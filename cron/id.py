@@ -1,5 +1,5 @@
-##### -*- coding: utf-8 -*-
-from cronos.proj_root import *
+# -*- coding: utf-8 -*-
+from proj_root import *
 import sys
 import os
 sys.path.append(PROJ_ROOT)
@@ -121,11 +121,11 @@ for item in soup.findAll('a'):
 
 		lesson = ''
 		for j in xrange(len((soup.findAll('a')[i].contents[0]).split('-')) - 1):
-			lesson = str(soup.findAll('a')[i].contents[0]).split('-')[j+1].strip() + ' '
+			lesson += str(soup.findAll('a')[i].contents[0]).split('-')[j+1].strip() + ' '
 
 		eclass = Id(
 			urlid = str(cid),
-			name = lesson.strip(),
+			name = 'e-class: ' + lesson.strip(),
 			department = '',
 			email = '',
 		)
