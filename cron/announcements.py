@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from cronos.proj_root import *
+from proj_root import *
 import sys
 import os
 sys.path.append(PROJ_ROOT)
