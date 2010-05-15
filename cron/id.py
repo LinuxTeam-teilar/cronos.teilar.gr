@@ -51,12 +51,14 @@ dest = [
 	['career', 'Γραφείο Διασύνδεσης'],
 	['linuxteam', 'Linux Team'],
 	['dionysos', 'Πρόγραμμα Γραμματείας']
+	['library', 'Κεντρική Βιβλιοθήκη']
+	['pr', 'Γραφείο Δημοσίων και Διεθνών Σχέσεων']
 	]
 
 for i in xrange(len(dest[:][:])):
 	dest[i][0] = Id(
 		urlid = 'cid' + str(50+i),
-		name = str(dest[i][1]) +  'ΤΕΙ Λάρισας',
+		name = str(dest[i][1]) +  ' ΤΕΙ Λάρισας',
 		department = '',
 		email = '',
 	)
@@ -134,5 +136,5 @@ for item in soup.findAll('a'):
 			eclass.save()
 		except MySQLdb.IntegrityError:
 			pass
-
+	
 	i += 1
