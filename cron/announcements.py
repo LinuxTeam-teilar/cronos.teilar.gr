@@ -202,7 +202,7 @@ for item in soup.findAll('a'):
 					if (len(str(soup1.findAll('td')[k].b)) > 8):
 						name = soup1.findAll('td')[k].b.contents[0].strip()
 					else: 
-						name = '<No Title>'
+						name = 'No Title'
 				except IndexError:
 					pass
 
@@ -366,7 +366,7 @@ for i in xrange(len(soup.findAll('th')) - 1):
 	main_text = p.sub(' ', main_text)
 
 	dionysos = Announcements(
-		title = '<No Title>',
+		title = 'No Title',
 		url = link,
 		urlid = getid('cid', 53),
 		description = main_text.strip(),
