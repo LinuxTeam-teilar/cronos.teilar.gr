@@ -1,9 +1,9 @@
 ##### -*- coding: utf-8 -*-
-PROJ_ROOT = '/home/tampakrap/Source_Code/ptixiaki/'
+from cronos.proj_root import *
 import sys
 import os
 sys.path.append(PROJ_ROOT)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'thesis.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
 import pycurl
 import StringIO
@@ -11,8 +11,8 @@ import urllib
 import urlparse
 import re
 import MySQLdb
-from thesis.passwords import *
-from thesis.announcements.models import *
+from cronos.passwords import *
+from cronos.announcements.models import *
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')

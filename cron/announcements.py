@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-PROJ_ROOT = '/home/tampakrap/Source_Code/ptixiaki/'
-import sys,os
+from cronos.proj_root import *
+import sys
+import os
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup

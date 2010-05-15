@@ -8,7 +8,7 @@ from cronos.announcements.feeds import LatestEntries
 #from cronos.main.views import *
 #from cronos.all.views import *
 #from cronos.eclass.views import *
-from cronos.thesis.library.views import *
+from cronos.library.views import *
 from cronos.dionysos.views import *
 from cronos.webmail.views import *
 #from cronos.sidebar.views import *
