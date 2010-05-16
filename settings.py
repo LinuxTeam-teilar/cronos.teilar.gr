@@ -3,7 +3,7 @@
 # Django settings for cronos project.
 
 ADMINS = (
-    ('cephalon, tampakrap', 'cronos@cronos.teilar.gr'),
+    ('cephalon, tampakrap', 'cronos@cephalon.teilar.gr'),
 )
 
 MANAGERS = ADMINS
