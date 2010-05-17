@@ -5,7 +5,7 @@ from django.template.loader import get_template
 def main(request) :
 	template = get_template('main.html')
 	variables = Context({
-		'head_title': 'poseidon.teilar.gr',
+		'head_title': 'cronos.teilar.gr',
 	})
 	output = template.render(variables)
 	return HttpResponse(output)

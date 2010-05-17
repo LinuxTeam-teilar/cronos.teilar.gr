@@ -41,9 +41,10 @@ for item in xrange(3, len(soup1)):
 	title += '<a href="/webmail/?passed_id='+str(soup1[item]).split('"')[1].split('&amp;')[1].split('=')[1]+'">test</a>'
 
 def announcements(request):
-	template = get_template('webmail_readbody.html')
+	template = get_template('test.html')
 	variables = Context({
 		'content': title,
+		'skiarxon': 'malakas',
 	})
 	output = template.render(variables)
 	return HttpResponse(output)
