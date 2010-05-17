@@ -5,6 +5,7 @@ import StringIO
 import urllib
 import os
 import urlparse
+from types import *
 from cronos.passwords import *
 from cronos.webmail.forms import *
 from BeautifulSoup import BeautifulSoup
@@ -28,26 +29,51 @@ conn.setopt(pycurl.POST, 1)
 conn.setopt(pycurl.POSTFIELDS, login_form_data)
 conn.setopt(pycurl.WRITEFUNCTION, b.write)
 conn.perform()
-conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
+#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
+conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX')
 conn.perform()
 output = (b.getvalue()).decode('iso-8859-7')
-#print output
 
 soup = BeautifulSoup(output).findAll('table')[9]
-soup1 = soup.findAll('a')
-title = ''
-for item in xrange(3, len(soup1)):
-	title += '<br />'
-	title += '<a href="?passed_id='+str(soup1[item]).split('"')[1].split('&amp;')[1].split('=')[1]+'">test</a>'
+soup1 = soup.findAll('tr')
+mail = []
+mail1 = ''
+
+for i in xrange(len(soup1)-1):
+	if (len(str(soup1[i+1].find('a'))) > 4):
+			mail.append([])
+#		for j in xrange(5):
+			# sender
+			sender = str(soup1[i+1].findAll('td')[1].contents[0].contents[0])
+			mail[i].append(sender)
+			# passed_id
+			passed_id = str(soup1[i+1].find('a')).split('&amp;')[1].replace('passed_id=', '')
+			mail[i].append(passed_id)
+			# time
+			time = str(soup1[i+1].findAll('td')[2].contents[0])
+			mail[i].append(time)
+			# title
+			title = str(soup1[i+1].findAll('td')[4].a.contents[0])
+			mail[i].append(title)
+			# full title
+#			if (soup1[i].findall('td')[4].split('"')[2] is None):
+#				full_title = soup1[i].findAll('td')[4].split('"')[3]
+#				mail[i-1].append(full_title)
+#			else:
+			full_title = ''
+			mail[i].append('')
+			print mail[i]
+			mail1 += '<br />' + sender + '<br />' + time + '<br /><a href="/mail?passed_id=' + passed_id + 'title ="' + full_title + '">' + title + '</a>'
+
 def webmail(request):
 	template = get_template('webmail_readbody.html')
 	variables = Context({
-		'content': title,
+		'content': mail1,
 	})
 	output = template.render(variables)
 	return HttpResponse(output)
 
-def passed_id(request):
+'''def passed_id(request):
 	if request.method == 'GET':
 		form = MailForm(request.GET)
 		if form.is_valid():
@@ -69,13 +95,12 @@ def passed_id(request):
 			conn.setopt(pycurl.URL, link)
 			conn.perform()
 			output = (b.getvalue()).decode('iso-8859-7')
-			'''
 			conn.setopt(pycurl.POSTFIELDS, login_form_data)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
 			output = unicode(b.getvalue(), 'utf-8', 'ignore')
-			print output'''
-			'''b = StringIO.StringIO()
+			print output
+			b = StringIO.StringIO()
 			conn.setopt(pycurl.FOLLOWLOCATION, 1)
 			conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
 			conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
@@ -85,7 +110,7 @@ def passed_id(request):
 			conn.setopt(pycurl.POSTFIELDS, login_form_data)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
-			output = unicode(b.getvalue(), 'utf-8', 'ignore')'''
+			output = unicode(b.getvalue(), 'utf-8', 'ignore')
 			template = get_template('test.html')
 			variables = Context({
 				'content': output,
@@ -95,4 +120,4 @@ def passed_id(request):
 			return HttpResponse(output)
 	else:
 		form = MailForm()
-	return render_to_response('webmail_readbody.html', {'form': form, } )
+	return render_to_response('webmail_readbody.html', {'form': form, } )'''

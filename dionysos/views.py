@@ -1,4 +1,4 @@
-##### -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 import pycurl
 import StringIO
@@ -44,6 +44,9 @@ eksamino = str(soup2.findAll('td')[1].contents[0])
 
 b = StringIO.StringIO()
 conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
+conn.setopt(pycurl.POST, 1)
+conn.setopt(pycurl.POSTFILEDS, login_form_data)
+conn.setopt(pycurl.COOKIE, cookie_file_name)
 conn.setopt(pycurl.WRITEFUNCTION, b.write)
 conn.perform()
 output = (b.getvalue()).decode('windows-1253')
