@@ -73,3 +73,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'cronos.announcements',
 )
+
+AUTHENTICATION_BACKENDS = (
+	'cronos.backends.ldapBackend.LDAPBackend',
+	'django,contrib.auth.backends.ModelBackend',
+)
