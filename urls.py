@@ -6,12 +6,12 @@ from django.contrib import admin
 from cronos.announcements.feeds import LatestEntries
 
 from cronos.main.views import *
-from cronos.frames.views import *
-from cronos.sidebar.views import *
+#from cronos.frames.views import *
+#from cronos.sidebar.views import *
 #from cronos.eclass.views import *
 #from cronos.library.views import *
 #from cronos.dionysos.views import *
-from cronos.webmail.views import *
+#from cronos.webmail.views import *
 #from cronos.announcements.views import *
 
 admin.autodiscover()
@@ -21,13 +21,13 @@ feeds = {
 	}
 
 urlpatterns = patterns('',
-	(r'^$', frames),
+#	(r'^$', frames),
 	(r'^main', main),
-	(r'^sidebar', sidebar),
+#	(r'^sidebar', sidebar),
 #    (r'^eclass', eclass),
 #	(r'^library', library),
 #	(r'^dionysos', dionysos),
-	(r'^webmail/', webmail),
+#	(r'^webmail/', webmail),
 #	(r'^mail/', mail),
 #	(r'^announcements', announcements),
 
