@@ -1,0 +1,40 @@
+{% ifequal passed_id 'set' %}
+{{content|safe}}
+{{passed_id}}
+{% else %}
+<table align="center">
+<tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr>
+{% for i in mail %}
+	<tr>
+	{% for j in i %}
+		{% ifequal forloop.counter0 0 %}
+			<td align="center" title="{{j|safe}}">
+		{% endifequal %}
+		{% ifequal forloop.counter0 1 %}
+			{{j|safe}}</td>
+		{% endifequal %}
+		{% ifequal forloop.counter0 2 %}
+			<td align="center">{{j|safe}}</td>
+		{% endifequal %}
+		{% ifequal forloop.counter0 3 %}
+			<td align="center"><a href="/webmail/?passed_id={{j}}"
+		{% endifequal %}
+		{% ifequal forloop.counter0 4 %}
+				{% ifequal j '' %}
+					>
+				{% else %}
+					 title="{{j|safe}}">
+				{% endifequal %}
+		{% endifequal %}
+		{% ifequal forloop.counter0 5 %}
+			{{j|safe}}</a></td>
+		{% endifequal %}
+	{% endfor %}
+	</tr>
+{% endfor %}
+</table>
+{% endifequal %}
+
+<form action="/webmail/" method="get">
+<input type="hidden" name="passed_id">
+</form>
