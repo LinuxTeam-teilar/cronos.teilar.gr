@@ -15,17 +15,15 @@ def library(request):
 	if request.method == 'GET':
 		form = SearchForm(request.GET)
 		if form.is_valid():
-			link = 'http://hermes.lib.teilar.gr:81/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=10&ipp=20&spp=20&profile=multbl--1&ri=&term=' + str(request.POST.get('page',1)) + '&index=.GEN&x=0&y=0&aspect=subtab22'
-			'''b = StringIO.StringIO()
+			link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=10&ipp=20&spp=20&profile=multbl--1&ri=&term=' + str(request.GET.get('search')) + '&index=.GEN&x=0&y=0&aspect=subtab22'
+			b = StringIO.StringIO()
 			conn = pycurl.Curl()
-			conn.setopt(pycurl.FOLLOWLOCATION, 1)
 			conn.setopt(pycurl.URL, link)
-			conn.setopt(pycurl.POST, 1)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
-			output = unicode(b.getvalue(), 'utf-8', 'ignore')'''
-			output = urllib.urlopen('file:///home/tampakrap/Downloads/Horizon%20Information%20Portal.html')
+			output = unicode(b.getvalue(), 'utf-8', 'ignore')
 			soup = BeautifulSoup(output).findAll('table')[24]
+			
 			results = []
 			results1 = []
 			i = 4
@@ -43,13 +41,26 @@ def library(request):
 				results1 = [title, author, editor]
 				for j in xrange(3):
 					results[k].append(results1[j][:])
-				k += 1
+				k +=  1
+
+			if (results == []):
+				search = 'empty'
+			else:
+				search = 'set'
+
 			template = get_template('library.html')
 			variables = Context({
+				'search': search,
 				'results': results,
 			})
 			output = template.render(variables)
 			return HttpResponse(output)
 	else:
 		form = SearchForm()
+#		template = get_template('library.html')
+#		variables = Context({
+#			'search': 'noresult',
+#		})
+#		output = template.render(variables)
+#		return HttpResponse(output)
 	return render_to_response('library.html', {'form': form, } )
