@@ -1,4 +1,5 @@
-##### -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
 from BeautifulSoup import BeautifulSoup
 import pycurl
 import StringIO
@@ -20,6 +21,16 @@ conn.setopt(pycurl.WRITEFUNCTION, b.write)
 conn.perform()
 output = unicode(b.getvalue(), 'utf-8', 'ignore')
 soup = BeautifulSoup(output)
-a = soup.find('li', 'category')
-def eclass(request) :
-  return HttpResponse(a)
+a = []
+print len(soup.findAll('th', 'persoBoxTitle'))
+for i in xrange(len(soup.findAll('th', 'persoBoxTitle'))):
+	a.append(soup.findAll('th', 'persoBoxTitle')[i].contents[0])
+
+
+def eclass(request):
+	template = get_template('eclass.html')
+	variables = Context({
+		'a': a,
+	})
+	output = template.render(variables)
+	return HttpResponse(output)

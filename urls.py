@@ -9,7 +9,7 @@ from cronos.announcements.feeds import LatestEntries
 from cronos.main.views import *
 from cronos.frames.views import *
 from cronos.sidebar.views import *
-#from cronos.eclass.views import *
+from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
@@ -24,7 +24,7 @@ urlpatterns = patterns('',
 	(r'^$', frames),
 	(r'^main', main),
 	(r'^sidebar', sidebar),
-#	(r'^eclass', eclass),
+	(r'^eclass', eclass),
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
 	(r'^announcements', announcements),
