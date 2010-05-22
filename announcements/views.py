@@ -8,7 +8,7 @@ from django.template.loader import get_template
 announce = []
 i = 0
 
-a = Announcements.objects.order_by('date_fetched')[:30]
+a = Announcements.objects.order_by('-date_fetched')[:30]
 print a[1]
 
 for item in a:
