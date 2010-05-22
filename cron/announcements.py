@@ -450,7 +450,7 @@ for item in link:
 			url = link1,
 			urlid = getid('cid', 55),
 			description = main_text,
-			unique = link,
+			unique = link1,
 			attachment_url = '',
 			attachment_text = '',
 		)
