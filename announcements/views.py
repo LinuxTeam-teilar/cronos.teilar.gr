@@ -12,8 +12,8 @@ a = Announcements.objects.order_by('-date_fetched')[:30]
 
 for item in a:
 	announce.append([])
-	announce1 = [item.author(), str(item.date()), item.get_absolute_url(), item.__unicode__()]
-	for j in xrange(4):
+	announce1 = [item.author(), item.get_absolute_url(), item.__unicode__()[:60]+'...', str(item.date()), item.body()]
+	for j in xrange(5):
 		announce[i].append(announce1[j][:])
 	i += 1
 

@@ -1,24 +1,20 @@
 <html>
 <head>
 <title>{{ head_title }}</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
 <table align="center">
-<!--tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr-->
 {% for i in announce %}
 	<tr>
 	{% for j in i %}
 		{% ifequal forloop.counter0 0 %}
-			<td align="center">{{j|safe}}</td>
+			<td align="center"><img src="http://www.leighpremier.co.uk/GifJpegs/new.gif" height="30px"></td><td align="right"><b>{{j|safe}}:</b></td>
 		{% endifequal %}
 		{% ifequal forloop.counter0 1 %}
-			<td align="center">{{j|safe}}</td>
+			<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{j|safe}}">
 		{% endifequal %}
 		{% ifequal forloop.counter0 2 %}
-			<td align="center"><a href="{{j|safe}}">
-		{% endifequal %}
-		{% ifequal forloop.counter0 3 %}
 			{{j|safe}}</a></td>
 		{% endifequal %}
 	{% endfor %}
