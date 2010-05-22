@@ -1,5 +1,12 @@
-<form action="/library/" method="get">
-{{ form.as_p }}
-<!--input type="hidden" name="search"-->
-<input type="submit" value="Submit" />
-</form>
+{% if results %}
+	{% for i in results %}
+		{% for j in i %}
+			{{j|safe}}<br />
+		{% endfor %}
+	{% endfor %}
+{% else %}
+	<form action="/library/" method="get">
+		{{ form.as_p }}
+		<input type="submit" value="Submit" />
+	</form>
+{% endif %}
