@@ -1,12 +1,16 @@
-{% if results %}
+{% ifequal search 'set' %}
 	{% for i in results %}
 		{% for j in i %}
 			{{j|safe}}<br />
 		{% endfor %}
 	{% endfor %}
 {% else %}
-	<form action="/library/" method="get">
+	{% ifequal search 'empty' %}
+		No Results
+	{% else %}
+		<form action="/library/" method="get">
 		{{ form.as_p }}
 		<input type="submit" value="Submit" />
-	</form>
-{% endif %}
+		</form>
+	{% endifequal %}
+{% endifequal %}
