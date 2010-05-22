@@ -4,20 +4,25 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 </head>
 <body>
-<h1>{{ page_title }}</h1>
-<p>{{dionysos|safe}}</p>
-<p>##########################################</p>
-<p>{{eclass|safe}}</p>
-<p>##########################################</p>
-<p>{{teilar_gr1|safe}}</p>
-<p>##########################################</p>
-<p>{{teilar_gr2|safe}}</p>
-<p>##########################################</p>
-<p>{{noc|safe}}</p>
-<p>##########################################</p>
-<p>{{career|safe}}</p>
-<p>##########################################</p>
-<p>{{linuxteam|safe}}</p>
-<p>##########################################</p>
-</body>
+<table align="center">
+<!--tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr-->
+{% for i in announce %}
+	<tr>
+	{% for j in i %}
+		{% ifequal forloop.counter0 0 %}
+			<td align="center">{{j|safe}}</td>
+		{% endifequal %}
+		{% ifequal forloop.counter0 1 %}
+			<td align="center">{{j|safe}}</td>
+		{% endifequal %}
+		{% ifequal forloop.counter0 2 %}
+			<td align="center"><a href="{{j|safe}}">
+		{% endifequal %}
+		{% ifequal forloop.counter0 3 %}
+			{{j|safe}}</a></td>
+		{% endifequal %}
+	{% endfor %}
+</tr>
+{% endfor %}
+</table><ody>
 </html>
