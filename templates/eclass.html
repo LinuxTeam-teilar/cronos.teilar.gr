@@ -1,0 +1,7 @@
+{% for item in a %}
+	{% ifequal forloop.counter0 2 %}
+		<b>{{item|safe}}</b><br />
+	{% else %}
+		{{item|safe}}<br />
+	{% endifequal %}
+{% endfor %}
