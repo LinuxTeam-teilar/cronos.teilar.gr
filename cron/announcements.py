@@ -26,6 +26,7 @@ def geteclassid(i):
 	db = Id.objects.filter(urlid__exact = i)
 	for item in db:
 		return item
+
 ### www.teilar.gr ###
 
 dest = ['http://www.teilar.gr/']
@@ -308,7 +309,7 @@ for i in xrange(20):
 	except MySQLdb.IntegrityError:
 		pass
 
-### linuxteam ###
+### linuxteam.cs.teilar.gr ###
 
 b = StringIO.StringIO()
 conn.setopt(pycurl.URL, 'http://linuxteam.cs.teilar.gr')
@@ -352,7 +353,6 @@ for i in range(4, 7):
 link = 'http://dionysos.teilar.gr/Menu/r1.htm'
 
 b = StringIO.StringIO()
-conn = pycurl.Curl()
 conn.setopt(pycurl.URL, link)
 conn.setopt(pycurl.WRITEFUNCTION, b.write)
 conn.perform()
@@ -379,3 +379,83 @@ for i in xrange(len(soup.findAll('th')) - 1):
 		dionysos.save()
 	except MySQLdb.IntegrityError:
 		pass
+
+### library.teilar.gr ###
+
+b = StringIO.StringIO()
+conn.setopt(pycurl.URL, 'http://library.teilar.gr/news_gr.php')
+conn.setopt(pycurl.WRITEFUNCTION, b.write)
+conn.perform()
+output = unicode(b.getvalue(), 'utf-8', 'ignore')
+soup = BeautifulSoup(str(BeautifulSoup(output).findAll('table')[9]))
+
+for item in soup.findAll('a', 'BlackText11'):
+	title = item.contents[0]
+	link = 'http://library.teilar.gr/' +str(item).split('"')[1]
+
+	b = StringIO.StringIO()
+	conn.setopt(pycurl.URL, link)
+	conn.setopt(pycurl.WRITEFUNCTION, b.write)
+	conn.perform()
+	output = unicode(b.getvalue(), 'utf-8', 'ignore')
+	soup1 = BeautifulSoup(output)
+	main_text = soup1.findAll('td', 'BlackText11')[2].contents[0]
+	main_text = p.sub(' ', main_text)
+	
+	library = Announcements(
+		title = title,
+		url = link,
+		urlid = getid('cid', 54),
+		description = main_text.strip(),
+		unique = link,
+		attachment_url = '',
+		attachment_text = '',
+	)
+
+	try:
+		library.save()
+	except MySQLdb.IntegrityError:
+		pass
+
+### www.pr.teilar.gr ###
+
+link = ['general_news/', 'meeting_conference/']
+
+for item in link:
+	b = StringIO.StringIO()
+	conn.setopt(pycurl.URL, 'http://www.pr.teilar.gr/el/announcements/' + item)
+	conn.setopt(pycurl.WRITEFUNCTION, b.write)
+	conn.perform()
+	output = unicode(b.getvalue(), 'utf-8', 'ignore')
+	soup = BeautifulSoup(output)
+
+	for i in xrange(len(soup.findAll('span','ba'))):
+		title = soup.findAll('span', 'ba')[i].a.contents[0]
+		link1 = 'http://www.pr.teilar.gr' + str(soup.findAll('span', 'ba')[i].contents[0]).split('"')[1]
+		
+		b = StringIO.StringIO()
+		conn.setopt(pycurl.URL, link1)
+		conn.setopt(pycurl.WRITEFUNCTION, b.write)
+		conn.perform()
+		output = unicode(b.getvalue(), 'utf-8', 'ignore')
+		soup1 = BeautifulSoup(output)
+
+		main_text = ''
+		for j in xrange(len(soup1.findAll('td', 'subject')[0].contents)):
+			main_text += str(soup1.findAll('td', 'subject')[0].contents[j])
+		main_text = p.sub(' ', main_text)
+
+		pr = Announcements(
+			title = title,
+			url = link1,
+			urlid = getid('cid', 55),
+			description = main_text,
+			unique = link,
+			attachment_url = '',
+			attachment_text = '',
+		)
+
+		try:
+			pr.save()
+		except MySQLdb.IntegrityError:
+			pass
