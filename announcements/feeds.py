@@ -9,7 +9,7 @@ class LatestEntries(Feed):
 	description = 'Ανακοινώσεις διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας. Παρέχονται από το http://cronos.teilar.gr'
 
 	def items(self):
-		return Announcements.objects.order_by('-date_fetched')[:200]
+		return Announcements.objects.order_by('-date_fetched')[:30]
 
 	def item_author_name(self, item):
 		return item.author()
