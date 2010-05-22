@@ -31,7 +31,7 @@ urlpatterns = patterns('',
 #	(r'^mail/', mail),
 #	(r'^announcements', announcements),
 
-#	url(r'^library/', include('cronos.library.urls')),
+	url(r'^library/', include('cronos.library.urls')),
 
 #	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
