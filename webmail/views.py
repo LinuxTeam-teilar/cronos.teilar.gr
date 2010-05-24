@@ -80,7 +80,7 @@ def webmail(request):
 
 		template = get_template('webmail.html')
 		variables = Context({
-			'mail': mail,
+			'items': mail,
 		})
 		output = template.render(variables)
 		return HttpResponse(output)

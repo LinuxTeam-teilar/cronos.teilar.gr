@@ -22,16 +22,18 @@ feeds = {
 
 urlpatterns = patterns('',
 	(r'^$', frames),
-	(r'^main', main),
-	(r'^sidebar', sidebar),
-	(r'^eclass', eclass),
+	(r'^main/', main),
+	(r'^sidebar/', sidebar),
+	(r'^eclass/', eclass),
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
-	(r'^announcements', announcements),
+	(r'^announcements/', announcements),
 
 	url(r'^library/', include('cronos.library.urls')),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+
+	('^' + settings.MEDIA_URL + '/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
 
 	# Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
 	# to INSTALLED_APPS to enable admin documentation:
