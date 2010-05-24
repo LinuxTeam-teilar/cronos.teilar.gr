@@ -4,7 +4,7 @@
 {% else %}
 <table align="center">
 <tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr>
-{% for i in mail %}
+{% for i in items %}
 	<tr>
 	{% for j in i %}
 		{% ifequal forloop.counter0 0 %}
