@@ -1,3 +1,63 @@
-h1 { color: grey; }
+body { background: #efefef url("./images/login_bg.png") repeat-x; }
 
-p.messages { color: red; }
+#container { width: 750px; margin: 0 auto; }
+
+h1 { width: 450px; height: 230px; margin: 0 auto; background: url("./images/logo_login.png") 0px -50px no-repeat; text-indent: -9999px; }
+
+#login {
+	width: 750px; float: left;
+	margin: 30px 0 0 0; padding: 15px 15px 15px 15px;
+	background: #fff;
+	border: solid 1px #c1c1c1;
+	
+	-moz-border-radius: 11px; /* FF1+ */
+	-webkit-border-radius: 11px; /* Saf3+, Chrome */
+	border-radius: 11px; /* Opera 10.5, IE 9 */
+	
+	-moz-box-shadow: 0 0 2px #a1a1a1; /* FF3.5+ */
+	-webkit-box-shadow: 0 0 2px #a1a1a1; /* Saf3.0+, Chrome */
+	box-shadow: 0 0 2px #a1a1a1; /* Opera 10.5, IE 9.0 */
+}
+
+#info { width: 365px; height: 270px; float: left; border-right: solid 1px #efefef; }
+
+#info h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
+
+#info p { width: 350px; margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
+
+#info ul { position: relative; top: -5px; margin: 0 0 0 25px; list-style-type: disc; }
+
+#info ul>li { font: normal 14px/18px Verdana,Arial,sans-serif; }
+
+#login-form { width: 375px; height: 270px; float: left; border-left: solid 1px #d5d5d5; }
+
+#login-form form {
+	height: 250px;
+	margin: 10px 0 0 30px;
+	background: #efefef url("./images/login_bg.png") -400px 0px repeat-x;
+	border: solid 1px #c1c1c1;
+	
+	-moz-border-radius: 9px; /* FF1+ */
+	-webkit-border-radius: 9px; /* Saf3+, Chrome */
+	border-radius: 9px; /* Opera 10.5, IE 9 */
+	
+	-moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
+	-webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
+	box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */	
+}
+
+#login-form input[type="text"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
+
+#login-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
+
+#login-form input[type="submit"] { display: block; margin: 10px 0 0 30px;}
+
+#login-form form>a { margin: 20px 0 0 30px; }
+
+#login-form p.messages {
+	width: 90px;
+	margin: 20px 0 0 30px; padding: 8px 10px;
+	background: #ffd0d0; color: #e92525;
+	font: 13px Verdana,Arial,sans-serif;
+	border: solid 1px #e92525;
+}

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import Context
 from django.template.loader import get_template
@@ -27,7 +27,7 @@ def main(request) :
 				template = get_template('login.html')
 				variables = Context({
 					'head_title': 'Είσοδος | ',
-					'msg': 'malakia',
+					'msg': 'Λάθος Κωδικός',
 				})
 				output = template.render(variables)
 				return HttpResponse(output)
@@ -35,3 +35,7 @@ def main(request) :
 		return render_to_response("main.html", {'head_title': 'Αρχική | '})
 	else:
 		return render_to_response("login.html", {'head_title': 'Είσοδος | '})
+
+def logout(request):
+	auth.logout(request)
+	return HttpResponseRedirect('/')
