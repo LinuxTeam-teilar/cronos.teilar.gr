@@ -7,7 +7,6 @@ from django.contrib import admin
 from cronos.announcements.feeds import LatestEntries
 
 from cronos.main.views import *
-from cronos.sidebar.views import *
 from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
