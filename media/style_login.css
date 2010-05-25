@@ -48,6 +48,8 @@ h1 { width: 450px; height: 230px; margin: 0 auto; background: url("./images/logo
 
 #login-form input[type="text"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
 
+#login-form input[type="password"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
+
 #login-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
 
 #login-form input[type="submit"] { display: block; margin: 10px 0 0 30px;}
