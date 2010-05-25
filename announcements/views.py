@@ -33,7 +33,6 @@ def announcements(request):
 			else:
 				img = item.urlid.urlid
 			announce2 = [img, item.author(), str(item.date()), item.__unicode__(), item.get_absolute_url(), item.body()]
-			print announce2[1][:]
 		template = get_template('announcements.html')
 		variables = Context({
 			'id': 'set',
