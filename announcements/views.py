@@ -24,7 +24,6 @@ for item in Announcements.objects.order_by('-date_fetched')[:30]:
 
 def announcements(request):
 	form = AnnouncementForm(request.GET)
-	print request.GET.get('announceid')
 	if (len(str(request.GET.get('announceid'))) != 4):
 		db = Announcements.objects.filter(id__exact = request.GET.get('announceid'))
 		for item in db:		
