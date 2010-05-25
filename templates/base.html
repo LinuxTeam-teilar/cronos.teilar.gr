@@ -3,6 +3,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<title>{{ head_title }}Cronos</title>
+		<link rel="stylesheet" href="/other/reset.css">
 		<link rel="stylesheet" href="/other/style.css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -15,6 +16,7 @@
 				<div id="sidebar">
 					<ul id="menu">
 						<a href="/">Αρχική</a>
+						<a href="/announcements/">Ανακοινώσεις</a>
 						<a href="/eclass/">E-class</a>
 						<a href="/webmail/">E-mail</a>
 						<a href="/library/">Αναζήτηση Βιβλιοθήκης</a>
@@ -24,7 +26,7 @@
 			</div>
 			<div id="main">
 				<div id="profile">
-					{% block profile %}{% endblock %}
+					{% block profile %}<a href="/logout/">Αποσύνδεση</a>{% endblock %}
 				</div>
 				<div id="content">
 					{% block content %}{% endblock %}
