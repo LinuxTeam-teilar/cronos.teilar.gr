@@ -7,7 +7,6 @@ from django.contrib import admin
 from cronos.announcements.feeds import LatestEntries
 
 from cronos.main.views import *
-from cronos.frames.views import *
 from cronos.sidebar.views import *
 from cronos.eclass.views import *
 #from cronos.dionysos.views import *
@@ -21,13 +20,13 @@ feeds = {
 	}
 
 urlpatterns = patterns('',
-	(r'^$', frames),
-	(r'^main/', main),
+	(r'^$', main),
 	(r'^sidebar/', sidebar),
 	(r'^eclass/', eclass),
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
 	(r'^announcements/', announcements),
+	(r'^login/', login),
 
 	url(r'^library/', include('cronos.library.urls')),
 

@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 # Constants
 AUTH_LDAP_SERVER = 'ldap://localhost:389'
-AUTH_LDAP_BASE_USER = "cn=root,dc=teilar,dc=com"
+AUTH_LDAP_BASE_USER = "cn=root,ou=teilarStudents,dc=teilar,dc=com"
 AUTH_LDAP_BASE_PASS = "ptixiaki"
 
 class LDAPBackend:
@@ -26,17 +26,17 @@ class LDAPBackend:
 		try:
 			result_id = l.search(base, scope, filter, ret)
 			result_type, result_data = l.result(result_id, 0)
-			while l:
-				print result_data
+#			while l:
+			print result_data
 				# If the user does not exist in LDAP, Fail.
-				if (result_data == []):
-					print 'no'
-					break
-				else:
-					print 'yes'
-					print result_data[0][0]
-					# Attempt to bind to the user's DN
-					l.simple_bind_s(result_data[0][0],password)
+			if (result_data == []):
+				print 'no'
+				return None
+			else:
+				print 'yes'
+				print result_data[0][0]
+				# Attempt to bind to the user's DN
+			l.simple_bind_s(result_data[0][0],password)
 
 			# The user existed and authenticated. Get the user
 			# record or create one with no privileges.

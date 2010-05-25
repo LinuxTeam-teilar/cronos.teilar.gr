@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 {% ifequal passed_id 'set' %}
 {{content|safe}}
 {{passed_id}}
@@ -38,3 +41,4 @@
 <form action="/webmail/" method="get">
 <input type="hidden" name="passed_id">
 </form>
+{% endblock %}
