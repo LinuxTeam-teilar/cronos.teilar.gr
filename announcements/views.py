@@ -2,6 +2,7 @@
 
 from cronos.announcements.models import Announcements
 from cronos.announcements.forms import AnnouncementForm
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.http import HttpResponse
@@ -22,6 +23,7 @@ for item in Announcements.objects.order_by('-date_fetched')[:30]:
 		announce[i].append(announce1[j][:])
 	i += 1
 
+@login_required(redirect_field_name='/')
 def announcements(request):
 	form = AnnouncementForm(request.GET)
 	if (len(str(request.GET.get('announceid'))) != 4):
