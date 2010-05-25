@@ -64,3 +64,5 @@ AUTHENTICATION_BACKENDS = (
 #	'cronos.backends.ldapBackend.LDAPBackend',
 	'django.contrib.auth.backends.ModelBackend',
 )
+
+LOGIN_URL = '/'

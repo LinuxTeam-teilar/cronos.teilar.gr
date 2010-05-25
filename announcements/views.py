@@ -23,7 +23,7 @@ for item in Announcements.objects.order_by('-date_fetched')[:30]:
 		announce[i].append(announce1[j][:])
 	i += 1
 
-@login_required(redirect_field_name='/')
+@login_required
 def announcements(request):
 	form = AnnouncementForm(request.GET)
 	if (len(str(request.GET.get('announceid'))) != 4):
