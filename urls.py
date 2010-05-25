@@ -20,7 +20,6 @@ feeds = {
 
 urlpatterns = patterns('',
 	(r'^$', main),
-	(r'^sidebar/', sidebar),
 	(r'^eclass/', eclass),
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
