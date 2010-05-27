@@ -3,6 +3,7 @@ import ldap.filter
 
 from django.conf import settings
 from django.contrib.auth.models import User, Group
+from cronos.profildap.models import LdapProfile
 
 from ldap_groups.models import LDAPGroup
 
@@ -78,7 +79,8 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
         ldap.set_option(ldap.OPT_REFERRALS,0) # DO NOT TURN THIS OFF OR SEARCH WON'T WORK!      
         l = ldap.initialize(settings.LDAP_URL)
         l.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
-        binddn = "%s@%s" % (username,settings.NT4_DOMAIN)
+#        binddn = "%s@%s" % (username,settings.NT4_DOMAIN)
+        binddn = "cn=%s,%s" % (username, settings.SEARCH_DN)
         l.simple_bind_s(binddn,password)
         return l
         
@@ -103,43 +105,45 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
             try:
                 l = self.bind_ldap(username, password)
                 # search
-                result = l.search_ext_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,"sAMAccountName=%s" % username,settings.SEARCH_FIELDS)[0][1]
+                result = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, "(cn=%s)" % (username), ['*'])[0][1]
+                print result
                
-                if result.has_key('memberOf'):
-                    membership = result['memberOf']
+                if result.has_key('dionysosUsername'):
+                    dionysos = result['dionysosUsername'][0]
                 else:
-                    membership = None
+                    dionysos = None
                 
                 # get email
                 if result.has_key('mail'):
                     mail = result['mail'][0]
                 else:
-                    mail = None
+                    mail = 'antekaigamisou@gmail.com'
+
                 # get surname
                 if result.has_key('sn'):
                     last_name = result['sn'][0]
                 else:
                     last_name = None
-                
+
                 # get display name
-                if result.has_key('givenName'):
-                    first_name = result['givenName'][0]
+                if result.has_key('cn'):
+                    first_name = result['cn'][0]
                 else:
                     first_name = None
-                
+
                 l.unbind_s()
                 
                 user = User(username=username,first_name=first_name,last_name=last_name,email=mail)
-            
             except Exception, e:
                 return None
         
             user.is_staff = False
             user.is_superuser = False
-            user.set_password('ldap authenticated')
+            user.set_password('ldap')
             user.save()
-            
-            self.set_memberships_from_ldap(user, membership)
+            userprofile = LdapProfile(user=user, dionysos_username=dionysos)
+            userprofile.save()
+#            self.set_memberships_from_ldap(user, membership)
         
         return user
     
