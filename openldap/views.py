@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import ldap
-from cronos.passwords import *
+#from cronos.passwords import *
 
 ldap_user = 'cn=root, dc=teilar, dc=com'
 ldap_pass = 'ptixiaki'

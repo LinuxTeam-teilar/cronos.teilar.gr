@@ -11,6 +11,7 @@ from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
+#from cronos.ldap_groups.views import *
 
 admin.autodiscover()
 
@@ -28,6 +29,8 @@ urlpatterns = patterns('',
 	(r'^logout/', logout),
 
 	url(r'^library/', include('cronos.library.urls')),
+
+	url(r'^ldap/', include('cronos.ldap_groups.urls')),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
