@@ -14,7 +14,7 @@ class LDAPGroup(models.Model):
     """
     make_staff = models.BooleanField(default=False)
     make_superuser = models.BooleanField(default=False)
-    org_unit = models.TextField(unique=True)
+    org_unit = models.CharField(unique=True, max_length=255)
     groups = models.ManyToManyField(Group, related_name='ldap_org_units')
     
     def __unicode__(self):
