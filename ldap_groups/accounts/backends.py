@@ -141,7 +141,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = None
 				
 				if result.has_key('eclassLessons'):
-					eclass_lessons = ',',join(result['eclassLessons'])
+					eclass_lessons = ','.join(result['eclassLessons'])
 				else:
 					eclass_lessons = None
 
@@ -163,7 +163,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					teacher_announcements = None
 
 				if result.has_key('otherAnnouncements'):
-					other_announcements = ',',join(result['otherAnnouncements'])
+					other_announcements = ','.join(result['otherAnnouncements'])
 				else:
 					other_announcements = None
 
