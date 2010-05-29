@@ -9,11 +9,11 @@
 	{% endfor %}
 {% else %}
 	{% ifequal search 'empty' %}
-		No Results
+		Δεν υπάρχουν αποτελέσματα
 	{% else %}
 		<form action="/library/" method="get">
 		{{ form.as_p }}
-		<input type="submit" value="Submit" />
+		<input type="submit" value="Αναζήτηση" />
 		</form>
 	{% endifequal %}
 {% endifequal %}

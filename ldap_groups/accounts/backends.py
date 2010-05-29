@@ -92,17 +92,17 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 			l = self.bind_ldap(username, password)
 			l.unbind_s()
 			return self.get_or_create_user(username,password)
-					
+
 		except ImportError:
 			pass
-		except ldap.INVALID_CREDENTIALS:
+		except ldap.INVALID_CREDENTIALS as e:
 			pass
-		
+	
 	def get_or_create_user(self, username, password):
 		try:
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
-		
+
 			try:
 				l = self.bind_ldap(username, password)
 
