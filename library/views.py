@@ -12,12 +12,11 @@ from django.shortcuts import render_to_response
 from django.template import Context
 from django.template.loader import get_template
 
-
-@login_required
 def library(request):
 	if request.method == 'GET':
 		form = SearchForm(request.GET)
 		if form.is_valid():
+			search = form.cleaned_data['Αναζήτηση']
 			link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=10&ipp=20&spp=20&profile=multbl--1&ri=&term=' + str(request.GET.get('search')) + '&index=.GEN&x=0&y=0&aspect=subtab22'
 			b = StringIO.StringIO()
 			conn = pycurl.Curl()
@@ -60,10 +59,4 @@ def library(request):
 			return HttpResponse(output)
 	else:
 		form = SearchForm()
-#		template = get_template('library.html')
-#		variables = Context({
-#			'search': 'noresult',
-#		})
-#		output = template.render(variables)
-#		return HttpResponse(output)
 	return render_to_response('library.html', {'form': form, } )

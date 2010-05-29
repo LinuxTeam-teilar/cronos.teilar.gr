@@ -23,7 +23,6 @@ conn.perform()
 output = unicode(b.getvalue(), 'utf-8', 'ignore')
 soup = BeautifulSoup(output)
 a = []
-print len(soup.findAll('th', 'persoBoxTitle'))
 for i in xrange(len(soup.findAll('th', 'persoBoxTitle'))):
 	a.append(soup.findAll('th', 'persoBoxTitle')[i].contents[0])
 
