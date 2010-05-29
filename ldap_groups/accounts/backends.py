@@ -109,7 +109,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				# search
 				result = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, "(cn=%s)" % (username), ['*'])[0][1]
 
-				first_name = result['givenName'][0]
+				first_name = result['firstName'][0]
 
 				last_name = result['sn'][0]
 
