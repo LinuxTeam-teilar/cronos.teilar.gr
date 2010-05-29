@@ -11,6 +11,8 @@ from django.shortcuts import render_to_response
 from django.template import Context
 from django.template.loader import get_template
 
+
+@login_required
 def library(request):
 	if request.method == 'GET':
 		form = SearchForm(request.GET)

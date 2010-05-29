@@ -26,7 +26,7 @@ print len(soup.findAll('th', 'persoBoxTitle'))
 for i in xrange(len(soup.findAll('th', 'persoBoxTitle'))):
 	a.append(soup.findAll('th', 'persoBoxTitle')[i].contents[0])
 
-
+@login_required
 def eclass(request):
 	template = get_template('eclass.html')
 	variables = Context({
