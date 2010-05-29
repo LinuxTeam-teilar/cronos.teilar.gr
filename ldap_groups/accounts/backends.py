@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth.models import User, Group
 from cronos.profildap.models import LdapProfile
 
-from ldap_groups.models import LDAPGroup
+from cronos.ldap_groups.models import LDAPGroup
 
 class BaseGroupMembershipBackend(object):
 	"""

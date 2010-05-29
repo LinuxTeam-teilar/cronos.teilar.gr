@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import ldap
 import ldap.filter
 from django.conf import settings
