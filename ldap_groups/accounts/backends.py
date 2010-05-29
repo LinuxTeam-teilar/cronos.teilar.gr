@@ -128,7 +128,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				if result.has_key('declaration'):
 					declaration = ','.join(result['declaration'])
 				else:
-					declaration = 'blank'
+					declaration = None
 				
 				if result.has_key('eclassUsername'):
 					eclass_username = result['eclassUsername'][0]
