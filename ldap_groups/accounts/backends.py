@@ -125,7 +125,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 
 				semester = result['semester'][0]
 
-				declaration = result['declaration'][0]
+				declaration = ','.join(result['declaration'])
 				
 				if result.has_key('eclassUsername'):
 					eclass_username = result['eclassUsername'][0]
@@ -138,9 +138,9 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = None
 				
 				if result.has_key('eclassLessons'):
-					eclassLessons = ',',join(result['eclassLessons'])
+					eclass_lessons = ',',join(result['eclassLessons'])
 				else:
-					eclassLessons = None
+					eclass_lessons = None
 
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
@@ -150,9 +150,9 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					webmail_username = None
 
 				if result.has_key('webmailPassword'):
-					webmailPassword = result['webmailPassword'][0]
+					webmail_password = result['webmailPassword'][0]
 				else:
-					webmailPassword = None
+					webmail_password = None
 
 				if result.has_key('teacherAnnouncements'):
 					teacher_announcements = ','.join(result['teacherAnnouncements'])
