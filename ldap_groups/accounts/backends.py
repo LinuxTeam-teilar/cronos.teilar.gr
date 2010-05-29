@@ -109,7 +109,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				# search
 				result = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, "(cn=%s)" % (username), ['*'])[0][1]
 
-				first_name = result['cn'][0]
+				first_name = result['givenName'][0]
 
 				last_name = result['sn'][0]
 
@@ -117,6 +117,16 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 
 				dionysos_password = result['dionysosPassword'][0]
 
+				introduction_year = result['introductionYear'][0]
+
+				registration_number = result['registrationNumber'][0]
+
+				school = result['school'][0]
+
+				semester = result['semester'][0]
+
+				declaration = result['declaration'][0]
+				
 				if result.has_key('eclassUsername'):
 					eclass_username = result['eclassUsername'][0]
 				else:
@@ -128,18 +138,40 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = None
 				
 				if result.has_key('eclassLessons'):
-					eclassLessons = result['eclassLessons'][0]
+					eclassLessons = ',',join(result['eclassLessons'])
 				else:
 					eclassLessons = None
 
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
+					webmail_username = result['webmailUsername'][0]
 				else:
-					mail = 'cn@not_applicable_mail.com'
+					mail = '%s@not_applicable_mail.com' % (first_name)
+					webmail_username = None
+
+				if result.has_key('webmailPassword'):
+					webmailPassword = result['webmailPassword'][0]
+				else:
+					webmailPassword = None
+
+				if result.has_key('teacherAnnouncements'):
+					teacher_announcements = ','.join(result['teacherAnnouncements'])
+				else:
+					teacher_announcements = None
+
+				if result.has_key('otherAnnouncements'):
+					other_announcements = ',',join(result['otherAnnouncements'])
+				else:
+					other_announcements = None
 
 				l.unbind_s()
 
-				user = User(username=username,first_name=first_name,last_name=last_name,email=mail)
+				user = User(
+					username = username,
+					first_name = first_name,
+					last_name = last_name,
+					email = mail,
+				)
 
 			except Exception, e:
 				return None
@@ -148,7 +180,23 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 			user.is_superuser = False
 			user.set_password('ldap')
 			user.save()
-			userprofile = LdapProfile(user=user, dionysos_username=dionysos)
+			userprofile = LdapProfile(
+				user = user,
+				dionysos_username = dionysos_username,
+				dionysos_password = dionysos_password,
+				introduction_year = introduction_year,
+				registration_number = registration_number,
+				school = school,
+				semester = semester,
+				declaration = declaration,
+				eclass_username = eclass_username,
+				eclass_password = eclass_password,
+				eclass_lessons = eclass_lessons,
+				webmail_username = webmail_username,
+				webmail_password = webmail_password,
+				teacher_announcements = teacher_announcements,
+				other_announcements = other_announcements,
+				)
 			userprofile.save()
 
 #			self.set_memberships_from_ldap(user, membership)
