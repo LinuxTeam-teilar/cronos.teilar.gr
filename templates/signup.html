@@ -1,0 +1,8 @@
+{% ifequal id 'set' %}
+	{{test}}
+{% else %}
+	<form action="/signup/" method="post">
+	{{ form.as_p }}
+	<input type="submit" value="Submit" />
+	</form>
+{% endifequal %}
