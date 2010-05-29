@@ -125,7 +125,10 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 
 				semester = result['semester'][0]
 
-				declaration = ','.join(result['declaration'])
+				if result.has_key('declaration'):
+					declaration = ','.join(result['declaration'])
+				else:
+					declaration = 'blank'
 				
 				if result.has_key('eclassUsername'):
 					eclass_username = result['eclassUsername'][0]
@@ -146,7 +149,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
 					webmail_username = result['webmailUsername'][0]
 				else:
-					mail = '%s@not_applicable_mail.com' % (first_name)
+					mail = '%s@not_applicable_mail.com' % (username)
 					webmail_username = None
 
 				if result.has_key('webmailPassword'):
@@ -196,7 +199,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				webmail_password = webmail_password,
 				teacher_announcements = teacher_announcements,
 				other_announcements = other_announcements,
-				)
+			)
 			userprofile.save()
 
 #			self.set_memberships_from_ldap(user, membership)
