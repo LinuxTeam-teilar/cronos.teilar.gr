@@ -37,6 +37,7 @@ def webmail_login(link):
 	output = (b.getvalue()).decode('iso-8859-7')
 	return output
 
+@login_required
 def webmail(request):
 	form = MailForm(request.GET)
 	if (len(str(request.GET.get('passed_id'))) == 3):
