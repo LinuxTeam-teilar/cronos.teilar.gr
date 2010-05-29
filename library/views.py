@@ -5,6 +5,7 @@ import httplib
 import urllib
 import StringIO
 from cronos.library.forms import *
+from django.contrib.auth.decorators import login_required
 from BeautifulSoup import BeautifulSoup
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response

@@ -7,6 +7,7 @@ import os
 import urlparse
 from types import *
 from cronos.passwords import *
+from django.contrib.auth.decorators import login_required
 from cronos.webmail.forms import *
 from BeautifulSoup import BeautifulSoup
 from django.http import HttpResponse, HttpResponseRedirect

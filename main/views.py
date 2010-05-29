@@ -7,7 +7,6 @@ from django.template.loader import get_template
 
 from django.contrib import auth
 
-@login_required
 def main(request) :
 	if request.method == "POST":
 		post = request.POST.copy()
