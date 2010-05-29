@@ -69,29 +69,16 @@ AUTHENTICATION_BACKENDS = (
 	'django.contrib.auth.backends.ModelBackend',
 )
 
+# Needed for the decorator
 LOGIN_URL = '/'
 
+# Needed for the custom user profile
 AUTH_PROFILE_MODULE = 'profildap.LdapProfile'
 
-# ldap
+# LDAP
 LDAP_SERVER = 'localhost'
-# If using non-SSL use these
 LDAP_PORT = 389
 LDAP_URL = 'ldap://%s:%s' % (LDAP_SERVER, LDAP_PORT)
-# If using SSL use these:
-# LDAP_PORT = 636
-# LDAP_URL = 'ldaps://%s:%s' % (LDAP_SERVER, LDAP_PORT)
 SEARCH_DN = 'ou=teilarStudents,dc=teilar,dc=gr'
-# NT4_DOMAIN is used with Active Directory only, comment out for eDirectory
-NT4_DOMAIN = ''
-# sAMAccountName is usd with Active Directory
-SEARCH_FIELDS = ['mail','givenName','sn','sAMAccountName','memberOf', 'cn']
-# Use the following for eDirectory
-#SEARCH_FIELDS = ['mail', 'givenName', 'sn', 'groupMembership', 'cn']
-#CERT_FILE = '/path/to/your/cert.txt'
-# BIND_USER and BIND_PASSWORD are used if your LDAP requires
-# authentication in order to search, leave blank for anonymous bind, e.g.:
-# BIND_USER = ''
-# BIND_PASSWORD = ''
-BIND_USER = 'cn=Manager,dc=teilar,dc=gr'
-BIND_PASSWORD = 'skata'
+SEARCH_FIELDS = ['*']
+# BIND_USER + BIND_PASSWORD moved to local_settings
