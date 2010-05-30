@@ -12,8 +12,10 @@
 		Δεν υπάρχουν αποτελέσματα
 	{% else %}
 		<form action="/library/" method="get">
-		{{ form.as_p }}
-		<input type="submit" value="Αναζήτηση" />
+			{% for field in form %}
+			{{ field.label.tag }}{{ field }}
+			{% endfor %}
+			<input type="submit" value="Αναζήτηση" />
 		</form>
 	{% endifequal %}
 {% endifequal %}

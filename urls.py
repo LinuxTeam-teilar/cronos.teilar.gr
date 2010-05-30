@@ -12,7 +12,6 @@ from cronos.eclass.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
 from cronos.signup.views import *
-#from cronos.ldap_groups.views import *
 
 admin.autodiscover()
 
