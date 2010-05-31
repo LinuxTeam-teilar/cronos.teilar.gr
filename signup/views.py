@@ -112,19 +112,49 @@ def signup(request):
 
 				import ldap
 				from django.conf import settings
-
-				'''add_record = [
-					('objectclass', ['person','top','teilarstudent']),
-					('cn', [request.POST.get('username')]),
-					('firstName', [request.POST.get('first_name')]),
-					('sn', [request.POST.get('lastname')]),
-					('userPassword', [request.POST.get('password')]),
-					('school', [request.POST.get('school')]),
-					('semester', [request.POST.get('semester')]),
-					('introductionYear', [request.POST.get('introduction_year')]),
-					('registrationNumber', [request.POST.get('registrationNumber')]),
-				]'''
+				import ldap.modlist as modlist
 				
+				l=ldap.initialize(settings.LDAP_URL)
+				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+		
+				# before adding to ldap, check if user is already there
+				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'cn=%s' % (request.POST.get('username')),settings.SEARCH_FIELDS):
+					template = get_template('signup.html')
+					variables = Context({
+						'head_title': 'Εγγραφή | ',
+						'form': form,
+						'msg': 'Ο χρήστης υπάρχει ήδη.'
+					})
+					output = template.render(variables)
+					return HttpResponse(output)
+				else:
+					username = str(request.POST.get('username'))
+					attrs = {}
+					attrs['objectClass'] = ['person','top','teilarStudent']
+					attrs['cn'] =  [username]
+					attrs['sn'] = [last_name]
+					attrs['firstName'] = [first_name]
+					attrs['userPassword'] = [str(request.POST.get('password'))]
+					attrs['school'] = [school]
+					attrs['semester'] = [str(semester)]
+					attrs['introductionYear'] = ['2004x']
+					attrs['registrationNumber'] = [registration_number]
+					#attrs['eclassUsername'] = [str(eclass_username)]
+					#attrs['eclassPassword'] = [str(eclass_password)]
+					attrs['dionysosUsername'] = [str(dionysos_username)]
+					attrs['dionysosPassword'] = ['dio']
+					#attrs['webmailUsername'] = [str(webmail_username)]
+					#attrs['webmailPassword'] = [str(webmail_password)]
+					print attrs
+#					('declaration', declaration),
+#					('eclassLessons', eclass_lessons),
+#					('teacherAnnouncements', teacher_announcements),
+
+					ldif = modlist.addModlist(attrs)
+					l.add_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
+					l.unbind_s()
+				
+				# in case there is no exception in the above, send the user to a welcome site
 				template = get_template('welcome.html')
 				variables = Context({
 					'head_title': 'Καλώς Ήρθατε | ',
@@ -155,6 +185,10 @@ def signup(request):
 				return HttpResponse(output)
 	else:
 		form = SignupForm()
-	return render_to_response('signup.html', {
-			'head_title': 'Εγγραφή | ',
-			'form': form } )
+	template = get_template('signup.html')
+	variables = Context({
+		'head_title': 'Εγγραφή | ',
+		'form': form,
+	})
+	output = template.render(variables)
+	return HttpResponse(output)
