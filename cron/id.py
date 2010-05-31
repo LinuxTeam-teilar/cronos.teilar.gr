@@ -66,7 +66,7 @@ for i in xrange(len(dest[:][:])):
 	try:
 		dest[i][0].save()
 	except MySQLdb.IntegrityError:
-		pass	
+		pass
 
 ### www.teilar.gr/profannews.php ###
 

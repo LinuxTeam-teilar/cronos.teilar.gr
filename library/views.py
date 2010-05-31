@@ -44,13 +44,14 @@ def library(request):
 				k +=  1
 
 			if (results == []):
-				search = 'empty'
+				msg = 'Δεν υπάρχουν αποτελέσματα'
 			else:
-				search = 'set'
+				msg = ''
 
 			template = get_template('library.html')
 			variables = Context({
-				'search': search,
+				'msg': msg,
+				'form': form,
 				'results': results,
 			})
 			output = template.render(variables)

@@ -1,22 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% ifequal search 'set' %}
+{% if results  %}
 	{% for i in results %}
 		{% for j in i %}
 			{{j|safe}}<br />
 		{% endfor %}
 	{% endfor %}
 {% else %}
-	{% ifequal search 'empty' %}
-		Δεν υπάρχουν αποτελέσματα
-	{% else %}
-		<form action="/library/" method="get">
-			{% for field in form %}
-			{{ field.label.tag }}{{ field }}
-			{% endfor %}
-			<input type="submit" value="Αναζήτηση" />
-		</form>
-	{% endifequal %}
-{% endifequal %}
+	<form action="/library/" method="get">
+		{% for field in form %}
+		{{ field.label.tag }}{{ field }}
+		{% endfor %}
+		<input type="submit" value="Αναζήτηση" />
+		{% if msg %}
+			<br />{{msg}}
+		{% endif %}
+	</form>
+{% endif %}
 {% endblock %}
