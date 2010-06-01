@@ -20,9 +20,14 @@ class SignupWizard(FormWizard):
 		eclass_username = str([form.cleaned_data for form in form_list][2]['eclass_username'])
 		if eclass_username:
 			eclass_password = base64.b64encode(str([form.cleaned_data for form in form_list][2]['eclass_password']))
+		else:
+			eclass_username = ''
 		webmail_username = str([form.cleaned_data for form in form_list][3]['webmail_username'])
 		if webmail_username:
 			webmail_password = base64.b64encode(str([form.cleaned_data for form in form_list][3]['webmail_password']))
+		else:
+			webmail_username = ''
+
 		try:
 			from BeautifulSoup import BeautifulSoup
 			import pycurl
@@ -68,7 +73,8 @@ class SignupWizard(FormWizard):
 			semester = str(soup2.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[8]))
 			school = str(soup2.findAll('td')[1].contents[0]).strip()
-			# missing introduction_year
+			# missing introduction_year, hardcode for now
+			introduction_year = '2004Χ'
 			# missing declaration'''
 	
 			# login to eclass
@@ -141,7 +147,7 @@ class SignupWizard(FormWizard):
 					cid = str(item.urlid)
 				attrs['school'] = [cid]
 				attrs['semester'] = [semester]
-				attrs['introductionYear'] = ['2004x']
+				attrs['introductionYear'] = [introduction_year]
 				attrs['registrationNumber'] = [registration_number]
 				attrs['dionysosUsername'] = [dionysos_username]
 				attrs['dionysosPassword'] = [dionysos_password]
@@ -168,7 +174,7 @@ class SignupWizard(FormWizard):
 				'username': username,
 				'eclass_username': eclass_username,
 				'dionysos_username': dionysos_username,
-				'mail': webmail_username,
+				'webmail_username': webmail_username,
 				'first_name': first_name,
 				'last_name': last_name,
 				'semester': semester,
