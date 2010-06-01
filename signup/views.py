@@ -123,7 +123,8 @@ class SignupWizard(FormWizard):
 			l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 	
 			# before adding to ldap, check if user is already there
-			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'cn=%s' % (username),settings.SEARCH_FIELDS):
+			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'cn=%s' % (username),settings.SEARCH_FIELDS) or \
+				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'dionysosUsername=%s' % (dionysos_username),settings.SEARCH_FIELDS):
 				return self.render(self.get_form(0), request, 0, context = {
 						'msg': 'Ο χρήστης υπάρχει ήδη.'
 					})
@@ -161,7 +162,7 @@ class SignupWizard(FormWizard):
 				l.unbind_s()
 			
 			# in case there is no exception in the above, send the user to a welcome site
-			template = get_template('signup.html')
+			template = get_template('welcome.html')
 			variables = Context({
 				'head_title': 'Καλώς Ήρθατε | ',
 				'username': username,
