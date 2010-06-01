@@ -29,6 +29,16 @@ h1 { width: 450px; height: 230px; margin: 0 auto; background: url("./images/logo
 
 #info ul>li { font: normal 14px/18px Verdana,Arial,sans-serif; }
 
+#welcome { width: 365px; height: 270px; float: right; border-right: solid 1px #efefef; }
+
+#welcome h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
+
+#welcome p { width: 350px; margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
+
+#welcome ul { position: relative; top: -5px; margin: 0 0 0 25px; list-style-type: disc; }
+
+#welcome ul>li { font: normal 14px/18px Verdana,Arial,sans-serif; }
+
 #login-form { width: 375px; height: 270px; float: left; border-left: solid 1px #d5d5d5; }
 
 #login-form form {
