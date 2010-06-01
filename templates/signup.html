@@ -20,11 +20,19 @@
 					<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για το cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε</p>
 				</div>
 				<div id="login-form">
-					<form action="/signup/" method="post">
+					<form action="." method="post">
+						<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+						{{ previous_fields|safe }}
 						{% for field in form %}
 						{{ field.label_tag }}{{ field }}
 						{% endfor %}
-						<input class="button" type="submit" value="Εγγραφή">
+						<input class="button" type="submit" value=
+						{% ifequal step 4 %}
+							"Εγγραφή"
+						{% else %}
+							"Επόμενο"
+						{% endifequal %}
+						/>
 						{% if msg %}
 							<p class="messages">{{ msg }}</p>
 						{% endif %}
