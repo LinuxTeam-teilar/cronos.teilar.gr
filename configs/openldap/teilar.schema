@@ -1,6 +1,10 @@
 attributetype ( 2.51.20100504.20100608.32.1 NAME 'registrationNumber'
 	DESC 'Registration Number'
 	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{8}
+#	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.2 NAME 'dionysosUsername'
 	DESC 'Username of dionysos.teilar.gr'
@@ -26,10 +30,17 @@ attributetype ( 2.51.20100504.20100608.32.4 NAME 'semester'
 attributetype ( 2.51.20100504.20100608.32.5 NAME 'introductionYear'
 	DESC 'students year of introduction'
 	SUP name )
+#	EQUALITY caseIgnoreMatch 
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{5}
+#	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.6 NAME 'declaration'
 	DESC 'dionysos.teilar.gr declaration'
 	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{100} )
 
 attributetype ( 2.51.20100504.20100608.32.7 NAME 'eclassUsername'
 	DESC 'openclass.teilar.gr username'
@@ -48,6 +59,9 @@ attributetype ( 2.51.20100504.20100608.32.8 NAME 'eclassPassword'
 attributetype ( 2.51.20100504.20100608.32.9 NAME 'eclassLessons'
 	DESC 'openclass.teilar.gr registered lessons'
 	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{2048} )
 
 attributetype ( 2.51.20100504.20100608.32.10 NAME 'webmailUsername'
 	DESC 'myweb.teilar.gr username'
@@ -64,8 +78,11 @@ attributetype ( 2.51.20100504.20100608.32.11 NAME 'webmailPassword'
 	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.12 NAME 'school'
-	DESC 'school'
-	SUP name )
+	DESC 'school cid (not name)'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{5}
+	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.13 NAME 'teacherAnnouncements'
 	DESC 'teacher Announcements pids'
@@ -82,6 +99,10 @@ attributetype ( 2.51.20100504.20100608.32.14 NAME 'otherAnnouncements'
 attributetype ( 2.51.20100504.20100608.32.15 NAME 'firstName'
 	DESC 'first name'
 	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{100}
+#	SINGLE-VALUE )
 
 objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarStudent'
 	DESC 'Credentials of a Student of Tei Larissas'
@@ -124,7 +145,7 @@ objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarStudent'
 #	SUBSTR caseIgnoreSubstringsMatch
 #	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30} )
 
-#objectclass ( 2.51.20100504.20100608.33.2 NAME 'teilarTeacher'
+#objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarTeacher'
 #	DESC 'Teachers object class'
 #	AUXILIARY
 #	MUST ( teacherName $ teacherId $ teacherTeilarUsername $ teacherTeilarPassword )
