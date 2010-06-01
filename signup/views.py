@@ -1,22 +1,28 @@
 # -*- coding: utf-8 -*-
 
 from cronos.signup.forms import *
+from cronos.announcements.models import Id
 from django.http import HttpResponse
 from django.template import RequestContext, Context
 from django.template.loader import get_template
 from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard import FormWizard
+import base64
+import hashlib
 
 class SignupWizard(FormWizard):
 	def done(self, request, form_list):
 		username = str([form.cleaned_data for form in form_list][0]['username'])
+		#password = hashlib.sha1(str([form.cleaned_data for form in form_list][0]['password'])) ### PROBLEM PROBLEM
 		password = str([form.cleaned_data for form in form_list][0]['password'])
 		dionysos_username = str([form.cleaned_data for form in form_list][1]['dionysos_username'])
-		dionysos_password = str([form.cleaned_data for form in form_list][1]['dionysos_password'])
+		dionysos_password = base64.b64encode(str([form.cleaned_data for form in form_list][1]['dionysos_password']))
 		eclass_username = str([form.cleaned_data for form in form_list][2]['eclass_username'])
-		eclass_password = str([form.cleaned_data for form in form_list][2]['eclass_password'])
+		if eclass_username:
+			eclass_password = base64.b64encode(str([form.cleaned_data for form in form_list][2]['eclass_password']))
 		webmail_username = str([form.cleaned_data for form in form_list][3]['webmail_username'])
-		webmail_password = str([form.cleaned_data for form in form_list][3]['webmail_password'])
+		if webmail_username:
+			webmail_password = base64.b64encode(str([form.cleaned_data for form in form_list][3]['webmail_password']))
 		try:
 			from BeautifulSoup import BeautifulSoup
 			import pycurl
@@ -33,7 +39,7 @@ class SignupWizard(FormWizard):
 			cookie_file_name = os.tempnam('/tmp','dionysos')
 			login_form_seq = [
 				('userName', dionysos_username),
-				('pwd', dionysos_password),
+				('pwd', base64.b64decode(dionysos_password)),
 				('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
 				('loginTrue', 'login')
 			]
@@ -52,7 +58,6 @@ class SignupWizard(FormWizard):
 			output = (b.getvalue()).decode('windows-1253')
 			soup = BeautifulSoup(output)
 			soup1 = BeautifulSoup(str(soup.findAll('table')[13]))
-			#username = str(soup1.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[5]))
 			last_name = str(soup2.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[6]))
@@ -62,16 +67,16 @@ class SignupWizard(FormWizard):
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[9]))
 			semester = str(soup2.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[8]))
-			school = str(soup2.findAll('td')[1].contents[0])
+			school = str(soup2.findAll('td')[1].contents[0]).strip()
 			# missing introduction_year
 			# missing declaration'''
-			
+	
 			# login to eclass
 			if eclass_username:
 				b = StringIO.StringIO()
 				login_form_seq = [
-					('uname', 'cst01387'),
-					('pass', 'h0m3b*yz'),
+					('uname', eclass_username),
+					('pass', base64.b64decode(eclass_password)),
 					('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82')
 				]
 				login_form_data = urllib.urlencode(login_form_seq)
@@ -88,7 +93,13 @@ class SignupWizard(FormWizard):
 			if webmail_username:
 				b = StringIO.StringIO()
 				cookie_file_name = os.tempnam('/tmp','webmail')
-				login_form_data = urllib.urlencode(login('webmail'))
+				login_form_seq = [
+					('login_username', webmail_username),
+					('secretkey', base64.b64decode(webmail_password)),
+					('js_autodetect_results', '1'),
+					('just_logged_in', '1')
+				]
+				login_form_data = urllib.urlencode(login_form_seq)
 				conn.setopt(pycurl.FOLLOWLOCATION, 0)
 				conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
 				conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
@@ -122,27 +133,35 @@ class SignupWizard(FormWizard):
 				attrs['cn'] =  [username]
 				attrs['sn'] = [last_name]
 				attrs['firstName'] = [first_name]
-				attrs['userPassword'] = [password]
-				attrs['school'] = [school]
+				attrs['userPassword'] = [password]#.hexdigest()]
+				# add cid instead of full name in school attr
+				db = Id.objects.filter(name__exact = (school))
+				for item in db:
+					cid = str(item.urlid)
+				attrs['school'] = [cid]
 				attrs['semester'] = [semester]
 				attrs['introductionYear'] = ['2004x']
 				attrs['registrationNumber'] = [registration_number]
-				attrs['eclassUsername'] = [eclass_username]
-				attrs['eclassPassword'] = ['eclass']#str(eclass_password)]
-				attrs['dionysosUsername'] = [str(dionysos_username)]
-				attrs['dionysosPassword'] = ['dio']
-				#attrs['webmailUsername'] = [str(webmail_username)]
-				#attrs['webmailPassword'] = [str(webmail_password)]
-				#('declaration', declaration),
-				#('eclassLessons', eclass_lessons),
-				#('teacherAnnouncements', teacher_announcements),
+				attrs['dionysosUsername'] = [dionysos_username]
+				attrs['dionysosPassword'] = [dionysos_password]
+				#attrs['declaration'] = [declaration]
+				#attrs['teacherAnnouncements'] = [teacher_announcements]
+				if eclass_username:
+					attrs['eclassUsername'] = [eclass_username]
+					attrs['eclassPassword'] = [eclass_password]
+				#if eclass_lessons:
+				#	attrs['eclassLessons'] = [eclass_lessons]
+				if webmail_username:
+					attrs['webmailUsername'] = [webmail_username]
+					attrs['webmailPassword'] = [webmail_password]
 
 				ldif = modlist.addModlist(attrs)
+				print ldif
 				l.add_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
 				l.unbind_s()
 			
 			# in case there is no exception in the above, send the user to a welcome site
-			template = get_template('welcome.html')
+			template = get_template('signup.html')
 			variables = Context({
 				'head_title': 'Καλώς Ήρθατε | ',
 				'username': username,
@@ -153,11 +172,8 @@ class SignupWizard(FormWizard):
 				'last_name': last_name,
 				'semester': semester,
 				'school': school,
-				#'introduction_year': introduction_year,
+				'introduction_year': introduction_year,
 				'registration_number': registration_number,
-				#'declaration': declaration,
-				#'eclass_lessons': eclass_lessons,
-				'form': [form.cleaned_data for form in form_list]
 			})
 			output = template.render(variables)
 			return HttpResponse(output)
