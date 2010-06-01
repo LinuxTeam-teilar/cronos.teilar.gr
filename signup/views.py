@@ -2,6 +2,7 @@
 
 from cronos.signup.forms import *
 from cronos.announcements.models import Id
+from django.conf import settings
 from django.http import HttpResponse
 from django.template import RequestContext, Context
 from django.template.loader import get_template
@@ -203,4 +204,4 @@ class SignupWizard(FormWizard):
 			), context_instance=RequestContext(request))
 
 	def get_template(self, step):
-		return '/home/tampakrap/Source_Code/ptixiaki/cronos/templates/signup.html'
+		return settings.PROJECT_ROOT + 'templates/signup.html'
