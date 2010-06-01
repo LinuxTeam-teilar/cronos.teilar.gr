@@ -4,6 +4,9 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
 
+from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
+from cronos.signup.views import SignupWizard
+
 from cronos.announcements.feeds import LatestEntries
 
 from cronos.main.views import *
@@ -11,7 +14,6 @@ from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
-from cronos.signup.views import *
 
 admin.autodiscover()
 
@@ -27,11 +29,12 @@ urlpatterns = patterns('',
 	(r'^announcements/', announcements),
 	(r'^login/', login),
 	(r'^logout/', logout),
-	(r'^signup/', signup),
 
 	url(r'^library/', include('cronos.library.urls')),
 
 	url(r'^ldap/', include('cronos.ldap_groups.urls')),
+
+	(r'^signup/', SignupWizard([SignupCronos, SignupDionysos, SignupEclass, SignupWebmail])),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
