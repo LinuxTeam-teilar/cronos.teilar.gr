@@ -19,11 +19,12 @@ for item in Announcements.objects.order_by('-date_fetched')[:30]:
 		img = 'eclass'
 	if (item.urlid.urlid[:3] == 'pid'):
 		img = 'teacher'
-	if (item.urlid.urlid == 'pid323') or (item.urlid.urlid == 'pid324') or (item.urlid.urlid == 'pid326') or (item.urlid.urlid == 'pid327'):
+	if (item.urlid.urlid == 'pid323') or (item.urlid.urlid == 'pid324'):
 		img = item.urlid.urlid
-	if (item.urlid.urlid[:3] == 'cid') and (item.urlid.urlid[1:] > 0) and (item.urlid.urlid[1:] < 50):
+	if (item.urlid.urlid == 'pid326') or (item.urlid.urlid == 'pid327'):
+		img == 'meeting'
+	if (item.urlid.urlid[:3] == 'cid') and (int(item.urlid.urlid[3:]) > 0) and (int(item.urlid.urlid[3:]) < 50):
 		img = 'department'
-	if (item.urlid.urlid[
 	announce1 = [img, item.author(), str(item.date()), str(item.id), item.__unicode__()]
 	for j in xrange(5):
 		announce_list[i].append(announce1[j][:])
@@ -35,17 +36,18 @@ def announcements(request):
 	if (len(str(request.GET.get('announceid'))) != 4):
 		db = Announcements.objects.filter(id__exact = request.GET.get('announceid'))
 		for item in db:
-			announce2 = [item.author(), str(item.date()), item.__unicode__(), item.get_absolute_url(), item.body()]
+			announce_body = [item.author(), str(item.date()), item.__unicode__(), item.get_absolute_url(), item.body()]
 		template = get_template('announcements.html')
 		variables = Context({
-			'id': 'set',
-			'content': announce2,
+			'head_title': 'Ανακοινώσεις |'
+			'content': announce_body,
 		})
 		output = template.render(variables)
 		return HttpResponse(output)
 	else:
 		template = get_template('announcements.html')
 		variables = Context({
+			'head_title': 'Ανακοινώσεις |'
 			'items': announce_list,
 			'MEDIA_URL': settings.MEDIA_URL,
 		})
