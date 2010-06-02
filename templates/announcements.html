@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% ifequal id 'set' %}
+{% if content %}
 <table>
 {% for i in content %}
 	<tr><td>{{i|safe}}</td></tr>
@@ -36,7 +36,7 @@
 	{% endfor %}
 {% endfor %}
 </table>
-{% endifequal %}
+{% endif %}
 
 <form action="/announcements/" method="get">
 <input type="hidden" name="announceid">
