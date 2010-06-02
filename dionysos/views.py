@@ -41,7 +41,7 @@ am = str(soup2.findAll('td')[1].contents[0])
 soup2 = BeautifulSoup(str(soup1.findAll('tr')[9]))
 eksamino = str(soup2.findAll('td')[1].contents[0])
 soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
-intr_year = str(eisagogi1.findAll('span','tablecell')[0].contents[0].split('-')[0]) + str(souptest.findAll('span','tablecell')[1].contents[0])[:2]
+intr_year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0]) + str(soup2t.findAll('span','tablecell')[1].contents[0])[:2]
 
 
 
