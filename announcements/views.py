@@ -39,7 +39,7 @@ def announcements(request):
 			announce_body = [item.author(), str(item.date()), item.__unicode__(), item.get_absolute_url(), item.body()]
 		template = get_template('announcements.html')
 		variables = Context({
-			'head_title': 'Ανακοινώσεις |'
+			'head_title': 'Ανακοινώσεις |',
 			'content': announce_body,
 		})
 		output = template.render(variables)
@@ -47,7 +47,7 @@ def announcements(request):
 	else:
 		template = get_template('announcements.html')
 		variables = Context({
-			'head_title': 'Ανακοινώσεις |'
+			'head_title': 'Ανακοινώσεις |',
 			'items': announce_list,
 			'MEDIA_URL': settings.MEDIA_URL,
 		})
