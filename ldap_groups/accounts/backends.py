@@ -5,7 +5,7 @@ import ldap.filter
 
 from django.conf import settings
 from django.contrib.auth.models import User, Group
-from cronos.profildap.models import LdapProfile
+from cronos.user.models import LdapProfile
 
 from cronos.ldap_groups.models import LDAPGroup
 
