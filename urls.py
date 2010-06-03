@@ -27,8 +27,7 @@ urlpatterns = patterns('',
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
 	(r'^announcements/', announcements),
-	(r'^login/', login),
-	(r'^logout/', logout),
+	(r'^logout/', mylogout),
 
 	url(r'^library/', include('cronos.library.urls')),
 

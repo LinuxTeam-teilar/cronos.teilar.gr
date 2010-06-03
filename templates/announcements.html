@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if content %}
+{% if id %}
 <table>
-{% for i in content %}
+{% for i in items %}
 	<tr><td>{{i|safe}}</td></tr>
 {% endfor %}
 </table>

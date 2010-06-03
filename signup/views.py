@@ -3,9 +3,7 @@
 from cronos.signup.forms import *
 from cronos.announcements.models import Id
 from django.conf import settings
-from django.http import HttpResponse
-from django.template import RequestContext, Context
-from django.template.loader import get_template
+from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard import FormWizard
 import base64
@@ -28,7 +26,6 @@ class SignupWizard(FormWizard):
 			webmail_password = base64.b64encode(str([form.cleaned_data for form in form_list][3]['webmail_password']))
 		else:
 			webmail_username = ''
-
 		try:
 			from BeautifulSoup import BeautifulSoup
 			import pycurl
@@ -74,10 +71,11 @@ class SignupWizard(FormWizard):
 			semester = str(soup2.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[8]))
 			school = str(soup2.findAll('td')[1].contents[0]).strip()
-			# missing introduction_year, hardcode for now
-			introduction_year = '2004Χ'
+			soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
+			introduction_year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0]) + \
+								str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
 			# missing declaration'''
-	
+
 			# login to eclass
 			if eclass_username:
 				b = StringIO.StringIO()
@@ -136,6 +134,7 @@ class SignupWizard(FormWizard):
 						'msg': 'Ο χρήστης υπάρχει ήδη.'
 					})
 			else:
+				print 'edo'
 				attrs = {}
 				attrs['objectClass'] = ['person','top','teilarStudent']
 				attrs['cn'] =  [username]
@@ -147,6 +146,7 @@ class SignupWizard(FormWizard):
 				for item in db:
 					cid = str(item.urlid)
 				attrs['school'] = [cid]
+				print school
 				attrs['semester'] = [semester]
 				attrs['introductionYear'] = [introduction_year]
 				attrs['registrationNumber'] = [registration_number]
@@ -164,44 +164,28 @@ class SignupWizard(FormWizard):
 					attrs['webmailPassword'] = [webmail_password]
 
 				ldif = modlist.addModlist(attrs)
-				print ldif
 				l.add_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
 				l.unbind_s()
 			
 			# in case there is no exception in the above, send the user to a welcome site
-			template = get_template('welcome.html')
-			variables = Context({
-				'head_title': 'Καλώς Ήρθατε | ',
-				'username': username,
-				'eclass_username': eclass_username,
-				'dionysos_username': dionysos_username,
-				'webmail_username': webmail_username,
-				'first_name': first_name,
-				'last_name': last_name,
-				'semester': semester,
-				'school': school,
-				'introduction_year': introduction_year,
-				'registration_number': registration_number,
-			})
-			output = template.render(variables)
-			return HttpResponse(output)
+			return render_to_response('welcome.html', {
+					'head_title': 'Καλώς Ήρθατε | ',
+					'username': username,
+					'eclass_username': eclass_username,
+					'dionysos_username': dionysos_username,
+					'webmail_username': webmail_username,
+					'first_name': first_name,
+					'last_name': last_name,
+					'semester': semester,
+					'school': school,
+					'introduction_year': introduction_year,
+					'registration_number': registration_number,
+				}, context_instance = RequestContext(request))
 		except:
 			return self.render(self.get_form(0), request, 0, context = {
 					'msg': 'Παρουσιάστηκε Σφάλμα',
+					'head_title': 'Εγγραφή | ',
 				})
-
-	def render_template(self, request, form, previous_fields, step, context=None):
-		context = context or {}
-		context.update(self.extra_context)
-		return render_to_response(self.get_template(step), dict(context,
-				step_field=self.step_field_name,
-				step0=step,
-				step=step + 1,
-				step_count=self.num_steps(),
-				form=form,
-				previous_fields=previous_fields,
-				head_title = 'Εγγραφή | ',
-			), context_instance=RequestContext(request))
 
 	def get_template(self, step):
 		return settings.PROJECT_ROOT + 'templates/signup.html'

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% ifequal passed_id 'set' %}
-{{content|safe}}
+{% if id %}
+{{items|safe}}
 {% else %}
 <table align="center">
 <tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr>
@@ -35,7 +35,7 @@
 	</tr>
 {% endfor %}
 </table>
-{% endifequal %}
+{% endif %}
 
 <form action="/webmail/" method="get">
 <input type="hidden" name="passed_id">
