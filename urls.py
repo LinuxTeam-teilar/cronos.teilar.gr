@@ -9,7 +9,7 @@ from cronos.signup.views import SignupWizard
 
 from cronos.announcements.feeds import LatestEntries
 
-from cronos.main.views import *
+from cronos.login.views import *
 from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
@@ -22,7 +22,7 @@ feeds = {
 	}
 
 urlpatterns = patterns('',
-	(r'^$', main),
+	(r'^$', mylogin),
 	(r'^eclass/', eclass),
 #	(r'^dionysos', dionysos),
 	(r'^webmail/', webmail),
