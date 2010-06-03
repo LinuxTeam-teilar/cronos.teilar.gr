@@ -40,7 +40,7 @@ urlpatterns = patterns('',
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
 	(r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
-
+	
 	# Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
 	# to INSTALLED_APPS to enable admin documentation:
 	# (r'^admin/doc/', include('django.contrib.admindocs.urls')),

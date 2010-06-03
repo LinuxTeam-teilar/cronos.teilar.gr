@@ -20,7 +20,7 @@
 					<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για το cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε</p>
 				</div>
 				<div id="login-form">
-					<form action="." method="post">{% csrf_token %}
+					<form action="." method="post">
 						<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
 						{{ previous_fields|safe }}
 						{% for field in form %}
