@@ -5,7 +5,7 @@ import StringIO
 import urllib
 import os
 import urlparse
-from cronos.passwords import *
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from cronos.webmail.forms import *
 from BeautifulSoup import BeautifulSoup
@@ -16,7 +16,13 @@ def webmail_login(link):
 	b = StringIO.StringIO()
 	conn = pycurl.Curl()
 	cookie_file_name = os.tempnam('/tmp','webmail')
-	login_form_data = urllib.urlencode(login('webmail'))
+	login_form_seq = [
+		('login_username', request.user.get_profile().webmail_username),
+		('secretkey', base64.b64decode(request.user.get_profile().webmail_password)),
+		('js_autodetect_results', '1'),
+		('just_logged_in', '1')
+	]
+	login_form_data = urllib.urlencode(login_form_seq)
 	conn.setopt(pycurl.FOLLOWLOCATION, 0)
 	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
 	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)

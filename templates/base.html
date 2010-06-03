@@ -17,17 +17,32 @@
 					<ul id="menu">
 						<a href="/">Αρχική</a>
 						<a href="/announcements/">Ανακοινώσεις</a>
+						{% if user.is_authenticated %}
+						{% if user.get_profile.eclass_username %}
 						<a href="/eclass/">E-class</a>
+						{% endif %}
+						{% if user.get_profile.webmail_username %}
 						<a href="/webmail/">E-mail</a>
-						<a href="/library/">Αναζήτηση Βιβλιοθήκης</a>
+						{% endif %}
 						<a href="/dionysos/">Η δήλωση μου</a>
+						{% endif %}
+						<a href="/library/">Αναζήτηση Βιβλιοθήκης</a>
+						{% if user.is_authenticated %}
+						<a href="/settings/">Προφίλ</a>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
 			<div id="main">
+				{% if user.is_authenticated %}
 				<div id="profile">
-					{% block profile %}<a href="/logout/">Αποσύνδεση</a>{% endblock %}
+					<b>Ονοματεπώνυμο:</b> {{user.first_name}} {{user.last_name}}
+					<b>Εξάμηνο:</b> {{user.get_profile.semester}}
+					<b>Έτος Εισαγωγής:</b> {{user.get_profile.introduction_year}}
+					<b>Αριθμός Μητρώου:</b> {{user.get_profile.registration_number}}
+					<a href="/logout/">Αποσύνδεση</a>
 				</div>
+				{% endif %}
 				<div id="content">
 					{% block content %}{% endblock %}
 				</div>
