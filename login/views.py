@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from cronos.main.forms import *
+from cronos.login.forms import *
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import login, authenticate, logout
 
-def main(request) :
+def mylogin(request):
 	msg = ''
-	template = 'login.html'
-	head_title = 'Είσοδος | '
 	form = ''
 	if request.method == "POST":
 		form = LoginForm(request.POST)
@@ -19,18 +17,16 @@ def main(request) :
 		if user is not None:
 			if user.is_active:
 				login(request, user)
-				template = 'main.html'
-				head_title = 'Αρχική | '
+				return HttpResponseRedirect('/user')
 		else:
 			msg = 'Λάθος Κωδικός'
 	else:
 		if request.user.is_authenticated():
-			template = 'main.html',
-			head_title = 'Αρχική | ',
+			return HttpResponseRedirect('/user')
 		else:
 			form = LoginForm()
-	return render_to_response(template, {
-			'head_title': head_title,
+	return render_to_response('login.html', {
+			'head_title': 'Είσοδος | ',
 			'msg': msg,
 			'form': form,
 		}, context_instance = RequestContext(request))
