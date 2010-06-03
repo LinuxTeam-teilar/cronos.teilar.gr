@@ -5,15 +5,12 @@ import StringIO
 import urllib
 import os
 import urlparse
-from types import *
 from cronos.passwords import *
 from django.contrib.auth.decorators import login_required
 from cronos.webmail.forms import *
 from BeautifulSoup import BeautifulSoup
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import Context
-from django.template.loader import get_template
+from django.template import RequestContext
 
 def webmail_login(link):
 	b = StringIO.StringIO()
@@ -40,29 +37,22 @@ def webmail_login(link):
 
 @login_required
 def webmail(request):
-	form = MailForm(request.GET)
-	if (len(str(request.GET.get('passed_id'))) == 3):
+	id = ''
+	if (request.GET.get('passed_id')):
+		form = MailForm(request.GET)
 		link = 'http://myweb.teilar.gr/src/read_body.php?mailbox=INBOX&passed_id=' + str(request.GET.get('passed_id')) + '&startMessage=1'
 		output = webmail_login(link)
-
-		soup = BeautifulSoup(output).findAll('table')[7]
-		template = get_template('webmail.html')
-		variables = Context({
-			'passed_id': 'set',
-			'content': soup,
-		})
-		output = template.render(variables)
-		return HttpResponse(output)
+		mail = BeautifulSoup(output).findAll('table')[7]
+		id = request.GET.get('passed_id')
 	else:
+		form = MailForm()
 		link = 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX'
 		output = webmail_login(link)
-
 		soup = BeautifulSoup(output).findAll('table')[9]
 		soup1 = soup.findAll('tr')
 		mail = []
 		mail1 = []
 		k = 0
-
 		for i in xrange(1, len(soup1)):
 			if (len(str(soup1[i].find('a'))) > 4):
 				mail.append([])
@@ -79,11 +69,8 @@ def webmail(request):
 				for j in xrange(6):
 					mail[k].append(mail1[j][:])
 				k+=1
-
-		template = get_template('webmail.html')
-		variables = Context({
+	return render_to_response('webmail.html', {
+			'form': form,
 			'items': mail,
-		})
-		output = template.render(variables)
-		return HttpResponse(output)
-	return render_to_response('webmail.html', {'form': form, } )
+			'id': id
+		}, context_instance = RequestContext(request))

@@ -3,8 +3,8 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<title>{{ head_title }}Cronos</title>
-		<link rel="stylesheet" href="/other/reset.css">
-		<link rel="stylesheet" href="/other/style_login.css">
+		<link rel="stylesheet" href="{{MEDIA_URL}}reset.css">
+		<link rel="stylesheet" href="{{MEDIA_URL}}style_login.css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 		<script type="text/javascript">
 		</script>
@@ -27,10 +27,9 @@
 				</div>
 				<div id="login-form">
 					<form action="." method="POST">
-						<label for="username">Όνομα Χρήστη:</label>
-						<input type="text" name="username" id="username">
-						<label for="password">Κωδικός Πρόσβασης:</label>
-						<input type="password" name="password" id="password">
+						{% for field in form %}
+						{{ field.label_tag }}{{ field }}
+						{% endfor %}
 						<input class="button" type="submit" value="Είσοδος">
 						<!--<a href="#">Ξεχάσατε τον κωδικό σας;</a>-->
 						{% if msg %}

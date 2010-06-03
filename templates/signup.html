@@ -3,8 +3,8 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<title>{{ head_title }}Cronos</title>
-		<link rel="stylesheet" href="/other/reset.css">
-		<link rel="stylesheet" href="/other/style_login.css">
+		<link rel="stylesheet" href="/{{MEDIA_URL}}reset.css">
+		<link rel="stylesheet" href="{{MEDIA_URL}}style_login.css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 		<script type="text/javascript">
 		</script>
@@ -20,7 +20,7 @@
 					<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για το cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε</p>
 				</div>
 				<div id="login-form">
-					<form action="." method="post">
+					<form action="." method="post">{% csrf_token %}
 						<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
 						{{ previous_fields|safe }}
 						{% for field in form %}

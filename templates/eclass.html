@@ -1,11 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for item in a %}
-	{% ifequal forloop.counter0 2 %}
-		<b>{{item|safe}}</b><br />
-	{% else %}
-		{{item|safe}}<br />
-	{% endifequal %}
+{% for item in header %}
+	<ul>
+		<li><b>{{item|safe}}</b></li>
+	</ul>
 {% endfor %}
 {% endblock %}
