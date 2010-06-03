@@ -14,6 +14,7 @@ from cronos.eclass.views import *
 #from cronos.dionysos.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
+from cronos.user.views import *
 
 admin.autodiscover()
 
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
 	(r'^webmail/', webmail),
 	(r'^announcements/', announcements),
 	(r'^logout/', mylogout),
+	(r'^user/', user),
 
 	url(r'^library/', include('cronos.library.urls')),
 

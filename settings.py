@@ -60,7 +60,7 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 	'cronos.announcements',
 	'cronos.ldap_groups',
-	'cronos.profildap',
+	'cronos.user',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -72,7 +72,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_URL = '/'
 
 # Needed for the custom user profile
-AUTH_PROFILE_MODULE = 'profildap.LdapProfile'
+AUTH_PROFILE_MODULE = 'user.LdapProfile'
 
 # LDAP
 LDAP_SERVER = 'localhost'
