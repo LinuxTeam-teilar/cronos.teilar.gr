@@ -4,6 +4,13 @@
 {% for item in header %}
 	<ul>
 		<li><b>{{item|safe}}</b></li>
+			<ul>
+				{%ifequal forloop.counter0 0 %}
+					{% for lesson in eclass_lessons %}
+					<li>{{lesson|safe}}</li>
+					{% endfor %}
+				{% endifequal %}
+			</ul>
 	</ul>
 {% endfor %}
 {% endblock %}

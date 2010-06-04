@@ -29,10 +29,12 @@ def eclass(request):
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
+	eclass_lessons = request.user.get_profile().eclass_lessons.split(',')
 	header = []
 	for i in xrange(len(soup.findAll('th', 'persoBoxTitle'))):
 		header.append(soup.findAll('th', 'persoBoxTitle')[i].contents[0])
 	return render_to_response('eclass.html', {
 			'head_title': 'Eclass | ',
 			'header': header,
+			'eclass_lessons': eclass_lessons,
 		}, context_instance = RequestContext(request))
