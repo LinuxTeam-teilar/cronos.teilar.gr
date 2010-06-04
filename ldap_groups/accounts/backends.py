@@ -132,29 +132,22 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				
 				if result.has_key('eclassUsername'):
 					eclass_username = result['eclassUsername'][0]
+					eclass_password = result['eclassPassword'][0]	
+					if result.has_key('eclassLessons'):
+						eclass_lessons = ','.join(result['eclassLessons'])
+					else:
+						eclass_lessons = None
 				else:
 					eclass_username = None
-
-				if result.has_key('eclassPassword'):
-					eclass_password = result['eclassPassword'][0]
-				else:
 					eclass_password = None
-				
-				if result.has_key('eclassLessons'):
-					eclass_lessons = ','.join(result['eclassLessons'])
-				else:
-					eclass_lessons = None
 
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
 					webmail_username = result['webmailUsername'][0]
+					webmail_password = result['webmailPassword'][0]
 				else:
 					mail = '%s@not_applicable_mail.com' % (username)
 					webmail_username = None
-
-				if result.has_key('webmailPassword'):
-					webmail_password = result['webmailPassword'][0]
-				else:
 					webmail_password = None
 
 				if result.has_key('teacherAnnouncements'):

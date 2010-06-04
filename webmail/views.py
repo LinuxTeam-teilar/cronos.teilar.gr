@@ -57,11 +57,9 @@ def webmail(request):
 		soup = BeautifulSoup(output).findAll('table')[9]
 		soup1 = soup.findAll('tr')
 		mail = []
-		mail1 = []
 		k = 0
 		for i in xrange(1, len(soup1)):
 			if (len(str(soup1[i].find('a'))) > 4):
-				mail.append([])
 				sender_name = str(soup1[i].findAll('td')[1].contents[0].contents[0])
 				sender_mail = str(soup1[i].findAll('td')[1]).split('"')[5]
 				passed_id = str(soup1[i].find('a')).split('&amp;')[1].replace('passed_id=', '')
@@ -71,10 +69,7 @@ def webmail(request):
 					full_title = str(soup1[i].findAll('td')[4].a).split('"')[3]
 				except (TypeError, IndexError):
 					full_title = ''
-				mail1 = [sender_mail, sender_name, time, passed_id, full_title, title]
-				for j in xrange(6):
-					mail[k].append(mail1[j][:])
-				k+=1
+				mail.append([sender_mail, sender_name, time, passed_id, full_title, title])
 	return render_to_response('webmail.html', {
 			'form': form,
 			'items': mail,

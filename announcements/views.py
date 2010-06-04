@@ -7,7 +7,6 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
 
-
 @login_required
 def announcements(request):
 	id = ''
@@ -23,7 +22,6 @@ def announcements(request):
 		i = 0
 		for item in Announcements.objects.order_by('-date_fetched'):
 			if request.user.get_profile().school == item.urlid.urlid or item.urlid.urlid == 'cid52' or item.urlid.urlid == 'cid55' or item.urlid.urlid == 'cid51': #got to finish it
-				announce.append([])
 				img = item.urlid.urlid
 				if (item.urlid.urlid[:2] == 'CS'):
 					img = 'eclass'
@@ -35,12 +33,10 @@ def announcements(request):
 					img == 'meeting'
 				if (item.urlid.urlid[:3] == 'cid') and (int(item.urlid.urlid[3:]) > 0) and (int(item.urlid.urlid[3:]) < 50):
 					img = 'department'
-				announce1 = [img, item.author(), str(item.date()), str(item.id), item.__unicode__()]
-				for j in xrange(5):
-					announce[i].append(announce1[j][:])
+				announce.append([img, item.author(), str(item.date()), str(item.id), item.__unicode__()])
+				if i == 30:
+					break
 				i += 1
-			if i == 30:
-				break
 	return render_to_response('announcements.html', {
 			'head_title': 'Ανακοινώσεις | ',
 			'items': announce,
