@@ -74,7 +74,32 @@ class SignupWizard(FormWizard):
 			soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
 			introduction_year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0]) + \
 								str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
-			# missing declaration'''
+			b = StringIO.StringIO()
+			conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
+			conn.setopt(pycurl.POST, 1)
+			conn.setopt(pycurl.POSTFIELDS, login_form_data)
+			conn.setopt(pycurl.COOKIE, cookie_file_name)
+			conn.setopt(pycurl.WRITEFUNCTION, b.write)
+			conn.perform()
+			output = (b.getvalue()).decode('windows-1253')
+			soup = BeautifulSoup(output)
+			soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
+
+			declaration = []
+			declaration.append([])
+			for item in soup1.findAll('td', 'error'):
+				declaration[0].append(str(item.contents[0]))
+			k = 8
+			for i in xrange(len(soup1.findAll('span', 'underline'))):
+				declaration.append([
+					str(soup1.findAll('td')[k].contents[2][6:]),
+					str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
+					str(soup1.findAll('td')[k+2].contents[0]),
+					str(soup1.findAll('td')[k+3].contents[0]),
+					str(soup1.findAll('td')[k+4].contents[0]),
+					str(soup1.findAll('td')[k+5].contents[0])
+				])
+				k += 7
 
 			# login to eclass
 			if eclass_username:
@@ -134,7 +159,6 @@ class SignupWizard(FormWizard):
 						'msg': 'Ο χρήστης υπάρχει ήδη.'
 					})
 			else:
-				print 'edo'
 				attrs = {}
 				attrs['objectClass'] = ['person','top','teilarStudent']
 				attrs['cn'] =  [username]
@@ -146,13 +170,15 @@ class SignupWizard(FormWizard):
 				for item in db:
 					cid = str(item.urlid)
 				attrs['school'] = [cid]
-				print school
 				attrs['semester'] = [semester]
 				attrs['introductionYear'] = [introduction_year]
 				attrs['registrationNumber'] = [registration_number]
 				attrs['dionysosUsername'] = [dionysos_username]
 				attrs['dionysosPassword'] = [dionysos_password]
-				#attrs['declaration'] = [declaration]
+				attrs['declaration'] = []
+				for i in xrange(len(declaration)):
+					attrs['declaration'].append(','.join(declaration[i]))
+					
 				#attrs['teacherAnnouncements'] = [teacher_announcements]
 				if eclass_username:
 					attrs['eclassUsername'] = [eclass_username]
