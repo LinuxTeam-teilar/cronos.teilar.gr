@@ -74,32 +74,36 @@ class SignupWizard(FormWizard):
 			soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
 			introduction_year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0]) + \
 								str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
-			b = StringIO.StringIO()
-			conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
-			conn.setopt(pycurl.POST, 1)
-			conn.setopt(pycurl.POSTFIELDS, login_form_data)
-			conn.setopt(pycurl.COOKIE, cookie_file_name)
-			conn.setopt(pycurl.WRITEFUNCTION, b.write)
-			conn.perform()
-			output = (b.getvalue()).decode('windows-1253')
-			soup = BeautifulSoup(output)
-			soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
+			try:
+				b = StringIO.StringIO()
+				conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
+				conn.setopt(pycurl.POST, 1)
+				conn.setopt(pycurl.POSTFIELDS, login_form_data)
+				conn.setopt(pycurl.COOKIE, cookie_file_name)
+				conn.setopt(pycurl.WRITEFUNCTION, b.write)
+				conn.perform()
+				output = (b.getvalue()).decode('windows-1253')
+				soup = BeautifulSoup(output)
+				soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
 
-			declaration = []
-			declaration.append([])
-			for item in soup1.findAll('td', 'error'):
-				declaration[0].append(str(item.contents[0]))
-			k = 8
-			for i in xrange(len(soup1.findAll('span', 'underline'))):
-				declaration.append([
-					str(soup1.findAll('td')[k].contents[2][6:]),
-					str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
-					str(soup1.findAll('td')[k+2].contents[0]),
-					str(soup1.findAll('td')[k+3].contents[0]),
-					str(soup1.findAll('td')[k+4].contents[0]),
-					str(soup1.findAll('td')[k+5].contents[0])
-				])
-				k += 7
+				declaration = []
+				declaration.append([])
+				for item in soup1.findAll('td', 'error'):
+					declaration[0].append(str(item.contents[0]))
+				k = 8
+				for i in xrange(len(soup1.findAll('span', 'underline'))):
+					declaration.append([
+						str(soup1.findAll('td')[k].contents[2][6:]),
+						str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
+						str(soup1.findAll('td')[k+2].contents[0]),
+						str(soup1.findAll('td')[k+3].contents[0]),
+						str(soup1.findAll('td')[k+4].contents[0]),
+						str(soup1.findAll('td')[k+5].contents[0])
+					])
+					k += 7
+			except:
+				declaration = ''
+				pass
 
 			# login to eclass
 			if eclass_username:
@@ -116,8 +120,15 @@ class SignupWizard(FormWizard):
 				conn.setopt(pycurl.WRITEFUNCTION, b.write)
 				conn.perform()
 				output = unicode(b.getvalue(), 'utf-8', 'ignore')
-				soup = BeautifulSoup(output)
-				# ...and then parse his lessons
+				soup = BeautifulSoup(output).find('table', 'FormData')
+				i = 0
+				eclass_lessons = []
+				for item in soup.findAll('a'):
+					if (i % 2 == 0):
+						eclass_lessons.append(str(soup.findAll('a')[i].contents[0]).split('-')[0].strip())
+					i += 1
+			else:
+				eclass_lessons = ''
 
 			# login to webmail
 			if webmail_username:
@@ -175,16 +186,16 @@ class SignupWizard(FormWizard):
 				attrs['registrationNumber'] = [registration_number]
 				attrs['dionysosUsername'] = [dionysos_username]
 				attrs['dionysosPassword'] = [dionysos_password]
-				attrs['declaration'] = []
-				for i in xrange(len(declaration)):
-					attrs['declaration'].append(','.join(declaration[i]))
-					
-				#attrs['teacherAnnouncements'] = [teacher_announcements]
+				if declaration:
+					attrs['declaration'] = []
+					for i in xrange(len(declaration)):
+						attrs['declaration'].append(','.join(declaration[i]))
 				if eclass_username:
 					attrs['eclassUsername'] = [eclass_username]
 					attrs['eclassPassword'] = [eclass_password]
-				#if eclass_lessons:
-				#	attrs['eclassLessons'] = [eclass_lessons]
+				print 'os edo ok'
+				if eclass_lessons:
+					attrs['eclassLessons'] = eclass_lessons
 				if webmail_username:
 					attrs['webmailUsername'] = [webmail_username]
 					attrs['webmailPassword'] = [webmail_password]
@@ -192,7 +203,7 @@ class SignupWizard(FormWizard):
 				ldif = modlist.addModlist(attrs)
 				l.add_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
 				l.unbind_s()
-			
+
 			# in case there is no exception in the above, send the user to a welcome site
 			return render_to_response('welcome.html', {
 					'head_title': 'Καλώς Ήρθατε | ',
