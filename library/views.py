@@ -24,11 +24,9 @@ def library(request):
 			output = unicode(b.getvalue(), 'utf-8', 'ignore')
 			soup = BeautifulSoup(output).findAll('table')[24]
 			results = []
-			results1 = []
 			i = 4
 			k = 0
 			for item in (soup.findAll('a', 'mediumBoldAnchor')):
-				results.append([])
 				title = str(soup.findAll('td')[i].contents[0].contents[0])
 				author = ''
 				for j in (soup.findAll('td')[i+1].contents[0].contents):
@@ -37,10 +35,7 @@ def library(request):
 				for j in (soup.findAll('td')[i+2].contents[0].contents):
 					editor += str(j)
 				i += 10
-				results1 = [title, author, editor]
-				for j in xrange(3):
-					results[k].append(results1[j][:])
-				k +=  1
+				results.append([title, author, editor])
 			if (results == []):
 				msg = 'Δεν υπάρχουν αποτελέσματα'
 	else:
