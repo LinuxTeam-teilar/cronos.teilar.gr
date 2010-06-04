@@ -193,7 +193,6 @@ class SignupWizard(FormWizard):
 				if eclass_username:
 					attrs['eclassUsername'] = [eclass_username]
 					attrs['eclassPassword'] = [eclass_password]
-				print 'os edo ok'
 				if eclass_lessons:
 					attrs['eclassLessons'] = eclass_lessons
 				if webmail_username:
