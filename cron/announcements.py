@@ -429,7 +429,7 @@ for item in link:
 
 	for item in soup.findAll('span','ba'):
 		title = item.a.contents[0]
-		link1 = 'http://www.pr.teilar.gr' + str(soup.findAll('span', 'ba')[i].contents[0]).split('"')[1]
+		link1 = 'http://www.pr.teilar.gr' + str(item.contents[0]).split('"')[1]
 		
 		b = StringIO.StringIO()
 		conn.setopt(pycurl.URL, link1)
@@ -440,7 +440,7 @@ for item in link:
 
 		main_text = ''
 		for item1 in soup1.findAll('td', 'subject')[0].contents:
-			main_text += str(item)
+			main_text += str(item1)
 		main_text = p.sub(' ', main_text)
 
 		pr = Announcements(

@@ -38,7 +38,7 @@ def eclass(request):
 	for item in Id.objects.filter(urlid__in = eclass_lessons_ids):
 		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
 	eclass_announcements = []
-	for item in Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched'):
+	for item in Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched')[:15]:
 		eclass_announcements.append([item.urlid.name[9:], item.title])
 	# missing parse of ΑΤΖΕΝΤΑ, ΔΙΟΡΙΕΣ, ΕΓΓΡΑΦΑ, ΣΥΖΗΤΗΣΕΙΣ
 	return render_to_response('eclass.html', {
