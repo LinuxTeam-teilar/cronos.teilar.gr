@@ -35,15 +35,12 @@ def eclass(request):
 		header.append(item.contents[0])
 	eclass_lessons = []
 	eclass_lessons_ids = request.user.get_profile().eclass_lessons.split(',')
-	db = Id.objects.filter(urlid__in = eclass_lessons_ids)
-	for item in db:
+	for item in Id.objects.filter(urlid__in = eclass_lessons_ids):
 		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
-	db = Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched')
 	eclass_announcements = []
-	i = 0
-	for item in db:
-		print item
+	for item in Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched'):
 		eclass_announcements.append([item.urlid.name[9:], item.title])
+	# missing parse of ΑΤΖΕΝΤΑ, ΔΙΟΡΙΕΣ, ΕΓΓΡΑΦΑ, ΣΥΖΗΤΗΣΕΙΣ
 	return render_to_response('eclass.html', {
 			'head_title': 'Eclass | ',
 			'header': header,

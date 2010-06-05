@@ -18,13 +18,11 @@ conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
 
 def getid(id, i):
-	db = Id.objects.filter(urlid__exact = (id + str(i)))
-	for item in db:
+	for item in Id.objects.filter(urlid__exact = (id + str(i))):
 		return item
 
 def geteclassid(i):
-	db = Id.objects.filter(urlid__exact = i)
-	for item in db:
+	for item in Id.objects.filter(urlid__exact = i):
 		return item
 
 ### www.teilar.gr ###
@@ -41,13 +39,12 @@ for cid in xrange(30):
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(str(BeautifulSoup(output).findAll('td', 'LineDownDots')))
 
-	j = 0
+	i = 0
 
 	for item in soup.findAll('td', 'LineDownDots'):
-		link = 'http://www.teilar.gr/' + str(soup.findAll('td', 'BlackText11')[j].contents[0]).split('"')[3].replace('&amp;', '&')
-
+		link = 'http://www.teilar.gr/' + str(soup.findAll('td', 'BlackText11')[i].contents[0]).split('"')[3].replace('&amp;', '&')
+		
 		#parse each announcement
-
 		b = StringIO.StringIO()
 		conn.setopt(pycurl.URL, link)
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -59,16 +56,16 @@ for cid in xrange(30):
 		attach_text = ''
 		attach_url = ''
 
-		if len(str(soup1.find('td', 'BlackText11'))) > 5:
+		if soup1.find('td', 'BlackText11'):
 			main_text = str(soup1.find('td', 'BlackText11'))
 			main_text = p.sub(' ', main_text)   
 
-		if len(str(soup1.find('a', 'BlackText11Bold'))) > 5:
+		if soup1.find('a', 'BlackText11Bold'):
 			attach_text = str(soup1.find('a', 'BlackText11Bold').contents[0])
 			attach_url = 'http://www.teilar.gr/' + str(soup1.find('a', 'BlackText11Bold')).split('"')[3]
 
 		teilar_gr = Announcements(
-			title = str(soup.findAll('a', 'BlackText11')[j].contents[0]).strip(),
+			title = str(soup.findAll('a', 'BlackText11')[i].contents[0]).strip(),
 			url = link,
 			unique = link,
 			urlid = getid('cid', cid),
@@ -82,7 +79,7 @@ for cid in xrange(30):
 		except MySQLdb.IntegrityError:
 			pass
 
-		j += 1
+		i += 1
 
 ### www.teilar.gr/profannnews.php ###
 
@@ -96,10 +93,8 @@ for pid in xrange(350):
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
 
-	i = 0
-
 	for item in soup.findAll('td', 'LineDownDots'):
-		soup1 = BeautifulSoup(str(soup.findAll('td', 'LineDownDots')[i]))
+		soup1 = BeautifulSoup(str(item))
 		
 		main_text = ''
 		attach_text = ''
@@ -120,8 +115,6 @@ for pid in xrange(350):
 			unique = attach_url
 		else:
 			unique = main_text.strip()
-
-		i += 1
 
 		teachers_teilar_gr = Announcements(
 			title = str(soup1.findAll('td', 'BlackText11')[0].contents[0].contents[0]).strip(),
@@ -163,7 +156,7 @@ i = 0
 
 for item in soup.findAll('a'):
 	if (i%2 == 0):
-		cid = str(soup.findAll('a')[i].contents[0]).split('-')[0].strip()
+		cid = str(item.contents[0]).split('-')[0].strip()
 		link = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
 
 		b = StringIO.StringIO()
@@ -366,8 +359,8 @@ soup = BeautifulSoup(str(BeautifulSoup(output).findAll('table')[1]))
 
 for i in xrange(len(soup.findAll('th')) - 1):
 	main_text = ''
-	for j in xrange(len(soup.findAll('th')[i+1].b.contents)):
-		main_text += str(soup.findAll('th')[i+1].b.contents[j])
+	for item in soup.findAll('th')[i+1].b.contents:
+		main_text += str(item)
 	main_text = p.sub(' ', main_text)
 
 	dionysos = Announcements(
@@ -434,8 +427,8 @@ for item in link:
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
 
-	for i in xrange(len(soup.findAll('span','ba'))):
-		title = soup.findAll('span', 'ba')[i].a.contents[0]
+	for item in soup.findAll('span','ba'):
+		title = item.a.contents[0]
 		link1 = 'http://www.pr.teilar.gr' + str(soup.findAll('span', 'ba')[i].contents[0]).split('"')[1]
 		
 		b = StringIO.StringIO()
@@ -446,8 +439,8 @@ for item in link:
 		soup1 = BeautifulSoup(output)
 
 		main_text = ''
-		for j in xrange(len(soup1.findAll('td', 'subject')[0].contents)):
-			main_text += str(soup1.findAll('td', 'subject')[0].contents[j])
+		for item1 in soup1.findAll('td', 'subject')[0].contents:
+			main_text += str(item)
 		main_text = p.sub(' ', main_text)
 
 		pr = Announcements(
