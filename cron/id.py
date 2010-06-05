@@ -11,7 +11,6 @@ import urllib
 import urlparse
 import re
 import MySQLdb
-from cronos.passwords import *
 from cronos.announcements.models import *
 
 conn = pycurl.Curl()
