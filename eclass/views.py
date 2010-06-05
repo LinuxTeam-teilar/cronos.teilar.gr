@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
+from cronos.announcements.models import *
 import pycurl
 import StringIO
 import urllib
@@ -29,12 +30,23 @@ def eclass(request):
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
-	eclass_lessons = request.user.get_profile().eclass_lessons.split(',')
 	header = []
-	for i in xrange(len(soup.findAll('th', 'persoBoxTitle'))):
-		header.append(soup.findAll('th', 'persoBoxTitle')[i].contents[0])
+	for item in soup.findAll('th', 'persoBoxTitle'):
+		header.append(item.contents[0])
+	eclass_lessons = []
+	eclass_lessons_ids = request.user.get_profile().eclass_lessons.split(',')
+	db = Id.objects.filter(urlid__in = eclass_lessons_ids)
+	for item in db:
+		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
+	db = Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched')
+	eclass_announcements = []
+	i = 0
+	for item in db:
+		print item
+		eclass_announcements.append([item.urlid.name[9:], item.title])
 	return render_to_response('eclass.html', {
 			'head_title': 'Eclass | ',
 			'header': header,
 			'eclass_lessons': eclass_lessons,
+			'eclass_announcements': eclass_announcements,
 		}, context_instance = RequestContext(request))

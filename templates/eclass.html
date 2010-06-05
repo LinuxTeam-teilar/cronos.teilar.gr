@@ -6,8 +6,28 @@
 		<li><b>{{item|safe}}</b></li>
 			<ul>
 				{%ifequal forloop.counter0 0 %}
-					{% for lesson in eclass_lessons %}
-					<li>{{lesson|safe}}</li>
+					{% for i in eclass_lessons %}
+						<li>
+						{% for j in i %}
+							{% ifequal forloop.counter0 0 %}
+							{{j|safe}}:
+							{% else %}
+							{{j|safe}}
+							{% endifequal %}
+						{% endfor %}
+						</li>
+					{% endfor %}
+				{% endifequal %}
+				{% ifequal forloop.counter0 1 %}
+					{% for i in eclass_announcements %}
+						<li>
+						{% for j in i %}
+							{% ifequal forloop.counter0 0 %}
+							{{j|safe}}:
+							{% else %}
+							{{j|safe}}
+							{% endifequal %}
+						{% endfor %}
 					{% endfor %}
 				{% endifequal %}
 			</ul>

@@ -11,7 +11,6 @@ import urllib
 import urlparse 
 import re
 import MySQLdb
-from cronos.passwords import *
 from cronos.announcements.models import *
 
 conn = pycurl.Curl()
@@ -142,7 +141,12 @@ for pid in xrange(350):
 
 b = StringIO.StringIO()
 cookie_file_name = os.tempnam('/tmp', 'eclass')
-login_form_data = urllib.urlencode(login('eclass'))
+login_form_seq = [
+	('uname', ECLASS_USER),
+	('pass', ECLASS_PASSWORD),
+	('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82'),
+]
+login_form_data = urllib.urlencode(login_form_seq)
 conn.setopt(pycurl.FOLLOWLOCATION, 1)
 conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
 conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
