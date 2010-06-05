@@ -25,7 +25,6 @@ def announcements(request):
 			all_announcements_ids += request.user.get_profile().teacher_announcements.split(',')
 		except:
 			pass
-		print all_announcements_ids
 		for item in Announcements.objects.filter(urlid__urlid__in = all_announcements_ids).order_by('-date_fetched')[:30]:
 				print item
 				img = item.urlid.urlid
