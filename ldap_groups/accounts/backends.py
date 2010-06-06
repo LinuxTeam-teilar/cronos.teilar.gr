@@ -135,11 +135,10 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = result['eclassPassword'][0]	
 					if result.has_key('eclassLessons'):
 						eclass_lessons = ','.join(result['eclassLessons'])
-					else:
-						eclass_lessons = None
 				else:
 					eclass_username = None
 					eclass_password = None
+					eclass_lessons = None
 
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
