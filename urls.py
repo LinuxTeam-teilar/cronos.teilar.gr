@@ -22,6 +22,8 @@ feeds = {
 	'announcements':LatestEntries,
 	}
 
+handler500 = 'cronos.login.views.server_error'
+
 urlpatterns = patterns('',
 	(r'^$', mylogin),
 	(r'^eclass/', eclass),
