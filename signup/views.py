@@ -72,8 +72,13 @@ class SignupWizard(FormWizard):
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[8]))
 			school = str(soup2.findAll('td')[1].contents[0]).strip()
 			soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
-			introduction_year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0]) + \
-								str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
+			# introduction year is in type first_year - next_year season
+			# if season is Εαρινό we parse the second_year, else the first_year
+			season = str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
+			if season == 'Ε':
+				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[1])
+			else:
+				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0])
 			try:
 				b = StringIO.StringIO()
 				conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
