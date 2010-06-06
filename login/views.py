@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from cronos.login.forms import *
+from django import http
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.template import RequestContext, loader
 from django.contrib.auth import login, authenticate, logout
 
 def mylogin(request):
@@ -38,3 +39,14 @@ def mylogout(request):
 #todo
 #def about(request):
 #
+
+# override 500 error page, in order to pass MEDIA_URL to Context
+def server_error(request, template_name='500.html'):
+	"""
+	500 error handler.
+
+	Templates: `500.html`
+	Context: None
+	"""
+	t = loader.get_template(template_name) # You need to create a 500.html template.
+	return http.HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
