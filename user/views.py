@@ -8,5 +8,5 @@ from django.contrib.auth.models import User
 @login_required
 def user(request):
 	return render_to_response('user.html', {
-			'head_title': str(request.user) + ' | ',
+			'test': 'test',
 		}, context_instance = RequestContext(request))

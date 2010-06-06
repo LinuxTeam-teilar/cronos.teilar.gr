@@ -41,7 +41,6 @@ def library(request):
 	else:
 		form = SearchForm()
 	return render_to_response('library.html', {
-			'head_title': 'Βιβλιοθήκη | ',
 			'form': form,
 			'msg': msg,
 			'results': results,

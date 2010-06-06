@@ -40,7 +40,6 @@ def announcements(request):
 					img = 'department'
 				all_announcements.append([img, item.author(), str(item.date()), str(item.id), item.__unicode__()])
 	return render_to_response('announcements.html', {
-			'head_title': 'Ανακοινώσεις | ',
 			'items': all_announcements,
 			'form': form,
 			'id': id,
