@@ -79,6 +79,7 @@ class SignupWizard(FormWizard):
 				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[1])
 			else:
 				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0])
+			introduction_year = year + season
 			try:
 				b = StringIO.StringIO()
 				conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&')
