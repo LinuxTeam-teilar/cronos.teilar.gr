@@ -135,7 +135,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = result['eclassPassword'][0]	
 					if result.has_key('eclassLessons'):
 						eclass_lessons = ','.join(result['eclassLessons'])
-					els:
+					else:
 						eclass_lessons = None
 				else:
 					eclass_username = None
