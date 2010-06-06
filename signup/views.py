@@ -205,7 +205,6 @@ class SignupWizard(FormWizard):
 
 			# in case there is no exception in the above, send the user to a welcome site
 			return render_to_response('welcome.html', {
-					'head_title': 'Καλώς Ήρθατε | ',
 					'username': username,
 					'eclass_username': eclass_username,
 					'dionysos_username': dionysos_username,
@@ -220,7 +219,6 @@ class SignupWizard(FormWizard):
 		except:
 			return self.render(self.get_form(0), request, 0, context = {
 					'msg': 'Παρουσιάστηκε Σφάλμα',
-					'head_title': 'Εγγραφή | ',
 				})
 
 	def get_template(self, step):

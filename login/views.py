@@ -27,7 +27,6 @@ def mylogin(request):
 		else:
 			form = LoginForm()
 	return render_to_response('login.html', {
-			'head_title': 'Είσοδος | ',
 			'msg': msg,
 			'form': form,
 		}, context_instance = RequestContext(request))

@@ -42,7 +42,6 @@ def eclass(request):
 		eclass_announcements.append([item.urlid.name[9:], item.title])
 	# missing parse of ΑΤΖΕΝΤΑ, ΔΙΟΡΙΕΣ, ΕΓΓΡΑΦΑ, ΣΥΖΗΤΗΣΕΙΣ
 	return render_to_response('eclass.html', {
-			'head_title': 'Eclass | ',
 			'header': header,
 			'eclass_lessons': eclass_lessons,
 			'eclass_announcements': eclass_announcements,

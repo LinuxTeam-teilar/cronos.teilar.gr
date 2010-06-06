@@ -1,45 +1,35 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<title>{{ head_title }}Cronos</title>
-		<link rel="stylesheet" href="{{MEDIA_URL}}reset.css">
-		<link rel="stylesheet" href="{{MEDIA_URL}}style_login.css">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-		<script type="text/javascript">
-		</script>
-	</head>
-	<body>
-		<div id="container">
-			<h1>CRONOS</h1>
-			<div id="login">
-				<div id="info">
-					<h3>Καλώς Ήρθατε</h3>
-					<p>Καλώς ήρθατε στην υπηρεσία cronos του ΤΕΙ Λάρισας.</p>
-					<h3>Ρυθμίσεις</h3>
-					<p>Είστε πλέον έτοιμοι να κάνετε εισαγωγή με το νέο σας λογαριασμό. Στο προφίλ σας θα μπορέσετε να επιλέξετε ποιες ανακοινώσεις θέλετε να λαμβάνετε, είτε από υπηρεσίες του ΤΕΙ Λάρισας (Κόμβος, Γραμματεία, Βιβλιοθήκη) είτε από καθηγητές, είτε από μαθήματα του e-class. Για να μεταβείτε στην αρχική σελίδα και να κάνετε εισαγωγή στην υπηρεσία πατήστε <a href="/">εδώ</a></p>
-				</div>
-				<div id="welcome">
-					<h3>Ονόματα Χρήστη</h3><br />
-					<ul>
-						<li><b>Cronos:</b> {{ username }}</li>
-						<li><b>Dionysos:</b> {{ dionysos_username }}</li>
-						{% if eclass_username %}
-						<li><b>E-class:</b> {{ eclass_username }}</li>
-						{% endif %}
-						{% if webmail_username %}
-						<li><b>Webmail:</b> {{ webmail_username }}</li>
-						{% endif %}
-					</ul>
-					<h3>Πλήρη Στοιχεία</h3><br />
-					<ul>
-						<li><b>Ονοματεπώνυμο:</b> {{ first_name }} {{ last_name }}</li>
-						<li><b>Εξάμηνο:</b> {{ semester }}</li>
-						<li><b>Έτος Εισαγωγής:</b> {{ introduction_year }}</li>
-						<li><b>Σχολή:</b> {{ school }}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+{% extends "intro.html" %}
+
+{% block title %}
+Καλώς Ήρθατε | 
+{% endblock %}
+{% block content %}
+<div id="login">
+	<div id="info">
+		<h3>Καλώς Ήρθατε</h3>
+		<p>Καλώς ήρθατε στην υπηρεσία cronos του ΤΕΙ Λάρισας.</p>
+		<h3>Ρυθμίσεις</h3>
+		<p>Είστε πλέον έτοιμοι να κάνετε εισαγωγή με το νέο σας λογαριασμό. Στο προφίλ σας θα μπορέσετε να επιλέξετε ποιες ανακοινώσεις θέλετε να λαμβάνετε, είτε από υπηρεσίες του ΤΕΙ Λάρισας (Κόμβος, Γραμματεία, Βιβλιοθήκη) είτε από καθηγητές, είτε από μαθήματα του e-class. Για να μεταβείτε στην αρχική σελίδα και να κάνετε εισαγωγή στην υπηρεσία πατήστε <a href="/">εδώ</a></p>
+	</div>
+	<div id="welcome">
+		<h3>Ονόματα Χρήστη</h3><br />
+		<ul>
+			<li><b>Cronos:</b> {{ username }}</li>
+			<li><b>Dionysos:</b> {{ dionysos_username }}</li>
+			{% if eclass_username %}
+			<li><b>E-class:</b> {{ eclass_username }}</li>
+			{% endif %}
+			{% if webmail_username %}
+			<li><b>Webmail:</b> {{ webmail_username }}</li>
+			{% endif %}
+		</ul>
+		<h3>Πλήρη Στοιχεία</h3><br />
+		<ul>
+			<li><b>Ονοματεπώνυμο:</b> {{ first_name }} {{ last_name }}</li>
+			<li><b>Εξάμηνο:</b> {{ semester }}</li>
+			<li><b>Έτος Εισαγωγής:</b> {{ introduction_year }}</li>
+			<li><b>Σχολή:</b> {{ school }}</li>
+		</ul>
+	</div>
+</div>
+{% endblock %}
