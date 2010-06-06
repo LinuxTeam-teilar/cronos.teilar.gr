@@ -145,7 +145,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					webmail_username = result['webmailUsername'][0]
 					webmail_password = result['webmailPassword'][0]
 				else:
-					mail = '%s@not_applicable_mail.com' % (username)
+					mail = '%s@notapplicablemail.com' % (username)
 					webmail_username = None
 					webmail_password = None
 
