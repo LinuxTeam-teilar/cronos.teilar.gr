@@ -4,11 +4,12 @@
 Eclass | 
 {% endblock %}
 {% block content %}
-{% for item in header %}
+{% for item in headers %}
 	<ul>
 		<li><b>{{item|safe}}</b></li>
-			<ul>
+			<li><ul>
 				{%ifequal forloop.counter0 0 %}
+					{% if eclass_lessons %}
 					{% for i in eclass_lessons %}
 						<li>
 						{% for j in i %}
@@ -20,39 +21,54 @@ Eclass |
 						{% endfor %}
 						</li>
 					{% endfor %}
+					{% else %}
+					<li>Δεν υπάρχουν μαθήματα προς εμφάνιση</li>
+					{% endif %}
 				{% endifequal %}
 				{% ifequal forloop.counter0 1 %}
+					{% if eclass_announcements %}
 					{% for i in eclass_announcements %}
 						<li>
 						{% for j in i %}
-							{% ifequal forloop.counter0 0 %}
+						{% ifequal forloop.counter0 0 %}
 							{{j|safe}}:
-							{% else %}
+						{% else %}
 							{{j|safe}}
-							{% endifequal %}
+						{% endifequal %}
 						{% endfor %}
 						</li>
 					{% endfor %}
+					{% else %}
+					<li>Δεν υπάρχουν ανακοινώσεις προς εμφάνιση</li>
+					{% endif %}
 				{% endifequal %}
-				{% ifequal forloop.counter0 3 %}
+				{% ifequal forloop.counter0 2 %}
+					{% if deadlines %}
 					{% for i in deadlines %}
 						<li>
 						{% for j in i %}
-							{{j|safe}}:
-						{% endfor %}
+							{{j|safe}}<br />
+						{% endfor %}<br />
 						</li>
 					{% endfor %}
+					{% else %}
+					<li>Δεν υπάρχουν εργασίες προς παράδοση</li>
+					{% endif %}
 				{% endifequal %}
-				{% ifequal forloop.counter0 4 %}
+				{% ifequal forloop.counter0 3 %}
+					{% if documents %}
 					{% for i in documents %}
 						<li>
 						{% for j in i %}
-							{{j|safe}}:
+							{{j|safe}}<br />
 						{% endfor %}
 						</li>
 					{% endfor %}
+					{% else %}
+					<li>Δεν υπάρχουν έγγραφα προς εμφάνιση</li>
+					{% endif %}
 				{% endifequal %}
-			</ul>
+			</ul></li>
 	</ul>
 {% endfor %}
 {% endblock %}
