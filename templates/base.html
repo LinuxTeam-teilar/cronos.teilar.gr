@@ -7,53 +7,48 @@
 		<link rel="stylesheet" href="{{MEDIA_URL}}reset.css">
 		<link rel="stylesheet" href="{{MEDIA_URL}}style.css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-		<script type="text/javascript">
-		</script>
+		{% block extra_css %}{% endblock %}
+		{% block extra_js_top %}{% endblock %}
 	</head>
 	<body>
 		<div id="container">
 			<div id="header">
 				<h1>CRONOS</h1>
 				<div id="sidebar">
-					<ul id="menu">
-						<a href="/">Αρχική</a>
-						<a href="/announcements/">Ανακοινώσεις</a>
+					<ul id="navigation">
+						<li><a href="/">&raquo;&emsp;Αρχική</a></li>
+						<li><a href="/announcements/">&raquo;&emsp;Ανακοινώσεις</a></li>
 						{% if user.is_authenticated %}
-						{% if user.get_profile.eclass_username %}
-						<a href="/eclass/">E-class</a>
+							{% if user.get_profile.eclass_username %}
+							<li><a href="/eclass/">&raquo;&emsp;E-class</a></li>
+							{% endif %}
+							{% if user.get_profile.webmail_username %}
+							<li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
+							{% endif %}
+							<li><a href="/dionysos/">&raquo;&emsp;Η δήλωση μου</a></li>
 						{% endif %}
-						{% if user.get_profile.webmail_username %}
-						<a href="/webmail/">E-mail</a>
-						{% endif %}
-						<a href="/dionysos/">Η δήλωση μου</a>
-						{% endif %}
-						<a href="/library/">Αναζήτηση Βιβλιοθήκης</a>
+						<li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
 						{% if user.is_authenticated %}
-						<a href="/settings/">Προφίλ</a>
-						{% if user.is_superuser %}
-						<a href="/admin">Διαχείριση Django</a>
-						<a href="http://cephalon.teilar.gr/phpldapadmin">Διαχείριση LDAP</a>
-						<a href="http://cephalon.teilar.gr/phpmyadmin">Διαχείριση MySQL</a>
-						
-						{% endif %}
+						<li><a href="/settings/">&raquo;&emsp;Προφίλ</a></li>
+							{% if user.is_superuser %}
+							<li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
+							<li><a href="http://cephalon.teilar.gr/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
+							<li><a href="http://cephalon.teilar.gr/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
+							{% endif %}
 						{% endif %}
 					</ul>
 				</div>
 			</div>
-			<div id="main">
-				{% if user.is_authenticated %}
-				<div id="profile">
-					<b>Ονοματεπώνυμο:</b> {{user.first_name}} {{user.last_name}}
-					<b>Εξάμηνο:</b> {{user.get_profile.semester}}
-					<b>Έτος Εισαγωγής:</b> {{user.get_profile.introduction_year}}
-					<b>Αριθμός Μητρώου:</b> {{user.get_profile.registration_number}}
-					<a href="/logout/">Αποσύνδεση</a>
-				</div>
-				{% endif %}
-				<div id="content">
-					{% block content %}{% endblock %}
-				</div>
+			{% if user.is_authenticated %}
+			<div id="profile">
+				<p>{{user.first_name}} {{user.last_name}}&emsp;&mdash;&emsp;{{user.get_profile.registration_number}}</p>
+				<a class="button" href="/logout/">Αποσύνδεση</a>
+			</div>
+			{% endif %}
+			<div id="content">
+				{% block content %}{% endblock %}
 			</div>
 		</div>
+		{% block extra_js_bottom %}{% endblock %}
 	</body>
 </html>

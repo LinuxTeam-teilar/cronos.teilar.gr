@@ -23,7 +23,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 	box-shadow: 0 0 2px #a1a1a1; /* Opera 10.5, IE 9.0 */
 }
 
-#info { width: 365px; height: 270px; float: left; border-right: solid 1px #efefef; }
+#info { width: 365px; height: 270px; float: left; }
 
 #info h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
 
@@ -39,7 +39,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #welcome p { width: 350px; margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
 
-#welcome ul { position: relative; top: -5px; margin: 0 0 0 25px; list-style-type: disc; }
+#welcome ul { position: relative; top: -5px; margin: 0 0 0 10px; list-style-type: disc; }
 
 #welcome ul>li { font: normal 14px/18px Verdana,Arial,sans-serif; }
 
@@ -72,8 +72,8 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 #login-form form>a { margin: 20px 0 0 30px; }
 
 #login-form p.messages {
-	width: 90px;
-	margin: 20px 0 0 30px; padding: 8px 10px;
+	width: 100px;
+	margin: 20px 0 0 30px; padding: 8px 10px 9px 10px;
 	background: #ffd0d0; color: #e92525;
 	font: 13px Verdana,Arial,sans-serif;
 	border: solid 1px #e92525;

@@ -1,3 +1,98 @@
-h1 { color: grey; }
+body { overflow-x: hidden; }
 
-p.messages { color: red; }
+#container {
+	width: 100%; min-height: 100%; position: absolute;
+	background: #f4f4f4;
+}
+
+#header {
+	width: 260px; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;
+	background: #efefef;
+	border-right: solid 1px #aaa;
+
+}
+
+#header h1 {
+	width: 200px; height: 180px;
+	margin: 18px 0 0 37px;
+	font: bold 38px Georgia, Times New Roman, Times, serif;
+	color: #786721;
+	text-indent: -9999px;
+	background: url("./images/logo_sidebar.png") -10px -20px no-repeat;
+}
+
+#navigation {
+	margin: 20px 15px 0 15px;
+	border-top: solid 1px #786721;
+	
+	-moz-box-shadow: 0px 0px 3px #aaa; /* FF3.5+ */
+	-webkit-box-shadow: 0px 0px 3px #aaa; /* Saf3.0+, Chrome */
+	box-shadow: 0px 0px 3px #aaa; /* Opera 10.5, IE 9.0 */
+}
+
+#navigation>li {
+	margin: 0;
+	font: normal 14px Verdana, Arial, Helvetica, sans-serif;
+	letter-spacing: 0.02em;
+}
+#navigation>li a {
+	display:block; text-decoration: none;
+	border-top: solid 1px #dfdfdf; border-bottom: solid 1px #786721;
+}
+#navigation>li a:link, #navigation>li a:visited{
+	padding: 8px 12px 9px 12px;
+	color: #786721;
+	background: #FFE699;
+	border: solid 1px #786721; border-top: solid 1px #FFF2CC;
+	text-shadow: #FFF2CC 1px 1px 0px;
+}
+#navigation>li a:hover, #navigation>li a:focus {
+	color: #f4f4f4; text-shadow: #000 0px 1px 0px;
+	background: #786721;
+	border: solid 1px #64561B; border-top: solid 1px #504416; border-bottom: solid 1px #504416;
+}
+
+#profile {
+	position: relative; height: 52px; top: 0; right: 0; display: block;
+	background: #eee url("./images/profile_bg.jpg") repeat;
+	text-align: right;
+	border-bottom: solid 1px #aaa;
+	
+	-moz-box-shadow: 0px 0px 5px #bbb; /* FF3.5+ */
+	-webkit-box-shadow: 0px 0px 5px #bbb; /* Saf3.0+, Chrome */
+	box-shadow: 0px 0px 5px #bbb; /* Opera 10.5, IE 9.0 */
+}
+
+#profile p {
+	display: inline; position: absolute; top: 17px; right: 160px;
+	
+	font: normal 14px Verdana, Arial, Helvetica, sans-serif;
+	color: #333; text-shadow: #f4f4f4 0px 1px 0px;
+}
+
+#profile a.button {
+	display: block; float: right; text-decoration: none;
+	margin: 10px 15px 10px 15px; padding: 7px 9px 8px 9px;
+	font: normal 15px Verdana, Arial, Helvetica, sans-serif;
+	
+	-moz-border-radius: 8px; /* FF1+ */
+	-webkit-border-radius: 8px; /* Saf3+, Chrome */
+	border-radius: 8px; /* Opera 10.5, IE 9 */
+
+}
+
+#profile a.button:link, #profile a.button:visited {
+	background: #FFE699;
+	color: #786721;
+	border: solid 1px #786721;
+}
+
+#profile a.button:hover, #profile a.button:focus {
+	background: #786721;
+	color: #f5f5f5;
+	border: solid 1px #504416;
+}
+
+#content {
+	width: 730px; min-height: 520px; position: relative; top: 0; left: 270px;
+}
