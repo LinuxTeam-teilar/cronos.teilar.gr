@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for i in declaration_lessons %}
+	{% for j in i %}
+		{{j|safe}}<br />
+	{% endfor %}
+{% endfor %}
+{% endblock %}
