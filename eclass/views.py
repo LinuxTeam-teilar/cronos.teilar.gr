@@ -30,9 +30,39 @@ def eclass(request):
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
+	try:
+		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))
+		deadlines = []
+		i = 0
+		for item in soup1.findAll('li', 'category'):
+			lesson = item
+			title = soup1.findAll('a', 'square_bullet2')[i].contents[0].contents[0]
+			date = soup1.findAll('p', 'content_pos')[i].b.contents[0]
+			status = soup1.findAll('span')[i].contents[0]
+			deadlines.append([lesson, title, date, status])
+			i += 1
+	except:
+		deadlines = 'den iparxoun diories'
+		pass
+	try:
+		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[4]))
+		documents = []
+		i = 0
+		for item in soup1.findAll('li', 'category'):
+			lesson = item
+			for item1 in soup1.findAll('a', 'square_bullet2'):
+				title = str(item1)
+				documents.append([lesson, title])
+			i += 1	
+	except:
+		documents = 'den iparxoun eggrafa'
+		pass	
 	header = []
-	for item in soup.findAll('th', 'persoBoxTitle'):
-		header.append(item.contents[0])
+	i = 0
+ 	for item in soup.findAll('th', 'persoBoxTitle'):
+		if i == 0 or i == 1 or i == 3 or i == 4:
+			header.append(item.contents[0])
+		i += 1
 	eclass_lessons = []
 	eclass_lessons_ids = request.user.get_profile().eclass_lessons.split(',')
 	for item in Id.objects.filter(urlid__in = eclass_lessons_ids):
@@ -45,4 +75,6 @@ def eclass(request):
 			'header': header,
 			'eclass_lessons': eclass_lessons,
 			'eclass_announcements': eclass_announcements,
+			'deadlines': deadlines,
+			'documents': documents,
 		}, context_instance = RequestContext(request))
