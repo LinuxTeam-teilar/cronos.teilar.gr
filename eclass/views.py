@@ -30,49 +30,48 @@ def eclass(request):
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
-	try:
-		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))
-		deadlines = []
-		i = 0
-		for item in soup1.findAll('li', 'category'):
-			lesson = item
-			title = soup1.findAll('a', 'square_bullet2')[i].contents[0].contents[0]
-			date = soup1.findAll('p', 'content_pos')[i].b.contents[0]
-			status = soup1.findAll('span')[i].contents[0]
-			deadlines.append([lesson, title, date, status])
-			i += 1
-	except:
-		deadlines = 'den iparxoun diories'
-		pass
-	try:
-		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[4]))
-		documents = []
-		i = 0
-		for item in soup1.findAll('li', 'category'):
-			lesson = item
-			for item1 in soup1.findAll('a', 'square_bullet2'):
-				title = str(item1)
-				documents.append([lesson, title])
-			i += 1	
-	except:
-		documents = 'den iparxoun eggrafa'
-		pass	
-	header = []
+	headers = []
 	i = 0
  	for item in soup.findAll('th', 'persoBoxTitle'):
-		if i == 0 or i == 1 or i == 3 or i == 4:
-			header.append(item.contents[0])
+		if i !=2 and i != 5:
+			headers.append(item.contents[0])
 		i += 1
+
+	soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))
+	deadlines = []
+	i = 0
+	for item in soup1.findAll('li', 'category'):
+		lesson = item.contents[0]
+		title = soup1.findAll('a', 'square_bullet2')[i].contents[0].contents[0]
+		date = soup1.findAll('p', 'content_pos')[i].b.contents[0]
+		status = soup1.findAll('span')[i].contents[0]
+		deadlines.append([lesson, title, date, status])
+		i += 1
+
+	soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[4]))
+	documents = []
+	i = 0
+	j = 0
+	for item in soup1.findAll('li'):
+		if item in soup1.findAll('li', 'category'):
+			lesson = item.contents[0]
+			i += 1
+		else:
+			title = soup1.findAll('a', 'square_bullet2')[j]
+			j += 1
+			documents.append([lesson, title])
+	
 	eclass_lessons = []
 	eclass_lessons_ids = request.user.get_profile().eclass_lessons.split(',')
 	for item in Id.objects.filter(urlid__in = eclass_lessons_ids):
 		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
+
 	eclass_announcements = []
 	for item in Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched')[:15]:
 		eclass_announcements.append([item.urlid.name[9:], item.title])
-	# missing parse of ΑΤΖΕΝΤΑ, ΔΙΟΡΙΕΣ, ΕΓΓΡΑΦΑ, ΣΥΖΗΤΗΣΕΙΣ
+
 	return render_to_response('eclass.html', {
-			'header': header,
+			'headers': headers,
 			'eclass_lessons': eclass_lessons,
 			'eclass_announcements': eclass_announcements,
 			'deadlines': deadlines,
