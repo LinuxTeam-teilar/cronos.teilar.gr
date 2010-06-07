@@ -131,10 +131,8 @@ class SignupWizard(FormWizard):
 				eclass_lessons = []
 				for item in soup.findAll('a'):
 					if (i % 2 == 0):
-						eclass_lessons.append(str(soup.findAll('a')[i].contents[0]).split('-')[0].strip())
+						eclass_lessons.append(str(item.contents[0]).split('-')[0].strip())
 					i += 1
-			else:
-				eclass_lessons = ''
 
 			# login to webmail
 			if webmail_username:
@@ -199,7 +197,6 @@ class SignupWizard(FormWizard):
 				if eclass_username:
 					attrs['eclassUsername'] = [eclass_username]
 					attrs['eclassPassword'] = [eclass_password]
-				if eclass_lessons:
 					attrs['eclassLessons'] = eclass_lessons
 				if webmail_username:
 					attrs['webmailUsername'] = [webmail_username]
