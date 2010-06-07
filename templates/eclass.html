@@ -31,6 +31,25 @@ Eclass |
 							{{j|safe}}
 							{% endifequal %}
 						{% endfor %}
+						</li>
+					{% endfor %}
+				{% endifequal %}
+				{% ifequal forloop.counter0 3 %}
+					{% for i in deadlines %}
+						<li>
+						{% for j in i %}
+							{{j|safe}}:
+						{% endfor %}
+						</li>
+					{% endfor %}
+				{% endifequal %}
+				{% ifequal forloop.counter0 4 %}
+					{% for i in documents %}
+						<li>
+						{% for j in i %}
+							{{j|safe}}:
+						{% endfor %}
+						</li>
 					{% endfor %}
 				{% endifequal %}
 			</ul>
