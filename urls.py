@@ -11,7 +11,7 @@ from cronos.announcements.feeds import LatestEntries
 
 from cronos.login.views import *
 from cronos.eclass.views import *
-#from cronos.dionysos.views import *
+from cronos.declaration.views import *
 from cronos.webmail.views import *
 from cronos.announcements.views import *
 from cronos.user.views import *
@@ -27,7 +27,7 @@ handler500 = 'cronos.login.views.server_error'
 urlpatterns = patterns('',
 	(r'^$', mylogin),
 	(r'^eclass/', eclass),
-#	(r'^dionysos', dionysos),
+	(r'^declaration', declaration),
 	(r'^webmail/', webmail),
 	(r'^announcements/', announcements),
 	(r'^logout/', mylogout),
