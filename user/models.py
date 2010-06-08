@@ -19,3 +19,9 @@ class LdapProfile(models.Model):
 	teacher_announcements = models.TextField(null = True, blank = True)
 	other_announcements = models.TextField(null = True, blank = True)
 	declaration = models.TextField(null = True, blank = True)
+
+	def __str__(self):
+		return self.user
+	
+	class Admin:
+		pass
