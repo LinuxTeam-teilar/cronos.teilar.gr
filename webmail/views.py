@@ -12,7 +12,7 @@ from BeautifulSoup import BeautifulSoup
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-def webmail_login(link):
+def webmail_login(request, link):
 	b = StringIO.StringIO()
 	conn = pycurl.Curl()
 	cookie_file_name = os.tempnam('/tmp','webmail')
@@ -47,7 +47,7 @@ def webmail(request):
 	if (request.GET.get('passed_id')):
 		form = MailForm(request.GET)
 		link = 'http://myweb.teilar.gr/src/read_body.php?mailbox=INBOX&passed_id=' + str(request.GET.get('passed_id')) + '&startMessage=1'
-		output = webmail_login(link)
+		output = webmail_login(request, link)
 		mail = BeautifulSoup(output).findAll('table')[7]
 		id = request.GET.get('passed_id')
 	else:
