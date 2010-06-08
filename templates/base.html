@@ -25,11 +25,11 @@
 							{% if user.get_profile.webmail_username %}
 							<li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
 							{% endif %}
-							<li><a href="/declaration/">&raquo;&emsp;Η δήλωση μου</a></li>
+							<li><a href="/declaration/">&raquo;&emsp;Προβολή Δήλωσης</a></li>
 						{% endif %}
 						<li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
 						{% if user.is_authenticated %}
-						<li><a href="/settings/">&raquo;&emsp;Προφίλ</a></li>
+						<li><a href="/settings/">&raquo;&emsp;Ρυθμίσεις</a></li>
 							{% if user.is_superuser %}
 							<li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
 							<li><a href="http://cephalon.teilar.gr/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
