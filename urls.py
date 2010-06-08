@@ -29,7 +29,6 @@ urlpatterns = patterns('',
 	(r'^eclass/', eclass),
 	(r'^declaration', declaration),
 	(r'^webmail/', webmail),
-	(r'^announcements/', announcements),
 	(r'^logout/', mylogout),
 	(r'^user/', user),
 	(r'^settings/', user_settings),
@@ -40,8 +39,9 @@ urlpatterns = patterns('',
 
 	(r'^signup/', SignupWizard([SignupCronos, SignupDionysos, SignupEclass, SignupWebmail])),
 
-	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
-
+	(r'^(?P<url>announcements)/feeds/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+	(r'^announcements/', announcements),
+	
 	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
 	
 	# Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
