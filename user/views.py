@@ -10,7 +10,7 @@ def getmail(request):
 	if request.user.email[-21:] == 'notapplicablemail.com':
 		mail = 'unset'
 	elif request.user.get_profile().webmail_username:
-		mail = webmail_username + '@teilar.gr'
+		mail = request.user.get_profile().webmail_username + '@teilar.gr'
 	else:
 		''
 	return mail
