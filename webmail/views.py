@@ -53,7 +53,7 @@ def webmail(request):
 	else:
 		form = MailForm()
 		link = 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX'
-		output = webmail_login(link)
+		output = webmail_login(request, link)
 		soup = BeautifulSoup(output).findAll('table')[9]
 		soup1 = soup.findAll('tr')
 		mail = []
