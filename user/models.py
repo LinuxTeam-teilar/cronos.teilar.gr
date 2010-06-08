@@ -21,7 +21,7 @@ class LdapProfile(models.Model):
 	declaration = models.TextField(null = True, blank = True)
 
 	def __str__(self):
-		return self.user
+		return self.user.username
 	
 	class Admin:
 		pass
