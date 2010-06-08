@@ -1,9 +1,35 @@
 {% extends "base.html" %}
 
+{% block title %}
+Δήλωση | 
+{% endblock %}
+
 {% block content %}
+<table>
 {% for i in declaration_lessons %}
+	<tr>
 	{% for j in i %}
-		{{j|safe}}<br />
+		<td>{{j|safe}}__</td>
 	{% endfor %}
+	</tr>
 {% endfor %}
+</table>
+{% for i in summary %}
+	{% ifequal forloop.counter0 0 %}
+		Σύνολο Μαθημάτων: {{i}}<br />
+	{% endifequal %}
+	{% ifequal forloop.counter0 1 %}
+		Σύνολο διδακτικών μονάδων: {{i}}<br />
+	{% endifequal %}
+	{% ifequal forloop.counter0 2 %}
+		Σύνολο ωρών: {{i}}<br />
+	{% endifequal %}
+{% endfor %}
+<form action="." method="post">
+	{{ field.label.tag }}{{ field }}
+	Σε περίπτωση που έχετε ανανεώσει τη δήλωσή σας στη Γραμματεία:<input type="submit" value="Ανανέωση" />
+	{% if msg %}
+		<br />{{msg}}
+	{% endif %}
+</form>
 {% endblock %}
