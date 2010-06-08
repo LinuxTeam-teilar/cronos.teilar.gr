@@ -50,5 +50,3 @@ REV="$2"
 #mailer.py commit "$REPOS" "$REV" /path/to/mailer.conf
 /usr/bin/svn update /var/www/localhost/htdocs/tests >> /var/log/svnserve.log
 /usr/bin/svn update /home/code/cronos >> /var/log/svnserve.log
-/bin/chmod 664 /home/code/cronos -R
-/bin/chgrp users /home/code/cronos -R
