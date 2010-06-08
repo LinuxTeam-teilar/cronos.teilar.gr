@@ -3,4 +3,4 @@
 from django import forms
 
 class MailForm(forms.Form):
-	passed_id = forms.CharField(max_length = 100)
+	passed_id = forms.CharField(widget = forms.HiddenInput())

@@ -37,7 +37,7 @@
 </table>
 {% endif %}
 
-<form action="/webmail/" method="get">
-<input type="hidden" name="passed_id">
+<form action="." method="get">
+{{ field.label.tag }}{{ field }}
 </form>
 {% endblock %}
