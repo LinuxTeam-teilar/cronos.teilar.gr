@@ -5,6 +5,7 @@ import StringIO
 import urllib
 import os
 import urlparse
+import base64
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from cronos.webmail.forms import *
