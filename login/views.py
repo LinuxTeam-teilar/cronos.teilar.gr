@@ -18,6 +18,8 @@ def mylogin(request):
 		if user is not None:
 			if user.is_active:
 				login(request, user)
+				if not request.POST.get('remember'):
+					request.session.set_expiry(0)
 				return HttpResponseRedirect('/user')
 		else:
 			msg = 'Λάθος Κωδικός'
