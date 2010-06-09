@@ -7,7 +7,7 @@ from django.contrib import admin
 from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
 from cronos.signup.views import SignupWizard
 
-from cronos.announcements.feeds import LatestEntries
+from cronos.announcements.feeds import *
 
 from cronos.login.views import *
 from cronos.eclass.views import *
@@ -19,7 +19,7 @@ from cronos.user.views import *
 admin.autodiscover()
 
 feeds = {
-	'announcements':LatestEntries,
+	'announcements': AnnouncementFeed,
 	}
 
 handler500 = 'cronos.login.views.server_error'
@@ -39,7 +39,7 @@ urlpatterns = patterns('',
 
 	(r'^signup/', SignupWizard([SignupCronos, SignupDionysos, SignupEclass, SignupWebmail])),
 
-	(r'^(?P<url>announcements)/feed/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
 	(r'^announcements/', announcements),
 	
