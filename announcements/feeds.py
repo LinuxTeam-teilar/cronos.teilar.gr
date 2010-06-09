@@ -5,7 +5,7 @@ from cronos.announcements.models import Announcements
 from django.contrib.auth.models import User
 from cronos.user.models import *
 
-class LatestEntries(Feed):
+class AnnouncementFeed(Feed):
 	title = 'Ανακοινώσεις ΤΕΙ Λάρισας'
 	link = 'http://cronos.teilar.gr'
 	description = 'Ανακοινώσεις διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας. Παρέχονται από το http://cronos.teilar.gr'
