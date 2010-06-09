@@ -33,7 +33,7 @@ def eclass(request):
 	headers = []
 	i = 0
  	for item in soup.findAll('th', 'persoBoxTitle'):
-		if i !=2 and i != 5:
+		if i != 1 and i != 2 and i != 5:
 			headers.append(item.contents[0])
 		i += 1
 
@@ -66,14 +66,9 @@ def eclass(request):
 	for item in Id.objects.filter(urlid__in = eclass_lessons_ids):
 		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
 
-	eclass_announcements = []
-	for item in Announcements.objects.filter(urlid__urlid__in = eclass_lessons_ids).order_by('-date_fetched')[:15]:
-		eclass_announcements.append([item.urlid.name[9:], item.title])
-
 	return render_to_response('eclass.html', {
 			'headers': headers,
 			'eclass_lessons': eclass_lessons,
-			'eclass_announcements': eclass_announcements,
 			'deadlines': deadlines,
 			'documents': documents,
 		}, context_instance = RequestContext(request))

@@ -20,7 +20,7 @@
 <h1>Προσωπικά Στοιχεία</h1>
 <ul>
 	<li>Ονοματεπώνυμο: {{ user.first_name }} {{ user.last_name }}</li>
-	<li>Email: {{ mail }} (Αλλαγή)</li>
+	<li>Email: {% ifequal mail 'unset' %} Δεν έχετε ορίσει (Προσθήκη) {% else %} <a href="mailto:{{ mail }}" >{{ mail }}</a> (Αλλαγή){% endifequal %}</li>
 	<li>Αριθμός Μητρώου: {{ user.get_profile.registration_number }}</li>
 	<li>Τμήμα: {{ school }}</li>
 	<li>Εξάμηνο: {{ user.get_profile.semester }}</li>
@@ -41,9 +41,25 @@ eclass:
 2
 3
 4
-Άλλες Ανακοινώσεις
-teilar.gr
-noc
-library
+<!--form action="." method="POST">
+	{% for status in other_status %}
+	<input type="checkbox" name="{% cycle 'noc' 'teilar' 'career' 'linuxteam' 'school' 'pr' 'dionysos' 'library' %}" id="id_{% cycle 'noc' 'teilar' 'career' 'linuxteam' 'school' 'pr' 'dionysos' 'library' %}" {% ifequal status 'set' %} checked="yes" {% endifequal %}><label for="id_{% cycle 'noc' 'teilar' 'career'     'linuxteam' 'school' 'pr' 'dionysos' 'library' %}">{% cycle 'Κέντρο Διαχείρισης Δικτύου' 'Κεντρική Σελίδα ΤΕΙ Λάρισας' 'Γραφείο Διασύνδεσης' 'Linux Team' school 'Γραφείο Δημοσίων και Διεθνών Σχέσεων' 'Πρόγραμμα Γραμματείας' 'Κεντρική Βιβλιοθήκη' %}</label><br />
+	{% endfor %}
+	<input class="button" type="submit" value="Υποβολή">
+	{% if msg %}
+		{{ msg }}
+	{% endif %}
+</form-->
 
+<form action="." method="POST">
+	{% for i in form_other %}
+		{% for j in i %}
+				{{j}}
+		{% endfor %}
+	{% endfor %}
+	<input class="button" type="submit" value="Υποβολή">
+	{% if msg %}
+		{{ msg }}
+	{% endif %}
+</form>
 {% endblock %}
