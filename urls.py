@@ -39,7 +39,8 @@ urlpatterns = patterns('',
 
 	(r'^signup/', SignupWizard([SignupCronos, SignupDionysos, SignupEclass, SignupWebmail])),
 
-	(r'^(?P<url>announcements)/feeds/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+	(r'^(?P<url>announcements)/feed/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+
 	(r'^announcements/', announcements),
 	
 	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
