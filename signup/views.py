@@ -8,12 +8,19 @@ from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard import FormWizard
 import base64
 import hashlib
+import os
+
+def Sha1Password(password):
+	from base64 import encodestring as encode
+	salt = os.urandom(4)
+	h = hashlib.sha1(password)
+	h.update(salt)
+	return "{SSHA}" + encode(h.digest() + salt)
 
 class SignupWizard(FormWizard):
 	def done(self, request, form_list):
 		username = str([form.cleaned_data for form in form_list][0]['username'])
-		#password = hashlib.sha1(str([form.cleaned_data for form in form_list][0]['password'])) ### PROBLEM PROBLEM
-		password = str([form.cleaned_data for form in form_list][0]['password'])
+		password = Sha1Password(str([form.cleaned_data for form in form_list][0]['password']))
 		dionysos_username = str([form.cleaned_data for form in form_list][1]['dionysos_username'])
 		dionysos_password = base64.b64encode(str([form.cleaned_data for form in form_list][1]['dionysos_password']))
 		eclass_username = str([form.cleaned_data for form in form_list][2]['eclass_username'])
@@ -175,11 +182,11 @@ class SignupWizard(FormWizard):
 					})
 			else:
 				attrs = {}
-				attrs['objectClass'] = ['person','top','teilarStudent']
-				attrs['cn'] =  [username]
+				attrs['objectClass'] = ['person','top','teilarStudent', 'posixAccount']
+				attrs['uid'] =  [username]
 				attrs['sn'] = [last_name]
-				attrs['firstName'] = [first_name]
-				attrs['userPassword'] = [password]#.hexdigest()]
+				attrs['cn'] = [first_name]
+				attrs['userPassword'] = [password]
 				# add cid instead of full name in school attr
 				db = Id.objects.filter(name__exact = (school))
 				for item in db:
@@ -201,9 +208,17 @@ class SignupWizard(FormWizard):
 				if webmail_username:
 					attrs['webmailUsername'] = [webmail_username]
 					attrs['webmailPassword'] = [webmail_password]
+					attrs['email'] = [webmail_username + '@teilar.gr']
+				attrs['homeDirectory'] = ['/home/' + username]
+				attrs['gidNumber'] = ['100'] # 100 is the users group
+				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
+				uids = []
+				for item in results:
+					uids.append(int(item[1]['uidNumber'][0]))
+				attrs['uidNumber'] = [str(max(uids) + 1)]
 
 				ldif = modlist.addModlist(attrs)
-				l.add_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
+				l.add_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
 				l.unbind_s()
 
 			# in case there is no exception in the above, send the user to a welcome site

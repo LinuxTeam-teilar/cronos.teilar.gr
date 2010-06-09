@@ -81,7 +81,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 		ldap.set_option(ldap.OPT_REFERRALS,0)
 		l = ldap.initialize(settings.LDAP_URL)
 		l.set_option(ldap.OPT_PROTOCOL_VERSION, 3)
-		binddn = "cn=%s,%s" % (username, settings.SEARCH_DN)
+		binddn = "uid=%s,%s" % (username, settings.SEARCH_DN)
 		l.simple_bind_s(binddn,password)
 		return l
 		
@@ -107,9 +107,9 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				l = self.bind_ldap(username, password)
 
 				# search
-				result = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, "(cn=%s)" % (username), ['*'])[0][1]
+				result = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, "(uid=%s)" % (username), ['*'])[0][1]
 
-				first_name = result['firstName'][0]
+				first_name = result['cn'][0]
 
 				last_name = result['sn'][0]
 
