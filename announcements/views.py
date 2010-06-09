@@ -26,7 +26,6 @@ def announcements(request):
 		except:
 			pass
 		for item in Announcements.objects.filter(urlid__urlid__in = all_announcements_ids).order_by('-date_fetched')[:30]:
-				print item
 				img = item.urlid.urlid
 				if (item.urlid.urlid[:3] != 'pid') and (item.urlid.urlid[:3] != 'cid'):
 					img = 'eclass'
