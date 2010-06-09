@@ -7,7 +7,7 @@ body { overflow-x: hidden; }
 
 #header {
 	width: 260px; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;
-	background: #efefef;
+	background: #dfdfdf url("./images/header_bg.png") top right repeat-y;
 	border-right: solid 1px #aaa;
 
 }
@@ -42,19 +42,20 @@ body { overflow-x: hidden; }
 #navigation>li a:link, #navigation>li a:visited{
 	padding: 8px 12px 9px 12px;
 	color: #786721;
-	background: #FFE699;
-	border: solid 1px #786721; border-top: solid 1px #FFF2CC;
+	background: #FFE699 url("./images/navigation_bg_link.png") top left repeat-x;
+	border: solid 1px #786721; border-top: 0;
 	text-shadow: #FFF2CC 1px 1px 0px;
 }
 #navigation>li a:hover, #navigation>li a:focus {
 	color: #f4f4f4; text-shadow: #000 0px 1px 0px;
-	background: #786721;
-	border: solid 1px #64561B; border-top: solid 1px #504416; border-bottom: solid 1px #504416;
+	background: #786721 url("./images/navigation_bg_over.png") top left repeat-x;
+	border: solid 1px #64561B; border-top: 0; border-bottom: solid 1px #504416;
 }
+#navigation>li a:active { background: #786721 url("./images/navigation_bg_active.png") top left repeat-x; }
 
 #profile {
 	position: relative; height: 52px; top: 0; right: 0; display: block;
-	background: #eee url("./images/profile_bg.jpg") repeat;
+	background: #e3e3e3 url("./images/profile_bg.jpg") repeat;
 	text-align: right;
 	border-bottom: solid 1px #aaa;
 	
@@ -82,15 +83,17 @@ body { overflow-x: hidden; }
 }
 
 #profile a.button:link, #profile a.button:visited {
-	background: #FFE699;
-	color: #786721;
+	background: #FFE699 url("./images/button_bg_link.png") bottom left repeat-x;
+	color: #64561B;
 	border: solid 1px #786721;
+	text-shadow: #FFE699 0px 1px 0px;
 }
 
 #profile a.button:hover, #profile a.button:focus {
-	background: #786721;
+	background: #786721 url("./images/button_bg_over.png") top left repeat-x;
 	color: #f5f5f5;
 	border: solid 1px #504416;
+	text-shadow: #504416 0px -1px 0px;
 }
 
 #content {
