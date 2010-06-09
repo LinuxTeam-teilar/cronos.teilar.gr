@@ -89,12 +89,12 @@ def declaration(request):
 			l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 
 			mod_attrs = [ (ldap.MOD_DELETE, 'declaration', None) ]
-			l.modify_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+			l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 
 			mod_attrs = []
 			for i in xrange(len(declaration_new)):
 				mod_attrs.append((ldap.MOD_ADD, 'declaration', ','.join(declaration_new[i])))
-			l.modify_s('cn=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+			l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 	
 			l.unbind_s()
 
