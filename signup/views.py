@@ -208,7 +208,6 @@ class SignupWizard(FormWizard):
 				if webmail_username:
 					attrs['webmailUsername'] = [webmail_username]
 					attrs['webmailPassword'] = [webmail_password]
-					attrs['email'] = [webmail_username + '@teilar.gr']
 				attrs['homeDirectory'] = ['/home/' + username]
 				attrs['gidNumber'] = ['100'] # 100 is the users group
 				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
