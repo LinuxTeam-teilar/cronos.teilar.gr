@@ -3,6 +3,11 @@
 {% block title %}
 Ανακοινώσεις | 
 {% endblock %}
+
+{% block more %}
+<link rel="alternate" type="application/rss+xml" title="Ανακοινώσεις RSS" href="/feeds/announcements/{{user}}" />
+{% endblock %}
+
 {% block content %}
 {% if id %}
 <table>
