@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.models import User
 from cronos.announcements.models import Id
-from cronos.user.forms import *
+#from cronos.user.forms import *
 from cronos.announcements.models import Id
 
 def getmail(request):
@@ -32,38 +32,48 @@ def user(request):
 def user_settings(request):
 	other_list = []
 	other_list.append(['noc', 'teilar', 'career', 'linuxteam', 'school', 'pr', 'dionysos', 'library'])
-	other_list.append(['pid50', 'pid0', 'pid51', 'pid52', request.user.get_profile().school, 'pid55', 'pid53', 'pid54'])
+	other_list.append(['cid50', 'cid0', 'cid51', 'cid52', request.user.get_profile().school, 'cid55', 'cid53', 'cid54'])
 	other_list.append([])
-	result_other = []
 	i = 0
+	form_other = []
 	for item in Id.objects.filter(urlid__in = other_list[1]).order_by('name'):
-		if other_list[1][i] in request.user.get_profile().other_announcements.split(','):
-			other_list[2].append('checked="yes"')
-		else:
+		try:
+			if other_list[1][i] in request.user.get_profile().other_announcements.split(','):
+				other_list[2].append('checked="yes"')
+			else:
+				other_list[2].append('')
+		except:
 			other_list[2].append('')
-		form_other.append(['<input type="checkbox" name="' + other_list[0][i] + '" id="id_' + other_list[0][i] + '" ' + other_list[2][i] + \
-							' /><label for="id_' + other_list[0][i] + '">' + item.name + '</label>'])
+			pass
+		form_other.append('<input type="checkbox" name="' + other_list[0][i] + '" id="id_' + other_list[0][i] + '" ' + other_list[2][i] + \
+							' /><label for="id_' + other_list[0][i] + '">' + item.name + '</label>')
 		i += 1
 
 	form_teacher = []
-	while i <= len(Id.objects.all().sort_by('name')):
-		if item.urlid in request.user.get_profile().other_announcements.split(','):
-			checked = 'checked="yes"'
-		else:
+	i = 0
+	for item in Id.objects.filter(urlid__startswith='pid').order_by('name'):
+		try:
+			if item.urlid in request.user.get_profile().teacher_announcements.split(','):
+				checked = 'checked="yes"'
+			else:
+				checked = ''
+		except:
 			checked = ''
-		form_teacher.append(['<input type="checkbox" name="' + item.urlid + '" id="id_' + item.urlid + '" ' + checked + \
-							' /><label for="id_' + item.urlid + '">' + item.name + '</label>'])
+			pass
+		form_teacher.append('<input type="checkbox" name="' + item.urlid + '" id="id_' + item.urlid + '" ' + checked + \
+							' /><label for="id_' + item.urlid + '">' + item.name + '</label>')
+		i += 1
 	msg = ''
-	if request.method == 'POST':
+	'''if request.method == 'POST':
 		form = OtherAnnouncements(request.POST)
 		
 		msg = 'Η αλλαγή ήταν επιτυχής'
 	else:
-		form = OtherAnnouncements()
+		form = OtherAnnouncements()'''
 	return render_to_response('settings.html', {
 			'school': getschool(request),
 			'mail': getmail(request),
-			'form': form,
+			#'form': form,
 			'msg': msg,
 			'form_other': form_other,
 			'form_teacher': form_teacher,

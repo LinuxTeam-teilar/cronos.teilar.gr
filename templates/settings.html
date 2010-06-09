@@ -41,21 +41,12 @@ eclass:
 2
 3
 4
-<!--form action="." method="POST">
-	{% for status in other_status %}
-	<input type="checkbox" name="{% cycle 'noc' 'teilar' 'career' 'linuxteam' 'school' 'pr' 'dionysos' 'library' %}" id="id_{% cycle 'noc' 'teilar' 'career' 'linuxteam' 'school' 'pr' 'dionysos' 'library' %}" {% ifequal status 'set' %} checked="yes" {% endifequal %}><label for="id_{% cycle 'noc' 'teilar' 'career'     'linuxteam' 'school' 'pr' 'dionysos' 'library' %}">{% cycle 'Κέντρο Διαχείρισης Δικτύου' 'Κεντρική Σελίδα ΤΕΙ Λάρισας' 'Γραφείο Διασύνδεσης' 'Linux Team' school 'Γραφείο Δημοσίων και Διεθνών Σχέσεων' 'Πρόγραμμα Γραμματείας' 'Κεντρική Βιβλιοθήκη' %}</label><br />
-	{% endfor %}
-	<input class="button" type="submit" value="Υποβολή">
-	{% if msg %}
-		{{ msg }}
-	{% endif %}
-</form-->
-
 <form action="." method="POST">
-	{% for i in form_other %}
-		{% for j in i %}
-				{{j}}
-		{% endfor %}
+	{% for item in form_other %}
+		{{item|safe}}<br />
+	{% endfor %}
+	{% for teacher in form_teacher %}
+		{{teacher|safe}}<br />
 	{% endfor %}
 	<input class="button" type="submit" value="Υποβολή">
 	{% if msg %}
