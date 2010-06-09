@@ -96,19 +96,17 @@ attributetype ( 2.51.20100504.20100608.32.14 NAME 'otherAnnouncements'
 	SUBSTR caseIgnoreSubstringsMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{5} )
 
-attributetype ( 2.51.20100504.20100608.32.15 NAME 'firstName'
-	DESC 'first name'
-	SUP name )
-#	EQUALITY caseIgnoreMatch
-#	SUBSTR caseIgnoreSubstringsMatch
-#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{100}
-#	SINGLE-VALUE )
+attributetype ( 2.51.20100504.20100608.32.15 NAME 'teilarAccess'
+	DESC 'Servers that the student has shell access'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{50} )
 
 objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarStudent'
 	DESC 'Credentials of a Student of Tei Larissas'
 	AUXILIARY
-	MUST ( firstName $ registrationNumber $ dionysosUsername $ dionysosPassword $ semester $ introductionYear $ school )
-	MAY ( email $ declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements ) )
+	MUST ( registrationNumber $ dionysosUsername $ dionysosPassword $ semester $ introductionYear $ school )
+	MAY ( declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements $ teilarAccess ) )
 
 
 #attributetype ( 2.51.20100504.20100608.32.16 NAME 'teacherFirstName'
