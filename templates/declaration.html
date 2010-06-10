@@ -8,25 +8,22 @@
 <div class="entry">
 	<h2>Η Δήλωση μου</h2>
 	<table>
-	{% autoescape off %}
+	<th>Κωδικός</th>
+	<th>Τίτλος</th>
+	<th>Εξάμηνο</th>
+	<th>Τύπος</th>
+	<th>ΔΜ</th>
+	<th>Ώρες</th>
 	{% for i in declaration_lessons %}
 		<tr>
 		{% for j in i %}
-			<td>{{j|safe}}__</td>
+			<td>__{{j|safe}}__</td>
 		{% endfor %}
 		</tr>
 	{% endfor %}
 	</table>
 	{% for i in summary %}
-		{% ifequal forloop.counter0 0 %}
-			Σύνολο Μαθημάτων: {{i}}<br />
-		{% endifequal %}
-		{% ifequal forloop.counter0 1 %}
-			Σύνολο διδακτικών μονάδων: {{i}}<br />
-		{% endifequal %}
-		{% ifequal forloop.counter0 2 %}
-			Σύνολο ωρών: {{i}}<br />
-		{% endifequal %}
+		{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}{{i}}
 	{% endfor %}
 	<form action="." method="post">
 		{{ field.label.tag }}{{ field }}
@@ -35,6 +32,5 @@
 			<br />{{msg}}
 		{% endif %}
 	</form>
-	{% endautoescape %}
 </div>
 {% endblock %}

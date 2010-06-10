@@ -13,11 +13,7 @@ Eclass |
 			{% for i in eclass_lessons %}
 				<li>
 				{% for j in i %}
-					{% ifequal forloop.counter0 0 %}
-					{{j|safe}}:
-					{% else %}
-					{{j|safe}}
-					{% endifequal %}
+					{{j|safe}}{% cycle ':' '' %}
 				{% endfor %}
 				</li>
 			{% endfor %}
@@ -30,8 +26,8 @@ Eclass |
 			{% for i in deadlines %}
 				<li>
 				{% for j in i %}
-					{{j|safe}}<br />
-				{% endfor %}<br />
+					{% cycle '<b>' '</b><br />Τίτλος: <i>' '</i><br />Προθεσμία Υποβολής: <i>' '</i><br /></i>Κατάσταση: <i>' %}{{j|safe}}{% cycle '' '' '' '</i><br /><br />' %}
+				{% endfor %}
 				</li>
 			{% endfor %}
 			{% else %}
@@ -43,7 +39,7 @@ Eclass |
 			{% for i in documents %}
 				<li>
 				{% for j in i %}
-					{{j|safe}}<br />
+					{% cycle '<br /><b>' '</b><br />Όνομα Αρχείου: ' %}{{j|safe}}
 				{% endfor %}
 				</li>
 			{% endfor %}
