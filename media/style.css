@@ -3,10 +3,6 @@ body { overflow-x: hidden; }
 #container {
 	width: 100%; min-height: 100%; position: absolute;
 	background: #f4f4f4;
-	background-image: url("./images/logo_bg.png");
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: 70% center;
 }
 
 #header {
@@ -102,4 +98,8 @@ body { overflow-x: hidden; }
 
 #content {
 	width: 730px; min-height: 520px; position: relative; top: 0; left: 270px;
+	background-image: url("./images/logo_bg.png");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center center;
 }
