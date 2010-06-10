@@ -3,6 +3,10 @@ body { overflow-x: hidden; }
 #container {
 	width: 100%; min-height: 100%; position: absolute;
 	background: #f4f4f4;
+	background-image: url("./images/logo_bg.png");
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: 70% center;
 }
 
 #header {
@@ -39,7 +43,7 @@ body { overflow-x: hidden; }
 	display:block; text-decoration: none;
 	border-top: solid 1px #dfdfdf; border-bottom: solid 1px #786721;
 }
-#navigation>li a:link, #navigation>li a:visited{
+#navigation>li a:link, #navigation>li a:visited {
 	padding: 8px 12px 9px 12px;
 	color: #786721;
 	background: #FFE699 url("./images/navigation_bg_link.png") top left repeat-x;
