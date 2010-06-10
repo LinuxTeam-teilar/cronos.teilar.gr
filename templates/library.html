@@ -4,21 +4,38 @@
 Βιβλιοθήκη | 
 {% endblock %}
 {% block content %}
-{% if results  %}
-	{% for i in results %}
-		{% for j in i %}
-			{{j|safe}}<br />
-		{% endfor %}
-	{% endfor %}
-{% else %}
-	<form action="/library/" method="get">
-		{% for field in form %}
-		{{ field.label.tag }}{{ field }}
-		{% endfor %}
-		<input type="submit" value="Αναζήτηση" />
-		{% if msg %}
-			<br />{{msg}}
-		{% endif %}
-	</form>
-{% endif %}
+	<div class="entry">
+		<h2>Αναζήτηση</h2>
+		<form action="/library/" method="get">
+			{% for field in form %}
+			{{ field.label.tag }}{{ field }}
+			{% endfor %}
+			<input type="submit" value="Αναζήτηση" />
+			{% if msg %}
+				<br />{{msg}}
+			{% endif %}
+		</form>
+	</div>
+	{% if results %}
+		<div class="entry">
+			<h2>Αποτελέσματα</h2>
+			<ul>
+			{% for i in results %}
+				<li>
+				{% for j in i %}
+					{% ifequal forloop.counter0 0 %}
+					{{j|safe}}
+					{% endifequal %}
+					{% ifequal forloop.counter0 1 %}
+					{{j|safe}}
+					{% endifequal %}
+					{% ifequal forloop.counter0 2 %}
+					{{j|safe}}
+					{% endifequal %}
+				{% endfor %}
+				</li>
+			{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
 {% endblock %}
