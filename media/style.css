@@ -2,11 +2,11 @@ body { overflow-x: hidden; }
 
 #container {
 	width: 100%; min-height: 100%; position: absolute;
-	background: #f4f4f4;
+	background: #f5f5f5;
 }
 
 #header {
-	width: 260px; height: 100%; position: absolute; top: 0; left: 0; z-index: 2;
+	width: 260px; height: 100%; position: fixed; top: 0; left: 0; z-index: 2;
 	background: #dfdfdf url("./images/header_bg.png") top right repeat-y;
 	border-right: solid 1px #aaa;
 
@@ -20,6 +20,10 @@ body { overflow-x: hidden; }
 	text-indent: -9999px;
 	background: url("./images/logo_sidebar.png") -10px -20px no-repeat;
 }
+
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*FOR NAVIGATION--------------------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 #navigation {
 	margin: 20px 15px 0 15px;
@@ -53,6 +57,10 @@ body { overflow-x: hidden; }
 }
 #navigation>li a:active { background: #786721 url("./images/navigation_bg_active.png") top left repeat-x; }
 
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*FOR PROFILE-----------------------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
 #profile {
 	position: relative; height: 52px; top: 0; right: 0; display: block;
 	background: #e3e3e3 url("./images/profile_bg.jpg") repeat;
@@ -79,7 +87,6 @@ body { overflow-x: hidden; }
 	-moz-border-radius: 8px; /* FF1+ */
 	-webkit-border-radius: 8px; /* Saf3+, Chrome */
 	border-radius: 8px; /* Opera 10.5, IE 9 */
-
 }
 
 #profile a.button:link, #profile a.button:visited {
@@ -96,10 +103,88 @@ body { overflow-x: hidden; }
 	text-shadow: #504416 0px -1px 0px;
 }
 
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*CONTENT---------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
 #content {
-	width: 730px; min-height: 520px; position: relative; top: 0; left: 270px;
-	background-image: url("./images/logo_bg.png");
+	width: 77.7%; min-width: 730px; height: 80%; min-height: 522px; position: relative; top: 10px; left: 270px;
+	padding-top: 25px;	
+/*	background-image: url("./images/logo_bg.png");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	background-position: center center;
+	background-position: center center;*/
 }
+
+#content a { text-decoration: none; }
+
+#content #notifications { margin-bottom: 30px; }
+#content #notifications p {
+	width: 550px;
+	margin: 0 0 5px 75px; padding: 9px 12px 10px 12px;
+	background: #FFECB3; border: dashed 1px #E6AC00;
+	font: normal 13px/17px Verdana, Arial, Helvetica, sans-serif;
+	color: #786721;
+	
+}
+
+#content #notifications p>a:link, #content #notifications p>a:visited {
+	padding: 1px 4px 1px 4px;
+	border-bottom: dashed 1px #504416;
+	color: #504416;
+	background: #FFF2CC;
+}
+#content #notifications p>a:hover, #content #notifications p>a:focus {
+	border-bottom: dashed 1px #111;
+	color: #111;
+	background: #FFF2CC;
+}
+
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*FOR ENTRY CONTENT-----------------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
+#content .entry {
+	width: 620px; display: block; position: relative;
+	margin: 0 0 30px 30px; padding: 50px 22px 18px 22px;
+	background: #fcfcfc;
+	border: solid 1px #aaa;
+	font: normal 13px/17px Verdana, Arial, Helvetica, sans-serif;
+	color: #212121;
+	
+	-moz-border-radius: 4px; /* FF1+ */
+	-webkit-border-radius: 4px; /* Saf3+, Chrome */
+	border-radius: 4px; /* Opera 10.5, IE 9 */
+	
+	-moz-box-shadow: 0px 0px 5px #ccc; /* FF3.5+ */
+	-webkit-box-shadow: 0px 0px 5px #ccc; /* Saf3.0+, Chrome */
+	box-shadow: 0px 0px 5px #ccc; /* Opera 10.5, IE 9.0 */
+	
+}
+
+#content .entry h3, #content .entry h2 {
+	position: absolute; top: 15px; left: 23px;
+	font: bold 22px Verdana, Arial, Helvetica, sans-serif;
+	color: #aaa;
+}
+
+#content .entry a:link, #content .entry a:visited {
+	border-bottom: solid 1px #786721;
+	color: #786721;
+}
+
+#content .entry a:hover, #content .entry a:focus {
+	border-bottom: solid 1px #111;
+	color: #111;
+}
+
+#content .rss-promo { background: #FFECB3; border: solid 1px #E6AC00; }
+#content .rss-promo a:link, #content .rss-promo a:visited {
+	width: 260px; height: 55px; display: block;
+	padding: 1px 0 0 42px;
+	border: 0; color: #E6AC00; text-shadow: #fff 0px 1px 0px;
+	background: url("./images/rss.png") top left no-repeat;
+}
+#content .rss-promo a:hover, #content .rss-promo a:focus { border: 0; color: #B38600; }
+#content .rss-promo p { color: #786721; }
+
