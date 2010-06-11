@@ -26,7 +26,7 @@ Eclass |
 				{% for i in deadlines %}
 				<li>
 					{% for j in i %}
-						{% cycle '<b>' '</b><br />Τίτλος: <i>' '</i><br />Προθεσμία Υποβολής: <i>' '</i><br /></i>Κατάσταση: <i>' %}{{j|safe}}{% cycle '' '' '' '</i><br /><br />' %}
+						{% cycle '<b>' '</b><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Τίτλος:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Προθεσμία Υποβολής:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Κατάσταση:</i> ' %}{{j|safe}}
 					{% endfor %}
 				</li>
 				{% endfor %}
@@ -39,7 +39,7 @@ Eclass |
 				{% for i in documents %}
 				<li>
 					{% for j in i %}
-						{% cycle '<br /><b>' '</b><br />Όνομα Αρχείου: ' %}{{j|safe}}
+						{% cycle '<b>' '</b><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Όνομα Αρχείου:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Ημερομηνία:</i> ' %}{{j|safe}}
 					{% endfor %}
 				</li>
 				{% endfor %}

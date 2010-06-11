@@ -12,17 +12,16 @@ def declaration(request):
 	msg = ''
 	summary = ''
 	declaration_lessons = []
-	try:
+	declaration_full = request.user.get_profile().declaration.split(',')
+	if request.user.get_profile().declaration:
 		declaration_full = request.user.get_profile().declaration.split(',')
 		i = 3
 		summary = declaration_full[:i]
 		while i <= len(declaration_full) - len(summary):
 			declaration_lessons.append(declaration_full[i:i+6])
 			i += 6
-	except:
+	else:
 		msg = 'Η δήλωσή σας είναι κενή'
-		pass
-
 	return  render_to_response('declaration.html', {
 			'summary': summary,
 			'declaration_lessons': declaration_lessons,

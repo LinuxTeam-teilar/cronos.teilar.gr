@@ -59,8 +59,9 @@ def eclass(request):
 				lesson = item.contents[0]
 				i += 1
 			else:
-				title = soup1.findAll('a', 'square_bullet2')[j].contents[0].contents[0]
-				documents.append([lesson, title])
+				title = soup1.findAll('a', 'square_bullet2')[j].contents[0].contents[0].split(' - (')[0]
+				date = soup1.findAll('a', 'square_bullet2')[j].contents[0].contents[0].split(' - (')[1][:-1]
+				documents.append([lesson, title, date])
 				j += 1
 
 	except:
