@@ -9,7 +9,6 @@ body { overflow-x: hidden; }
 	width: 260px; height: 100%; position: fixed; top: 0; left: 0; z-index: 2;
 	background: #dfdfdf url("./images/header_bg.png") top right repeat-y;
 	border-right: solid 1px #aaa;
-
 }
 
 #header h1 {
