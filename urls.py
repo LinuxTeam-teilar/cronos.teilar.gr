@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import admin
 from cronos.announcements.feeds import *
 from cronos.announcements.views import *
-from cronos.declaration.views import *
+from cronos.dionysos.views import *
 from cronos.eclass.views import *
 from cronos.login.views import *
 from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
