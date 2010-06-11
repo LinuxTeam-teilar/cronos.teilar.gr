@@ -28,14 +28,11 @@ def library(request):
 			k = 0
 			for item in (soup.findAll('a', 'mediumBoldAnchor')):
 				title = str(soup.findAll('td')[i].contents[0].contents[0])
-				author = ''
-				for j in (soup.findAll('td')[i+1].contents[0].contents):
-					author += str(j)
-				editor = ''
-				for j in (soup.findAll('td')[i+2].contents[0].contents):
-					editor += str(j)
+				author = ''.join(str(soup.findAll('td')[i+1].contents[0].contents[1:]))[4:-5]
+				editor = str(soup.findAll('td')[i+2].contents[0].contents[0]).split(' : ')[1]
+				city = str(soup.findAll('td')[i+2].contents[0].contents[0]).split(' : ')[0]
 				i += 10
-				results.append([title, author, editor])
+				results.append([title, author, editor, city])
 			if (results == []):
 				msg = 'Δεν υπάρχουν αποτελέσματα'
 	else:
