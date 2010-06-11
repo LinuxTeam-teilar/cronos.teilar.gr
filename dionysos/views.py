@@ -27,3 +27,8 @@ def declaration(request):
 			'declaration_lessons': declaration_lessons,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
+
+@login_required
+def grades(request):
+	return render_to_response('grades.html', {
+		}, context_instance = RequestContext(request))
