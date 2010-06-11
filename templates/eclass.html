@@ -4,9 +4,6 @@
 Eclass | 
 {% endblock %}
 {% block content %}
-	<div id="notifications">
-		<p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από το e-class, επισκευτείτε τις <a href="/settings">ρυθμίσεις</a> για να την ανανεώσετε και στο Cronos</p>
-	</div>
 	{% for item in headers %}
 		<div class="entry">
 		<h3>{{item|safe}}</h3>
@@ -53,4 +50,7 @@ Eclass |
 		</ul>
 		</div>
 	{% endfor %}
+	<div id="notifications">
+		<p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από το e-class, επισκευτείτε τις <a href="/settings">ρυθμίσεις</a> για να την ανανεώσετε και στο Cronos</p>
+	</div>
 {% endblock %}
