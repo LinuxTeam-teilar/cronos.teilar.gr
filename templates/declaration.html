@@ -27,13 +27,7 @@
 			{% for i in summary %}
 				<tr><td colspan="5" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}</i></td><td align="right">{{i}}</td></tr>
 			{% endfor %}
-			<!--form action="." method="post">
-			{{ field.label.tag }}{{ field }}
-			Σε περίπτωση που έχετε ανανεώσει τη δήλωσή σας στη Γραμματεία:<input type="submit" value="Ανανέωση" />
-			{% if msg %}
-				<br />{{msg}}
-			{% endif %}
-		</form-->
+		</table>
 	{% endif %}
 	</div>
 	<div id="notifications">
