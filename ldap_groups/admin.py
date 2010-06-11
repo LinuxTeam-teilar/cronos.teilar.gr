@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib import admin
 from cronos.ldap_groups.models import LDAPGroup
 from cronos.ldap_groups.views import ldap_search
 from django.conf.urls.defaults import *
+from django.contrib import admin
 
 class LDAPGroupAdmin(admin.ModelAdmin):
     class Media:

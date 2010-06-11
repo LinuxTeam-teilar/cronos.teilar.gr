@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.syndication.feeds import *
 from cronos.announcements.models import Announcements
-from django.contrib.auth.models import User
 from cronos.user.models import *
+from django.contrib.auth.models import User
+from django.contrib.syndication.feeds import *
 
 class AnnouncementFeed(Feed):
 	title = 'Ανακοινώσεις ΤΕΙ Λάρισας'

@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseNotAllowed
 import ldap
 import ldap.filter
-from django.conf import settings
-#from accounts import settings
-
 import simplejson as json
-
-from django.http import HttpResponse, HttpResponseNotAllowed
 
 class LDAPSearchResult(object):
     """

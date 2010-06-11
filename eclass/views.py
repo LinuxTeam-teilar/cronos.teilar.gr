@@ -2,16 +2,16 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+import base64
+import os
 import pycurl
 import StringIO
 import urllib
-import os
 import urlparse
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-import base64
 
 @login_required
 def eclass(request):

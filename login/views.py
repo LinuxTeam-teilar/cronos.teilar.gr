@@ -2,10 +2,10 @@
 
 from cronos.login.forms import *
 from django import http
+from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
-from django.contrib.auth import login, authenticate, logout
 
 def mylogin(request):
 	msg = ''

@@ -2,10 +2,10 @@
 
 from cronos.announcements.models import *
 from cronos.declaration.forms import *
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
+from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 @login_required
 def declaration(request):
@@ -20,12 +20,12 @@ def declaration(request):
 	if request.method == 'POST':
 		form = DeclarationForm(request.GET)
 		from BeautifulSoup import BeautifulSoup
+		import base64
+		import os
 		import pycurl
 		import StringIO
 		import urllib
-		import os
 		import urlparse
-		import base64
 
 		conn = pycurl.Curl()
 

@@ -167,8 +167,8 @@ class SignupWizard(FormWizard):
 				conn.perform()
 
 			# add to ldap
-			import ldap
 			from django.conf import settings
+			import ldap
 			import ldap.modlist as modlist
 			
 			l=ldap.initialize(settings.LDAP_URL)
