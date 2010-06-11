@@ -1,36 +1,42 @@
 {% extends "base.html" %}
 
 {% block title %}
-Δήλωση | 
+	Δήλωση | 
 {% endblock %}
 
 {% block content %}
-<div class="entry">
-	<h2>Η Δήλωση μου</h2>
-	<table>
-	<th>Κωδικός</th>
-	<th>Τίτλος</th>
-	<th>Εξάμηνο</th>
-	<th>Τύπος</th>
-	<th>ΔΜ</th>
-	<th>Ώρες</th>
-	{% for i in declaration_lessons %}
-		<tr>
-		{% for j in i %}
-			<td>__{{j|safe}}__</td>
-		{% endfor %}
-		</tr>
-	{% endfor %}
-	</table>
-	{% for i in summary %}
-		{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}{{i}}
-	{% endfor %}
-	<form action="." method="post">
-		{{ field.label.tag }}{{ field }}
-		Σε περίπτωση που έχετε ανανεώσει τη δήλωσή σας στη Γραμματεία:<input type="submit" value="Ανανέωση" />
-		{% if msg %}
-			<br />{{msg}}
-		{% endif %}
-	</form>
-</div>
+	<div class="entry">
+	<h2>Δήλωση μαθημάτων</h2>
+	{% if msg %}
+		{{ msg }}
+	{% else %}
+		<table border="2">
+			<th>Κωδικός</th>
+			<th>Τίτλος</th>
+			<th>Εξάμηνο</th>
+			<th>Τύπος</th>
+			<th>ΔΜ</th>
+			<th>Ώρες</th>
+			{% for i in declaration_lessons %}
+				<tr>
+				{% for j in i %}
+					<td>__{{j|safe}}__</td>
+				{% endfor %}
+				</tr>
+			{% endfor %}
+			{% for i in summary %}
+				<tr><td colspan="5" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}</i></td><td align="right">{{i}}</td></tr>
+			{% endfor %}
+			<!--form action="." method="post">
+			{{ field.label.tag }}{{ field }}
+			Σε περίπτωση που έχετε ανανεώσει τη δήλωσή σας στη Γραμματεία:<input type="submit" value="Ανανέωση" />
+			{% if msg %}
+				<br />{{msg}}
+			{% endif %}
+		</form-->
+	{% endif %}
+	</div>
+	<div id="notifications">
+		<p>Σε περίπτωση που έχετε κάνει αλλαγές στη δήλωσή σας σας από το dionysos, επισκευτείτε τις <a href="/settings">ρυθμίσεις</a> για να την ανανεώσετε και στο Cronos</p>
+	</div>
 {% endblock %}
