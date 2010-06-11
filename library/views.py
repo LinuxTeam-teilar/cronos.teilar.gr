@@ -15,7 +15,7 @@ def library(request):
 	if request.method == 'GET':
 		form = SearchForm(request.GET)
 		if form.is_valid():
-			link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=10&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % (str(request.GET.get('search')))
+			link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=40&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % (str(request.GET.get('search')))
 			b = StringIO.StringIO()
 			conn = pycurl.Curl()
 			conn.setopt(pycurl.URL, link)
