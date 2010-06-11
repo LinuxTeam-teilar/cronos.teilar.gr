@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Λίστα Καθηγητών | 
+{% endblock %}
+
+{% block content %}
+	<div class="entry">
+		<h3>Λίστα Καθηγητών</h3>
+		<ul>
+		{% for i in teachers %}
+			<li>
+			{% for j in i %}
+				{% ifequal forloop.counter0 0 %}<b>{{j|safe}}</b><br />{% endifequal %}
+				{% ifequal forloop.counter0 1 %}
+					{% if j %}
+						&nbsp;&nbsp;&nbsp;&nbsp;<i>Email:</i> <a href="mailto:{{j|safe}}">{{j|safe}}</a><br />
+					{% endif %}
+				{% endifequal %}
+				{% ifequal forloop.counter0 2 %}
+					{% if j %}
+						&nbsp;&nbsp;&nbsp;&nbsp;<i>Τμήμα / Υπηρεσία:</i> {{j|safe}}
+					{% endif %}
+				{% endifequal %}
+			{% endfor %}
+			</li>
+		{% endfor %}
+		</ul>
+{% endblock %}
