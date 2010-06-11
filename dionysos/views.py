@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.announcements.models import *
-from cronos.declaration.forms import *
+from cronos.dionysos.forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
