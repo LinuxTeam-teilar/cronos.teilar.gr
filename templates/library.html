@@ -11,11 +11,13 @@
 			{{ field.label.tag }}{{ field }}
 			{% endfor %}
 			<input type="submit" value="Αναζήτηση" />
-			{% if msg %}
-				<br />{{msg}}
-			{% endif %}
 		</form>
 	</div>
+	{% if msg %}
+	<div id="notifications">
+		<p>{{msg}}</p>
+	</div>
+	{% endif %}
 	{% if results %}
 		<div class="entry">
 			<h2>Αποτελέσματα</h2>
@@ -23,15 +25,7 @@
 			{% for i in results %}
 				<li>
 				{% for j in i %}
-					{% ifequal forloop.counter0 0 %}
-					{{j|safe}}
-					{% endifequal %}
-					{% ifequal forloop.counter0 1 %}
-					{{j|safe}}
-					{% endifequal %}
-					{% ifequal forloop.counter0 2 %}
-					{{j|safe}}
-					{% endifequal %}
+					{% cycle '<b>' '</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;<i>Συγγραφέας:</i> ' '</i><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Εκδοτικός Οίκος:</i> ' ', ' %}{{j|safe}}
 				{% endfor %}
 				</li>
 			{% endfor %}
