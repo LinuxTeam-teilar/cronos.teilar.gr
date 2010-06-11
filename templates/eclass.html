@@ -4,50 +4,53 @@
 Eclass | 
 {% endblock %}
 {% block content %}
-{% for item in headers %}
-<div class="entry">
-	<h3>{{item|safe}}</h3>
-	<ul>
+	<div id="notifications">
+		<p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από το e-class, επισκευτείτε τις <a href="/settings">ρυθμίσεις</a> για να την ανανεώσετε και στο Cronos</p>
+	</div>
+	{% for item in headers %}
+		<div class="entry">
+		<h3>{{item|safe}}</h3>
+		<ul>
 		{%ifequal forloop.counter0 0 %}
 			{% if eclass_lessons %}
-			{% for i in eclass_lessons %}
+				{% for i in eclass_lessons %}
 				<li>
-				{% for j in i %}
-					{{j|safe}}{% cycle ':' '' %}
-				{% endfor %}
+					{% for j in i %}
+						{{j|safe}}{% cycle ':' '' %}
+					{% endfor %}
 				</li>
-			{% endfor %}
+				{% endfor %}
 			{% else %}
-			<li>Δεν υπάρχουν μαθήματα προς εμφάνιση.</li>
+				<li>Δεν υπάρχουν μαθήματα προς εμφάνιση.</li>
 			{% endif %}
 		{% endifequal %}
 		{% ifequal forloop.counter0 1 %}
 			{% if deadlines %}
-			{% for i in deadlines %}
+				{% for i in deadlines %}
 				<li>
-				{% for j in i %}
-					{% cycle '<b>' '</b><br />Τίτλος: <i>' '</i><br />Προθεσμία Υποβολής: <i>' '</i><br /></i>Κατάσταση: <i>' %}{{j|safe}}{% cycle '' '' '' '</i><br /><br />' %}
-				{% endfor %}
+					{% for j in i %}
+						{% cycle '<b>' '</b><br />Τίτλος: <i>' '</i><br />Προθεσμία Υποβολής: <i>' '</i><br /></i>Κατάσταση: <i>' %}{{j|safe}}{% cycle '' '' '' '</i><br /><br />' %}
+					{% endfor %}
 				</li>
-			{% endfor %}
+				{% endfor %}
 			{% else %}
-			<li>Δεν υπάρχουν εργασίες προς παράδοση.</li>
+				<li>Δεν υπάρχουν εργασίες προς παράδοση.</li>
 			{% endif %}
 		{% endifequal %}
 		{% ifequal forloop.counter0 2 %}
 			{% if documents %}
-			{% for i in documents %}
+				{% for i in documents %}
 				<li>
-				{% for j in i %}
-					{% cycle '<br /><b>' '</b><br />Όνομα Αρχείου: ' %}{{j|safe}}
-				{% endfor %}
+					{% for j in i %}
+						{% cycle '<br /><b>' '</b><br />Όνομα Αρχείου: ' %}{{j|safe}}
+					{% endfor %}
 				</li>
-			{% endfor %}
+				{% endfor %}
 			{% else %}
-			<li>Δεν υπάρχουν έγγραφα προς εμφάνιση.</li>
+				<li>Δεν υπάρχουν έγγραφα προς εμφάνιση.</li>
 			{% endif %}
 		{% endifequal %}
-	</ul>
-</div>
-{% endfor %}
+		</ul>
+		</div>
+	{% endfor %}
 {% endblock %}
