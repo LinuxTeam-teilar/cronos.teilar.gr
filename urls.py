@@ -3,18 +3,15 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
-
+from cronos.announcements.feeds import *
+from cronos.announcements.views import *
+from cronos.declaration.views import *
+from cronos.eclass.views import *
+from cronos.login.views import *
 from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
 from cronos.signup.views import SignupWizard
-
-from cronos.announcements.feeds import *
-
-from cronos.login.views import *
-from cronos.eclass.views import *
-from cronos.declaration.views import *
-from cronos.webmail.views import *
-from cronos.announcements.views import *
 from cronos.user.views import *
+from cronos.webmail.views import *
 
 admin.autodiscover()
 

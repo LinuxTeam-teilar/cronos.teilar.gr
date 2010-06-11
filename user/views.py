@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from cronos.announcements.models import Id
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib.auth.models import User
-from cronos.announcements.models import Id
-#from cronos.user.forms import *
-from cronos.announcements.models import Id
 
 def getmail(request):
 	if request.user.email[-21:] == 'notapplicablemail.com':

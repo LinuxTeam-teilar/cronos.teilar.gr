@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import ldap
-import ldap.filter
-
+from cronos.ldap_groups.models import LDAPGroup
+from cronos.user.models import LdapProfile
 from django.conf import settings
 from django.contrib.auth.models import User, Group
-from cronos.user.models import LdapProfile
-
-from cronos.ldap_groups.models import LDAPGroup
+import ldap
+import ldap.filter
 
 class BaseGroupMembershipBackend(object):
 	"""

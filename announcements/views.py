@@ -3,9 +3,9 @@
 from cronos.announcements.models import Announcements
 from cronos.announcements.forms import AnnouncementForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.contrib.auth.models import User
 
 @login_required
 def announcements(request):

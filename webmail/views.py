@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from BeautifulSoup import BeautifulSoup
+from cronos.webmail.forms import *
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+import base64
+import os
 import pycurl
 import StringIO
 import urllib
-import os
 import urlparse
-import base64
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from cronos.webmail.forms import *
-from BeautifulSoup import BeautifulSoup
-from django.shortcuts import render_to_response
-from django.template import RequestContext
 
 def webmail_login(request, link):
 	b = StringIO.StringIO()
