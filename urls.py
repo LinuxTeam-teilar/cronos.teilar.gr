@@ -10,6 +10,7 @@ from cronos.eclass.views import *
 from cronos.login.views import *
 from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
 from cronos.signup.views import SignupWizard
+from cronos.teachers.views import *
 from cronos.user.views import *
 from cronos.webmail.views import *
 
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
 	(r'^logout/', mylogout),
 	(r'^user/', user),
 	(r'^settings/', user_settings),
+	(r'^teachers/', teachers),
 
 	url(r'^library/', include('cronos.library.urls')),
 
