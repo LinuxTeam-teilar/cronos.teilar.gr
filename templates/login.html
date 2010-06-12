@@ -17,7 +17,12 @@
 	<div id="login-form">
 		<form action="." method="POST">
 			{% for field in form %}
-			{{ field.label_tag }}{{ field }}
+				{% ifequal forloop.counter0 2 %}
+					<br />
+					{{ field }}{{ field.label_tag }}
+				{% else %}
+					{{ field.label_tag }}{{ field }}
+				{% endifequal %}
 			{% endfor %}
 			<input class="button" type="submit" value="Είσοδος" name="submit" />
 			<input class="button" type="submit" value="Εγγραφή" name="signup" />
