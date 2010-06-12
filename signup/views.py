@@ -33,8 +33,8 @@ class SignupWizard(FormWizard):
 		else:
 			webmail_username = ''
 		username = str([form.cleaned_data for form in form_list][3]['username'])
-		password1 = (str([form.cleaned_data for form in form_list][3]['password1']))
-		password2 = (str([form.cleaned_data for form in form_list][3]['password2']))
+		password1 = str([form.cleaned_data for form in form_list][3]['password1'])
+		password2 = str([form.cleaned_data for form in form_list][3]['password2'])
 		try:
 			if password1 != password2:
 				from random import choice
@@ -42,7 +42,7 @@ class SignupWizard(FormWizard):
 				dionysos_password = ''.join([choice(string.printable) for i in range(20)])
 				msg = 'Ο κωδικός δεν επαληθεύτηκε'
 			else:
-				password = Sha1Password(str([form.cleaned_data for form in form_list][0]['password1']))
+				password = Sha1Password(password1)
 			from BeautifulSoup import BeautifulSoup
 			import pycurl
 			import StringIO
@@ -181,10 +181,10 @@ class SignupWizard(FormWizard):
 			import ldap.modlist as modlist
 			
 			l=ldap.initialize(settings.LDAP_URL)
-			l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+			l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 	
 			# before adding to ldap, check if user is already there
-			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'cn=%s' % (username),settings.SEARCH_FIELDS) or \
+			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS) or \
 				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'dionysosUsername=%s' % (dionysos_username),settings.SEARCH_FIELDS):
 				return self.render(self.get_form(0), request, 0, context = {
 						'msg': 'Ο χρήστης υπάρχει ήδη.'
