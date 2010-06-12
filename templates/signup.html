@@ -1,34 +1,40 @@
 {% extends "intro.html" %}
 
 {% block title %}
-Εγγραφή | 
+	Εγγραφή | 
 {% endblock %}
+
 {% block content %}
-<div id="login">
-	<div id="info">
-		<h3>Εγγραφή</h3>
-		<p>Συμπληρώστε στη φόρμα δεξιά ένα όνομα χρήστη και κωδικό πρόσβασης για το cronos, και στη συνέχεια συμπληρώστε τα στοιχεία σας από τις υπηρεσίες Διόνυσος, e-class και webmail.</p>
-		<h3>Προσοχή</h3>
-		<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για το cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε</p>
+	<div id="login">
+		<div id="info">
+			<h3>Οδηγίες Εγγραφής</h3>
+			<p>Συμπληρώστε ένα όνομα χρήστη και κωδικό πρόσβασης για το cronos, αφού πρώτα συμπληρώσετε τα στοιχεία σας από τις παρακάτω υπηρεσίες του ΤΕΙ Λάρισας:</p>
+			<ul>
+				<li>Πρόγραμμα Γραμματείας (<a href="http://dionysos.teilar.gr">dionysos</a>)</li>
+				<li>Πλατφόρμα Ασύγχρονης Εκπαίδευσης (<a href="http://e-class.teilar.gr">e-class</a>)</li>
+				<li>Ηλεκτρονική Αλληλογραφία (<a href="http://myweb.teilar.gr">webmail</a>)</p>
+			</ul>
+			<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για τα cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε.</p>
+		</div>
+		<div id="login-form">
+			<form action="." method="post">
+				<p>Βήμα {{ step }} Από {{ step_count }}</p>
+				<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+				{{ previous_fields|safe }}
+				{% for field in form %}
+				{{ field.label_tag }}{{ field }}
+				{% endfor %}
+				<input class="button" type="submit" value=
+					{% ifequal step 4 %}
+					"Εγγραφή"
+					{% else %}
+					"Επόμενο"
+					{% endifequal %}
+					/>
+				{% if msg %}
+				<p class="messages">{{ msg }}</p>
+				{% endif %}
+			</form>
+		</div>
 	</div>
-	<div id="login-form">
-		<form action="." method="post">
-			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-			{{ previous_fields|safe }}
-			{% for field in form %}
-			{{ field.label_tag }}{{ field }}
-			{% endfor %}
-			<input class="button" type="submit" value=
-				{% ifequal step 4 %}
-				"Εγγραφή"
-				{% else %}
-				"Επόμενο"
-				{% endifequal %}
-				/>
-			{% if msg %}
-			<p class="messages">{{ msg }}</p>
-			{% endif %}
-		</form>
-	</div>
-</div>
 {% endblock %}

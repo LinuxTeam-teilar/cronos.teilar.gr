@@ -19,21 +19,30 @@ def Sha1Password(password):
 
 class SignupWizard(FormWizard):
 	def done(self, request, form_list):
-		username = str([form.cleaned_data for form in form_list][0]['username'])
-		password = Sha1Password(str([form.cleaned_data for form in form_list][0]['password']))
-		dionysos_username = str([form.cleaned_data for form in form_list][1]['dionysos_username'])
-		dionysos_password = base64.b64encode(str([form.cleaned_data for form in form_list][1]['dionysos_password']))
-		eclass_username = str([form.cleaned_data for form in form_list][2]['eclass_username'])
+		msg = ''
+		dionysos_username = str([form.cleaned_data for form in form_list][0]['dionysos_username'])
+		dionysos_password = base64.b64encode(str([form.cleaned_data for form in form_list][0]['dionysos_password']))
+		eclass_username = str([form.cleaned_data for form in form_list][1]['eclass_username'])
 		if eclass_username:
-			eclass_password = base64.b64encode(str([form.cleaned_data for form in form_list][2]['eclass_password']))
+			eclass_password = base64.b64encode(str([form.cleaned_data for form in form_list][1]['eclass_password']))
 		else:
 			eclass_username = ''
-		webmail_username = str([form.cleaned_data for form in form_list][3]['webmail_username'])
+		webmail_username = str([form.cleaned_data for form in form_list][2]['webmail_username'])
 		if webmail_username:
-			webmail_password = base64.b64encode(str([form.cleaned_data for form in form_list][3]['webmail_password']))
+			webmail_password = base64.b64encode(str([form.cleaned_data for form in form_list][2]['webmail_password']))
 		else:
 			webmail_username = ''
+		username = str([form.cleaned_data for form in form_list][3]['username'])
+		password1 = (str([form.cleaned_data for form in form_list][3]['password1']))
+		password2 = (str([form.cleaned_data for form in form_list][3]['password2']))
 		try:
+			if password1 != password2:
+				from random import choice
+				import string
+				dionysos_password = ''.join([choice(string.printable) for i in range(20)])
+				msg = 'Ο κωδικός δεν επαληθεύτηκε'
+			else:
+				password = Sha1Password(str([form.cleaned_data for form in form_list][0]['password1']))
 			from BeautifulSoup import BeautifulSoup
 			import pycurl
 			import StringIO
@@ -80,7 +89,7 @@ class SignupWizard(FormWizard):
 			school = str(soup2.findAll('td')[1].contents[0]).strip()
 			soup2 = BeautifulSoup(str(soup.findAll('table')[15]))
 			# introduction year is in type first_year - next_year season
-			# if season is Εαρινό we parse the second_year, else the first_year
+			# if season is 'Εαρινό' we parse the second_year, else the first_year
 			season = str(soup2.findAll('span','tablecell')[1].contents[0])[:2]
 			if season == 'Ε':
 				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[1])
@@ -209,7 +218,7 @@ class SignupWizard(FormWizard):
 					attrs['webmailUsername'] = [webmail_username]
 					attrs['webmailPassword'] = [webmail_password]
 				attrs['homeDirectory'] = ['/home/' + username]
-				attrs['gidNumber'] = ['100'] # 100 is the users group
+				attrs['gidNumber'] = ['100'] # 100 is the users group in linux
 				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
 				uids = []
 				for item in results:
@@ -234,8 +243,10 @@ class SignupWizard(FormWizard):
 					'registration_number': registration_number,
 				}, context_instance = RequestContext(request))
 		except:
+			if msg == '':
+				msg = 'Παρουσιάστηκε Σφάλμα'
 			return self.render(self.get_form(0), request, 0, context = {
-					'msg': 'Παρουσιάστηκε Σφάλμα',
+					'msg': msg,
 				})
 
 	def get_template(self, step):

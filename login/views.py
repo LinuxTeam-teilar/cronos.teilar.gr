@@ -11,6 +11,8 @@ def mylogin(request):
 	msg = ''
 	form = ''
 	if request.method == "POST":
+		if request.POST.get('signup'):
+			return HttpResponseRedirect('/signup')
 		form = LoginForm(request.POST)
 		username = request.POST.get('username')
 		password = request.POST.get('password')
