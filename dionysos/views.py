@@ -95,6 +95,6 @@ def grades_notready(request):
 			'lessons': lessons,
 		}, context_instance = RequestContext(request))
 
-def grades():
+def grades(request):
 	return render_to_response('grades.html', {
 		}, context_instance = RequestContext(request))
