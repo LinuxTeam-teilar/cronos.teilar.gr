@@ -5,7 +5,7 @@ from cronos.signup.views import SignupWizard
 
 class SignupDionysos(forms.Form):
 	dionysos_username = forms.CharField(max_length = 100, label = 'Όνομα Χρήστη από το dionysos:')
-	dionysos_password = forms.CharField(max_length = 100, widget = forms.PasswordInput(), label = 'Κωδικός Πρόσβασης από το Διόνυσο:')
+	dionysos_password = forms.CharField(max_length = 100, widget = forms.PasswordInput(), label = 'Κωδικός Πρόσβασης από το dionysos:')
 
 class SignupEclass(forms.Form):
 	eclass_username = forms.CharField(max_length = 100, label = 'Όνομα Χρήστη από το e-class:', required = False)
