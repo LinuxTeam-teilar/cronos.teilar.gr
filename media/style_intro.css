@@ -65,9 +65,13 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #login-form input[type="password"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
 
-#login-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
+#login-form input[type="checkbox"] { margin: 5px 0 5px 30px; }
 
-#login-form input[type="submit"] { display: block; margin: 10px 0 0 30px;}
+#login-form label[id="id_username"] { display: block; margin: 12px 0 0 30px; color: #212121; }
+
+#login-form input[name="submit"] { display: block; margin: 10px 0 0 30px;}
+
+#login-form input[name="signup"] { display: block; margin: -20px 0 0 110px;}
 
 #login-form form>a { margin: 20px 0 0 30px; }
 
