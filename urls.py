@@ -38,7 +38,7 @@ urlpatterns = patterns('',
 
 	url(r'^ldap/', include('cronos.ldap_groups.urls')),
 
-	(r'^signup/', SignupWizard([SignupCronos, SignupDionysos, SignupEclass, SignupWebmail])),
+	(r'^signup/', SignupWizard([SignupDionysos, SignupEclass, SignupWebmail, SignupCronos])),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
