@@ -1,4 +1,6 @@
-body { overflow-x: hidden; }
+body { overflow-x: hidden; background: #f5f5f5; }
+
+th { color: #786721; width: 280px; }
 
 #container {
 	width: 100%; min-height: 100%; position: absolute;
@@ -186,4 +188,3 @@ body { overflow-x: hidden; }
 }
 #content .rss-promo a:hover, #content .rss-promo a:focus { border: 0; color: #B38600; }
 #content .rss-promo p { color: #786721; }
-

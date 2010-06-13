@@ -18,13 +18,13 @@
 		</div>
 		<div id="login-form">
 			<form action="." method="post">
-				<p>Βήμα {{ step }} Από {{ step_count }}</p>
+				<div style="font-weight:bold; text-align: center; margin-top: 5px; color: #786721;">Βήμα {{ step }} Από {{ step_count }}</div>
 				<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
 				{{ previous_fields|safe }}
 				{% for field in form %}
 				{{ field.label_tag }}{{ field }}
 				{% endfor %}
-				<input class="button" type="submit" value=
+				<input class="button" name="step" type="submit" value=
 					{% ifequal step 4 %}
 					"Εγγραφή"
 					{% else %}

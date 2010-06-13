@@ -19,7 +19,10 @@
 			{% for field in form %}
 				{% ifequal forloop.counter0 2 %}
 					<br />
-					{{ field }}{{ field.label_tag }}
+					<input type="checkbox" name="remember" />
+					<label style="display: inline; margin: 0 0 0 0" for="remember">Nα με θυμάσαι</label>
+					<br />
+					<!--{{ field }}{{ field.label_tag }}-->
 				{% else %}
 					{{ field.label_tag }}{{ field }}
 				{% endifequal %}
