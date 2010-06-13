@@ -8,6 +8,17 @@ h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #78672
 
 p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
 
+a {
+	text-decoration: none;
+	border-bottom: 1px dashed #212121;
+	color: #212121;
+}
+
+a:hover {
+	border-bottom: 1px dashed #786721;
+	color: #786721;
+}
+
 #login {
 	width: 750px; float: left;
 	margin: 30px 0 0 0; padding: 15px 15px 15px 15px;
@@ -69,9 +80,11 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #login-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
 
-#login-form input[name="submit"] { display: block; margin: 10px 0 0 30px;}
+#login-form input[name="submit"] { display: inherited; margin: 10px 0 0 30px; }
 
-#login-form input[name="signup"] { display: block; margin: -22px 0 0 110px;}
+#login-form input[name="signup"] { display: inline;}
+
+#login-form input[name="step"] { display: block; margin: 10px 0 0 30px; }
 
 #login-form form>a { margin: 20px 0 0 30px; }
 
