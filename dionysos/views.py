@@ -31,6 +31,7 @@ def declaration(request):
 @login_required
 def grades_notready(request):
 	from BeautifulSoup import BeautifulSoup
+	import base64
 	import pycurl
 	import StringIO
 	import urllib
@@ -44,8 +45,8 @@ def grades_notready(request):
 	conn = pycurl.Curl()
 	cookie_file_name = os.tempnam('/tmp','dionysos')
 	login_form_seq = [
-		('userName', 'theochat24'),
-		('pwd', 'h0m3b*yz'),
+		('userName', request.user.get_profile().dionysos_username),
+		('pwd', base64.b64decode(request.user.get_profile().dionysos_password)),
 		('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
 		('loginTrue', 'login')
 	]
@@ -69,30 +70,28 @@ def grades_notready(request):
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
 	conn.perform()
 	output = (b.getvalue()).decode('windows-1253')
-	print output
 	soup = BeautifulSoup(output)
-	headers = []
-	for item in soup.findAll('td', 'groupHeader'):
-		headers.append(item.contents[0])
-	lessons = []
-	all_lessons = soup.findAll('td', 'topBorderLight')
+	all = []
 	i = 0
-	a = 80
-	print a
-	while i < len(all_lessons):
-		lessons.append([
-			str(all_lessons[i].contents[0]),
-			str(all_lessons[i+1].contents[0]),
-			str(all_lessons[i+2].contents[0]),
-			str(all_lessons[i+3].contents[0]),
-			str(all_lessons[i+4].contents[0]),
-			str(all_lessons[i+5].contents[0]),
-			str(all_lessons[i+6])
-		])
-		i += 7
+	while i < len(soup.findAll('table')[13].findAll('td')):
+		item = soup.findAll('td')[i]
+		if item in soup.findAll('td', 'groupHeader'):
+			all.append([item.contents[0]])
+		if item in soup.findAll('td', 'topBorderLight'):
+			all.append([
+				str(item.contents[0]),
+				str(soup.findAll('td')[i+1].contents[0]),
+				str(soup.findAll('td')[i+2].contents[0]),
+				str(soup.findAll('td')[i+3].contents[0]),
+				str(soup.findAll('td')[i+4].contents[0]),
+				str(soup.findAll('td')[i+5].contents[0]),
+				str(soup.findAll('td')[i+6].contents[0].i.contents[0]),
+			])
+			i += 6
+		i += 1
+
 	return render_to_response('grades.html', {
-			'headers': headers,
-			'lessons': lessons,
+			'all': all,
 		}, context_instance = RequestContext(request))
 
 def grades(request):
