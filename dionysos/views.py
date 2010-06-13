@@ -71,27 +71,68 @@ def grades_notready(request):
 	conn.perform()
 	output = (b.getvalue()).decode('windows-1253')
 	soup = BeautifulSoup(output)
-	all = []
+	lessons = []
 	i = 0
 	while i < len(soup.findAll('table')[13].findAll('td')):
-		item = soup.findAll('td')[i]
-		if item in soup.findAll('td', 'groupHeader'):
-			all.append([item.contents[0]])
-		if item in soup.findAll('td', 'topBorderLight'):
-			all.append([
-				str(item.contents[0]),
-				str(soup.findAll('td')[i+1].contents[0]),
-				str(soup.findAll('td')[i+2].contents[0]),
-				str(soup.findAll('td')[i+3].contents[0]),
-				str(soup.findAll('td')[i+4].contents[0]),
-				str(soup.findAll('td')[i+5].contents[0]),
-				str(soup.findAll('td')[i+6].contents[0].i.contents[0]),
+		item0 = soup.findAll('table')[13].findAll('td')[i]
+		item = soup.findAll('table')[13].findAll('td')
+		if item0 in soup.findAll('td', 'groupHeader'):
+			lessons.append([item0.contents[0]])
+		if item0 in soup.findAll('td', 'topBorderLight'):
+			year = str(item[i+6].contents[0].i.contents[0])
+			year = year[:10] + year[-9:]
+			if year =='--':
+				year = '-'
+			lessons.append([
+				str(item0.contents[0]),
+				str(item[i+1].contents[0]),
+				str(item[i+2].contents[0]),
+				str(item[i+3].contents[0]),
+				str(item[i+4].contents[0]),
+				str(item[i+5].span.contents[0]),
+				year,
 			])
+			try:
+				if item[i+9].contents[1][-3:] == '(Θ)' or item[i+9].contents[1][-3:] == '(Ε)':
+					year = str(item[i+14].contents[0].i.contents[0])
+					year = year[:10] + year[-9:]
+					lessons.append([
+						str(item[i+9].contents[1]),
+						'',
+						str(item[i+10].i.contents[0]),
+						str(item[i+11].contents[0]),
+						str(item[i+12].contents[0]),
+						str(item[i+13].contents[0]),
+						year,
+					])
+					year = str(item[i+22].contents[0].i.contents[0])
+					year = year[:10] + year[-9:]
+					lessons.append([
+						str(item[i+17].contents[1]),
+						'',
+						str(item[i+18].i.contents[0]),
+						str(item[i+19].contents[0]),
+						str(item[i+20].contents[0]),
+						str(item[i+21].contents[0]),
+						year,
+					])
+					i += 11
+			except:
+				pass
 			i += 6
+#		try:
+#			if item0.contents[0][:6] == 'Σύνολα':
+#				lessons.append([
+#					str(item0.b.contents[0]),
+#					','.join(item[i+1].contents[1:7:2])
+#				])
+#			i += 1
+#		except:
+#			pass
 		i += 1
 
 	return render_to_response('grades.html', {
-			'all': all,
+			'lessons': lessons,
 		}, context_instance = RequestContext(request))
 
 def grades(request):
