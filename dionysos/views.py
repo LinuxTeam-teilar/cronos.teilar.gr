@@ -120,15 +120,18 @@ def grades_notready(request):
 			except:
 				pass
 			i += 6
-#		try:
-#			if item0.contents[0][:6] == 'Σύνολα':
-#				lessons.append([
-#					str(item0.b.contents[0]),
-#					','.join(item[i+1].contents[1:7:2])
-#				])
-#			i += 1
-#		except:
-#			pass
+		try:
+			if item0.contents[0][:6] == 'Σύνολα':
+				lessons.append([
+					str(item0.b.contents[0]),
+					str(item[i+1].contents[1].contents[0]).strip(),
+					str(item[i+1].contents[3].contents[0]).strip(),
+					str(item[i+1].contents[5].contents[0]).strip(),
+					str(item[i+1].contents[7].contents[0]).strip(),
+				])
+				i += 1
+		except:
+			pass
 		i += 1
 
 	return render_to_response('grades.html', {

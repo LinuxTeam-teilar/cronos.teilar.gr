@@ -11,7 +11,7 @@
 		{{ msg }}
 	{% else %}
 		<table>
-			<th style="text-align:left; width: 120px;">Κωδικός</th>
+			<th style="width: 120px;">Κωδικός</th>
 			<th style="width: 280px;">Τίτλος</th>
 			<th style="width: 80px;">Εξάμηνο</th>
 			<th style="width: 80px;">Τύπος</th>
@@ -25,7 +25,6 @@
 					{% ifequal forloop.counter0 3 %} style="text-align: center;" {% endifequal %}
 					{% ifequal forloop.counter0 4 %} style="text-align: center;" {% endifequal %}
 					{% ifequal forloop.counter0 5 %} style="text-align: center;" {% endifequal %}
-
 					>{{j|safe}}</td>
 				{% endfor %}
 				</tr>
