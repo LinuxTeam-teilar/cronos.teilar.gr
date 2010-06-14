@@ -15,8 +15,12 @@
 			{% ifequal i|length 1 %}
 				<th colspan="7">{{j|safe}}</th></tr>
 				<tr><td>Μάθημα</td><td>Τύπος</td><td>ΔΜ</td><td>Ώρες</td><td>ECTS</td><td>Βαθμός</td><td>Εξεταστική</td>
-			{% else %}
-				<td>{{j|safe}}<td>
+			{% endifequal %}
+			{% ifequal i|length 5 %}
+				<td colspan="6" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' 'Σύνολο 4: ' 'Σύνολο 5: ' %}</i></td><td align="right">{{j}}</td></tr><tr>
+			{% endifequal %}
+			{% ifequal i|length 7 %}
+				<td>{{j|safe}}</td>
 			{% endifequal %}
 		{% endfor %}
 		</tr>
