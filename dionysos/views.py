@@ -31,45 +31,12 @@ def declaration(request):
 @login_required
 def grades_notready(request):
 	from BeautifulSoup import BeautifulSoup
+	from cronos.login.teilar import *
 	import base64
-	import pycurl
-	import StringIO
-	import urllib
-	import os
-	import urlparse
 
-	conn = pycurl.Curl()
-
-	# login to dionysos
-	b = StringIO.StringIO()
-	conn = pycurl.Curl()
-	cookie_file_name = os.tempnam('/tmp','dionysos')
-	login_form_seq = [
-		('userName', request.user.get_profile().dionysos_username),
-		('pwd', base64.b64decode(request.user.get_profile().dionysos_password)),
-		('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
-		('loginTrue', 'login')
-	]
-	login_form_data = urllib.urlencode(login_form_seq)
-	conn.setopt(pycurl.FOLLOWLOCATION, 1)
-	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
-	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/')
-	conn.setopt(pycurl.POST, 0)
-	conn.perform()
-	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/login.asp')
-	conn.setopt(pycurl.POST, 1)
-	conn.setopt(pycurl.POSTFIELDS, login_form_data)
-	conn.setopt(pycurl.WRITEFUNCTION, b.write)
-	conn.perform()
-	b = StringIO.StringIO()
-	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&')
-	conn.setopt(pycurl.POST, 1)
-	conn.setopt(pycurl.POSTFIELDS, login_form_data)
-	conn.setopt(pycurl.COOKIE, cookie_file_name)
-	conn.setopt(pycurl.WRITEFUNCTION, b.write)
-	conn.perform()
-	output = (b.getvalue()).decode('windows-1253')
+	link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
+	dionysos_login(0, request.user.get_profile().dionysos_username, base64.b64decode(request.user.get_profile().dionysos_password))
+	output = dionysos_login(link, 0, 0)
 	soup = BeautifulSoup(output)
 	lessons = []
 	i = 0
@@ -134,9 +101,10 @@ def grades_notready(request):
 			pass
 		i += 1
 
-	return render_to_response('grades.html', {
-			'lessons': lessons,
-		}, context_instance = RequestContext(request))
+
+#	return render_to_response('grades.html', {
+#			'lessons': lessons,
+#		}, context_instance = RequestContext(request))
 
 def grades(request):
 	return render_to_response('grades.html', {

@@ -2,6 +2,7 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
+from cronos.login.teilar import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
@@ -16,28 +17,8 @@ import urlparse
 @login_required
 def eclass(request):
 	try:
-		b = StringIO.StringIO()
-		conn = pycurl.Curl()
-		login_form_seq = [
-			('uname', request.user.get_profile().eclass_username),
-			('pass', base64.b64decode(request.user.get_profile().eclass_password)),
-			('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82')
-		]
-		login_form_data = urllib.urlencode(login_form_seq)
-		conn.setopt(pycurl.FOLLOWLOCATION, 1)
-		conn.setopt(pycurl.POSTFIELDS, login_form_data)
-		conn.setopt(pycurl.URL, 'http://e-class.teilar.gr/index.php')
-		conn.setopt(pycurl.WRITEFUNCTION, b.write)
-		conn.perform()
-		output = unicode(b.getvalue(), 'utf-8', 'ignore')
+		output = eclass_login(request.user.get_profile().eclass_username, base64.b64decode(request.user.get_profile().eclass_password))
 		soup = BeautifulSoup(output)
-
-#		headers = []
-#		i = 0
-#		for item in soup.findAll('th', 'persoBoxTitle'):
-#			if i != 1 and i != 2 and i != 5:
-#				headers.append(item.contents[0])
-#			i += 1
 
 		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))
 		deadlines = []
