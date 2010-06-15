@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.user.forms import *
+from cronos.signup.views import Sha1Password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
@@ -9,10 +10,8 @@ from django.template import RequestContext
 def getmail(request):
 	if request.user.email[-21:] == 'notapplicablemail.com':
 		mail = 'unset'
-	elif request.user.get_profile().webmail_username:
-		mail = request.user.get_profile().webmail_username + '@teilar.gr'
 	else:
-		''
+		mail = request.user.email
 	return mail
 
 def getschool(request):
@@ -29,46 +28,56 @@ def user(request):
 
 @login_required
 def user_settings(request):
-	other_list = []
-	other_list.append(['noc', 'teilar', 'career', 'linuxteam', 'school', 'pr', 'dionysos', 'library'])
-	other_list.append(['cid50', 'cid0', 'cid51', 'cid52', request.user.get_profile().school, 'cid55', 'cid53', 'cid54'])
-	other_list.append([])
-	i = 0
-	'''form_other = []
-	for item in Id.objects.filter(urlid__in = other_list[1]).order_by('name'):
-		try:
-			if other_list[1][i] in request.user.get_profile().other_announcements.split(','):
-				other_list[2].append('checked="yes"')
-			else:
-				other_list[2].append('')
-		except:
-			other_list[2].append('')
-			pass
-		form_other.append('<input type="checkbox" name="' + other_list[0][i] + '" id="id_' + other_list[0][i] + '" ' + other_list[2][i] + \
-							' /><label for="id_' + other_list[0][i] + '">' + item.name + '</label>')
-		i += 1
-
-	form_teacher = []
-	i = 0
-	for item in Id.objects.filter(urlid__startswith='pid').order_by('name'):
-		try:
-			if item.urlid in request.user.get_profile().teacher_announcements.split(','):
-				checked = 'checked="yes"'
-			else:
-				checked = ''
-		except:
-			checked = ''
-			pass
-		form_teacher.append('<input type="checkbox" name="' + item.urlid + '" id="id_' + item.urlid + '" ' + checked + \
-							' /><label for="id_' + item.urlid + '">' + item.name + '</label>')
-		i += 1
 	msg = ''
+	cronos_form = CronosForm()
+	dionysos_form = DionysosForm()
+	eclass1_form = Eclass1Form()
+	webmail_form = WebmailForm()
+	email_form = EmailForm()
 	if request.method == 'POST':
-		form = OtherAnnouncements(request.POST)
-		
-		msg = 'Η αλλαγή ήταν επιτυχής'
-	else:
-		form = OtherAnnouncements()'''
+		if request.POST.get('old_password'):
+			cronos_form = CronosForm(request.POST)
+			if cronos_form.is_valid():
+				if request.POST.get('password1') == request.POST.get('password2') :
+					u = User.objects.get(username = request.user.username)
+					if u.check_password(request.POST.get('old_password')):
+						try:
+							import ldap
+							import ldap.modlist as modlist
+							from django.conf import settings
+
+							l = ldap.initialize(settings.LDAP_URL)
+							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+							mod_attrs = [ (ldap.MOD_DELETE, 'userPassword', None) ]
+							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+							mod_attrs = [ (ldap.MOD_ADD, 'userPassword', Sha1Password(request.POST.get('password1'))) ]
+							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+							l.unbind_s()
+							
+							u.set_password(request.POST.get('password1'))
+							u.save()
+						except:
+							msg = 'Παρουσιάστηκε Σφάλμα'
+					else:
+						msg = 'Ο τρέχων κωδικός που δώσατε είναι λανθασμένος, παρακαλούμε ξαναπροσπαθήστε'
+				else:
+					msg = 'Οι κωδικοί δεν ταιριάζουν, παρακαλούμε ξαναπροσπαθήστε'
+		if request.POST.get('dionysos_username'):
+			dionysos_form = DionysosForm(request.POST)
+			if dionysos_form.is_valid():
+				print 'ok'
+				# login to dionysos to verify it
+				msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
+		if eclass1_form.is_valid():
+			msg = 'Η ανανέωση των στοιχείων για το eclass ήταν επιτυχής'
+		if webmail_form.is_valid():
+			msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
+		if email_form.is_valid():
+			u = User.objects.get(username = request.user.username)
+			u.email = request.POST.get('email')
+			u.save()
+			msg = 'Η ανανέωση του email σας ήταν επιτυχής'
+
 	
 	# update dionysos' declaration
 	'''if request.method == 'POST':
@@ -184,5 +193,11 @@ def user_settings(request):
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),
+			'cronos_form': cronos_form,
+			'dionysos_form': dionysos_form,
+			'eclass1_form': eclass1_form,
+			'webmail_form': webmail_form,
+			'email_form': email_form,
+			'msg': msg,
 			'form_teacher': form_teacher,
 		}, context_instance = RequestContext(request))
