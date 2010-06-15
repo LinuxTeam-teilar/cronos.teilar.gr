@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from cronos.user.forms import *
+from cronos.login.teilar import *
 from cronos.signup.views import Sha1Password
+from cronos.user.forms import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+import base64
 import ldap
 import ldap.modlist as modlist
 
@@ -38,6 +40,7 @@ def user_settings(request):
 	eclass1_form = Eclass1Form()
 	webmail_form = WebmailForm()
 	email_form = EmailForm()
+	declaration_form = DeclarationForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -45,11 +48,10 @@ def user_settings(request):
 				if request.POST.get('password1') == request.POST.get('password2'):
 					user = User.objects.get(username = request.user.username)
 					if user.check_password(request.POST.get('old_password')):
-						print 'ok'
 						try:
 							l = ldap.initialize(settings.LDAP_URL)
 							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-							mod_attrs = [ (ldap.MOD_ADD, 'userPassword', Sha1Password(request.POST.get('password1'))) ]
+							mod_attrs = [(ldap.MOD_ADD, 'userPassword', Sha1Password(request.POST.get('password1')))]
 							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							l.unbind_s()
 							
@@ -60,35 +62,84 @@ def user_settings(request):
 						except:
 							msg = 'Παρουσιάστηκε Σφάλμα'
 					else:
-						print 'not ok'
 						msg = 'Ο τρέχων κωδικός που δώσατε είναι λανθασμένος, παρακαλούμε ξαναπροσπαθήστε'
 				else:
 					msg = 'Οι κωδικοί δεν ταιριάζουν, παρακαλούμε ξαναπροσπαθήστε'
-		'''if request.POST.get('dionysos_username'):
+		if request.POST.get('dionysos_username'):
 			dionysos_form = DionysosForm(request.POST)
 			if dionysos_form.is_valid():
 				try:
 					dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
+				except:
+					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
 
+				try:
 					l = ldap.initialize(settings.LDAP_URL)
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-					mod_attrs = [(ldap.MOD_DELETE, 'dionysosUsername', None)]
+					mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = [(ldap.MOD_DELETE, 'dionysosPassword', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = [(ldap.MOD_ADD, 'dionysosUsername', base64.b64encode(request.POST.get('dionysos_password')))]
+					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [base64.b64encode(request.POST.get('dionysos_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
-					u.dionysos_password = (request.POST.get('dionysos_username'))
-					u.dionysos
-					u.save()
+					user = LdapProfile.objects.get(user__username = request.user.username)
+					user.dionysos_username = (request.POST.get('dionysos_username'))
+					user.dionysos_password = (base64.b64encode(request.POST.get('dionysos_password')))
+					user.save()
 					
-				msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
+					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
+				except AttributeError:
+					msg = 'Παρουσιάστηκε Σφάλμα'
 		if eclass1_form.is_valid():
-			msg = 'Η ανανέωση των στοιχείων για το eclass ήταν επιτυχής'
+			eclass1_form = Eclass1Form(request.POST)
+			if eclass1_form.is_valid():
+				try:
+					eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
+				except:
+					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
+
+				try:
+					l = ldap.initialize(settings.LDAP_URL)
+					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+					mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [base64.b64encode(request.POST.get('eclass_password'))]})
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+
+					user = LdapProfile.objects.get(user__username = request.user.username)
+					user.eclass_username = (request.POST.get('eclass_username'))
+					user.eclass_password = base64.b64encode((request.POST.get('eclass_password')))
+					user.save()
+					
+					msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
+				except:
+					msg = 'Παρουσιάστηκε Σφάλμα'
 		if webmail_form.is_valid():
-			msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'''
+			webmail_form = WebmailForm(request.POST)
+			if webmail_form.is_valid():
+				try:
+					webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
+				except:
+					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
+
+				try:
+					l = ldap.initialize(settings.LDAP_URL)
+					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+					mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [base64.b64encode(request.POST.get('webmail_password'))]})
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+
+					user = LdapProfile.objects.get(user__username = request.user.username)
+					user.webmail_username = (request.POST.get('webmail_username'))
+					user.webmail_password = base64.b64encode((request.POST.get('webmail_password')))
+					user.save()
+					
+					msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
+				except:
+					msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('email'):
 			email_form = EmailForm(request.POST)
 			if email_form.is_valid():
@@ -96,13 +147,17 @@ def user_settings(request):
 				u.email = request.POST.get('email')
 				u.save()
 				msg = 'Η ανανέωση του email σας ήταν επιτυχής'
-
+		if request.POST.get('declaration'):
+			declaration_form = DeclarationForm(request.GET)
+			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
+			dionysos_login(0, request.user.get_profile().dionysos_username, base64.b64decode(request.user.get_profile().dionysos_password))
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
 		eclass1_form = Eclass1Form()
 		webmail_form = WebmailForm()
 		email_form = EmailForm()
+		declaration_form = DeclarationForm()
 	
 	# update dionysos' declaration
 	'''if request.method == 'POST':
@@ -223,6 +278,6 @@ def user_settings(request):
 			'eclass1_form': eclass1_form,
 			'webmail_form': webmail_form,
 			'email_form': email_form,
+			'declaration_form': declaration_form,
 			'msg': msg,
-			'form_teacher': form_teacher,
 		}, context_instance = RequestContext(request))
