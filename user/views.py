@@ -29,11 +29,6 @@ def user(request):
 @login_required
 def user_settings(request):
 	msg = ''
-	cronos_form = CronosForm()
-	dionysos_form = DionysosForm()
-	eclass1_form = Eclass1Form()
-	webmail_form = WebmailForm()
-	email_form = EmailForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -77,7 +72,12 @@ def user_settings(request):
 			u.email = request.POST.get('email')
 			u.save()
 			msg = 'Η ανανέωση του email σας ήταν επιτυχής'
-
+	else:
+		cronos_form = CronosForm()
+		dionysos_form = DionysosForm()
+		eclass1_form = Eclass1Form()
+		webmail_form = WebmailForm()
+		email_form = EmailForm()
 	
 	# update dionysos' declaration
 	'''if request.method == 'POST':
