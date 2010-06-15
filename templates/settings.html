@@ -4,53 +4,63 @@
 	Ρυθμίσεις χρήστη {{user}} | 
 {% endblock %}
 
-{% block content %}
-<h1>Ονόματα χρήστη:</h1>
-<ul>
-	<li>Cronos: {{ user.username }} (Αλλαγή Κωδικού) </li>
-	<li>Dionysos: {{ user.get_profile.dionysos_username }} (Ανανέωση) </li>
-	{% if user.get_profile.eclass_username %}
-	<li>Eclass: {{ user.get_profile.eclass_username }} (Αλλαγή)</li>
-	{% endif %}
-	{% if user.get_profile.webmail_username %}
-	<li>Webmail: {{ user.get_profile.webmail_username }} (Αλλαγή)</li>
-	{% endif %}
-</ul>
-<br />
-<h1>Προσωπικά Στοιχεία</h1>
-<ul>
-	<li>Ονοματεπώνυμο: {{ user.first_name }} {{ user.last_name }}</li>
-	<li>Email: {% ifequal mail 'unset' %} Δεν έχετε ορίσει (Προσθήκη) {% else %} <a href="mailto:{{ mail }}" >{{ mail }}</a> (Αλλαγή){% endifequal %}</li>
-	<li>Αριθμός Μητρώου: {{ user.get_profile.registration_number }}</li>
-	<li>Τμήμα: {{ school }}</li>
-	<li>Εξάμηνο: {{ user.get_profile.semester }}</li>
-	<li>Έτος Εισαγωγής: {{ user.get_profile.introduction_year }}</li>
-	<li><a href="/declaration">Προβολή Δήλωσης</a></li>
-	<li><a href="/eclass">Μαθήματα E-class</a></li>
-</ul>
+{% block extra_css %}
+	<link rel="stylesheet" type="text/css" href="{{ADMIN_MEDIA_PREFIX}}css/widgets.css" />
+{% endblock %}
 
-<h1>Ανακοινώσεις</h1>
-Ανακοινώσεις Σχολής
-eclass:
-1
-2
-3
-4
-Ανακοινώσεις Καθηγητών
-1
-2
-3
-4
-<form action="." method="POST">
-	{% for item in form_other %}
-		{{item|safe}}<br />
-	{% endfor %}
-	{% for teacher in form_teacher %}
-		{{teacher|safe}}<br />
-	{% endfor %}
-	<input class="button" type="submit" value="Υποβολή">
-	{% if msg %}
-		{{ msg }}
-	{% endif %}
-</form>
+{% block extra_js_top %}
+	<script type="text/javascript" src="/admin/jsi18n/"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/core.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/admin/RelatedObjectLookups.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/getElementsBySelector.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/actions.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/SelectBox.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/SelectFilter2.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/calendar.js"></script>
+	<script type="text/javascript" src="{{ADMIN_MEDIA_PREFIX}}js/admin/DateTimeShortcuts.js"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="entry">
+		<h3>Ονόματα χρήστη:</h3>
+		<ul>
+			<li><i>Cronos: </i>{{ user.username }} </li>
+			<li><i>Dionysos: </i>{{ user.get_profile.dionysos_username }} (Ανανέωση) </li>
+			{% if user.get_profile.eclass_username %}
+				<li><i>Eclass: </i>{{ user.get_profile.eclass_username }} (Αλλαγή)</li>
+			{% endif %}
+			{% if user.get_profile.webmail_username %}
+				<li><i>Webmail: </i>{{ user.get_profile.webmail_username }} (Αλλαγή)</li>
+			{% endif %}
+		</ul>
+	</div>
+
+	<div class="entry">
+		<h3>Άλλα Στοιχεία</h3>
+		<ul>
+			<li>Email:
+			{% ifequal mail 'unset' %}
+				Δεν έχει οριστεί (Προσθήκη)
+			{% else %}
+				<a href="mailto:{{ mail }}" >{{ mail }}</a> (Αλλαγή)
+			{% endifequal %}</li>
+			<li><a href="/dionysos">Δήλωση Μαθημάτων</a> (Ανανέωση)</li>
+			<li><a href="/dionysos">Βαθμολογία</a> (Ανανέωση)</li>
+			<li><a href="/eclass">Μαθήματα E-class</a> (Ανανέωση)</li>
+		</ul>
+	</div>
+
+	<div class="entry">
+		<h3>Ανακοινώσεις Καθηγητών</h3>
+		<form action="/add/{{ field }}" method="POST">
+			{{ form }}
+			<input class="button" type="submit" value="Υποβολή"> | <a href="javascript:window.close()">Cancel</a></p>
+		</form>
+	</div>
+
+	<div class="entry">
+		<h3>Άλλες Ανακοινώσεις</h3>
+		{{ form.other_announcements }}
+		<input class="button" type="submit" value="Υποβολή">
+	</div>
 {% endblock %}
