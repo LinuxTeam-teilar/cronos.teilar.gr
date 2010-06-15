@@ -173,7 +173,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 
 			user.is_staff = False
 			user.is_superuser = False
-			user.set_password('ldap')
+			user.set_password(password)
 			user.save()
 			userprofile = LdapProfile(
 				user = user,
