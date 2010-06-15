@@ -2,10 +2,14 @@
 
 from cronos.user.forms import *
 from cronos.signup.views import Sha1Password
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+import ldap
+import ldap.modlist as modlist
+
 
 def getmail(request):
 	if request.user.email[-21:] == 'notapplicablemail.com':
@@ -29,49 +33,70 @@ def user(request):
 @login_required
 def user_settings(request):
 	msg = ''
+	cronos_form = CronosForm()
+	dionysos_form = DionysosForm()
+	eclass1_form = Eclass1Form()
+	webmail_form = WebmailForm()
+	email_form = EmailForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
 			if cronos_form.is_valid():
-				if request.POST.get('password1') == request.POST.get('password2') :
-					u = User.objects.get(username = request.user.username)
-					if u.check_password(request.POST.get('old_password')):
+				if request.POST.get('password1') == request.POST.get('password2'):
+					user = User.objects.get(username = request.user.username)
+					if user.check_password(request.POST.get('old_password')):
+						print 'ok'
 						try:
-							import ldap
-							import ldap.modlist as modlist
-							from django.conf import settings
-
 							l = ldap.initialize(settings.LDAP_URL)
 							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-							mod_attrs = [ (ldap.MOD_DELETE, 'userPassword', None) ]
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							mod_attrs = [ (ldap.MOD_ADD, 'userPassword', Sha1Password(request.POST.get('password1'))) ]
 							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							l.unbind_s()
 							
-							u.set_password(request.POST.get('password1'))
-							u.save()
+							user.set_password(request.POST.get('password1'))
+							user.save()
+
+							msg = 'Η αλλαγή του κωδικού πραγματοποιήθηκε με επιτυχία'
 						except:
 							msg = 'Παρουσιάστηκε Σφάλμα'
 					else:
+						print 'not ok'
 						msg = 'Ο τρέχων κωδικός που δώσατε είναι λανθασμένος, παρακαλούμε ξαναπροσπαθήστε'
 				else:
 					msg = 'Οι κωδικοί δεν ταιριάζουν, παρακαλούμε ξαναπροσπαθήστε'
-		if request.POST.get('dionysos_username'):
+		'''if request.POST.get('dionysos_username'):
 			dionysos_form = DionysosForm(request.POST)
 			if dionysos_form.is_valid():
-				print 'ok'
-				# login to dionysos to verify it
+				try:
+					dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
+
+					l = ldap.initialize(settings.LDAP_URL)
+					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+					mod_attrs = [(ldap.MOD_DELETE, 'dionysosUsername', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					mod_attrs = [(ldap.MOD_DELETE, 'dionysosPassword', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					mod_attrs = [(ldap.MOD_ADD, 'dionysosUsername', base64.b64encode(request.POST.get('dionysos_password')))]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+
+					u.dionysos_password = (request.POST.get('dionysos_username'))
+					u.dionysos
+					u.save()
+					
 				msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
 		if eclass1_form.is_valid():
 			msg = 'Η ανανέωση των στοιχείων για το eclass ήταν επιτυχής'
 		if webmail_form.is_valid():
-			msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
-		if email_form.is_valid():
-			u = User.objects.get(username = request.user.username)
-			u.email = request.POST.get('email')
-			u.save()
-			msg = 'Η ανανέωση του email σας ήταν επιτυχής'
+			msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'''
+		if request.POST.get('email'):
+			email_form = EmailForm(request.POST)
+			if email_form.is_valid():
+				u = User.objects.get(username = request.user.username)
+				u.email = request.POST.get('email')
+				u.save()
+				msg = 'Η ανανέωση του email σας ήταν επιτυχής'
+
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()

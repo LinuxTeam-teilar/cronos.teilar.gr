@@ -31,7 +31,6 @@ def dionysos_login(link, username, password):
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
 		conn.perform()
 		return (b.getvalue()).decode('windows-1253')
-	print 'eimai e3o'
 	conn.setopt(pycurl.URL, link)
 	conn.setopt(pycurl.POST, 1)
 	conn.setopt(pycurl.POSTFIELDS, login_form_data)
