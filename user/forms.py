@@ -41,3 +41,6 @@ class WebmailForm(forms.Form):
 
 class EmailForm(forms.Form):
 	email = forms.EmailField()
+
+class DeclarationForm(forms.Form):
+	declaration = forms.CharField(widget = forms.HiddenInput())
