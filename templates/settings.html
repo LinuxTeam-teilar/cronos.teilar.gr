@@ -21,33 +21,147 @@
 {% endblock %}
 
 {% block content %}
+	{% if msg %}
+		<div id="notifications">
+			<p>{{ msg }}</p>
+		</div>
+	{% endif %}
+
 	<div class="entry">
-		<h3>Ονόματα χρήστη:</h3>
-		<ul>
-			<li><i>Cronos: </i>{{ user.username }} </li>
-			<li><i>Dionysos: </i>{{ user.get_profile.dionysos_username }} (Ανανέωση) </li>
-			{% if user.get_profile.eclass_username %}
-				<li><i>Eclass: </i>{{ user.get_profile.eclass_username }} (Αλλαγή)</li>
-			{% endif %}
-			{% if user.get_profile.webmail_username %}
-				<li><i>Webmail: </i>{{ user.get_profile.webmail_username }} (Αλλαγή)</li>
-			{% endif %}
-		</ul>
+		<h3>Στοιχεία για το Cronos</h3>
+		<table>
+			<tr><th><i>Όνομα Χρήστη: </i>{{user.username}}</th><tr>
+			<form action="." method="POST" align="center">
+					{% for field in cronos_form %}
+						<tr><td>{{ field.label_tag }}<br />{{ field }}</td></tr>
+					{% endfor %}
+				<tr><td><input class="button" type="submit" value="Αλλαγή Κωδικού" /></td></tr>
+			</form>
+		</table>
+	</div>
+
+	<div class="entry">
+		<h3>Στοιχεία άλλων υπηρεσιών ΤΕΙ Λάρισας</h3>
+		<table>
+			<tr>
+				<th><i>Dionysos: </i>{{ user.get_profile.dionysos_username }}</th>
+				<th><i>Eclass: </i>
+					{% if user.get_profile.eclass_username %}
+						{{ user.get_profile.eclass_username }}
+					{% else %}
+						----
+					{% endif %}
+				</th>
+				<th><i>Webmail: </i>
+					{% if user.get_profile.webmail_username %}
+						{{ user.get_profile.webmail_username }}
+					{% else %}
+						----
+					{% endif %}
+				</th>
+			</tr>
+			<tr>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in dionysos_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value="Ανανέωση" />
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in eclass1_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value=
+						{% if user.get_profile.eclass_username %}
+							"Ανανέωση"
+						{% else %}
+							"Προσθήκη"
+						{% endif %}
+						/>
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in webmail_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value=
+						{% if user.get_profile.webmail_username %}
+							"Ανανέωση"
+						{% else %}
+							"Προσθήκη"
+						{% endif %}
+						/>
+					</form>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div id="notifications">
+		<p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης από τις υπόλοιπες τρεις υπηρεσίες (<a href="http://dionysos.teilar.gr/">dionysos</a>, <a href="http://e-class.teilar.gr/">eclass</a>, <a href="http://myweb.teilar.gr">webmail</a>) συμπληρώστε τα νέα στοιχεία στην κατάλληλη φόρμα</p>
 	</div>
 
 	<div class="entry">
 		<h3>Άλλα Στοιχεία</h3>
-		<ul>
-			<li>Email:
-			{% ifequal mail 'unset' %}
-				Δεν έχει οριστεί (Προσθήκη)
-			{% else %}
-				<a href="mailto:{{ mail }}" >{{ mail }}</a> (Αλλαγή)
-			{% endifequal %}</li>
-			<li><a href="/dionysos">Δήλωση Μαθημάτων</a> (Ανανέωση)</li>
-			<li><a href="/dionysos">Βαθμολογία</a> (Ανανέωση)</li>
-			<li><a href="/eclass">Μαθήματα E-class</a> (Ανανέωση)</li>
-		</ul>
+		<table>
+			<tr>
+				<th><i>Email:</i>
+					{% ifequal mail 'unset' %}
+						-----
+					{% else %}
+						<a href="mailto:{{ mail }}" >{{ mail }}</a>
+					{% endifequal %}
+				</th>
+				<th><a href="/dionysos/#declaration">Δήλωση Μαθημάτων</a></th>
+				<th><a href="/dionysos/#grades">Βαθμολογία</a></th>
+				<th><a href="/eclass">Μαθήματα E-class</a></th>
+			</tr>
+			<tr>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in email_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value=
+						{% ifequal mail 'unset' %}
+							Προσθήκη
+						{% else %}
+							Αλλαγή
+						{% endifequal %}
+						"" />
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in declaration_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value="Ανανέωση" />
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in grades_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value="Ανανέωση" />
+					</form>
+				</td>
+				<td>
+					<form action="." method="POST" align="center">
+						{% for field in eclass2_form %}
+							{{ field }}
+						{% endfor %}
+						<input class="button" type="submit" value="Ανανέωση" />
+					</form>
+				</td>
+			</tr>
+		</table>
 	</div>
 
 	<div class="entry">

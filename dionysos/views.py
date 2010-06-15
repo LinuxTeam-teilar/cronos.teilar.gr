@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 @login_required
-def declaration(request):
+def dionysos(request):
 	msg = ''
 	summary = ''
 	declaration_lessons = []
@@ -22,7 +22,8 @@ def declaration(request):
 			i += 6
 	else:
 		msg = 'Η δήλωσή σας είναι κενή'
-	return  render_to_response('declaration.html', {
+
+	return  render_to_response('dionysos.html', {
 			'summary': summary,
 			'declaration_lessons': declaration_lessons,
 			'msg': msg,
@@ -106,6 +107,3 @@ def grades_notready(request):
 #			'lessons': lessons,
 #		}, context_instance = RequestContext(request))
 
-def grades(request):
-	return render_to_response('grades.html', {
-		}, context_instance = RequestContext(request))

@@ -21,3 +21,23 @@ class OtherAnnouncementsForm(forms.ModelForm):
 	class Meta:
 		model = LdapProfile
 		exclude = ['user', 'declaration', 'dionysos_username', 'dionysos_password', 'eclass_username', 'eclass_password', 'eclass_lessons', 'introduction_year', 'registration_number', 'school', 'semester', 'webmail_username', 'webmail_password', 'teacher_announcements', 'other_announcements']
+
+class CronosForm(forms.Form):
+	old_password = forms.CharField(max_length = 30, widget = forms.PasswordInput(), label = 'Παλιός Κωδικός:')
+	password1 = forms.CharField(max_length = 30, widget = forms.PasswordInput(), label = 'Νέος Κωδικός:')
+	password2 = forms.CharField(max_length = 30, widget = forms.PasswordInput(), label = 'Επαλήθευση Νέου Κωδικού:')
+
+class DionysosForm(forms.Form):
+	dionysos_username = forms.CharField(max_length = 30)
+	dionysos_password = forms.CharField(max_length = 30, widget = forms.PasswordInput())
+
+class Eclass1Form(forms.Form):
+	eclass_username = forms.CharField(max_length = 30)
+	eclass_password = forms.CharField(max_length = 30, widget = forms.PasswordInput())
+
+class WebmailForm(forms.Form):
+	webmail_username = forms.CharField(max_length = 30)
+	webmail_password = forms.CharField(max_length = 30, widget = forms.PasswordInput())
+
+class EmailForm(forms.Form):
+	email = forms.EmailField()
