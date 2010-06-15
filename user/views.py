@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.announcements.models import Id
+from cronos.user.forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
@@ -24,6 +24,7 @@ def getschool(request):
 def user(request):
 	return render_to_response('user.html', {
 			'mail': getmail(request),
+			'school': getschool(request),
 		}, context_instance = RequestContext(request))
 
 @login_required
@@ -33,7 +34,7 @@ def user_settings(request):
 	other_list.append(['cid50', 'cid0', 'cid51', 'cid52', request.user.get_profile().school, 'cid55', 'cid53', 'cid54'])
 	other_list.append([])
 	i = 0
-	form_other = []
+	'''form_other = []
 	for item in Id.objects.filter(urlid__in = other_list[1]).order_by('name'):
 		try:
 			if other_list[1][i] in request.user.get_profile().other_announcements.split(','):
@@ -62,7 +63,7 @@ def user_settings(request):
 							' /><label for="id_' + item.urlid + '">' + item.name + '</label>')
 		i += 1
 	msg = ''
-	'''if request.method == 'POST':
+	if request.method == 'POST':
 		form = OtherAnnouncements(request.POST)
 		
 		msg = 'Η αλλαγή ήταν επιτυχής'
@@ -174,11 +175,14 @@ def user_settings(request):
 						'form': form,
 				}, context_instance = RequestContext(request))'''
 
+	if request.method == 'POST':
+		form_teacher = TeacherAnnouncementsForm(request.POST)
+		if form_teacher.is_valid():
+			print 'form is valid'
+	else:
+		form_teacher = TeacherAnnouncementsForm()
+
 	return render_to_response('settings.html', {
-			'school': getschool(request),
 			'mail': getmail(request),
-			#'form': form,
-			'msg': msg,
-			'form_other': form_other,
 			'form_teacher': form_teacher,
 		}, context_instance = RequestContext(request))
