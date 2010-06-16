@@ -71,7 +71,7 @@ def eclass_login(username, password):
 		if soup.find('div', 'user').contents[0] == '&nbsp;':
 			return 1
 		else:
-			return str(unicode(b.getvalue(), 'utf-8', 'ignore'))
+			raise
 	except:
 		return str(unicode(b.getvalue(), 'utf-8', 'ignore'))
 
@@ -110,7 +110,7 @@ def webmail_login(link, username, password):
 			return 1
 	except:
 		if link == 0:
-			return
+			return (b.getvalue()).decode('iso-8859-7')
 		conn.setopt(pycurl.URL, link)
 		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
 		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX')
