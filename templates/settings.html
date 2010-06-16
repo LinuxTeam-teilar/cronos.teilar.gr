@@ -11,7 +11,7 @@
 		</div>
 	{% endif %}
 
-	<div class="entry">
+	<div class="entry" id="cronos">
 		<h3>Στοιχεία για το Cronos</h3>
 		<table>
 			<tr><th><i>Όνομα Χρήστη: </i>{{user.username}}</th><tr>
@@ -24,7 +24,7 @@
 		</table>
 	</div>
 
-	<div class="entry">
+	<div class="entry" id="teilar">
 		<h3>Στοιχεία άλλων υπηρεσιών ΤΕΙ Λάρισας</h3>
 		<table>
 			<tr>
@@ -90,7 +90,7 @@
 		<p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης για κάποια από τρεις υπηρεσίες (<a href="http://dionysos.teilar.gr/">dionysos</a>, <a href="http://e-class.teilar.gr/">eclass</a>, <a href="http://myweb.teilar.gr">webmail</a>), ή θέλετε να προσθέσετε μια νέα στο λογαριασμό σας, συμπληρώστε τα νέα στοιχεία στην κατάλληλη φόρμα</p>
 	</div>
 
-	<div class="entry">
+	<div class="entry" id="other">
 		<h3>Άλλα Στοιχεία</h3>
 		<table>
 			<tr>
@@ -148,7 +148,7 @@
 		</table>
 	</div>
 
-	<div class="entry">
+	<div class="entry" id="theacher">
 		<h3>Ανακοινώσεις Καθηγητών</h3>
 		<form action="/add/{{ field }}" method="POST">
 			{{ form }}
@@ -156,7 +156,7 @@
 		</form>
 	</div>
 
-	<div class="entry">
+	<div class="entry" id="otherann">
 		<h3>Άλλες Ανακοινώσεις</h3>
 		{{ form.other_announcements }}
 		<input class="button" type="submit" value="Υποβολή">
