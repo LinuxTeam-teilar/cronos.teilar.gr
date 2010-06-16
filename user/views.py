@@ -69,66 +69,76 @@ def user_settings(request):
 		if request.POST.get('dionysos_username'):
 			dionysos_form = DionysosForm(request.POST)
 			if dionysos_form.is_valid():
-				try:
-					dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
-					l = ldap.initialize(settings.LDAP_URL)
-					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-					mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encryptPassword(request.POST.get('dionysos_password'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
+				msg = dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
+				if msg != 1:
+					try:
+						l = ldap.initialize(settings.LDAP_URL)
+						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+						mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encryptPassword(request.POST.get('dionysos_password'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						l.unbind_s()
 
-					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.dionysos_username = request.POST.get('dionysos_username')
-					user.dionysos_password = encryptPassword(request.POST.get('dionysos_password'))
-					user.save()
-					
-					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
-				except AttributeError:
-					msg = 'Παρουσιάστηκε Σφάλμα'
+						user = LdapProfile.objects.get(user__username = request.user.username)
+						user.dionysos_username = request.POST.get('dionysos_username')
+						user.dionysos_password = encryptPassword(request.POST.get('dionysos_password'))
+						user.save()
+
+						msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
+					except:
+						msg = 'Παρουσιάστηκε Σφάλμα'
+				else:
+					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το dionysos'
 		if request.POST.get('eclass_username'):
 			eclass1_form = Eclass1Form(request.POST)
 			if eclass1_form.is_valid():
-				try:
-					eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-					l = ldap.initialize(settings.LDAP_URL)
-					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-					mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
+				msg = eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
+				if msg != 1:
+					try:
+						l = ldap.initialize(settings.LDAP_URL)
+						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+						mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						l.unbind_s()
 
-					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.eclass_username = request.POST.get('eclass_username')
-					user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
-					user.save()
+						user = LdapProfile.objects.get(user__username = request.user.username)
+						user.eclass_username = request.POST.get('eclass_username')
+						user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
+						user.save()
 					
-					msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
-				except:
-					msg = 'Παρουσιάστηκε Σφάλμα'
+						msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
+					except:
+						msg = 'Παρουσιάστηκε Σφάλμα'
+				else:
+					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το e-class'
 		if request.POST.get('webmail_username'):
 			webmail_form = WebmailForm(request.POST)
 			if webmail_form.is_valid():
-				try:
-					webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
-					l = ldap.initialize(settings.LDAP_URL)
-					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-					mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encryptPassword(request.POST.get('webmail_password'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
+				msg = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
+				print msg
+				if msg != 1:
+					try:
+						l = ldap.initialize(settings.LDAP_URL)
+						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+						mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encryptPassword(request.POST.get('webmail_password'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						l.unbind_s()
 
-					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.webmail_username = request.POST.get('webmail_username')
-					user.webmail_password = encryptPassword(request.POST.get('webmail_password'))
-					user.save()
+						user = LdapProfile.objects.get(user__username = request.user.username)
+						user.webmail_username = request.POST.get('webmail_username')
+						user.webmail_password = encryptPassword(request.POST.get('webmail_password'))
+						user.save()
 					
-					msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
-				except:
-					msg = 'Παρουσιάστηκε Σφάλμα'
+						msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
+					except:
+						msg = 'Παρουσιάστηκε Σφάλμα'
+				else:
+					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το webmail'
 		if request.POST.get('email'):
 			email_form = EmailForm(request.POST)
 			if email_form.is_valid():
