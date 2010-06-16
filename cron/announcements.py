@@ -6,7 +6,7 @@ import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from cronos.announcements.models import *
-from cronos.login.encryption import encryptPassword, decryptPassword
+from cronos.login.encryption import decryptPassword
 from django.conf import settings
 from BeautifulSoup import BeautifulSoup
 import MySQLdb
