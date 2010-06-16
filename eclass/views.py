@@ -2,22 +2,17 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
+from cronos.login.encryption import decryptPassword
 from cronos.login.teilar import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import base64
-import os
-import pycurl
-import StringIO
-import urllib
-import urlparse
 
 @login_required
 def eclass(request):
 	try:
-		output = eclass_login(request.user.get_profile().eclass_username, base64.b64decode(request.user.get_profile().eclass_password))
+		output = eclass_login(request.user.get_profile().eclass_username, decodePassword(request.user.get_profile().eclass_password))
 		soup = BeautifulSoup(output)
 
 		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))

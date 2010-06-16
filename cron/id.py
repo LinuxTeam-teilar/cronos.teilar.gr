@@ -5,9 +5,8 @@ import os
 import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
-import base64
 from BeautifulSoup import BeautifulSoup
-from cronos.announcements.models import *
+from cronos.announcements.models import encryptPassword, decryptPassword
 from django.conf import settings
 import MySQLdb
 import pycurl
@@ -72,7 +71,7 @@ for i in xrange(len(dest[:][:])):
 
 ### www.teilar.gr/profannews.php ###
 
-for pid in xrange(350):
+for pid in xrange(400):
 	b = StringIO.StringIO()
 	conn.setopt(pycurl.URL, 'http://www.teilar.gr/person.php?pid=' + str(pid))
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -107,7 +106,7 @@ b = StringIO.StringIO()
 cookie_file_name = os.tempnam('/tmp', 'eclass')
 login_form_seq = [
 	('uname', settings.ECLASS_USER),
-	('pass', base64.b64decode(settings.ECLASS_PASSWORD)),
+	('pass', decodePassword(settings.ECLASS_PASSWORD)),
 	('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82')
 ]
 login_form_data = urllib.urlencode(login_form_seq)

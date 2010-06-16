@@ -149,16 +149,6 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					webmail_username = None
 					webmail_password = None
 
-				if result.has_key('teacherAnnouncements'):
-					teacher_announcements = ','.join(result['teacherAnnouncements'])
-				else:
-					teacher_announcements = None
-
-				if result.has_key('otherAnnouncements'):
-					other_announcements = ','.join(result['otherAnnouncements'])
-				else:
-					other_announcements = None
-
 				l.unbind_s()
 
 				user = User(
@@ -189,8 +179,6 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				eclass_lessons = eclass_lessons,
 				webmail_username = webmail_username,
 				webmail_password = webmail_password,
-				teacher_announcements = teacher_announcements,
-				other_announcements = other_announcements,
 			)
 			userprofile.save()
 

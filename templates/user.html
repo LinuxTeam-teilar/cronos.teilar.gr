@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-	{% ifequal mail 'unset' %}
+	{% ifequal mail '' %}
 	<div id="notifications">
 		<p>Δεν έχετε δηλώσει κάποιο email. Αλλάξτε το στις <a href="/settings">Ρυθμίσεις</a> αλλιώς δεν θα μπορείτε να ανακτήσετε τον κωδικό σας σε περίπτωση που χαθεί.</p>
 	</div>
@@ -22,7 +22,7 @@
 		<ul>
 			<li>Ονοματεπώνυμο: {{ user.first_name }} {{ user.last_name }}</li>
 			<li>Email: 
-				{% ifequal mail 'unset' %}
+				{% ifequal mail '' %}
 					Δεν έχετε ορίσει (Προσθήκη)
 				{% else %}
 					<a href="mailto:{{ mail }}" >{{ mail }}</a>

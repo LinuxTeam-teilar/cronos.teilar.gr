@@ -111,7 +111,7 @@
 		<table>
 			<tr>
 				<th><i>Email:</i>
-					{% ifequal mail 'unset' %}
+					{% ifequal mail '' %}
 						-----
 					{% else %}
 						<a href="mailto:{{ mail }}" >{{ mail }}</a>
