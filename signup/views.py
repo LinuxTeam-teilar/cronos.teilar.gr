@@ -166,7 +166,7 @@ class SignupWizard(FormWizard):
 					'introduction_year': introduction_year,
 					'registration_number': registration_number,
 				}, context_instance = RequestContext(request))
-		except AttributeError:
+		except:
 			if msg == '':
 				msg = 'Παρουσιάστηκε Σφάλμα'
 			return self.render(self.get_form(0), request, 0, context = {
