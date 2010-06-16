@@ -71,10 +71,6 @@ def user_settings(request):
 			if dionysos_form.is_valid():
 				try:
 					dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
-				except:
-					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
-
-				try:
 					l = ldap.initialize(settings.LDAP_URL)
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
@@ -96,10 +92,6 @@ def user_settings(request):
 			if eclass1_form.is_valid():
 				try:
 					eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-				except:
-					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
-
-				try:
 					l = ldap.initialize(settings.LDAP_URL)
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
@@ -121,10 +113,6 @@ def user_settings(request):
 			if webmail_form.is_valid():
 				try:
 					webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
-				except:
-					msg = 'Τα στοιχεία που δώσατε δεν επαληθεύτηκαν'
-
-				try:
 					l = ldap.initialize(settings.LDAP_URL)
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
@@ -144,16 +132,19 @@ def user_settings(request):
 		if request.POST.get('email'):
 			email_form = EmailForm(request.POST)
 			if email_form.is_valid():
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-				mod_attrs = modlist.modifyModlist({'cronosEmail': [getmail(request)]}, {'cronosEmail': [str(request.POST.get('email'))]})
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				l.unbind_s()
-				
-				u = User.objects.get(username = request.user.username)
-				u.email = request.POST.get('email')
-				u.save()
-				msg = 'Η ανανέωση του email σας ήταν επιτυχής'
+				try:
+					l = ldap.initialize(settings.LDAP_URL)
+					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+					mod_attrs = modlist.modifyModlist({'cronosEmail': [getmail(request)]}, {'cronosEmail': [str(request.POST.get('email'))]})
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+		
+					u = User.objects.get(username = request.user.username)
+					u.email = request.POST.get('email')
+					u.save()
+					msg = 'Η ανανέωση του email σας ήταν επιτυχής'
+				except:
+					msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('declaration'):
 			declaration_form = DeclarationForm(request.GET)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
