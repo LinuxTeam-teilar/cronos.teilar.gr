@@ -13,7 +13,7 @@ import ldap.modlist as modlist
 
 
 def getmail(request):
-	if request.user.email[-21:] == 'notapplicablemail.com':
+	if request.user.email[-13:] == 'emptymail.com':
 		mail = ''
 	else:
 		mail = request.user.email
