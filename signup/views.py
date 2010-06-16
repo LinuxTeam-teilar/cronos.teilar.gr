@@ -30,14 +30,14 @@ class SignupWizard(FormWizard):
 		password2 = str([form.cleaned_data for form in form_list][3]['password2'])
 		try:
 			if password1 != password2:
-				from random import choice
-				import string
-				dionysos_password = ''.join([choice(string.printable) for i in range(20)])
 				msg = 'Οι κωδικοί δεν ταιριάζουν'
+				raise
 			else:
 				password = sha1Password(password1)
-	
 			output = dionysos_login(0, dionysos_username, decryptPassword(dionysos_password))
+			if output == 1:
+				msg = 'Λάθος Στοιχεία dionysos'
+				raise
 			soup = BeautifulSoup(output)
 			soup1 = BeautifulSoup(str(soup.findAll('table')[13]))
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[5]))
@@ -87,6 +87,9 @@ class SignupWizard(FormWizard):
 			# login to eclass
 			if eclass_username:
 				output = eclass_login(eclass_username, decryptPassword(eclass_password))
+				if output == 1:
+					msg = 'Λάθος Στοιχεία e-class'
+					raise
 				soup = BeautifulSoup(output).find('table', 'FormData')
 				i = 0
 				eclass_lessons = []
@@ -97,7 +100,10 @@ class SignupWizard(FormWizard):
 
 			# login to webmail
 			if webmail_username:
-				print webmail_login(0, webmail_username, decryptPassword(webmail_password))
+				output = webmail_login(0, webmail_username, decryptPassword(webmail_password))
+				if output == 1:
+					msg = 'Λάθος Στοιχεία webmail'
+					raise
 
 			# add to ldap
 			from django.conf import settings
@@ -110,51 +116,49 @@ class SignupWizard(FormWizard):
 			# before adding to ldap, check if user is already there
 			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS) or \
 				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'dionysosUsername=%s' % (dionysos_username),settings.SEARCH_FIELDS):
-				return self.render(self.get_form(0), request, 0, context = {
-						'msg': 'Ο χρήστης υπάρχει ήδη.'
-					})
+				msg = 'Ο χρήστης υπάρχει ήδη'
+				raise
+				
+			attrs = {}
+			attrs['objectClass'] = ['person','top','teilarStudent', 'posixAccount']
+			attrs['uid'] =  [username]
+			attrs['sn'] = [last_name]
+			attrs['cn'] = [first_name]
+			attrs['userPassword'] = [password]
+			# add cid instead of full name in school attr
+			for item in Id.objects.filter(name__exact = (school)):
+				cid = str(item.urlid)
+			attrs['school'] = [cid]
+			attrs['semester'] = [semester]
+			attrs['introductionYear'] = [introduction_year]
+			attrs['registrationNumber'] = [registration_number]
+			attrs['dionysosUsername'] = [dionysos_username]
+			attrs['dionysosPassword'] = [dionysos_password]
+			if declaration:
+				attrs['declaration'] = []
+				for i in xrange(len(declaration)):
+					attrs['declaration'].append(','.join(declaration[i]))
+			if eclass_username:
+				attrs['eclassUsername'] = [eclass_username]
+				attrs['eclassPassword'] = [eclass_password]
+				attrs['eclassLessons'] = eclass_lessons
+			if webmail_username:
+				attrs['webmailUsername'] = [webmail_username]
+				attrs['webmailPassword'] = [webmail_password]
+				attrs['cronosEmail'] = [webmail_username + '@teilar.gr']
 			else:
-				attrs = {}
-				attrs['objectClass'] = ['person','top','teilarStudent', 'posixAccount']
-				attrs['uid'] =  [username]
-				attrs['sn'] = [last_name]
-				attrs['cn'] = [first_name]
-				attrs['userPassword'] = [password]
-				# add cid instead of full name in school attr
-				db = Id.objects.filter(name__exact = (school))
-				for item in db:
-					cid = str(item.urlid)
-				attrs['school'] = [cid]
-				attrs['semester'] = [semester]
-				attrs['introductionYear'] = [introduction_year]
-				attrs['registrationNumber'] = [registration_number]
-				attrs['dionysosUsername'] = [dionysos_username]
-				attrs['dionysosPassword'] = [dionysos_password]
-				if declaration:
-					attrs['declaration'] = []
-					for i in xrange(len(declaration)):
-						attrs['declaration'].append(','.join(declaration[i]))
-				if eclass_username:
-					attrs['eclassUsername'] = [eclass_username]
-					attrs['eclassPassword'] = [eclass_password]
-					attrs['eclassLessons'] = eclass_lessons
-				if webmail_username:
-					attrs['webmailUsername'] = [webmail_username]
-					attrs['webmailPassword'] = [webmail_password]
-					attrs['cronosEmail'] = [webmail_username + '@teilar.gr']
-				else:
-					attrs['cronosEmail'] = [username + '@emptymail.com']
-				attrs['homeDirectory'] = ['/home/' + username]
-				attrs['gidNumber'] = ['100'] # 100 is the users group in linux
-				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
-				uids = []
-				for item in results:
-					uids.append(int(item[1]['uidNumber'][0]))
-				attrs['uidNumber'] = [str(max(uids) + 1)]
+				attrs['cronosEmail'] = [username + '@emptymail.com']
+			attrs['homeDirectory'] = ['/home/' + username]
+			attrs['gidNumber'] = ['100'] # 100 is the users group in linux
+			results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
+			uids = []
+			for item in results:
+				uids.append(int(item[1]['uidNumber'][0]))
+			attrs['uidNumber'] = [str(max(uids) + 1)]
 
-				ldif = modlist.addModlist(attrs)
-				l.add_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
-				l.unbind_s()
+			ldif = modlist.addModlist(attrs)
+			l.add_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
+			l.unbind_s()
 
 			# in case there is no exception in the above, send the user to a welcome site
 			return render_to_response('welcome.html', {
@@ -169,7 +173,7 @@ class SignupWizard(FormWizard):
 					'introduction_year': introduction_year,
 					'registration_number': registration_number,
 				}, context_instance = RequestContext(request))
-		except ImportError:
+		except:
 			if msg == '':
 				msg = 'Παρουσιάστηκε Σφάλμα'
 			return self.render(self.get_form(0), request, 0, context = {
