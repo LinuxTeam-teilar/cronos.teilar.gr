@@ -141,6 +141,8 @@ class SignupWizard(FormWizard):
 					attrs['webmailUsername'] = [webmail_username]
 					attrs['webmailPassword'] = [webmail_password]
 					attrs['cronosEmail'] = [webmail_username + '@teilar.gr']
+				else:
+					attrs['cronosEmail'] = [username + '@emptymail.com']
 				attrs['homeDirectory'] = ['/home/' + username]
 				attrs['gidNumber'] = ['100'] # 100 is the users group in linux
 				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])

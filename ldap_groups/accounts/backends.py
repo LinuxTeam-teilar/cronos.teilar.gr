@@ -140,7 +140,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = None
 					eclass_lessons = None
 
-				mail = '%s@notapplicablemail.com' % (username)
+				mail = '%s@emptymail.com' % (username)
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
 					webmail_username = result['webmailUsername'][0]
