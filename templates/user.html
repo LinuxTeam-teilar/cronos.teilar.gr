@@ -23,7 +23,7 @@
 			<li>Ονοματεπώνυμο: {{ user.first_name }} {{ user.last_name }}</li>
 			<li>Email: 
 				{% ifequal mail '' %}
-					Δεν έχετε ορίσει (Προσθήκη)
+					----- <a href="/settings/#othercred">Προσθήκη</a>
 				{% else %}
 					<a href="mailto:{{ mail }}" >{{ mail }}</a>
 				{% endifequal %}</li>
