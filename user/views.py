@@ -91,7 +91,7 @@ def user_settings(request):
 					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
 				except AttributeError:
 					msg = 'Παρουσιάστηκε Σφάλμα'
-		if request.POST.get('eclass_username')
+		if request.POST.get('eclass_username'):
 			eclass1_form = Eclass1Form(request.POST)
 			if eclass1_form.is_valid():
 				try:
