@@ -27,7 +27,7 @@
 								<img src="{{ MEDIA_URL }}images/{{j}}.png" /></td>
 						{% endifequal %}
 						{% ifequal forloop.counter0 2 %}
-							<td style="vertical-align:middle;padding-left:30px;"><a href="/announcements/?announce_id={{j|safe}}">
+							<td style="vertical-align:middle;padding-left:30px;"><a href="/announcements/?announceid={{j|safe}}">
 						{% endifequal %}
 						{% ifequal forloop.counter0 3 %}
 							{{j|safe}}</a><br />
