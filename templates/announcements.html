@@ -1,50 +1,44 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Ανακοινώσεις | 
+	Ανακοινώσεις | 
 {% endblock %}
 
 {% block more %}
-<link rel="alternate" type="application/rss+xml" title="Ανακοινώσεις RSS" href="/feeds/announcements/{{user}}" />
+	<link rel="alternate" type="application/rss+xml" title="Ανακοινώσεις RSS" href="/feeds/announcements/{{user}}" />
 {% endblock %}
 
 {% block content %}
-{% if id %}
-<table>
-{% for i in items %}
-	<tr><td>{{i|safe}}</td></tr>
-{% endfor %}
-</table>
-{% else %}
-<table>
-{% for i in items %}
-	{% for j in i %}
-		{% ifequal forloop.counter0 0 %}
-			<tr>
-				<td><img src="{{MEDIA_URL}}images/{{j|safe}}.png" style="width:50px;height:50px"></td>
-				<td>
-					<table style="border-top: 2px solid #666; width:100%">
-		{% endifequal %}
-		{% ifequal forloop.counter0 1 %}
-						<tr><td align="left"><font size="-2" color="grey">{{j|safe}}</font></td>
-		{% endifequal %}
-		{% ifequal forloop.counter0 2 %}
-						<td align="right"><font size="-2" color="grey">{{j|safe}}</font></td></tr>
-		{% endifequal %}
-		{% ifequal forloop.counter0 3 %}
-						<tr><td><a href="/announcements/?announceid={{j|safe}}">
-		{% else %}
-			{% ifequal forloop.counter0 4 %}
-						{{j|safe}}</a></td></tr>
-					</table>
-				</td>
-			</tr>
-			{% endifequal %}
-		{% endifequal %}
-	{% endfor %}
-{% endfor %}
-</table>
-{% endif %}
+	{% if id %}
+		<table>
+			{% for i in items %}
+				<tr><td>{{i|safe}}</td></tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		{% for i in items %}
+			<div class="entry">
+				{% for j in i %}
+						{% ifequal forloop.counter0 0 %}
+							<h3>{{j|safe}}</h3>
+						{% endifequal %}
+						{% ifequal forloop.counter0 1 %}
+							<table><tr><td style="vertical-align:middle;">
+								<img src="{{ MEDIA_URL }}images/{{j}}.png" /></td>
+						{% endifequal %}
+						{% ifequal forloop.counter0 2 %}
+							<td style="vertical-align:middle;padding-left:30px;"><a href="/announcements/?announce_id={{j|safe}}">
+						{% endifequal %}
+						{% ifequal forloop.counter0 3 %}
+							{{j|safe}}</a><br />
+						{% endifequal %}
+						{% ifequal forloop.counter0 4 %}
+							<font size="-2" color="grey">Υποβολή: {{j}}</td></tr></table>
+						{% endifequal %}
+				{% endfor %}
+			</div>
+		{% endfor %}
+	{% endif %}
 
 <form action="/announcements/" method="get">
 <input type="hidden" name="announceid">
