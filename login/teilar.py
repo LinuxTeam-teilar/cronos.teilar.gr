@@ -66,12 +66,14 @@ def eclass_login(username, password):
 	conn.setopt(pycurl.URL, 'http://e-class.teilar.gr/index.php')
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
 	conn.perform()
-	soup = BeautifulSoup(unicode(b.getvalue(), 'utf-8', 'ignore'))
+	soup = BeautifulSoup(str(unicode(b.getvalue(), 'utf-8', 'ignore')))
 	try:
-		 if soup.find('div', 'user').contents[0] == '&nbsp;':
+		if soup.find('div', 'user').contents[0] == '&nbsp;':
 			return 1
+		else:
+			return str(unicode(b.getvalue(), 'utf-8', 'ignore'))
 	except:
-		return unicode(b.getvalue(), 'utf-8', 'ignore')
+		return str(unicode(b.getvalue(), 'utf-8', 'ignore'))
 
 def webmail_login(link, username, password):
 	from BeautifulSoup import BeautifulSoup
@@ -105,7 +107,6 @@ def webmail_login(link, username, password):
 	soup = BeautifulSoup(b.getvalue().decode('iso-8859-7'))
 	try:
 		if soup.title.contents[0].split('-')[2].strip() == 'Άγνωστος χρήστης η εσφαλμένος κωδικός.':
-			print soup.title.contents[0].split('-')[2].strip()
 			return 1
 	except:
 		if link == 0:
