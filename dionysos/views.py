@@ -12,7 +12,6 @@ def dionysos(request):
 	msg = ''
 	summary = ''
 	declaration_lessons = []
-	declaration_full = request.user.get_profile().declaration.split(',')
 	if request.user.get_profile().declaration:
 		declaration_full = request.user.get_profile().declaration.split(',')
 		i = 3
