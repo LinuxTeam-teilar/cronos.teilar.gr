@@ -140,14 +140,27 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 					eclass_password = None
 					eclass_lessons = None
 
+				mail = '%s@notapplicablemail.com' % (username)
 				if result.has_key('webmailUsername'):
 					mail = result['webmailUsername'][0] + '@teilar.gr'
 					webmail_username = result['webmailUsername'][0]
 					webmail_password = result['webmailPassword'][0]
 				else:
-					mail = '%s@notapplicablemail.com' % (username)
 					webmail_username = None
 					webmail_password = None
+
+				if result.has_key('cronosEmail'):
+					mail = result['cronosEmail'][0]
+
+				if result.has_key('teacherAnnouncements'):
+					teacher_announcements = ','.join(result['teacherAnnouncements'])
+				else:
+					teacher_announcements = None
+
+				if result.has_key('otherAnnouncements'):
+					other_announcements = ','.join(result['otherAnnouncements'])
+				else:
+					other_announcements = None
 
 				l.unbind_s()
 
@@ -179,6 +192,8 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				eclass_lessons = eclass_lessons,
 				webmail_username = webmail_username,
 				webmail_password = webmail_password,
+				teacher_announcements = teacher_announcements,
+				other_announcements = other_announcements,
 			)
 			userprofile.save()
 
