@@ -91,7 +91,7 @@ def user_settings(request):
 					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
 				except AttributeError:
 					msg = 'Παρουσιάστηκε Σφάλμα'
-		if eclass1_form.is_valid():
+		if request.POST.get('eclass_username')
 			eclass1_form = Eclass1Form(request.POST)
 			if eclass1_form.is_valid():
 				try:
@@ -116,7 +116,7 @@ def user_settings(request):
 					msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
 				except:
 					msg = 'Παρουσιάστηκε Σφάλμα'
-		if webmail_form.is_valid():
+		if request.POST.get('webmail_username'):
 			webmail_form = WebmailForm(request.POST)
 			if webmail_form.is_valid():
 				try:

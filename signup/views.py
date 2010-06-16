@@ -60,7 +60,8 @@ class SignupWizard(FormWizard):
 				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0])
 			introduction_year = year + season
 			try:
-				output = dionysos_login('declaration', 0, 0)
+				link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
+				output = dionysos_login(link, 0, 0)
 				soup = BeautifulSoup(output)
 				soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
 
