@@ -28,14 +28,14 @@ def dionysos(request):
 			'msg': msg,
 		}, context_instance = RequestContext(request))
 
-@login_required
+'''@login_required
 def grades_notready(request):
 	from BeautifulSoup import BeautifulSoup
 	from cronos.login.teilar import *
 	import base64
 
 	link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
-	dionysos_login(0, request.user.get_profile().dionysos_username, base64.b64decode(request.user.get_profile().dionysos_password))
+	dionysos_login(0, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 	output = dionysos_login(link, 0, 0)
 	soup = BeautifulSoup(output)
 	lessons = []
@@ -104,5 +104,4 @@ def grades_notready(request):
 
 #	return render_to_response('grades.html', {
 #			'lessons': lessons,
-#		}, context_instance = RequestContext(request))
-
+#		}, context_instance = RequestContext(request))'''
