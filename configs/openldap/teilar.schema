@@ -17,7 +17,7 @@ attributetype ( 2.51.20100504.20100608.32.3 NAME 'dionysosPassword'
 	DESC 'Password of dionysos.teilar.gr'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30}
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{40}
 	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.4 NAME 'semester'
@@ -53,7 +53,7 @@ attributetype ( 2.51.20100504.20100608.32.8 NAME 'eclassPassword'
 	DESC 'openclass.teilar.gr password'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30}
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{40}
 	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.9 NAME 'eclassLessons'
@@ -74,7 +74,7 @@ attributetype ( 2.51.20100504.20100608.32.11 NAME 'webmailPassword'
 	DESC 'myweb.teilar.gr password'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30}
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{40}
 	SINGLE-VALUE )
 
 attributetype ( 2.51.20100504.20100608.32.12 NAME 'school'
@@ -102,11 +102,18 @@ attributetype ( 2.51.20100504.20100608.32.15 NAME 'teilarAccess'
 	SUBSTR caseIgnoreSubstringsMatch
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{50} )
 
+attributetype ( 2.51.20100504.20100608.32.16 NAME 'cronosEmail'
+	DESC 'Email defined by user, @teilar.gr is the default if applicable'
+	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30} )
+
 objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarStudent'
 	DESC 'Credentials of a Student of Tei Larissas'
 	AUXILIARY
 	MUST ( registrationNumber $ dionysosUsername $ dionysosPassword $ semester $ introductionYear $ school )
-	MAY ( declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements $ teilarAccess ) )
+	MAY ( declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements $ teilarAccess $ cronosEmail ) )
 
 
 #attributetype ( 2.51.20100504.20100608.32.16 NAME 'teacherFirstName'
