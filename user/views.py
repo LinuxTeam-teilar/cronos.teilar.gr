@@ -79,13 +79,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encodePassword(request.POST.get('dionysos_password'))]})
+					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encryptPassword(request.POST.get('dionysos_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
 					user.dionysos_username = request.POST.get('dionysos_username')
-					user.dionysos_password = encodePassword(request.POST.get('dionysos_password'))
+					user.dionysos_password = encryptPassword(request.POST.get('dionysos_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
@@ -104,13 +104,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encodePassword(request.POST.get('eclass_password'))]})
+					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
 					user.eclass_username = request.POST.get('eclass_username')
-					user.eclass_password = encodePassword(request.POST.get('eclass_password'))
+					user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
@@ -129,13 +129,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encodePassword(request.POST.get('webmail_password'))]})
+					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encryptPassword(request.POST.get('webmail_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
 					user.webmail_username = request.POST.get('webmail_username')
-					user.webmail_password = encodePassword(request.POST.get('webmail_password'))
+					user.webmail_password = encryptPassword(request.POST.get('webmail_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
