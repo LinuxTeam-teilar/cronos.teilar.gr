@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 
+from cronos.login.encryption import sha1Password, encryptPassword, decryptPassword
 from cronos.login.teilar import *
-from cronos.signup.views import Sha1Password
 from cronos.user.forms import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import base64
 import ldap
 import ldap.modlist as modlist
 
 
 def getmail(request):
 	if request.user.email[-21:] == 'notapplicablemail.com':
-		mail = 'unset'
+		mail = ''
 	else:
 		mail = request.user.email
 	return mail
@@ -51,7 +50,8 @@ def user_settings(request):
 						try:
 							l = ldap.initialize(settings.LDAP_URL)
 							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-							mod_attrs = [(ldap.MOD_ADD, 'userPassword', Sha1Password(request.POST.get('password1')))]
+							############# delete to password
+							mod_attrs = [(ldap.MOD_ADD, 'userPassword', sha1Password(request.POST.get('password1')))]
 							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							l.unbind_s()
 							
@@ -78,13 +78,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [base64.b64encode(request.POST.get('dionysos_password'))]})
+					mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encodePassword(request.POST.get('dionysos_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.dionysos_username = (request.POST.get('dionysos_username'))
-					user.dionysos_password = (base64.b64encode(request.POST.get('dionysos_password')))
+					user.dionysos_username = request.POST.get('dionysos_username')
+					user.dionysos_password = encodePassword(request.POST.get('dionysos_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
@@ -103,13 +103,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [base64.b64encode(request.POST.get('eclass_password'))]})
+					mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encodePassword(request.POST.get('eclass_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.eclass_username = (request.POST.get('eclass_username'))
-					user.eclass_password = base64.b64encode((request.POST.get('eclass_password')))
+					user.eclass_username = request.POST.get('eclass_username')
+					user.eclass_password = encodePassword(request.POST.get('eclass_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
@@ -128,13 +128,13 @@ def user_settings(request):
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [base64.b64encode(request.POST.get('webmail_password'))]})
+					mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encodePassword(request.POST.get('webmail_password'))]})
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 
 					user = LdapProfile.objects.get(user__username = request.user.username)
-					user.webmail_username = (request.POST.get('webmail_username'))
-					user.webmail_password = base64.b64encode((request.POST.get('webmail_password')))
+					user.webmail_username = request.POST.get('webmail_username')
+					user.webmail_password = encodePassword(request.POST.get('webmail_password'))
 					user.save()
 					
 					msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
@@ -143,6 +143,12 @@ def user_settings(request):
 		if request.POST.get('email'):
 			email_form = EmailForm(request.POST)
 			if email_form.is_valid():
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+				mod_attrs = modlist.modifyModlist({'cronosEmail': [getmail(request)]}, {'cronosEmail': [str(request.POST.get('email'))]})
+				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				l.unbind_s()
+				
 				u = User.objects.get(username = request.user.username)
 				u.email = request.POST.get('email')
 				u.save()
@@ -150,7 +156,7 @@ def user_settings(request):
 		if request.POST.get('declaration'):
 			declaration_form = DeclarationForm(request.GET)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
-			dionysos_login(0, request.user.get_profile().dionysos_username, base64.b64decode(request.user.get_profile().dionysos_password))
+			dionysos_login(0, request.user.get_profile().dionysos_username, decodePassword(request.user.get_profile().dionysos_password))
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
@@ -263,13 +269,6 @@ def user_settings(request):
 						'msg': msg,
 						'form': form,
 				}, context_instance = RequestContext(request))'''
-
-	if request.method == 'POST':
-		form_teacher = TeacherAnnouncementsForm(request.POST)
-		if form_teacher.is_valid():
-			print 'form is valid'
-	else:
-		form_teacher = TeacherAnnouncementsForm()
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),

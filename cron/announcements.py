@@ -6,9 +6,9 @@ import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from cronos.announcements.models import *
+from cronos.login.encryption import encryptPassword, decryptPassword
 from django.conf import settings
 from BeautifulSoup import BeautifulSoup
-import base64
 import MySQLdb
 import pycurl
 import re
@@ -139,7 +139,7 @@ b = StringIO.StringIO()
 cookie_file_name = os.tempnam('/tmp', 'eclass')
 login_form_seq = [
 	('uname', settings.ECLASS_USER),
-	('pass', base64.b64decode(settings.ECLASS_PASSWORD)),
+	('pass', decryptPassword(settings.ECLASS_PASSWORD)),
 	('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82'),
 ]
 login_form_data = urllib.urlencode(login_form_seq)
