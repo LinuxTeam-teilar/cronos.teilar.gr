@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 def dionysos_login(link, username, password):
+	from BeautifulSoup import BeautifulSoup
 	import pycurl
 	import StringIO
 	import urllib
@@ -30,7 +31,12 @@ def dionysos_login(link, username, password):
 		conn.setopt(pycurl.POSTFIELDS, login_form_data)
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
 		conn.perform()
-		return (b.getvalue()).decode('windows-1253')
+		soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
+		try:
+			soup.find('td', 'whiteheader').b.contents[0] == 'Είσοδος Φοιτητή'
+			return 1
+		except:
+			return (b.getvalue()).decode('windows-1253')
 	conn.setopt(pycurl.URL, link)
 	conn.setopt(pycurl.POST, 1)
 	conn.setopt(pycurl.POSTFIELDS, login_form_data)
@@ -40,6 +46,7 @@ def dionysos_login(link, username, password):
 	return (b.getvalue()).decode('windows-1253')
 
 def eclass_login(username, password):
+	from BeautifulSoup import BeautifulSoup
 	import pycurl
 	import StringIO
 	import urllib
@@ -59,9 +66,15 @@ def eclass_login(username, password):
 	conn.setopt(pycurl.URL, 'http://e-class.teilar.gr/index.php')
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
 	conn.perform()
-	return unicode(b.getvalue(), 'utf-8', 'ignore')
+	soup = BeautifulSoup(unicode(b.getvalue(), 'utf-8', 'ignore'))
+	try:
+		 if soup.find('div', 'user').contents[0] == '&nbsp;':
+			return 1
+	except:
+		return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def webmail_login(link, username, password):
+	from BeautifulSoup import BeautifulSoup
 	import pycurl
 	import StringIO
 	import urllib
@@ -89,10 +102,16 @@ def webmail_login(link, username, password):
 	conn.setopt(pycurl.POSTFIELDS, login_form_data)
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
 	conn.perform()
-	if link == 0:
-		return
-	conn.setopt(pycurl.URL, link)
-	#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
-	#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX')
-	conn.perform()
-	return (b.getvalue()).decode('iso-8859-7')
+	soup = BeautifulSoup(b.getvalue().decode('iso-8859-7'))
+	try:
+		if soup.title.contents[0].split('-')[2].strip() == 'Άγνωστος χρήστης η εσφαλμένος κωδικός.':
+			print soup.title.contents[0].split('-')[2].strip()
+			return 1
+	except:
+		if link == 0:
+			return
+		conn.setopt(pycurl.URL, link)
+		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
+		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX')
+		conn.perform()
+		return (b.getvalue()).decode('iso-8859-7')
