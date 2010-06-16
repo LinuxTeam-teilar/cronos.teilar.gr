@@ -97,7 +97,7 @@ class SignupWizard(FormWizard):
 
 			# login to webmail
 			if webmail_username:
-				webmail_login(0, webmail_username, decryptPassword(webmail_password))
+				print webmail_login(0, webmail_username, decryptPassword(webmail_password))
 
 			# add to ldap
 			from django.conf import settings
@@ -169,7 +169,7 @@ class SignupWizard(FormWizard):
 					'introduction_year': introduction_year,
 					'registration_number': registration_number,
 				}, context_instance = RequestContext(request))
-		except:
+		except ImportError:
 			if msg == '':
 				msg = 'Παρουσιάστηκε Σφάλμα'
 			return self.render(self.get_form(0), request, 0, context = {
