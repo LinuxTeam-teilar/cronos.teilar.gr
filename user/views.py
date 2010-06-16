@@ -51,7 +51,7 @@ def user_settings(request):
 							l = ldap.initialize(settings.LDAP_URL)
 							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 							mod_attrs = [(ldap.MOD_DELETE, 'userPassword', None)]
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs
+							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							mod_attrs = [(ldap.MOD_ADD, 'userPassword', sha1Password(request.POST.get('password1')))]
 							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 							l.unbind_s()
