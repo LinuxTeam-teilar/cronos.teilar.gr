@@ -12,7 +12,7 @@ from django.template import RequestContext
 @login_required
 def eclass(request):
 	try:
-		output = eclass_login(request.user.get_profile().eclass_username, decodePassword(request.user.get_profile().eclass_password))
+		output = eclass_login(request.user.get_profile().eclass_username, decryptPassword(request.user.get_profile().eclass_password))
 		soup = BeautifulSoup(output)
 
 		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[3]))
