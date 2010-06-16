@@ -23,16 +23,21 @@
 							<h3>{{j|safe}}</h3>
 						{% endifequal %}
 						{% ifequal forloop.counter0 1 %}
+							{% if j %}
+								<br />
+							{% endif %}
+						{% endifequal %}
+						{% ifequal forloop.counter0 2 %}
 							<table><tr><td style="vertical-align:middle;">
 								<img src="{{ MEDIA_URL }}images/{{j}}.png" /></td>
 						{% endifequal %}
-						{% ifequal forloop.counter0 2 %}
+						{% ifequal forloop.counter0 3 %}
 							<td style="vertical-align:middle;padding-left:30px;"><a href="/announcements/?announceid={{j|safe}}">
 						{% endifequal %}
-						{% ifequal forloop.counter0 3 %}
+						{% ifequal forloop.counter0 4 %}
 							{{j|safe}}</a><br />
 						{% endifequal %}
-						{% ifequal forloop.counter0 4 %}
+						{% ifequal forloop.counter0 5 %}
 							<font size="-2" color="grey">Υποβολή: {{j}}</td></tr></table>
 						{% endifequal %}
 				{% endfor %}
