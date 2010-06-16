@@ -37,7 +37,11 @@ def announcements(request):
 					img == 'meeting'
 				if (item.urlid.urlid[:3] == 'cid') and (int(item.urlid.urlid[3:]) > 0) and (int(item.urlid.urlid[3:]) < 50):
 					img = 'department'
-				all_announcements.append([img, item.author(), str(item.date()), str(item.id), item.__unicode__()])
+				print item.date()
+				date = str(item.date()).split(' ')[0].split('-')
+				hour = str(item.date()).split(' ')[1].split(':')
+				date = date[2] + '/' + date[1] + '/' + date[0] + ', ' + hour[0] + ':' + hour[1]
+				all_announcements.append([item.author(), img, str(item.id), item.__unicode__(), date])
 	return render_to_response('announcements.html', {
 			'items': all_announcements,
 			'form': form,
