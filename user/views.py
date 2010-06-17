@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from BeautifulSoup import BeautifulSoup
 from cronos.login.encryption import sha1Password, encryptPassword, decryptPassword
 from cronos.login.teilar import *
 from cronos.user.forms import *
@@ -98,15 +99,33 @@ def user_settings(request):
 					try:
 						l = ldap.initialize(settings.LDAP_URL)
 						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-						mod_attrs = modlist.modifyModlist({'eclassUsername': [str(request.user.get_profile().eclass_username)]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
+						mod_attrs = modlist.modifyModlist({'eclassUsername': [request.user.get_profile().eclass_username]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
 						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 						mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
+						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+
+						soup = BeautifulSoup(msg).find('table', 'FormData')
+						i = 0
+						eclass_lessons = []
+						for item in soup.findAll('a'):
+							if (i % 2 == 0):
+								eclass_lessons.append(str(item.contents[0]).split('-')[0].strip())
+							i += 1
+						try:
+							mod_attrs = [(ldap.MOD_DELETE, 'eclassLessons', None)]
+							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+						except:
+							pass
+						mod_attrs = []
+						for item in eclass_lessons:
+							mod_attrs.append((ldap.MOD_ADD, 'eclassLessons', item))
 						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 						l.unbind_s()
 
 						user = LdapProfile.objects.get(user__username = request.user.username)
 						user.eclass_username = request.POST.get('eclass_username')
 						user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
+						user.eclass_lessons = ','.join(eclass_lessons)
 						user.save()
 					
 						msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
