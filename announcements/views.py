@@ -13,7 +13,10 @@ def announcements(request):
 	if (request.GET.get('announceid')):
 		form = AnnouncementForm(request.GET)
 		for item in Announcements.objects.filter(id__exact = request.GET.get('announceid')):
-			all_announcements = [item.author(), str(item.date()), item.__unicode__(), item.get_absolute_url(), item.body()]
+			date = str(item.date()).split(' ')[0].split('-')
+			hour = str(item.date()).split(' ')[1].split(':')
+			date = date[2] + '/' + date[1] + '/' + date[0] + ', ' + hour[0] + ':' + hour[1]
+			all_announcements = [item.author(), item.get_absolute_url(), item.__unicode__(), date, item.body()]
 		id = request.GET.get('announceid')
 	else:
 		form = AnnouncementForm()

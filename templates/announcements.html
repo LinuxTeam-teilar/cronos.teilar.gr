@@ -10,11 +10,24 @@
 
 {% block content %}
 	{% if id %}
-		<table>
-			{% for i in items %}
-				<tr><td>{{i|safe}}</td></tr>
-			{% endfor %}
-		</table>
+		{% for i in items %}
+			{% ifequal forloop.counter0 0 %}
+				<div class="entry">
+					<h3>{{ i|safe }}</h3>
+			{% endifequal %}
+			{% ifequal forloop.counter0 1 %}
+				<p><a href="{{ i }}">
+			{% endifequal %}
+			{% ifequal forloop.counter0 2 %}
+				{{ i|safe }}</a><br />
+			{% endifequal %}
+			{% ifequal forloop.counter0 3 %}
+				<font size="-2" color="grey">Υποβολή: {{i}}</font><br /><br />
+			{% endifequal %}
+			{% ifequal forloop.counter0 4 %}
+				{{ i|safe }}</p>
+			{% endifequal %}
+		{% endfor %}
 	{% else %}
 		{% for i in items %}
 			<div class="entry">
