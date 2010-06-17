@@ -19,31 +19,33 @@ def dionysos_login(link, username, password):
 		('loginTrue', 'login')
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
+	conn.setopt(pycurl.FOLLOWLOCATION, 1)
+	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
+	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
+	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/')
+	conn.setopt(pycurl.POST, 0)
+	conn.perform()
+	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/login.asp')
+	conn.setopt(pycurl.POST, 1)
+	conn.setopt(pycurl.POSTFIELDS, login_form_data)
+	conn.setopt(pycurl.WRITEFUNCTION, b.write)
+	conn.perform()
 	if link == 0:
-		conn.setopt(pycurl.FOLLOWLOCATION, 1)
-		conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-		conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
-		conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/')
-		conn.setopt(pycurl.POST, 0)
-		conn.perform()
-		conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/login.asp')
-		conn.setopt(pycurl.POST, 1)
-		conn.setopt(pycurl.POSTFIELDS, login_form_data)
-		conn.setopt(pycurl.WRITEFUNCTION, b.write)
-		conn.perform()
 		soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
 		try:
 			soup.find('td', 'whiteheader').b.contents[0] == 'Είσοδος Φοιτητή'
 			return 1
 		except:
 			return (b.getvalue()).decode('windows-1253')
-	conn.setopt(pycurl.URL, link)
-	conn.setopt(pycurl.POST, 1)
-	conn.setopt(pycurl.POSTFIELDS, login_form_data)
-	conn.setopt(pycurl.COOKIE, cookie_file_name)
-	conn.setopt(pycurl.WRITEFUNCTION, b.write)
-	conn.perform()
-	return (b.getvalue()).decode('windows-1253')
+	else:
+		b = StringIO.StringIO()
+		conn.setopt(pycurl.URL, link)
+		conn.setopt(pycurl.POST, 1)
+		conn.setopt(pycurl.POSTFIELDS, login_form_data)
+		conn.setopt(pycurl.COOKIE, cookie_file_name)
+		conn.setopt(pycurl.WRITEFUNCTION, b.write)
+		conn.perform()
+		return (b.getvalue()).decode('windows-1253')
 
 def eclass_login(username, password):
 	from BeautifulSoup import BeautifulSoup
