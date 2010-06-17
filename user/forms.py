@@ -44,3 +44,9 @@ class EmailForm(forms.Form):
 
 class DeclarationForm(forms.Form):
 	declaration = forms.CharField(widget = forms.HiddenInput())
+
+class GradesForm(forms.Form):
+	grades = forms.CharField(widget = forms.HiddenInput())
+
+class Eclass2Form(forms.Form):
+	eclass_lessons = forms.CharField(widget = forms.HiddenInput())

@@ -41,6 +41,8 @@ def user_settings(request):
 	webmail_form = WebmailForm()
 	email_form = EmailForm()
 	declaration_form = DeclarationForm()
+	grades_form = GradesForm()
+	eclass2_form = Eclass2Form()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -167,9 +169,9 @@ def user_settings(request):
 					# skip this step to the end of the procedure, as django user db does a check if the given string is a valid mail
 					#l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 
-					u = User.objects.get(username = request.user.username)
-					u.email = request.POST.get('email')
-					u.save()
+					user = User.objects.get(username = request.user.username)
+					user.email = request.POST.get('email')
+					user.save()
 
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
@@ -215,16 +217,143 @@ def user_settings(request):
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 				
-					u = User.objects.get(username = request.user.username)
+					user = LdapProfile.objects.get(user__username = request.user.username)
 					temp = []
 					for item in declaration_new:
 						temp += item
-					u.declaration = ','.join(temp)
-					u.save()
+					user.declaration = ','.join(temp)
+					user.save()
 					msg = 'Η ανανέωση της δήλωσής σας ήταν επιτυχής'
 				else:
 					msg = 'Η δήλωσή σας είναι κενή'
 			except:
+				msg = 'Παρουσιάστηκε Σφάλμα'
+		if str(request.POST) == str('<QueryDict: {u\'grades\': [u\'\']}>'):
+			declaration_form = DeclarationForm(request.GET)
+			link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
+			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
+			try:
+				soup = BeautifulSoup(output)
+				grades = []
+				i = 0
+				while i < len(soup.findAll('table')[13].findAll('td')):
+					item0 = soup.findAll('table')[13].findAll('td')[i]
+					item = soup.findAll('table')[13].findAll('td')
+					if item0 in soup.findAll('td', 'groupHeader'):
+						grades.append([str(item0.contents[0])])
+					if item0 in soup.findAll('td', 'topBorderLight'):
+						year = str(item[i+6].contents[0].i.contents[0]).strip()
+						year = year[:10] + year[-9:]
+						if year == '--':
+							year = '-'
+						grades.append([
+							str(item0.contents[0]).strip(),
+							str(item[i+1].contents[0]).strip(),
+							str(item[i+2].contents[0]).strip(),
+							str(item[i+3].contents[0]).strip(),
+							str(item[i+4].contents[0]).strip(),
+							str(item[i+5].span.contents[0]).strip(),
+							year,
+						])
+						try:
+							if item[i+9].contents[1][-3:] == '(Θ)' or item[i+9].contents[1][-3:] == '(Ε)':
+								year = str(item[i+14].contents[0].i.contents[0]).strip()
+								year = year[:10] + year[-9:]
+								grades.append([
+									str(item[i+9].contents[1]).strip(),
+									'',
+									str(item[i+10].i.contents[0]).strip(),
+									str(item[i+11].contents[0]).strip(),
+									str(item[i+12].contents[0]).strip(),
+									str(item[i+13].contents[0]).strip(),
+									year,
+								])
+								year = str(item[i+22].contents[0].i.contents[0])
+								year = year[:10] + year[-9:]
+								grades.append([
+									str(item[i+17].contents[i]).strip(),
+									'',
+									str(item[i+18].i.contents[0]).strip(),
+									str(item[i+19].contents[0]).strip(),
+									str(item[i+20].contents[0]).strip(),
+									str(item[i+21].contents[0]).strip(),
+									year,
+								])
+								i += 11
+						except:
+							pass
+						i += 6
+					try:
+						if item0.contents[0][:6] == 'Σύνολα':
+							grades.append([
+								str(item0.b.contents[0]),
+								str(item[i+1].contents[1].contents[0]).strip(),
+								str(item[i+1].contents[3].contents[0]).strip(),
+								str(item[i+1].contents[5].contents[0]).strip(),
+								str(item[i+1].contents[7].contents[0]).strip(),
+							])
+							i += 1
+					except:
+						pass
+					i += 1
+				for item in grades:
+					for item1 in item:
+						l = ldap.initialize(settings.LDAP_URL)
+				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'grades', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+	
+				if grades:
+					mod_attrs = []
+					for item in grades:
+						mod_attrs.append((ldap.MOD_ADD, 'grades', ','.join(item)))
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+				
+					user = LdapProfile.objects.get(user__username = request.user.username)
+					temp = []
+					for item in grades:
+						temp += item
+					user.grades = ','.join(temp)
+					user.save()
+					msg = 'Η ανανέωση της βαθμολογίας σας ήταν επιτυχής'
+				else:
+					msg = 'Η βαθμολογία σας είναι κενή'
+			except:
+				msg = 'Παρουσιάστηκε Σφάλμα'
+		if str(request.POST) == str('<QueryDict: {u\'eclass_lessons\': [u\'\']}>'):
+			eclass2_form = Eclass2Form(request.POST)
+			output = eclass_login(request.user.get_profile().eclass_username, decryptPassword(request.user.get_profile().dionysos_password))
+			try:
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+
+				soup = BeautifulSoup(output).find('table', 'FormData')
+				i = 0
+				eclass_lessons = []
+				for item in soup.findAll('a'):
+					if (i % 2 == 0):
+						eclass_lessons.append(str(item.contents[0]).split('-')[0].strip())
+					i += 1
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'eclassLessons', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+				mod_attrs = []
+				for item in eclass_lessons:
+					mod_attrs.append((ldap.MOD_ADD, 'eclassLessons', item))
+				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				l.unbind_s()
+
+				user = LdapProfile.objects.get(user__username = request.user.username)
+				user.eclass_lessons = ','.join(eclass_lessons)
+				user.save()
+				msg = 'Η ανανέωση των μαθημάτων του e-class ήταν επιτυχής'
+			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 
 	else:
@@ -234,6 +363,8 @@ def user_settings(request):
 		webmail_form = WebmailForm()
 		email_form = EmailForm()
 		declaration_form = DeclarationForm()
+		grades_form = GradesForm()
+		eclass2_form = Eclass2Form()
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),
@@ -243,5 +374,7 @@ def user_settings(request):
 			'webmail_form': webmail_form,
 			'email_form': email_form,
 			'declaration_form': declaration_form,
+			'grades_form': grades_form,
+			'eclass2_form': eclass2_form,
 			'msg': msg,
 		}, context_instance = RequestContext(request))

@@ -20,6 +20,7 @@ class LdapProfile(models.Model):
 	teacher_announcements = models.TextField(null = True, blank = True)
 	other_announcements = models.TextField(null = True, blank = True)
 	declaration = models.TextField(null = True, blank = True)
+	grades = models.TextField(null = True, blank = True)
 #	choice_field = models.ManyToManyField(Id)
 
 	def __str__(self):
