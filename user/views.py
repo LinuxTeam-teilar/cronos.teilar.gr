@@ -164,12 +164,16 @@ def user_settings(request):
 					l = ldap.initialize(settings.LDAP_URL)
 					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 					mod_attrs = modlist.modifyModlist({'cronosEmail': [getmail(request)]}, {'cronosEmail': [str(request.POST.get('email'))]})
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
-		
+					# skip this step to the end of the procedure, as django user db does a check if the given string is a valid mail
+					#l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+
 					u = User.objects.get(username = request.user.username)
 					u.email = request.POST.get('email')
 					u.save()
+
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+					
 					msg = 'Η ανανέωση του email σας ήταν επιτυχής'
 				except:
 					msg = 'Παρουσιάστηκε Σφάλμα'
