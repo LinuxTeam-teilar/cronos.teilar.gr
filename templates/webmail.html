@@ -1,43 +1,58 @@
 {% extends "base.html" %}
 
-{% block content %}
-{% if id %}
-{{items|safe}}
-{% else %}
-<table align="center">
-<tr><td align="center">From:</td><td align="center">Date:</td><td align="center">Title</td></tr>
-{% for i in items %}
-	<tr>
-	{% for j in i %}
-		{% ifequal forloop.counter0 0 %}
-			<td align="center" title="{{j|safe}}">
-		{% endifequal %}
-		{% ifequal forloop.counter0 1 %}
-			{{j|safe}}</td>
-		{% endifequal %}
-		{% ifequal forloop.counter0 2 %}
-			<td align="center">{{j|safe}}</td>
-		{% endifequal %}
-		{% ifequal forloop.counter0 3 %}
-			<td align="center"><a href="/webmail/?passed_id={{j}}"
-		{% endifequal %}
-		{% ifequal forloop.counter0 4 %}
-				{% ifequal j '' %}
-					>
-				{% else %}
-					 title="{{j|safe}}">
-				{% endifequal %}
-		{% endifequal %}
-		{% ifequal forloop.counter0 5 %}
-			{{j|safe}}</a></td>
-		{% endifequal %}
-	{% endfor %}
-	</tr>
-{% endfor %}
-</table>
-{% endif %}
+{% block title %}
+	E-mail | 
+{% endblock %}
 
-<form action="." method="get">
-{{ field }}
-</form>
+{% block content %}
+	{% if id %}
+		<div class="entry">
+			{% for i in items %}
+				{% ifequal forloop.counter0 0 %}
+					<h3>{{ i|safe }}</h3><br /><br />
+				{% endifequal %}
+				{% ifequal forloop.counter0 1 %}
+					<table>
+						<tr><td align="right"><i>Από:</i></td><td align="left">{{ i|safe }}</td></tr>
+				{% endifequal %}
+				{% ifequal forloop.counter0 2 %}
+						<tr><td align="right"><i>Ημερομηνία:</i> </td><td align="left">{{ i|safe }}</td></tr>
+				{% endifequal %}
+				{% ifequal forloop.counter0 3 %}
+						<tr><td align="right"><i>Προς:</i></td><td align="left">{{ i|safe }}</td></tr>
+				{% endifequal %}
+				{% ifequal forloop.counter0 4 %}
+						<tr><td colspan="2">{{ i|safe }}</td></tr>
+					</table>
+				{% endifequal %}
+			{% endfor %}
+		</div>
+	{% else %}
+		{% for i in items %}
+			<div class="entry">
+				{% for j in i %}
+					{% ifequal forloop.counter0 0 %}
+						<h3>{{ j|safe }}</h3><br />
+					{% endifequal %}
+					{% ifequal forloop.counter0 1 %}
+						<p>Από: <a href="mailto:{{ j }}">
+					{% endifequal %}
+					{% ifequal forloop.counter0 2 %}
+						{{ j|safe }}</a><br />
+					{% endifequal %}
+					{% ifequal forloop.counter0 3 %}
+						Ώρα: {{ j|safe }}<br />
+					{% endifequal %}
+					{% ifequal forloop.counter0 4 %}
+						<a href="/webmail/?passed_id={{ j }}">Προβολή Θέματος</a></p>
+					{% endifequal %}
+				{% endfor %}
+			</div>
+		{% endfor %}
+	{% endif %}
+
+	<form action="." method="get">
+		{{ field }}
+		<input type="hidden" name="passed_id" />
+	</form>
 {% endblock %}
