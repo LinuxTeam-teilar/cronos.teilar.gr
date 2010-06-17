@@ -103,7 +103,11 @@
 				</th>
 				<th><a href="/dionysos/#declaration">Δήλωση Μαθημάτων</a></th>
 				<th><a href="/dionysos/#grades">Βαθμολογία</a></th>
-				<th><a href="/eclass">Μαθήματα E-class</a></th>
+				{% if user.get_profile.eclass_username %}
+					<th><a href="/eclass">Μαθήματα E-class</a></th>
+				{% else %}
+					<th>Μαθήματα E-class</th>
+				{% endif %}
 			</tr>
 			<tr>
 				<td>
@@ -137,12 +141,14 @@
 					</form>
 				</td>
 				<td>
+					{% if user.get_profile.eclass_username %}
 					<form action="." method="POST" align="center">
 						{% for field in eclass2_form %}
 							{{ field }}
 						{% endfor %}
 						<input class="button" type="submit" value="Ανανέωση" />
 					</form>
+					{% endif %}
 				</td>
 			</tr>
 		</table>
@@ -152,7 +158,7 @@
 		<h3>Ανακοινώσεις Καθηγητών</h3>
 		<form action="/add/{{ field }}" method="POST">
 			{{ form }}
-			<input class="button" type="submit" value="Υποβολή"> | <a href="javascript:window.close()">Cancel</a></p>
+			<input class="button" type="submit" value="Υποβολή">
 		</form>
 	</div>
 
