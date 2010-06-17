@@ -11,15 +11,15 @@ def dionysos_login(link, username, password):
 	conn = pycurl.Curl()
 	b = StringIO.StringIO()
 	
+	cookie_file_name = os.tempnam('/tmp','dionysos')
+	login_form_seq = [
+		('userName', username),
+		('pwd', password),
+		('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
+		('loginTrue', 'login')
+	]
+	login_form_data = urllib.urlencode(login_form_seq)
 	if link == 0:
-		cookie_file_name = os.tempnam('/tmp','dionysos')
-		login_form_seq = [
-			('userName', username),
-			('pwd', password),
-			('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
-			('loginTrue', 'login')
-		]
-		login_form_data = urllib.urlencode(login_form_seq)
 		conn.setopt(pycurl.FOLLOWLOCATION, 1)
 		conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
 		conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
