@@ -137,7 +137,6 @@ def user_settings(request):
 			webmail_form = WebmailForm(request.POST)
 			if webmail_form.is_valid():
 				msg = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
-				print msg
 				if msg != 1:
 					try:
 						l = ldap.initialize(settings.LDAP_URL)
@@ -174,10 +173,56 @@ def user_settings(request):
 					msg = 'Η ανανέωση του email σας ήταν επιτυχής'
 				except:
 					msg = 'Παρουσιάστηκε Σφάλμα'
-		if request.POST.get('declaration'):
+		if str(request.POST) == str('<QueryDict: {u\'declaration\': [u\'\']}>'):
 			declaration_form = DeclarationForm(request.GET)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
-			dionysos_login(0, request.user.get_profile().dionysos_username, decodePassword(request.user.get_profile().dionysos_password))
+			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
+			try:
+				soup = BeautifulSoup(output)
+				soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
+				declaration_new = []
+				declaration_new.append([])
+				for item in soup1.findAll('td', 'error'):
+					declaration_new[0].append(str(item.contents[0]))
+					k = 8
+				for i in xrange(len(soup1.findAll('span', 'underline'))):
+					declaration_new.append([
+						str(soup1.findAll('td')[k].contents[2][6:]),
+						str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
+						str(soup1.findAll('td')[k+2].contents[0]),
+						str(soup1.findAll('td')[k+3].contents[0]),
+						str(soup1.findAll('td')[k+4].contents[0]),
+						str(soup1.findAll('td')[k+5].contents[0])
+					])
+					k += 7
+
+				l = ldap.initialize(settings.LDAP_URL)
+				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'declaration', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+	
+				if declaration_new:
+					mod_attrs = []
+					for i in xrange(len(declaration_new)):
+						mod_attrs.append((ldap.MOD_ADD, 'declaration', ','.join(declaration_new[i])))
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+					l.unbind_s()
+				
+					u = User.objects.get(username = request.user.username)
+					temp = []
+					for item in declaration_new:
+						temp += item
+					u.declaration = ','.join(temp)
+					u.save()
+					msg = 'Η ανανέωση της δήλωσής σας ήταν επιτυχής'
+				else:
+					msg = 'Η δήλωσή σας είναι κενή'
+			except:
+				msg = 'Παρουσιάστηκε Σφάλμα'
+
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
@@ -185,7 +230,7 @@ def user_settings(request):
 		webmail_form = WebmailForm()
 		email_form = EmailForm()
 		declaration_form = DeclarationForm()
-	
+	print request.POST
 	# update dionysos' declaration
 	'''if request.method == 'POST':
 		form = DeclarationForm(request.GET)
