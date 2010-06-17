@@ -14,9 +14,20 @@ def webmail(request):
 	id = ''
 	if (request.GET.get('passed_id')):
 		form = MailForm(request.GET)
-		link = 'http://myweb.teilar.gr/src/read_body.php?mailbox=INBOX&passed_id=' + str(request.GET.get('passed_id')) + '&startMessage=1'
+		link = 'http://myweb.teilar.gr/src/read_body.php?mailbox=INBOX&passed_id=' + str(request.GET.get('passed_id')) + '&startMessage=1&show_more=1'
 		output = webmail_login(link, request.user.get_profile().webmail_username, decryptPassword(request.user.get_profile().webmail_password))
-		mail = BeautifulSoup(output).findAll('table')[7]
+		soup = BeautifulSoup(output)
+		title = soup.findAll('td')[10].contents[0]
+		sender = soup.findAll('td')[12].contents[0]
+		date = soup.findAll('td')[14].contents[0]
+		to = soup.findAll('td')[16].contents[0][:-7]
+		try:
+			for item in soup.findAll('td')[16].contents[4:]:
+				to += str(item)
+		except:
+			pass
+		subject = soup.findAll('table')[7]
+		mail = [title, sender, date, to, subject]
 		id = request.GET.get('passed_id')
 	else:
 		form = MailForm()
@@ -37,9 +48,9 @@ def webmail(request):
 					full_title = str(soup1[i].findAll('td')[4].a).split('"')[3]
 				except (TypeError, IndexError):
 					full_title = ''
-				mail.append([sender_mail, sender_name, time, passed_id, full_title, title])
+				mail.append([title, sender_mail, sender_name, time, passed_id])
 	return render_to_response('webmail.html', {
 			'form': form,
 			'items': mail,
-			'id': id
+			'id': id,
 		}, context_instance = RequestContext(request))
