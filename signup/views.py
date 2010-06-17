@@ -61,7 +61,6 @@ class SignupWizard(FormWizard):
 			introduction_year = year + season
 			try:
 				link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
-				dionysos_login(0, dionysos_username, decryptPassword(dionysos_password))
 				output = dionysos_login(link, dionysos_username, decryptPassword(dionysos_password))
 				soup = BeautifulSoup(output)
 				soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
