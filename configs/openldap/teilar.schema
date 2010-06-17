@@ -109,11 +109,18 @@ attributetype ( 2.51.20100504.20100608.32.16 NAME 'cronosEmail'
 #	SUBSTR caseIgnoreSubstringsMatch
 #	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{30} )
 
+attributetype ( 2.51.20100504.20100608.32.17 NAME 'grades'
+	DESC 'dionysos.teilar.gr grades'
+	SUP name )
+#	EQUALITY caseIgnoreMatch
+#	SUBSTR caseIgnoreSubstringsMatch
+#	SYNTAX 1.3.6.1.4.1.1466.115.121.1.44{100} )
+
 objectclass ( 2.51.20100504.20100608.33.1 NAME 'teilarStudent'
 	DESC 'Credentials of a Student of Tei Larissas'
 	AUXILIARY
 	MUST ( registrationNumber $ dionysosUsername $ dionysosPassword $ semester $ introductionYear $ school )
-	MAY ( declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements $ teilarAccess $ cronosEmail ) )
+	MAY ( declaration $ eclassUsername $ eclassPassword $ eclassLessons $ webmailUsername $ webmailPassword $ teacherAnnouncements $ otherAnnouncements $ teilarAccess $ cronosEmail $ grades ) )
 
 
 #attributetype ( 2.51.20100504.20100608.32.16 NAME 'teacherFirstName'
