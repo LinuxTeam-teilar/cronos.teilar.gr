@@ -175,7 +175,7 @@ class SignupWizard(FormWizard):
 				from django.core.mail import send_mail
 
 				send_mail(
-					'Cronos user No. %s: %s' % (str(max(uids))[2:], username), 
+					'Cronos user No.%s: %s' % (str(max(uids) + 2)[2:], username), 
 					'Name: %s %s \nDepartment: %s\nSemester: %s' % (first_name, last_name, school, semester),
 					'signup@cronos.teilar.gr',
 					['cs1387@teilar.gr', 'cs1105@teilar.gr', 'tampakrap@gmail.com']
