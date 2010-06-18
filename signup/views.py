@@ -114,10 +114,20 @@ class SignupWizard(FormWizard):
 			l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 	
 			# before adding to ldap, check if user is already there
-			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS) or \
-				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
+			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS):
+				msg = 'Το username δεν είναι διαθέσιμο'
+				raise
+			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
 				msg = 'Ο χρήστης υπάρχει ήδη'
 				raise
+			if eclass_username:
+				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'eclassUsername=%s' % (eclass_username),settings.SEARCH_FIELDS):
+					msg = 'Τα στοιχεία eclass υπάρχουν ήδη'
+					raise
+			if webmail_username:
+				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'webmailUsername=%s' % (webmail_username),settings.SEARCH_FIELDS):
+					msg = 'Τα στοιχεία webmail υπάρχουν ήδη'
+					raise
 				
 			attrs = {}
 			attrs['objectClass'] = ['person','top','teilarStudent', 'posixAccount']
@@ -160,16 +170,20 @@ class SignupWizard(FormWizard):
 			l.add_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
 			l.unbind_s()
 
-			# in case there is no exception in the above, send the user to a welcome site
-			from django.core.mail import send_mail
+			# notify the admins about the new user
+			try:
+				from django.core.mail import send_mail
 
-			send_mail(
-					'Cronos user No. %s: %s' % (str(int(uidNumber[1:]) + 1), username), 
-					'Name: %s %s \n Department: %s' % (first_name, last_name, school),
+				send_mail(
+					'Cronos user No. %s: %s' % (str(max(uids))[2:], username), 
+					'Name: %s %s \nDepartment: %s\nSemester: %s' % (first_name, last_name, school, semester),
 					'signup@cronos.teilar.gr',
 					['cs1387@teilar.gr', 'cs1105@teilar.gr', 'tampakrap@gmail.com']
-			)
+				)
+			except:
+				pass
 
+			# in case there is no exception in the above, send the user to a welcome site
 			return render_to_response('welcome.html', {
 					'username': username,
 					'eclass_username': eclass_username,
