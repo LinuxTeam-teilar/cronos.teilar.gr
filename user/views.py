@@ -32,6 +32,10 @@ def user(request):
 			'school': getschool(request),
 		}, context_instance = RequestContext(request))
 
+def about(request):
+	return render_to_response('about.html', {
+		}, context_instance = RequestContext(request))
+
 @login_required
 def user_settings(request):
 	msg = ''
@@ -229,19 +233,22 @@ def user_settings(request):
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'grades\': [u\'\']}>'):
-			declaration_form = DeclarationForm(request.GET)
+			grades_form = DeclarationForm(request.GET)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
 			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 			try:
 				soup = BeautifulSoup(output)
 				grades = []
 				i = 0
-				while i < len(soup.findAll('table')[13].findAll('td')):
-					item0 = soup.findAll('table')[13].findAll('td')[i]
-					item = soup.findAll('table')[13].findAll('td')
-					if item0 in soup.findAll('td', 'groupHeader'):
+				item = soup.findAll('table')[13].findAll('td')
+				length_all_td = len(item)
+				semesters = soup.findAll('table')[13].findAll('td', 'groupHeader')
+				lessons = soup.findAll('table')[13].findAll('td', 'topBorderLight')
+				while i < length_all_td:
+					item0 = item[i]
+					if item0 in semesters:
 						grades.append([str(item0.contents[0])])
-					if item0 in soup.findAll('td', 'topBorderLight'):
+					if item0 in lessons:
 						year = str(item[i+6].contents[0].i.contents[0]).strip()
 						year = year[:10] + year[-9:]
 						if year == '--':
@@ -322,7 +329,7 @@ def user_settings(request):
 					msg = 'Η ανανέωση της βαθμολογίας σας ήταν επιτυχής'
 				else:
 					msg = 'Η βαθμολογία σας είναι κενή'
-			except:
+			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'eclass_lessons\': [u\'\']}>'):
 			eclass2_form = Eclass2Form(request.POST)

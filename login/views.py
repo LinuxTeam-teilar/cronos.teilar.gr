@@ -39,10 +39,6 @@ def mylogout(request):
 	logout(request)
 	return HttpResponseRedirect('/')
 
-#todo
-#def about(request):
-#
-
 # override 500 error page, in order to pass MEDIA_URL to Context
 def server_error(request, template_name='500.html'):
 	"""
