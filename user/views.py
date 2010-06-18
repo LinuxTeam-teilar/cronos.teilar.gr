@@ -305,7 +305,15 @@ def user_settings(request):
 						pass
 					i += 1
 				
-				
+				general = soup.findAll('table')[13].findAll('tr', 'subHeaderBack')[-1]
+				grades.append([
+					str(general.b.contents[2][-2:]),
+					str(general.contents[1].span.contents[0]),
+					str(general.contents[1].b.contents[3].contents[0]),
+					str(general.contents[1].b.contents[5].contents[0]),
+					str(general.contents[1].b.contents[7].contents[0]),
+				])
+
 				l = ldap.initialize(settings.LDAP_URL)
 				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 				try:
