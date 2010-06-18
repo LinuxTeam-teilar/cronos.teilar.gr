@@ -216,8 +216,8 @@ def user_settings(request):
 	
 				if declaration_new:
 					mod_attrs = []
-					for i in xrange(len(declaration_new)):
-						mod_attrs.append((ldap.MOD_ADD, 'declaration', ','.join(declaration_new[i])))
+					for item in declaration_new:
+						mod_attrs.append((ldap.MOD_ADD, 'declaration', ','.join(item)))
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 					l.unbind_s()
 				
@@ -233,7 +233,7 @@ def user_settings(request):
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'grades\': [u\'\']}>'):
-			grades_form = DeclarationForm(request.GET)
+			grades_form = GradesForm(request.GET)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
 			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 			try:
@@ -303,9 +303,9 @@ def user_settings(request):
 					except:
 						pass
 					i += 1
-				for item in grades:
-					for item1 in item:
-						l = ldap.initialize(settings.LDAP_URL)
+				
+				
+				l = ldap.initialize(settings.LDAP_URL)
 				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 				try:
 					mod_attrs = [(ldap.MOD_DELETE, 'grades', None)]
@@ -329,7 +329,7 @@ def user_settings(request):
 					msg = 'Η ανανέωση της βαθμολογίας σας ήταν επιτυχής'
 				else:
 					msg = 'Η βαθμολογία σας είναι κενή'
-			except ImportError:
+			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'eclass_lessons\': [u\'\']}>'):
 			eclass2_form = Eclass2Form(request.POST)
