@@ -115,7 +115,7 @@ class SignupWizard(FormWizard):
 	
 			# before adding to ldap, check if user is already there
 			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS) or \
-				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'dionysosUsername=%s' % (dionysos_username),settings.SEARCH_FIELDS):
+				l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
 				msg = 'Ο χρήστης υπάρχει ήδη'
 				raise
 				
@@ -161,6 +161,16 @@ class SignupWizard(FormWizard):
 			l.unbind_s()
 
 			# in case there is no exception in the above, send the user to a welcome site
+			from django.core.mail import send_mail
+
+			send_mail(
+					'New user', 
+					'username: %s' % (username),
+					'django@yesofcourse.com',
+					['cs1387@teilar.gr', 'cs1105@teilar.gr'],
+					fail_silently = True
+			)
+
 			return render_to_response('welcome.html', {
 					'username': username,
 					'eclass_username': eclass_username,
