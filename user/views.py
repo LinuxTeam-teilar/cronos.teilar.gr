@@ -184,7 +184,7 @@ def user_settings(request):
 				except:
 					msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'declaration\': [u\'\']}>'):
-			declaration_form = DeclarationForm(request.GET)
+			declaration_form = DeclarationForm(request.POST)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
 			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 			try:
@@ -233,7 +233,7 @@ def user_settings(request):
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST) == str('<QueryDict: {u\'grades\': [u\'\']}>'):
-			grades_form = GradesForm(request.GET)
+			grades_form = GradesForm(request.POST)
 			link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
 			output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 			try:
@@ -298,7 +298,7 @@ def user_settings(request):
 								str(item[i+1].contents[3].contents[0]).strip(),
 								str(item[i+1].contents[5].contents[0]).strip(),
 								str(item[i+1].contents[7].contents[0]).strip(),
-								i,
+								str(i),
 							])
 							i += 1
 					except:
