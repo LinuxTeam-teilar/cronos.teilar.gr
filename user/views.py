@@ -298,6 +298,7 @@ def user_settings(request):
 								str(item[i+1].contents[3].contents[0]).strip(),
 								str(item[i+1].contents[5].contents[0]).strip(),
 								str(item[i+1].contents[7].contents[0]).strip(),
+								i,
 							])
 							i += 1
 					except:
@@ -360,7 +361,7 @@ def user_settings(request):
 				user.eclass_lessons = ','.join(eclass_lessons)
 				user.save()
 				msg = 'Η ανανέωση των μαθημάτων του e-class ήταν επιτυχής'
-			except ImportError:
+			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 
 	else:
