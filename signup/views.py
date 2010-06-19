@@ -5,6 +5,7 @@ from cronos.signup.forms import *
 from cronos.announcements.models import Id
 from cronos.login.encryption import sha1Password, encryptPassword, decryptPassword
 from cronos.login.teilar import *
+from cronos.user.update import *
 from django.conf import settings
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -59,30 +60,12 @@ class SignupWizard(FormWizard):
 			else:
 				year = str(soup2.findAll('span','tablecell')[0].contents[0].split('-')[0])
 			introduction_year = year + season
-			try:
-				link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
-				output = dionysos_login(link, dionysos_username, decryptPassword(dionysos_password))
-				soup = BeautifulSoup(output)
-				soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
-
-				declaration = []
-				declaration.append([])
-				for item in soup1.findAll('td', 'error'):
-					declaration[0].append(str(item.contents[0]))
-				k = 8
-				for i in xrange(len(soup1.findAll('span', 'underline'))):
-					declaration.append([
-						str(soup1.findAll('td')[k].contents[2][6:]),
-						str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
-						str(soup1.findAll('td')[k+2].contents[0]),
-						str(soup1.findAll('td')[k+3].contents[0]),
-						str(soup1.findAll('td')[k+4].contents[0]),
-						str(soup1.findAll('td')[k+5].contents[0])
-					])
-					k += 7
-			except:
-				declaration = ''
-				pass
+			link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
+			output = dionysos_login(link, dionysos_username, decryptPassword(dionysos_password))
+			declaration = declaration_update(output)
+			link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
+			output = dionysos_login(link, dionysos_username, decryptPassword(dionysos_password))
+			grades = grades_update(output)
 
 			# login to eclass
 			if eclass_username:
@@ -90,13 +73,7 @@ class SignupWizard(FormWizard):
 				if output == 1:
 					msg = 'Λάθος Στοιχεία e-class'
 					raise
-				soup = BeautifulSoup(output).find('table', 'FormData')
-				i = 0
-				eclass_lessons = []
-				for item in soup.findAll('a'):
-					if (i % 2 == 0):
-						eclass_lessons.append(str(item.contents[0]).split('-')[0].strip())
-					i += 1
+				eclass_lessons = eclass_lessons_update(output)
 
 			# login to webmail
 			if webmail_username:
@@ -146,12 +123,17 @@ class SignupWizard(FormWizard):
 			attrs['dionysosPassword'] = [dionysos_password]
 			if declaration:
 				attrs['declaration'] = []
-				for i in xrange(len(declaration)):
-					attrs['declaration'].append(','.join(declaration[i]))
+				for item in declaration:
+					attrs['declaration'].append(','.join(item))
+			if grades:
+				attrs['grades'] = []
+				for item in grades:
+					attrs['grades'].append(','.join(item))
 			if eclass_username:
 				attrs['eclassUsername'] = [eclass_username]
 				attrs['eclassPassword'] = [eclass_password]
-				attrs['eclassLessons'] = eclass_lessons
+				if eclass_lessons:
+					attrs['eclassLessons'] = eclass_lessons
 			if webmail_username:
 				attrs['webmailUsername'] = [webmail_username]
 				attrs['webmailPassword'] = [webmail_password]
@@ -196,7 +178,7 @@ class SignupWizard(FormWizard):
 					'introduction_year': introduction_year,
 					'registration_number': registration_number,
 				}, context_instance = RequestContext(request))
-		except:
+		except ImportError:
 			if msg == '':
 				msg = 'Παρουσιάστηκε Σφάλμα'
 			return self.render(self.get_form(0), request, 0, context = {
