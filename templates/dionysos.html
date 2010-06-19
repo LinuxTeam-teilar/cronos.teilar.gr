@@ -62,10 +62,13 @@
 								<td>{{j|safe}}</td>
 							{% endifequal %}
 							{% ifequal i|length 3 %}
-								</tr><tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Σύνολα περασμένων μαθημάτων εξαμήνου: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{j|safe}}</td>
+								</tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Σύνολα περασμένων μαθημάτων εξαμήνου: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{j|safe}}</td>
 							{% endifequal %}
 						{% endfor %}
 					</tr>
+				{% endfor %}
+				{% for item in total %}
+					<tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Γενικά σύνολα περασμένων μαθημάτων: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{item|safe}}</td></tr>
 				{% endfor %}
 			</table>
 		{% endif %}
