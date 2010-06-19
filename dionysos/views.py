@@ -40,7 +40,7 @@ def dionysos(request):
 					#str(grades_full[i+4]),
 				])
 				i += 6 
-			else: # grades_full[i][0] == '(' or grades_full[i][1] == ' ':
+			else: 
 				grades.append([
 					str(grades_full[i]),
 					#str(grades_full[i+1]),
@@ -51,16 +51,17 @@ def dionysos(request):
 					str(grades_full[i+6]),
 				])
 				i += 7
-		grades.append([
+		total = [
 			str(grades_full[i]),
 			str(grades_full[i+1]),
 			#str(grades_full[i+2]),
 			str(grades_full[i+3]),
 			#str(grades_full[i+4]),
-		])
+		]
 	return  render_to_response('dionysos.html', {
 			'summary': summary,
 			'declaration_lessons': declaration_lessons,
 			'grades': grades,
+			'total': total,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
