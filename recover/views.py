@@ -18,6 +18,15 @@ def recover(request):
 		if form.is_valid():
 			new_password = ''.join([choice(string.letters + string.digits) for i in range(8)])
 			try:
+				user = User.objects.get(username = request.POST.get('username'))
+				if not user:
+					msg = 'Ο χρήστης δεν υπάρχει'
+					raise
+				
+				if user.email[-13:] == 'emptymail.com':
+					msg = 'Ο χρήστης δεν έχει δηλώσει email'
+					raise
+
 				l = ldap.initialize(settings.LDAP_URL)
 				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 				mod_attrs = [(ldap.MOD_DELETE, 'userPassword', None)]
@@ -26,7 +35,6 @@ def recover(request):
 				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.POST.get('username')), mod_attrs)
 				l.unbind_s()
 
-				user = User.objects.get(username = request.POST.get('username'))
 				user.set_password(new_password)
 				user.save()
 
@@ -38,8 +46,9 @@ def recover(request):
 				)
 
 				msg = 'Το email έχει αποσταλεί'
-			except ImportError:
-				msg = 'Παρουσιάστηκε σφάλμα'
+			except:
+				if not msg:
+					msg = 'Παρουσιάστηκε σφάλμα'
 	else:
 		form = RecoverForm()
 	return render_to_response('recover.html', {
