@@ -169,7 +169,6 @@ def user_settings(request):
 						except:
 							result = ''
 							pass
-						print result
 						if result and result[0][1]['webmailUsername'][0] != request.user.get_profile().webmail_username:
 							msg = 'Ο χρήστης webmail υπάρχει ήδη'
 							raise
