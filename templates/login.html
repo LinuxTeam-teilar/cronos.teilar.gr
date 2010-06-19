@@ -14,25 +14,26 @@
 			<h3>Αναφορά Σφάλματος</h3>
 			<p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε επικοινωνήστε μαζί μας στο email <a href="mailto:webmaster@cronos.teilar.gr">webmaster@cronos.teilar.gr</a></p>
 		</div>
-	<div id="login-form">
-		<form action="." method="POST">
-			{% for field in form %}
-				{% ifequal forloop.counter0 2 %}
-					<br />
-					{{ field}}
-					<label style="display: inline; margin: 0 0 0 0" for="remember">Nα με θυμάσαι</label>
-					<br />
-				{% else %}
-					{{ field.label_tag }}{{ field }}
-				{% endifequal %}
-			{% endfor %}
-			<input class="button" type="submit" value="Είσοδος" name="submit" />
-			<input class="button" type="submit" value="Εγγραφή" name="signup" />
-			<br />
-			<a href="#">Ξεχάσατε τον κωδικό σας;</a>
-			{% if msg %}
-				<p class="messages">{{ msg }}</p>
-			{% endif %}
-		</form>
+		<div id="login-form">
+			<form action="." method="POST">
+				{% for field in form %}
+					{% ifequal forloop.counter0 2 %}
+						<br />
+						{{ field}}
+						<label style="display: inline; margin: 0 0 0 0" for="remember">Nα με θυμάσαι</label>
+						<br />
+					{% else %}
+						{{ field.label_tag }}{{ field }}
+					{% endifequal %}
+				{% endfor %}
+				<input class="button" type="submit" value="Είσοδος" name="submit" />
+				<input class="button" type="submit" value="Εγγραφή" name="signup" />
+				<br />
+				<a href="/recover">Ξεχάσατε τον κωδικό σας;</a>
+				{% if msg %}
+					<p class="messages">{{ msg }}</p>
+				{% endif %}
+			</form>
+		</div>
 	</div>
 {% endblock %}
