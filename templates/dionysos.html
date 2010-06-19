@@ -53,13 +53,19 @@
 							{% ifequal i|length 1 %}
 								<th style="font-size: 18px; text-align: left; padding-top: 30px; padding-bottom: 7px;">{{j|safe}}</th>
 								</tr><tr>
-								<th style="width: 400px; text-align:left;">Μάθημα</th>
-								<th style="width: 80px; text-align:left;">Ώρες</th>
-								<th style="width: 80px; text-align:left;">Βαθμός</th>
-								<th style="width: 140px;">Εξεταστική</th>
+								<th style="width: 400px; text-align:center;">Μάθημα</th>
+								<th style="width: 80px; text-align:center;">Ώρες</th>
+								<th style="width: 80px; text-align:center;">Βαθμός</th>
+								<th style="width: 140px; text-align:center;">Εξεταστική</th>
 							{% endifequal %}
 							{% ifequal i|length 4 %}
-								<td>{{j|safe}}</td>
+								<td style="text-align:
+									{% ifequal forloop.counter0 0 %}
+									left
+									{% else %}
+									center
+									{% endifequal %}
+									;">{{j|safe}}</td>
 							{% endifequal %}
 							{% ifequal i|length 3 %}
 								</tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Σύνολα περασμένων μαθημάτων εξαμήνου: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{j|safe}}</td>
