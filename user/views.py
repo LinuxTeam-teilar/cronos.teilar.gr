@@ -76,9 +76,16 @@ def user_settings(request):
 		if request.POST.get('dionysos_username'):
 			dionysos_form = DionysosForm(request.POST)
 			if dionysos_form.is_valid():
-				msg = dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
-				if msg != 1:
+				output = dionysos_login(0, request.POST.get('dionysos_username'), request.POST.get('dionysos_password'))
+				if output != 1:
 					try:
+						soup = BeautifulSoup(output)
+						soup1 = BeautifulSoup(str(soup.findAll('table')[13]))
+						soup2 = BeautifulSoup(str(soup1.findAll('tr')[7]))
+						registration_number = str(soup2.findAll('td')[1].contents[0])
+						if registration_number != request.user.get_profile().registration_number:
+							msg = 'Οι Αριθμοί Μητρώου δεν ταιριάζουν'
+							raise
 						l = ldap.initialize(settings.LDAP_URL)
 						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 						mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
@@ -94,23 +101,32 @@ def user_settings(request):
 
 						msg = 'Η ανανέωση των στοιχείων για το dionysos ήταν επιτυχής'
 					except:
-						msg = 'Παρουσιάστηκε Σφάλμα'
+						if not msg:
+							msg = 'Παρουσιάστηκε Σφάλμα'
 				else:
 					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το dionysos'
 		if request.POST.get('eclass_username'):
 			eclass1_form = Eclass1Form(request.POST)
 			if eclass1_form.is_valid():
-				msg = eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-				if msg != 1:
+				output = eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
+				if output != 1:
 					try:
 						l = ldap.initialize(settings.LDAP_URL)
 						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+						try:
+							result = l.search_s('ou=teilarStudents,dc=teilar,dc=gr', ldap.SCOPE_SUBTREE, 'eclassUsername=%s' % (request.POST.get('eclass_username')), ['*'])
+						except:
+							result = ''
+							pass
+						if result and result[0][1]['eclassUsername'][0] != request.user.get_profile().eclass_username:
+							msg = 'Ο χρήστης eclass υπάρχει ήδη'
+							raise
 						mod_attrs = modlist.modifyModlist({'eclassUsername': [request.user.get_profile().eclass_username]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
 						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 						mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
 						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 
-						soup = BeautifulSoup(msg).find('table', 'FormData')
+						soup = BeautifulSoup(output).find('table', 'FormData')
 						i = 0
 						eclass_lessons = []
 						for item in soup.findAll('a'):
@@ -136,17 +152,27 @@ def user_settings(request):
 					
 						msg = 'Η ανανέωση των στοιχείων για το e-class ήταν επιτυχής'
 					except:
-						msg = 'Παρουσιάστηκε Σφάλμα'
+						if not msg:
+							msg = 'Παρουσιάστηκε Σφάλμα'
 				else:
 					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το e-class'
 		if request.POST.get('webmail_username'):
 			webmail_form = WebmailForm(request.POST)
 			if webmail_form.is_valid():
-				msg = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
-				if msg != 1:
+				output = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
+				if output != 1:
 					try:
 						l = ldap.initialize(settings.LDAP_URL)
 						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+						try:
+							result = l.search_s('ou=teilarStudents,dc=teilar,dc=gr', ldap.SCOPE_SUBTREE, 'webmailUsername=%s' % (request.POST.get('webmail_username')), ['*'])
+						except:
+							result = ''
+							pass
+						print result
+						if result and result[0][1]['webmailUsername'][0] != request.user.get_profile().webmail_username:
+							msg = 'Ο χρήστης webmail υπάρχει ήδη'
+							raise
 						mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
 						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 						mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encryptPassword(request.POST.get('webmail_password'))]})
@@ -160,7 +186,8 @@ def user_settings(request):
 					
 						msg = 'Η ανανέωση των στοιχείων για το webmail ήταν επιτυχής'
 					except:
-						msg = 'Παρουσιάστηκε Σφάλμα'
+						if not msg:
+							msg = 'Παρουσιάστηκε Σφάλμα'
 				else:
 					msg = 'Τα στοιχεία δεν επαληθεύτηκαν από το webmail'
 		if request.POST.get('email'):

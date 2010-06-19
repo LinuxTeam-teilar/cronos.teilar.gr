@@ -47,7 +47,7 @@ def eclass(request):
 
 	eclass_lessons = []
 	for item in Id.objects.filter(urlid__in = request.user.get_profile().eclass_lessons.split(',')):
-		eclass_lessons.append([item.urlid.strip(), item.name[9:]])
+		eclass_lessons.append([item.urlid.strip(), item.name])
 
 	return render_to_response('eclass.html', {
 			'headers': ['ΤΑ ΜΑΘΗΜΑΤΑ ΜΟΥ', 'ΟΙ ΔΙΟΡΙΕΣ ΜΟΥ', 'ΤΑ ΤΕΛΕΥΤΑΙΑ ΜΟΥ ΕΓΓΡΑΦΑ'],

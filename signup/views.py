@@ -115,18 +115,18 @@ class SignupWizard(FormWizard):
 	
 			# before adding to ldap, check if user is already there
 			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS):
-				msg = 'Το username δεν είναι διαθέσιμο'
+				msg = 'Το username υπάρχει ήδη'
 				raise
 			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
 				msg = 'Ο χρήστης υπάρχει ήδη'
 				raise
 			if eclass_username:
 				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'eclassUsername=%s' % (eclass_username),settings.SEARCH_FIELDS):
-					msg = 'Τα στοιχεία eclass υπάρχουν ήδη'
+					msg = 'Το eclass υπάρχει ήδη'
 					raise
 			if webmail_username:
 				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'webmailUsername=%s' % (webmail_username),settings.SEARCH_FIELDS):
-					msg = 'Τα στοιχεία webmail υπάρχουν ήδη'
+					msg = 'Το webmail υπάρχει ήδη'
 					raise
 				
 			attrs = {}
