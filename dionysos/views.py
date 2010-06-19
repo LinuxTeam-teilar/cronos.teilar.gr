@@ -46,8 +46,8 @@ def dionysos(request):
 					#str(grades_full[i+1]),
 					#str(grades_full[i+2]),
 					str(grades_full[i+3]),
-					str(grades_full[i+4]),
-					#str(grades_full[i+5]),
+					#str(grades_full[i+4]),
+					str(grades_full[i+5]),
 					str(grades_full[i+6]),
 				])
 				i += 7
