@@ -133,7 +133,7 @@ for item in soup.findAll('a'):
 
 		eclass = Id(
 			urlid = str(cid),
-			name = 'e-class: ' + lesson.strip(),
+			name = lesson.strip(),
 			department = '',
 			email = '',
 		)
