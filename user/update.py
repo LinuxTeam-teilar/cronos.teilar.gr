@@ -43,16 +43,14 @@ def grades_update(output):
 			if item0 in lessons:
 				year = str(item[i+6].contents[0].i.contents[0]).strip()
 				year = year[:10] + year[-9:]
-				if year == '--':
-					year = '-'
 				grades.append([
 					str(item0.contents[0]).strip(),
 					str(item[i+1].contents[0]).strip(),
 					str(item[i+2].contents[0]).strip(),
 					str(item[i+3].contents[0]).strip(),
 					str(item[i+4].contents[0]).strip(),
-					str(item[i+5].span.contents[0]).strip(),
-					year,
+					str(item[i+5].span.contents[0]).strip().replace(',', '.'),
+					year.replace('--', '-'),
 				])
 				try:
 					if item[i+9].contents[1][-3:] == '(Θ)' or item[i+9].contents[1][-3:] == '(Ε)':
@@ -64,19 +62,19 @@ def grades_update(output):
 							str(item[i+10].i.contents[0]).strip(),
 							str(item[i+11].contents[0]).strip(),
 							str(item[i+12].contents[0]).strip(),
-							str(item[i+13].contents[0]).strip(),
-							year,
+							str(item[i+13].contents[0]).strip().replace(',', '.'),
+							year.replace('--', '-'),
 						])
 						year = str(item[i+22].contents[0].i.contents[0])
 						year = year[:10] + year[-9:]
 						grades.append([
-							str(item[i+17].contents[i]).strip(),
+							str(item[i+17].contents[1]).strip(),
 							'',
 							str(item[i+18].i.contents[0]).strip(),
 							str(item[i+19].contents[0]).strip(),
 							str(item[i+20].contents[0]).strip(),
-							str(item[i+21].contents[0]).strip(),
-							year,
+							str(item[i+21].contents[0]).strip().replace(',', '.'),
+							year.replace('--', '-'),
 						])
 						i += 11
 				except:
@@ -90,7 +88,7 @@ def grades_update(output):
 						str(item[i+1].contents[3].contents[0]).strip(),
 						str(item[i+1].contents[5].contents[0]).strip(),
 						str(item[i+1].contents[7].contents[0]).strip(),
-						str(i),
+						'total' + str(i),
 					])
 					i += 1
 			except:
