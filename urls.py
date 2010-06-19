@@ -31,10 +31,11 @@ urlpatterns = patterns('',
 	(r'^user/', user),
 	(r'^settings/', user_settings),
 	(r'^teachers/', teachers),
+	(r'^about/', about),
 
 	url(r'^library/', include('cronos.library.urls')),
 
-	url(r'^ldap/', include('cronos.ldap_groups.urls')),
+	#url(r'^ldap/', include('cronos.ldap_groups.urls')),
 
 	(r'^signup/', SignupWizard([SignupDionysos, SignupEclass, SignupWebmail, SignupCronos])),
 

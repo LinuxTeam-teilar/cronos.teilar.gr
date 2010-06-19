@@ -22,8 +22,45 @@ def dionysos(request):
 	else:
 		msg = 'Η δήλωσή σας είναι κενή'
 
+	grades = []
+	if request.user.get_profile().grades:
+		grades_full = request.user.get_profile().grades.split(',')
+		length = len(grades_full)
+		i = 0
+		while i < length - 6:
+			if grades_full[i][:7] == 'Εξάμηνο':
+				grades.append([str(grades_full[i])])
+				i += 1
+			elif str(grades_full[i+5])[:5] == 'total':
+				grades.append([
+					str(grades_full[i]),
+					str(grades_full[i+1]),
+					str(grades_full[i+2]),
+					str(grades_full[i+3]),
+					str(grades_full[i+4]),
+				])
+				i += 6 
+			else: # grades_full[i][0] == '(' or grades_full[i][1] == ' ':
+				grades.append([
+					str(grades_full[i]),
+					str(grades_full[i+1]),
+					str(grades_full[i+2]),
+					str(grades_full[i+3]),
+					str(grades_full[i+4]),
+					str(grades_full[i+5]),
+					str(grades_full[i+6]),
+				])
+				i += 7
+		grades.append([
+			str(grades_full[i]),
+			str(grades_full[i+1]),
+			str(grades_full[i+2]),
+			str(grades_full[i+3]),
+			str(grades_full[i+4]),
+		])
 	return  render_to_response('dionysos.html', {
 			'summary': summary,
 			'declaration_lessons': declaration_lessons,
+			'grades': grades,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
