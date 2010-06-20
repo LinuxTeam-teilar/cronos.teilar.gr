@@ -161,21 +161,18 @@
 	<div class="entry" id="theacher">
 		<h3>Ανακοινώσεις Καθηγητών</h3>
 		<div>
-			<select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
-				{% for i in teacher_announcements_all %}
-					{% for j in i %}
-						{% if forloop.counter0 = 0 %}
-							<option value="{{j|safe}}">
-						{% else %}
-							{{j|safe}}</option>
-						{% endif %}
-					{% endfor %}
-				{% endfor %}
-			</select>
-			<a href="#" id="add1">Προσθήκη &gt;&gt;</a>
-		</div>
-		<div>
 			<form action="." method="POST" id="teacherann">
+				<select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
+					{% for i in teacher_announcements_all %}
+						{% for j in i %}
+							{% if forloop.counter0 = 0 %}
+								<option value="{{j|safe}}">
+							{% else %}
+								{{j|safe}}</option>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				</select>
 				<select multiple="multiple" name="teacherann_selected" id="teacherann_selected">
 					{% for i in teacher_announcements_selected %}
 						{% for j in i %}
@@ -187,7 +184,9 @@
 						{% endfor %}
 					{% endfor %}
 				</select>
-				<a href="#" id="remove1">&lt;&lt; Αφαίρεση</a>
+				<div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
+				<div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
+				<br /><br /><br />
 				<input class="button" type="submit" value="Ανανέωση" />
 			</form>
 			<form action="." method="POST">
@@ -199,6 +198,7 @@
 	<div class="entry" id="otherann">
 		<h3>Άλλες Ανακοινώσεις</h3>
 		<div>
+			<form action="." method="POST" id="otherann">
 			<select multiple="multiple" name="other_announcements" id="id_other_announcements">
 				{% for i in other_announcements_all %}
 					{% for j in i %}
@@ -210,10 +210,6 @@
 					{% endfor %}
 				{% endfor %}
 			</select>
-			<a href="#" id="add2">Προσθήκη &gt;&gt;</a>
-		</div>
-		<div>
-			<form action="." method="POST" id="otherann">
 				<select multiple="multiple" name="otherann_selected" id="otherann_selected">
 					{% for i in other_announcements_selected %}
 						{% for j in i %}
@@ -225,7 +221,9 @@
 						{% endfor %}
 					{% endfor %}
 				</select>
-				<a href="#" id="remove2">&lt;&lt; Αφαίρεση</a>
+				<div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
+				<div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
+				<br /><br /><br />
 				<input class="button" type="submit" value="Ανανέωση" name="update" />
 			</form>
 			<form action="." method="POST">
