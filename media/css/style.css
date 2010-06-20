@@ -2,6 +2,17 @@ body { overflow-x: hidden; background: #f5f5f5; }
 
 th { color: #786721; width: 280px; }
 
+#id_teacher_announcements, #teacherann_selected , #id_other_announcements, #otherann_selected{
+	height: 200px;
+	width: 250px;
+}
+
+#add1pl, #remove1pl ,#add2pl,#remove2pl{
+	float: left;
+	width: 250px;
+	text-align: center;
+}
+
 #container {
 	width: 100%; min-height: 100%; position: absolute;
 	background: #f5f5f5;
