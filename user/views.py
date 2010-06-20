@@ -299,7 +299,6 @@ def user_settings(request):
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:34] == '<QueryDict: {u\'teacherann_selected':
-			print request.POST
 			try:
 				l = ldap.initialize(settings.LDAP_URL)
 				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
@@ -322,8 +321,6 @@ def user_settings(request):
 			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:32] == '<QueryDict: {u\'otherann_selected':
-			print 'edo'
-			print request.POST
 			try:
 				l = ldap.initialize(settings.LDAP_URL)
 				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
