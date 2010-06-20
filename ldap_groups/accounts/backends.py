@@ -192,6 +192,7 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 				school = school,
 				semester = semester,
 				declaration = declaration,
+				grades = grades,
 				eclass_username = eclass_username,
 				eclass_password = eclass_password,
 				eclass_lessons = eclass_lessons,
