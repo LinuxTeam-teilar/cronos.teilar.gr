@@ -161,14 +161,32 @@
 	<div class="entry" id="theacher">
 		<h3>Ανακοινώσεις Καθηγητών</h3>
 		<div>
-			{% for field in teacher_form %}
-				{{ field }}
-			{% endfor %}
+			<select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
+					{% for i in teacher_announcements_all %}
+						{% for j in i %}
+							{% if forloop.counter0 = 0 %}
+								<option value="{{j|safe}}">
+							{% else %}
+								{{j|safe}}</option>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+			</select>
 			<a href="#" id="add">Προσθήκη &gt;&gt;</a>
 		</div>
 		<div>
 			<form action="." method="POST">
-				<select multiple="multiple" name="teacherann_selected" id="teacherann_selected"></select>
+				<select multiple="multiple" name="teacherann_selected" id="teacherann_selected">
+					{% for i in teacher_announcements_selected %}
+						{% for j in i %}
+							{% if forloop.counter0 = 0 %}
+								<option value="{{j|safe}}">
+							{% else %}
+								{{j|safe}}</option>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+				</select>
 				<a href="#" id="remove">&lt;&lt; Αφαίρεση</a>
 				<input class="button" type="submit" value="Υποβολή" />
 			</form>

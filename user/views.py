@@ -308,16 +308,16 @@ def user_settings(request):
 					mod_attrs = [(ldap.MOD_DELETE, 'teacherAnnouncements', None)]
 					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 				except:
-					print 'mpika except'
 					pass
-
+				mod_attrs = []
 				for item in request.POST.getlist('teacherann_selected'):
-					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', str(item)))
+					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', 'pid' + str(item)))
+				print mod_attrs
 				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 				l.unbind_s()
 
 				user = LdapProfile.objects.get(user__username = request.user.username)
-				user.teacher_announcements = ','.join(request.POST.getlist('teacherann_selected'))
+				user.teacher_announcements = 'pid' + ',pid'.join(request.POST.getlist('teacherann_selected'))
 				user.save()
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
 			except ImportError:
@@ -332,6 +332,15 @@ def user_settings(request):
 		grades_form = GradesForm()
 		eclass2_form = Eclass2Form()
 		teacher_form = TeacherAnnouncementsForm()
+	
+
+	teacher_announcements_selected = []
+	for teacher in Id.objects.filter(urlid__in = request.user.get_profile().teacher_announcements.split(',')).order_by('name'):
+		teacher_announcements_selected.append([teacher.urlid, teacher.name])
+	
+	teacher_announcements_all = []
+	for teacher in Id.objects.filter(urlid__startswith = 'pid').exclude(urlid__in = request.user.get_profile().teacher_announcements.split(',')).order_by('name'):
+		teacher_announcements_all.append([teacher.urlid, teacher.name])
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),
@@ -344,5 +353,7 @@ def user_settings(request):
 			'grades_form': grades_form,
 			'eclass2_form': eclass2_form,
 			'teacher_form': teacher_form,
+			'teacher_announcements_all': teacher_announcements_all,
+			'teacher_announcements_selected': teacher_announcements_selected,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
