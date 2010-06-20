@@ -1,8 +1,8 @@
 $().ready(function() {
 	$('#add').click(function() {
-		return !$('#id_teacher_announcements option:selected').remove().appendTo('#selected');
+		return !$('#id_teacher_announcements option:selected').remove().appendTo('#teacherann_selected');
 	});
 	$('#remove').click(function() {
-		return !$('#selected option:selected').remove().appendTo('#id_teacher_announcements');
+		return !$('#teacherann_selected option:selected').remove().appendTo('#id_teacher_announcements');
 	});
 });

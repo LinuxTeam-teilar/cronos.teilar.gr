@@ -298,7 +298,7 @@ def user_settings(request):
 				msg = 'Η ανανέωση των μαθημάτων του e-class ήταν επιτυχής'
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
-		if str(request.POST)[:23] == '<QueryDict: {u\'selected':
+		if str(request.POST)[:34] == '<QueryDict: {u\'teacherann_selected':
 			teacher_form = TeacherAnnouncementsForm(request.POST)
 			try:
 				l = ldap.initialize(settings.LDAP_URL)
@@ -311,13 +311,13 @@ def user_settings(request):
 					print 'mpika except'
 					pass
 
-				for item in request.POST.getlist('selected'):
+				for item in request.POST.getlist('teacherann_selected'):
 					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', str(item)))
 				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 				l.unbind_s()
 
 				user = LdapProfile.objects.get(user__username = request.user.username)
-				user.teacher_announcements = ','.join(request.POST.getlist('selected'))
+				user.teacher_announcements = ','.join(request.POST.getlist('teacherann_selected'))
 				user.save()
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
 			except ImportError:
