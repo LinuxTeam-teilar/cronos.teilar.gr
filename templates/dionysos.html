@@ -44,7 +44,7 @@
 	<div class="entry" id="grades">
 		<h3>Βαθμολογία</h3>
 		{% if not user.get_profile.grades %}
-			Παρακαλούμε πατήστε ανανέωση στο πεδίο Βαθμολογίες στις <a href="/settings/#other">ρυθμίσεις</a>
+			Παρακαλούμε πατήστε ανανέωση στο πεδίο της Βαθμολογίας στις <a href="/settings/#other">ρυθμίσεις</a>
 		{% else %}
 			<table>
 				{% for i in grades %}
