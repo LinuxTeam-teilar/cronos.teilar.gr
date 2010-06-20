@@ -123,6 +123,11 @@ class ActiveDirectoryGroupMembershipSSLBackend(BaseGroupMembershipBackend):
 
 				semester = result['semester'][0]
 
+				if result.has_key('grades'):
+					grades = ','.join(result['grades'])
+				else:
+					grades = None
+				
 				if result.has_key('declaration'):
 					declaration = ','.join(result['declaration'])
 				else:
