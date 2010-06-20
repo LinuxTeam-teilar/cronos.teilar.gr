@@ -11,6 +11,7 @@ from django.template import RequestContext
 def dionysos(request):
 	msg = ''
 	summary = ''
+	total = ''
 	declaration_lessons = []
 	if request.user.get_profile().declaration:
 		declaration_full = request.user.get_profile().declaration.split(',')
