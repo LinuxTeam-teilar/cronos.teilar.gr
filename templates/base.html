@@ -30,6 +30,7 @@
 						{% endif %}
 						<li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
 						<li><a href="/teachers/">&raquo;&emsp;Λίστα Καθηγητών</a></li>
+						<li><a href="/about/">&raquo;&emsp;Σχετικά</a></li>
 						{% if user.is_authenticated %}
 						<li><a href="/settings/">&raquo;&emsp;Ρυθμίσεις</a></li>
 							{% if user.is_superuser %}
@@ -38,7 +39,6 @@
 							<li><a href="http://cronos.teilar.gr/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
 							{% endif %}
 						{% endif %}
-						<li><a href="http://cronos.teilar.gr/websvn">&raquo;&emsp;Προβολή Κώδικα</a></li>
 					</ul>
 				</div>
 			</div>
