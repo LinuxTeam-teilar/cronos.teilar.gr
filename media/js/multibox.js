@@ -5,4 +5,9 @@ $().ready(function() {
 	$('#remove').click(function() {
 		return !$('#teacherann_selected option:selected').remove().appendTo('#id_teacher_announcements');
 	});
+	$('form').submit(function() {
+		$('#teacherann_selected option').each(function(i) {
+			$(this).attr("selected", "selected");
+		});
+	});
 });

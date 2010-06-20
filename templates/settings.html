@@ -162,15 +162,15 @@
 		<h3>Ανακοινώσεις Καθηγητών</h3>
 		<div>
 			<select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
-					{% for i in teacher_announcements_all %}
-						{% for j in i %}
-							{% if forloop.counter0 = 0 %}
-								<option value="{{j|safe}}">
-							{% else %}
-								{{j|safe}}</option>
-							{% endif %}
-						{% endfor %}
+				{% for i in teacher_announcements_all %}
+					{% for j in i %}
+						{% if forloop.counter0 = 0 %}
+							<option value="{{j|safe}}">
+						{% else %}
+							{{j|safe}}</option>
+						{% endif %}
 					{% endfor %}
+				{% endfor %}
 			</select>
 			<a href="#" id="add">Προσθήκη &gt;&gt;</a>
 		</div>
