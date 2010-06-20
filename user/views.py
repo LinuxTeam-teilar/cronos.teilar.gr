@@ -8,6 +8,7 @@ from cronos.user.update import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 import ldap
@@ -48,7 +49,6 @@ def user_settings(request):
 	declaration_form = DeclarationForm()
 	grades_form = GradesForm()
 	eclass2_form = Eclass2Form()
-	#teacher_form = TeacherAnnouncementsForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -321,6 +321,29 @@ def user_settings(request):
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
 			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
+		if str(request.POST)[:32] == '<QueryDict: {u\'otherann_selected':
+			print request.POST
+			try:
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'otherAnnouncements', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+				mod_attrs = []
+				for item in request.POST.getlist('otherann_selected'):
+					mod_attrs.append((ldap.MOD_ADD, 'otherAnnouncements', str(item)))
+				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				l.unbind_s()
+
+				user = LdapProfile.objects.get(user__username = request.user.username)
+				user.other_announcements = ','.join(request.POST.getlist('otherann_selected'))
+				user.save()
+				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
+			except ImportError:
+				msg = 'Παρουσιάστηκε Σφάλμα'
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
@@ -330,16 +353,35 @@ def user_settings(request):
 		declaration_form = DeclarationForm()
 		grades_form = GradesForm()
 		eclass2_form = Eclass2Form()
-#		teacher_form = TeacherAnnouncementsForm()
 	
-
+	
 	teacher_announcements_selected = []
-	for teacher in Id.objects.filter(urlid__in = request.user.get_profile().teacher_announcements.split(',')).order_by('name'):
-		teacher_announcements_selected.append([teacher.urlid, teacher.name])
+	try:
+		for teacher in Id.objects.filter(urlid__in = request.user.get_profile().teacher_announcements.split(',')).order_by('name'):
+			teacher_announcements_selected.append([teacher.urlid, teacher.name])
+	except:
+		pass
 	
 	teacher_announcements_all = []
-	for teacher in Id.objects.filter(urlid__startswith = 'pid').exclude(urlid__in = request.user.get_profile().teacher_announcements.split(',')).order_by('name'):
-		teacher_announcements_all.append([teacher.urlid, teacher.name])
+	teachers = Id.objects.filter(urlid__startswith = 'pid').order_by('name')
+	if request.user.get_profile().teacher_announcements:
+		teachers = teachers.exclude(urlid__in = request.user.get_profile().teacher_announcements.split(','))
+	for teacher in teachers:
+			teacher_announcements_all.append([teacher.urlid, teacher.name])
+
+	other_announcements_selected = []
+	try:
+		for item in Id.objects.filter(urlid__in = request.user.get_profile().other_announcements.split(',')).order_by('name'):
+			teacher_announcements_selected.append([item.urlid, item.name])
+	except:
+		pass
+	
+	other_announcements_all = []
+	others = Id.objects.filter(Q(urlid__startswith = 'cid5') | Q(urlid__exact = 'cid0')).order_by('name')
+	if request.user.get_profile().other_announcements:
+		others = others.exclude(urlid__in = request.user.get_profile().other_announcements.split(','))
+	for item in others:
+			other_announcements_all.append([item.urlid, item.name])
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),
@@ -351,8 +393,9 @@ def user_settings(request):
 			'declaration_form': declaration_form,
 			'grades_form': grades_form,
 			'eclass2_form': eclass2_form,
-#			'teacher_form': teacher_form,
 			'teacher_announcements_all': teacher_announcements_all,
 			'teacher_announcements_selected': teacher_announcements_selected,
+			'other_announcements_all': other_announcements_all,
+			'other_announcements_selected': other_announcements_selected,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
