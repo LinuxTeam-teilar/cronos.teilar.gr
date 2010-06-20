@@ -48,7 +48,7 @@ def user_settings(request):
 	declaration_form = DeclarationForm()
 	grades_form = GradesForm()
 	eclass2_form = Eclass2Form()
-	teacher_form = TeacherAnnouncementsForm()
+	#teacher_form = TeacherAnnouncementsForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -299,7 +299,7 @@ def user_settings(request):
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:34] == '<QueryDict: {u\'teacherann_selected':
-			teacher_form = TeacherAnnouncementsForm(request.POST)
+			print request.POST
 			try:
 				l = ldap.initialize(settings.LDAP_URL)
 				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
@@ -311,13 +311,12 @@ def user_settings(request):
 					pass
 				mod_attrs = []
 				for item in request.POST.getlist('teacherann_selected'):
-					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', 'pid' + str(item)))
-				print mod_attrs
+					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', str(item)))
 				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
 				l.unbind_s()
 
 				user = LdapProfile.objects.get(user__username = request.user.username)
-				user.teacher_announcements = 'pid' + ',pid'.join(request.POST.getlist('teacherann_selected'))
+				user.teacher_announcements = ','.join(request.POST.getlist('teacherann_selected'))
 				user.save()
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
 			except ImportError:
@@ -331,7 +330,7 @@ def user_settings(request):
 		declaration_form = DeclarationForm()
 		grades_form = GradesForm()
 		eclass2_form = Eclass2Form()
-		teacher_form = TeacherAnnouncementsForm()
+#		teacher_form = TeacherAnnouncementsForm()
 	
 
 	teacher_announcements_selected = []
@@ -352,7 +351,7 @@ def user_settings(request):
 			'declaration_form': declaration_form,
 			'grades_form': grades_form,
 			'eclass2_form': eclass2_form,
-			'teacher_form': teacher_form,
+#			'teacher_form': teacher_form,
 			'teacher_announcements_all': teacher_announcements_all,
 			'teacher_announcements_selected': teacher_announcements_selected,
 			'msg': msg,
