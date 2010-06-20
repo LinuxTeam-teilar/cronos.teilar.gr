@@ -48,6 +48,7 @@ def user_settings(request):
 	declaration_form = DeclarationForm()
 	grades_form = GradesForm()
 	eclass2_form = Eclass2Form()
+	teacher_form = TeacherAnnouncementsForm()
 	if request.method == 'POST':
 		if request.POST.get('old_password'):
 			cronos_form = CronosForm(request.POST)
@@ -297,7 +298,30 @@ def user_settings(request):
 				msg = 'Η ανανέωση των μαθημάτων του e-class ήταν επιτυχής'
 			except:
 				msg = 'Παρουσιάστηκε Σφάλμα'
+		if str(request.POST)[:23] == '<QueryDict: {u\'selected':
+			teacher_form = TeacherAnnouncementsForm(request.POST)
+			try:
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'teacherAnnouncements', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					print 'mpika except'
+					pass
+
+				for item in request.POST.getlist('selected'):
+					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', str(item)))
+				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				l.unbind_s()
+
+				user = LdapProfile.objects.get(user__username = request.user.username)
+				user.teacher_announcements = ','.join(request.POST.getlist('selected'))
+				user.save()
+				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
+			except ImportError:
+				msg = 'Παρουσιάστηκε Σφάλμα'
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
@@ -307,6 +331,7 @@ def user_settings(request):
 		declaration_form = DeclarationForm()
 		grades_form = GradesForm()
 		eclass2_form = Eclass2Form()
+		teacher_form = TeacherAnnouncementsForm()
 
 	return render_to_response('settings.html', {
 			'mail': getmail(request),
@@ -318,5 +343,6 @@ def user_settings(request):
 			'declaration_form': declaration_form,
 			'grades_form': grades_form,
 			'eclass2_form': eclass2_form,
+			'teacher_form': teacher_form,
 			'msg': msg,
 		}, context_instance = RequestContext(request))

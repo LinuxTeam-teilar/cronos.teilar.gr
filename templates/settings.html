@@ -4,6 +4,10 @@
 	Ρυθμίσεις χρήστη {{user}} | 
 {% endblock %}
 
+{% block extra_js_top %}
+	<script type="text/javascript" src="{{MEDIA_URL}}js/multibox.js"></script>
+{% endblock %}
+
 {% block content %}
 	{% if msg %}
 		<div id="notifications">
@@ -153,13 +157,22 @@
 			</tr>
 		</table>
 	</div>
-
+	
 	<div class="entry" id="theacher">
 		<h3>Ανακοινώσεις Καθηγητών</h3>
-		<form action="/add/{{ field }}" method="POST">
-			{{ form }}
-			<input class="button" type="submit" value="Υποβολή">
-		</form>
+		<div>
+			{% for field in teacher_form %}
+				{{ field }}
+			{% endfor %}
+			<a href="#" id="add">Προσθήκη &gt;&gt;</a>
+		</div>
+		<div>
+			<form action="." method="POST">
+				<select multiple="multiple" name="teacher_announcements_selected" id="selected"></select>
+				<a href="#" id="remove">&lt;&lt; Αφαίρεση</a>
+				<input class="button" type="submit" value="Υποβολή" />
+			</form>
+		</div>
 	</div>
 
 	<div class="entry" id="otherann">
