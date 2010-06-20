@@ -322,6 +322,7 @@ def user_settings(request):
 			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:32] == '<QueryDict: {u\'otherann_selected':
+			print 'edo'
 			print request.POST
 			try:
 				l = ldap.initialize(settings.LDAP_URL)
@@ -344,6 +345,40 @@ def user_settings(request):
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
 			except ImportError:
 				msg = 'Παρουσιάστηκε Σφάλμα'
+		if request.POST.get('delete1'):
+			try:
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'teacherAnnouncements', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+
+				user = LdapProfile.objects.get(user__username = request.user.username)
+				user.teacher_announcements = ''
+				user.save()
+				msg = 'Η διαγραφή πραγματοποιήθηκε με επιτυχία'
+			except ImportError:
+				msg = 'Παρουσιάστηκε Σφάλμα'
+		if request.POST.get('delete2'):
+			try:
+				l = ldap.initialize(settings.LDAP_URL)
+				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
+
+				try:
+					mod_attrs = [(ldap.MOD_DELETE, 'otherAnnouncements', None)]
+					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
+				except:
+					pass
+
+				user = LdapProfile.objects.get(user__username = request.user.username)
+				user.other_announcements = ''
+				user.save()
+				msg = 'Η διαγραφή πραγματοποιήθηκε με επιτυχία'
+			except ImportError:
+				msg = 'Παρουσιάστηκε Σφάλμα'
 	else:
 		cronos_form = CronosForm()
 		dionysos_form = DionysosForm()
@@ -353,7 +388,6 @@ def user_settings(request):
 		declaration_form = DeclarationForm()
 		grades_form = GradesForm()
 		eclass2_form = Eclass2Form()
-	
 	
 	teacher_announcements_selected = []
 	try:
@@ -372,7 +406,7 @@ def user_settings(request):
 	other_announcements_selected = []
 	try:
 		for item in Id.objects.filter(urlid__in = request.user.get_profile().other_announcements.split(',')).order_by('name'):
-			teacher_announcements_selected.append([item.urlid, item.name])
+			other_announcements_selected.append([item.urlid, item.name])
 	except:
 		pass
 	
