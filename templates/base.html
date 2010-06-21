@@ -35,8 +35,9 @@
 						<li><a href="/settings/">&raquo;&emsp;Ρυθμίσεις</a></li>
 							{% if user.is_superuser %}
 							<li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
-							<li><a href="http://cronos.teilar.gr/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
-							<li><a href="http://cronos.teilar.gr/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
+							<li><a href="/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
+							<li><a href="/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
+							<li><a href="http://cephalon.teilar.gr/cgi-bin/awstats.pl?config=cronos.teilar.gr">&raquo;&emsp;Στατιστικά</a></li>
 							{% endif %}
 						{% endif %}
 					</ul>
