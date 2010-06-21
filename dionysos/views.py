@@ -43,7 +43,7 @@ def dionysos(request):
 				i += 6 
 			else: 
 				grades.append([
-					str(grades_full[i]).strip(),
+					str(grades_full[i].strip()),
 					#str(grades_full[i+1]),
 					#str(grades_full[i+2]),
 					str(grades_full[i+3]),
