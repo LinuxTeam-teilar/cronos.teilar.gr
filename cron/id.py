@@ -6,6 +6,7 @@ import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
+from cronos.announcements.models import *
 from django.conf import settings
 import MySQLdb
 import pycurl
