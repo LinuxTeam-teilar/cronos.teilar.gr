@@ -80,6 +80,8 @@ for cid in xrange(30):
 			teilar_gr.save()
 		except MySQLdb.IntegrityError:
 			pass
+		except:
+			pass
 
 		i += 1
 
@@ -87,6 +89,7 @@ for cid in xrange(30):
 
 for pid in xrange(350):
 	link = 'http://www.teilar.gr/person_announce.php?pid=' + str(pid)
+	print link
 
 	b = StringIO.StringIO()
 	conn.setopt(pycurl.URL, link)
@@ -131,6 +134,8 @@ for pid in xrange(350):
 		try:
 			teachers_teilar_gr.save()
 		except MySQLdb.IntegrityError:
+			pass
+		except:
 			pass
 
 ### e-class.teilar.gr ###
@@ -226,6 +231,8 @@ for item in soup.findAll('a'):
 					eclass_teilar_gr.save()
 				except MySQLdb.IntegrityError:
 					pass
+				except:
+					pass
 
 				j += 1
 				k += 2
@@ -269,6 +276,8 @@ for i in xrange(2):
 			noc_teilar_gr.save()
 		except MySQLdb.IntegrityError:
 			pass
+		except:
+			pass
 
 ### www.career.teilar.gr ###
 
@@ -307,6 +316,8 @@ for i in xrange(20):
 	try:
 		career_teilar_gr.save()
 	except MySQLdb.IntegrityError:
+		pass
+	except:
 		pass
 
 ### linuxteam.cs.teilar.gr ###
@@ -347,6 +358,8 @@ for i in range(4, 7):
 		linuxteam.save()
 	except MySQLdb.IntegrityError:
 		pass
+	except:
+		pass
 
 ### dionysos.teilar.gr ###
 
@@ -378,6 +391,8 @@ for i in xrange(len(soup.findAll('th')) - 1):
 	try:
 		dionysos.save()
 	except MySQLdb.IntegrityError:
+		pass
+	except:
 		pass
 
 ### library.teilar.gr ###
@@ -415,6 +430,8 @@ for item in soup.findAll('a', 'BlackText11'):
 	try:
 		library.save()
 	except MySQLdb.IntegrityError:
+		pass
+	except:
 		pass
 
 ### www.pr.teilar.gr ###
@@ -458,4 +475,6 @@ for item in link:
 		try:
 			pr.save()
 		except MySQLdb.IntegrityError:
+			pass
+		except:
 			pass
