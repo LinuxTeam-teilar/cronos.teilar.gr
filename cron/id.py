@@ -6,7 +6,8 @@ import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
-from cronos.announcements.models import decryptPassword
+from cronos.login.encryption import decryptPassword
+from cronos.announcements.models import *
 from django.conf import settings
 import MySQLdb
 import pycurl
@@ -45,6 +46,8 @@ for cid in xrange(30):
 		depart.save()
 	except MySQLdb.IntegrityError:
 		pass
+	except:
+		pass
 
 # extra sites #
 dest = [
@@ -67,6 +70,8 @@ for i in xrange(len(dest[:][:])):
 	try:
 		dest[i][0].save()
 	except MySQLdb.IntegrityError:
+		pass
+	except:
 		pass
 
 ### www.teilar.gr/profannews.php ###
@@ -98,6 +103,8 @@ for pid in xrange(400):
 		try:
 			teachers.save()
 		except MySQLdb.IntegrityError:
+			pass
+		except:
 			pass
 
 ### e-class.teilar.gr ###
@@ -141,6 +148,8 @@ for item in soup.findAll('a'):
 		try:
 			eclass.save()
 		except MySQLdb.IntegrityError:
+			pass
+		except:
 			pass
 	
 	i += 1
