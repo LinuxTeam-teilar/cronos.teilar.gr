@@ -6,8 +6,6 @@ import sys
 sys.path.append(PROJ_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
-from cronos.login.encryption import decryptPassword
-from cronos.announcements.models import *
 from django.conf import settings
 import MySQLdb
 import pycurl
@@ -44,8 +42,6 @@ for cid in xrange(30):
 		)
 	try:
 		depart.save()
-	except MySQLdb.IntegrityError:
-		pass
 	except:
 		pass
 
@@ -69,8 +65,6 @@ for i in xrange(len(dest[:][:])):
 
 	try:
 		dest[i][0].save()
-	except MySQLdb.IntegrityError:
-		pass
 	except:
 		pass
 
@@ -102,8 +96,6 @@ for pid in xrange(400):
 		)
 		try:
 			teachers.save()
-		except MySQLdb.IntegrityError:
-			pass
 		except:
 			pass
 
@@ -113,7 +105,7 @@ b = StringIO.StringIO()
 cookie_file_name = os.tempnam('/tmp', 'eclass')
 login_form_seq = [
 	('uname', settings.ECLASS_USER),
-	('pass', decryptPassword(settings.ECLASS_PASSWORD)),
+	('pass', settings.ECLASS_PASSWORD),
 	('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82')
 ]
 login_form_data = urllib.urlencode(login_form_seq)
@@ -147,8 +139,6 @@ for item in soup.findAll('a'):
 
 		try:
 			eclass.save()
-		except MySQLdb.IntegrityError:
-			pass
 		except:
 			pass
 	
