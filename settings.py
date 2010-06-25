@@ -82,34 +82,3 @@ LDAP_PORT = 389
 LDAP_URL = 'ldap://%s:%s' % (LDAP_SERVER, LDAP_PORT)
 SEARCH_DN = 'ou=teilarStudents,dc=teilar,dc=gr'
 SEARCH_FIELDS = ['*']
-
-##### LOCAL_SETTINGS #######
-
-### Debug variables are in local settings for easy switch / testing
-# DEBUG = False
-# TEMPLATE_DEBUG = DEBUG
-
-### Database configurations
-# DATABASE_ENGINE = '(db)'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-# DATABASE_NAME = '(secret)'             # Or path to database file if using sqlite3.
-# DATABASE_USER = '(secret)'             # Not used with sqlite3.
-# DATABASE_PASSWORD = '(secret)'         # Not used with sqlite3.
-# DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-# DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
-
-# Make this unique, and don't share it with anybody.
-# SECRET_KEY = '(secret)'
-
-### Proj_root and media could be different in local systems
-# PROJECT_ROOT = '/home/code/cronos'
-# MEDIA_ROOT = PROJECT_ROOT + 'media/'
-# MEDIA_URL = '/media/'
-# ADMIN_MEDIA_PREFIX = '/admin_media/'
-
-### Eclass username / password, for the cron jobs
-# ECLASS_USER = '(secret)'
-# ECLASS_PASSWORD = '(secret)'
-
-### LDAP username / password
-# BIND_USER = '(secret)'
-# BIND_PASSWORD = '(secret)'

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.login.encryption import sha1Password
+from cronos.recover import captcha
 from cronos.recover.forms import *
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -13,14 +14,26 @@ import string
 
 def recover(request):
 	msg = ''
+	html_captcha = captcha.displayhtml(settings.RECAPTCHA_PUB_KEY)
 	if request.method == 'POST':
+		print request
+		check_captcha = captcha.submit(
+			request.POST['recaptcha_challenge_field'],
+			request.POST['recaptcha_response_field'],
+			settings.RECAPTCHA_PRIVATE_KEY, request.META['REMOTE_ADDR']
+		)
 		form = RecoverForm(request.POST)
 		if form.is_valid():
 			new_password = ''.join([choice(string.letters + string.digits) for i in range(8)])
 			try:
-				user = User.objects.get(username = request.POST.get('username'))
-				if not user:
+				if check_captcha.is_valid is False:
+					msg = 'Το captcha δεν επαληθεύτηκε'
+					raise
+				try:
+					user = User.objects.get(username = request.POST.get('username'))
+				except:
 					msg = 'Ο χρήστης δεν υπάρχει'
+				if not user:
 					raise
 				
 				if user.email[-13:] == 'emptymail.com':
@@ -51,7 +64,9 @@ def recover(request):
 					msg = 'Παρουσιάστηκε σφάλμα'
 	else:
 		form = RecoverForm()
+		html_captcha = captcha.displayhtml(settings.RECAPTCHA_PUB_KEY)
 	return render_to_response('recover.html', {
 			'form': form,
+			'html_captcha': html_captcha,
 			'msg': msg,
 		}, context_instance = RequestContext(request))
