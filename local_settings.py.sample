@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+# RENAME TO local_settings.py and change accordingly the vars
 
+# Change to True for development boxes
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
+# Change them to reflect your own db settings
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'secret'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'secret'             # Not used with sqlite3.
@@ -13,25 +16,30 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'
 
-PROJECT_ROOT = '/home/code/cronos/'
+# Change PROJECT_ROOT to reflect your own dir
+PROJECT_ROOT = '/var/code/cronos/'
+
+#
 MEDIA_ROOT = PROJECT_ROOT + 'media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
-# ECLASS
-ECLASS_USER = 'secret'
-ECLASS_PASSWORD = 'secret'
-
-# Blowfish key, used by encryptPassword and decryptPassword functions in cronso.teilar.login module
+# Blowfish key, used by encryptPassword and decryptPassword functions in cronos.teilar.login module
 BLOWFISH_KEY = 'secret'
 
 # LDAP
 BIND_USER = 'uid=secret,dc=teilar,dc=gr'
 BIND_PASSWORD = 'secret'
 
+##### The following variables can remain unset in development boxes
+
+# ECLASS
+ECLASS_USER = 'secret'
+ECLASS_PASSWORD = 'secret'
+
 # used to send mails by sendmail
 EMAIL_HOST_USER = 'root'
 
-# recaptcha
+# recaptcha keys
 RECAPTCHA_PUB_KEY = 'secret'
 RECAPTCHA_PRIVATE_KEY = 'secret'
