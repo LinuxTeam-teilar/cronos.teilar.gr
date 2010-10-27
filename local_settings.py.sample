@@ -19,7 +19,9 @@ SECRET_KEY = 'secret'
 # Change PROJECT_ROOT to reflect your own dir
 PROJECT_ROOT = '/var/code/cronos/'
 
-#
+# Create a media/ dir for you own static content
+# and create an admin_media symlink pointing to django's media
+# (admin_media is used for django's admin panel static content)
 MEDIA_ROOT = PROJECT_ROOT + 'media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
