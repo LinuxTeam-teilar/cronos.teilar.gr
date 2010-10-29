@@ -31,7 +31,7 @@ def getschool(request):
 def user(request):
 	return render_to_response('user.html', {
 			'mail': getmail(request),
-			'school': getschool(request),
+			'school': '', # getschool(request), <---disable until i fix the unicode exception
 		}, context_instance = RequestContext(request))
 
 def about(request):
