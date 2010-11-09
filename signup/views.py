@@ -40,7 +40,7 @@ class SignupWizard(FormWizard):
 				msg = 'Λάθος Στοιχεία dionysos'
 				raise
 			soup = BeautifulSoup(output)
-			soup1 = BeautifulSoup(str(soup.findAll('table')[13]))
+			soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[5]))
 			last_name = str(soup2.findAll('td')[1].contents[0])
 			soup2 = BeautifulSoup(str(soup1.findAll('tr')[6]))
@@ -91,23 +91,26 @@ class SignupWizard(FormWizard):
 			l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
 	
 			# before adding to ldap, check if user is already there
-			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS):
-				msg = 'Το username υπάρχει ήδη'
-				raise
-			if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
-				msg = 'Ο χρήστης υπάρχει ήδη'
-				raise
-			if eclass_username:
-				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'eclassUsername=%s' % (eclass_username),settings.SEARCH_FIELDS):
-					msg = 'Το eclass υπάρχει ήδη'
+			try:
+				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'uid=%s' % (username),settings.SEARCH_FIELDS):
+					msg = 'Το username υπάρχει ήδη'
 					raise
-			if webmail_username:
-				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'webmailUsername=%s' % (webmail_username),settings.SEARCH_FIELDS):
-					msg = 'Το webmail υπάρχει ήδη'
+				if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'registrationNumber=%s' % (registration_number),settings.SEARCH_FIELDS):
+					msg = 'Ο χρήστης υπάρχει ήδη'
 					raise
+				if eclass_username:
+					if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'eclassUsername=%s' % (eclass_username),settings.SEARCH_FIELDS):
+						msg = 'Το eclass υπάρχει ήδη'
+						raise
+				if webmail_username:
+					if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'webmailUsername=%s' % (webmail_username),settings.SEARCH_FIELDS):
+						msg = 'Το webmail υπάρχει ήδη'
+						raise
+			except:
+				pass
 				
 			attrs = {}
-			attrs['objectClass'] = ['person','top','teilarStudent', 'posixAccount']
+			attrs['objectClass'] = ['person', 'top', 'teilarStudent', 'posixAccount']
 			attrs['uid'] =  [username]
 			attrs['sn'] = [last_name]
 			attrs['cn'] = [first_name]
@@ -142,11 +145,27 @@ class SignupWizard(FormWizard):
 				attrs['cronosEmail'] = [username + '@emptymail.com']
 			attrs['homeDirectory'] = ['/home/' + username]
 			attrs['gidNumber'] = ['100'] # 100 is the users group in linux
-			results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
-			uids = []
-			for item in results:
-				uids.append(int(item[1]['uidNumber'][0]))
-			attrs['uidNumber'] = [str(max(uids) + 1)]
+			try:
+				results = l.search_s(settings.SEARCH_DN, ldap.SCOPE_SUBTREE, 'uid=*', ['uidNumber'])
+				uids = []
+				for item in results:
+					uids.append(int(item[1]['uidNumber'][0]))
+				attrs['uidNumber'] = [str(max(uids) + 1)]
+			except:
+				attrs['uidNumber'] = ['0']
+				# ldap is empty, initializing it
+				init_attrs1 = {}
+				init_attrs1['objectClass'] = ['dcObject', 'organizationalUnit', 'top']
+				init_attrs1['dc'] = ['teilar']
+				init_attrs1['ou'] = ['TEI Larissas']
+				ldif1 = modlist.addModlist(init_attrs1)
+				l.add_s('dc=teilar,dc=gr', ldif1)
+
+				init_attrs2 = {}
+				init_attrs2['objectClass'] = ['organizationalUnit', 'top']
+				init_attrs2['ou'] = ['teilarStudents']
+				ldif2 = modlist.addModlist(init_attrs2)
+				l.add_s('ou=teilarStudents,dc=teilar,dc=gr', ldif2)
 
 			ldif = modlist.addModlist(attrs)
 			l.add_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (username), ldif)
@@ -160,7 +179,7 @@ class SignupWizard(FormWizard):
 					'Cronos user No.%s: %s' % (str(max(uids) + 2)[2:], username), 
 					'Name: %s %s \nDepartment: %s\nSemester: %s' % (first_name, last_name, school, semester),
 					'signup@cronos.teilar.gr',
-					['cs1387@teilar.gr', 'cs1105@teilar.gr', 'tampakrap@gmail.com']
+					['cronos@teilar.gr']
 				)
 			except:
 				pass
