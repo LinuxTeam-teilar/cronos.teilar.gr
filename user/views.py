@@ -24,14 +24,14 @@ def getmail(request):
 
 def getschool(request):
 	for item in Id.objects.filter(urlid__exact = request.user.get_profile().school):
-		school = str(item.name)
+		school = item.name
 	return school
 
 @login_required
 def user(request):
 	return render_to_response('user.html', {
 			'mail': getmail(request),
-			'school': '', # getschool(request), <---disable until i fix the unicode exception
+			'school': getschool(request),
 		}, context_instance = RequestContext(request))
 
 def about(request):
