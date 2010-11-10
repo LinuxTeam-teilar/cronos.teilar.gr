@@ -68,14 +68,14 @@ def eclass_login(username, password):
 	conn.setopt(pycurl.URL, 'http://e-class.teilar.gr/index.php')
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
 	conn.perform()
-	soup = BeautifulSoup(str(unicode(b.getvalue(), 'utf-8', 'ignore')))
+	soup = BeautifulSoup(unicode(b.getvalue(), 'utf-8', 'ignore'))
 	try:
 		if soup.find('div', 'user').contents[0] == '&nbsp;':
 			return 1
 		else:
 			raise
 	except:
-		return str(unicode(b.getvalue(), 'utf-8', 'ignore'))
+		return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def webmail_login(link, username, password):
 	from BeautifulSoup import BeautifulSoup
