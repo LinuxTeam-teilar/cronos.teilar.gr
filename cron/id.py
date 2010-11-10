@@ -3,15 +3,17 @@
 from proj_root import *
 import os
 import sys
-sys.path.append(PROJ_ROOT)
+sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
 from django.conf import settings
+from django.db.utils import IntegrityError
 import MySQLdb
 import pycurl
 import re
 import StringIO
+import tempfile
 import urllib
 import urlparse
 
@@ -27,13 +29,14 @@ for cid in xrange(30):
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output)
-	try:
-		school = str(soup.findAll('td', 'BlueTextBold')[0])
-		school = p.sub(' ', school)
-	except:
-		pass
+
+	school = str(soup.findAll('td', 'BlueTextBold')[0])
+	school = p.sub(' ', school)
+
 	if (cid == 0):
 		school = 'Κεντρική Σελίδα ΤΕΙ Λάρισας'
+	if (cid == 2):
+		school = 'Τμήμα Τεχνολογίας Πληροφορικής και Τηλεπικοινωνιών'
 	if (len(school) > 5):
 		depart = Id(
 			urlid = 'cid' + str(cid),
@@ -41,12 +44,14 @@ for cid in xrange(30):
 			department = '',
 			email = '',
 		)
-	try:
-		depart.save()
-	except:
-		pass
+		try:
+			depart.save()
+			print 'ADDED ' + school
+		except IntegrityError:
+			pass
 
 # extra sites #
+
 dest = [
 	['noc', 'Κέντρο Διαχείρισης Δικτύου'],
 	['career', 'Γραφείο Διασύνδεσης'],
@@ -54,7 +59,7 @@ dest = [
 	['dionysos', 'Πρόγραμμα Γραμματείας'],
 	['library', 'Κεντρική Βιβλιοθήκη'],
 	['pr', 'Γραφείο Δημοσίων και Διεθνών Σχέσεων'],
-	]
+]
 
 for i in xrange(len(dest[:][:])):
 	dest[i][0] = Id(
@@ -63,10 +68,10 @@ for i in xrange(len(dest[:][:])):
 		department = '',
 		email = '',
 	)
-
 	try:
 		dest[i][0].save()
-	except:
+		print 'ADDED ' + str(dest[i][1])
+	except IntegrityError:
 		pass
 
 ### www.teilar.gr/profannews.php ###
@@ -81,13 +86,28 @@ for pid in xrange(400):
 	teacher = ''
 	email = ''
 	depart = ''
+	
 	try:
-		teacher = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11Bold')[1].contents[0])))
-		email = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11')[5])).a.contents[0])
-		depart = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11')[2])))
-		depart = p.sub('',depart)
-	except:
+		teacher = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11Bold')[1].contents[0]))).strip()
+	except IndexError:
 		pass
+	try:
+		email = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11')[5])).a.contents[0])
+	except AttributeError:
+		try:
+			email = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11')[5].contents[0])))
+		except IndexError:
+			pass
+	except IndexError:
+		pass
+	try:
+		depart = str(BeautifulSoup(str(soup.findAll('td', 'BlackText11')[2]))).strip()
+		depart = p.sub('',depart)
+		if depart.split(' ')[1] == 'Τεχν.':
+			depart = 'Τμήμα Τεχνολογίας ' + ' '.join(depart.split(' ')[2:])
+	except IndexError:
+		pass
+
 	if (len(teacher) > 1):
 		teachers = Id(
 			urlid = 'pid' + str(pid),
@@ -97,13 +117,16 @@ for pid in xrange(400):
 		)
 		try:
 			teachers.save()
-		except:
+			print 'ADDED ' + teacher
+		except IntegrityError:
 			pass
 
 ### e-class.teilar.gr ###
 
 b = StringIO.StringIO()
-cookie_file_name = os.tempnam('/tmp', 'eclass')
+fd, cookie_path = tempfile.mkstemp(prefix='eclass_', dir='/tmp')
+print fd
+print cookie_path
 login_form_seq = [
 	('uname', settings.ECLASS_USER),
 	('pass', settings.ECLASS_PASSWORD),
@@ -111,8 +134,8 @@ login_form_seq = [
 ]
 login_form_data = urllib.urlencode(login_form_seq)
 conn.setopt(pycurl.FOLLOWLOCATION, 1)
-conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
+conn.setopt(pycurl.COOKIEFILE, cookie_path)
+conn.setopt(pycurl.COOKIEJAR, cookie_path)
 conn.setopt(pycurl.URL, 'http://openclass.teilar.gr/index.php')
 conn.setopt(pycurl.POST, 1)
 conn.setopt(pycurl.POSTFIELDS, login_form_data)
@@ -123,10 +146,10 @@ soup = BeautifulSoup(output).find('table', 'FormData')
 
 i = 0
 
-for item in soup.findAll('a'):
+lessonslist = soup.findAll('a')
+for item in lessonslist:
 	if (i%2 == 0):
 		cid = str(soup.findAll('a')[i].contents[0]).split('-')[0]
-
 		lesson = ''
 		for j in xrange(len((soup.findAll('a')[i].contents[0]).split('-')) - 1):
 			lesson += str(soup.findAll('a')[i].contents[0]).split('-')[j+1].strip() + ' '
@@ -137,10 +160,17 @@ for item in soup.findAll('a'):
 			department = '',
 			email = '',
 		)
-
 		try:
 			eclass.save()
-		except:
+			print 'ADDED ' + lesson.strip()
+		except IntegrityError:
 			pass
-	
+		except MySQLdb.Warning, e:
+			print 'ADDED ' + lesson.strip()
+			print e
+			pass
+
 	i += 1
+os.close(fd)
+os.remove(cookie_path)
+print "Probably finished successfully"
