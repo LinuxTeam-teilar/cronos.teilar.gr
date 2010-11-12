@@ -189,6 +189,7 @@ def main():
 	extra_sites()
 	professors()
 	eclass_teilar_gr()
+	print "DONE"
 
 if __name__ == "__main__":
 	main()
