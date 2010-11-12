@@ -174,7 +174,7 @@ def eclass_teilar_gr():
 				pass
 			except MySQLdb.Warning, warning:
 				print 'ADDED ' + lesson.strip()
-				print 'WARNING: ' + warning
+				print 'WARNING: ' + str(warning)
 				pass
 			except Exception as error:
 				print 'ERROR: ' + lesson.strip() 
