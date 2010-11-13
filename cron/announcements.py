@@ -7,6 +7,7 @@ sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from cronos.announcements.models import *
 from django.conf import settings
+from django.db.utils import IntegrityError
 from BeautifulSoup import BeautifulSoup
 import MySQLdb
 import pycurl
@@ -41,7 +42,7 @@ def www_teilar_gr():
 		templinedowndots = soup.findAll('td', 'LineDownDots')
 		tempblacktext11 = soup.findAll('td', 'BlackText11')
 		for item in templinedowndots:
-			link = 'http://www.teilar.gr/' + str(blacktext11[i].contents[0]).split('"')[3].replace('&amp;', '&')
+			link = 'http://www.teilar.gr/' + str(tempblacktext11[i].contents[0]).split('"')[3].replace('&amp;', '&')
 
 			#parse each announcement
 			b = StringIO.StringIO()
@@ -59,8 +60,9 @@ def www_teilar_gr():
 			if soup1.find('a', 'BlackText11Bold'):
 				attach_text = str(soup1.find('a', 'BlackText11Bold').contents[0])
 				attach_url = 'http://www.teilar.gr/' + str(soup1.find('a', 'BlackText11Bold')).split('"')[3]
+			title = str(soup.findAll('a', 'BlackText11')[i].contents[0]).strip()
 			teilar_gr = Announcements(
-				title = str(soup.findAll('a', 'BlackText11')[i].contents[0]).strip(),
+				title = title,
 				url = link,
 				unique = link,
 				urlid = getid('cid', cid),
@@ -70,11 +72,17 @@ def www_teilar_gr():
 			)
 			try:
 				teilar_gr.save()
-				print 'New announement from: ' + getcid('cid', cid)
+				print 'NEW: ' + title
+				print '    from: ' + str(getid('cid', cid))
 			except IntegrityError:
 				pass
+			except MySQLdb.Warning, warning:
+				print 'NEW: ' + title
+				print '    from: ' + str(getid('cid', cid))
+				print 'WARNING: ' + str(warning)
+				pass
 			except Exception as error:
-				print 'ERROR: ' + getcid('cid', cid)
+				print 'ERROR: ' + title
 				print 'ERROR: ' + str(error)
 				pass
 			i += 1
@@ -82,51 +90,59 @@ def www_teilar_gr():
 def professors():
 	for pid in xrange(350):
 		link = 'http://www.teilar.gr/person_announce.php?pid=' + str(pid)
-
-	b = StringIO.StringIO()
-	conn.setopt(pycurl.URL, link)
-	conn.setopt(pycurl.WRITEFUNCTION, b.write)
-	conn.perform()
-	output = unicode(b.getvalue(), 'utf-8', 'ignore')
-	soup = BeautifulSoup(output)
-
-	for item in soup.findAll('td', 'LineDownDots'):
-		soup1 = BeautifulSoup(str(item))
-		
-		main_text = ''
-		attach_text = ''
-		attach_url = ''
-		unique = ''
-
-		if len(str(soup1.findAll('td', 'BlackText11')[1])) > 5:
-			main_text = str(soup1.findAll('td', 'BlackText11')[1])
-			main_text = p.sub(' ', main_text)
-
-		try:
-			attach_text = str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0].contents[0])
-			attach_url = 'http://www.teilar.gr/' + str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0]).split('"')[3]
-		except:
-			pass
-
-		if len(main_text) == 0:
-			unique = attach_url
-		else:
-			unique = main_text.strip()
-
-		teachers_teilar_gr = Announcements(
-			title = str(soup1.findAll('td', 'BlackText11')[0].contents[0].contents[0]).strip(),
-			urlid = getid('pid', pid),
-			description = main_text.strip(),
-			unique = unique,
-			attachment_text = attach_text,
-			attachment_url = attach_url,
-			url = link,
-		)
-		
-		try:
-			teachers_teilar_gr.save()
-		except:
-			pass
+		b = StringIO.StringIO()
+		conn.setopt(pycurl.URL, link)
+		conn.setopt(pycurl.WRITEFUNCTION, b.write)
+		conn.perform()
+		output = unicode(b.getvalue(), 'utf-8', 'ignore')
+		soup = BeautifulSoup(output)
+		templinedowndots = soup.findAll('td', 'LineDownDots')
+		for item in templinedowndots:
+			soup1 = BeautifulSoup(str(item))
+			main_text = ''
+			attach_text = ''
+			attach_url = ''
+			unique = ''
+			if len(str(soup1.findAll('td', 'BlackText11')[1])) > 5:
+				main_text = str(soup1.findAll('td', 'BlackText11')[1])
+				main_text = p.sub(' ', main_text)
+			try:
+				attach_text = str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0].contents[0])
+				attach_url = 'http://www.teilar.gr/' + str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0]).split('"')[3]
+			except:
+				pass
+			if len(main_text) == 0:
+				unique = attach_url
+			else:
+				unique = main_text.strip()
+			try:
+				title = str(soup1.findAll('td', 'BlackText11')[0].contents[0].contents[0]).strip()
+			except IndexError:
+				title = ''
+			teachers_teilar_gr = Announcements(
+				title = title,
+				urlid = getid('pid', pid),
+				description = main_text.strip(),
+				unique = unique,
+				attachment_text = attach_text,
+				attachment_url = attach_url,
+				url = link,
+			)
+			try:
+				teachers_teilar_gr.save()
+				print 'NEW: ' + title
+				print '    from: ' + str(getid('pid', pid))
+			except IntegrityError:
+				pass
+			except MySQLdb.Warning, warning:
+				print 'NEW: ' + title
+				print '    from: ' + str(getid('pid', pid))
+				print 'WARNING: ' + str(warning)
+				pass
+			except Exception as error:
+				print 'ERROR: ' + title
+				print 'ERROR: ' + str(error)
+				pass
 
 def eclass_teilar_gr():
 	b = StringIO.StringIO()
@@ -461,13 +477,14 @@ def pr_teilar_gr():
 def main():
 	www_teilar_gr()
 	professors()
-	eclass_teilar_gr()
+	'''eclass_teilar_gr()
 	noc_teilar_gr()
 	career_teilar_gr()
 	linuxteam_cs_teilar_gr()
 	dionysos_teilar_gr()
 	library_teilar_gr()
-	pr_teilar_gr()
+	pr_teilar_gr()'''
+	print 'DONE'
 
 if __name__ == '__main__':
 	main()
