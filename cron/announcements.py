@@ -13,6 +13,7 @@ import MySQLdb
 import pycurl
 import re
 import StringIO
+import tempfile
 import urllib
 import urlparse 
 
@@ -40,58 +41,59 @@ def www_teilar_gr():
 		soup = BeautifulSoup(str(BeautifulSoup(output).findAll('td', 'LineDownDots')))
 		i = 0
 		templinedowndots = soup.findAll('td', 'LineDownDots')
-		tempblacktext11 = soup.findAll('td', 'BlackText11')
+		temptdblacktext11 = soup.findAll('td', 'BlackText11')
+		tempablacktext11 = soup.findAll('a', 'BlackText11')
 		for item in templinedowndots:
-			link = 'http://www.teilar.gr/' + str(tempblacktext11[i].contents[0]).split('"')[3].replace('&amp;', '&')
+			url = 'http://www.teilar.gr/' + str(temptdblacktext11[i].contents[0]).split('"')[3].replace('&amp;', '&')
 
 			#parse each announcement
 			b = StringIO.StringIO()
-			conn.setopt(pycurl.URL, link)
+			conn.setopt(pycurl.URL, url)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
 			output = unicode(b.getvalue(), 'utf-8', 'ignore')
 			soup1 = BeautifulSoup(output)
-			main_text = ''
-			attach_text = ''
-			attach_url = ''
+			description = ''
+			attachment_text = ''
+			attachment_url = ''
 			if soup1.find('td', 'BlackText11'):
-				main_text = str(soup1.find('td', 'BlackText11'))
-				main_text = p.sub(' ', main_text)
+				description = str(soup1.find('td', 'BlackText11'))
+				description = p.sub(' ', description)
 			if soup1.find('a', 'BlackText11Bold'):
-				attach_text = str(soup1.find('a', 'BlackText11Bold').contents[0])
-				attach_url = 'http://www.teilar.gr/' + str(soup1.find('a', 'BlackText11Bold')).split('"')[3]
-			title = str(soup.findAll('a', 'BlackText11')[i].contents[0]).strip()
+				attachment_text = str(soup1.find('a', 'BlackText11Bold').contents[0])
+				attachment_url = 'http://www.teilar.gr/' + str(soup1.find('a', 'BlackText11Bold')).split('"')[3]
+			title = str(tempablacktext11[i].contents[0]).strip()
 			teilar_gr = Announcements(
 				title = title,
-				url = link,
-				unique = link,
+				url = url,
+				unique = url,
 				urlid = getid('cid', cid),
-				description = main_text.strip(),
-				attachment_text = attach_text,
-				attachment_url = attach_url,
+				description = description.strip(),
+				attachment_text = attachment_text,
+				attachment_url = attachment_url,
 			)
 			try:
 				teilar_gr.save()
-				print 'NEW: ' + title
-				print '    from: ' + str(getid('cid', cid))
+				print 'NEW: %s' % title
+				print '    from: %s\n' % str(getid('cid', cid))
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'NEW: ' + title
-				print '    from: ' + str(getid('cid', cid))
-				print 'WARNING: ' + str(warning)
+				print 'NEW: %s' % title
+				print '    from: %s' % str(getid('cid', cid))
+				print 'WARNING: %s\n' % str(warning)
 				pass
 			except Exception as error:
-				print 'ERROR: ' + title
-				print 'ERROR: ' + str(error)
+				print 'ERROR: %s' % title
+				print 'ERROR: %s\n' % str(error)
 				pass
 			i += 1
 
 def professors():
 	for pid in xrange(350):
-		link = 'http://www.teilar.gr/person_announce.php?pid=' + str(pid)
+		url = 'http://www.teilar.gr/person_announce.php?pid=' + str(pid)
 		b = StringIO.StringIO()
-		conn.setopt(pycurl.URL, link)
+		conn.setopt(pycurl.URL, url)
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
 		conn.perform()
 		output = unicode(b.getvalue(), 'utf-8', 'ignore')
@@ -99,22 +101,22 @@ def professors():
 		templinedowndots = soup.findAll('td', 'LineDownDots')
 		for item in templinedowndots:
 			soup1 = BeautifulSoup(str(item))
-			main_text = ''
-			attach_text = ''
-			attach_url = ''
+			description = ''
+			attachment_text = ''
+			attachment_url = ''
 			unique = ''
 			if len(str(soup1.findAll('td', 'BlackText11')[1])) > 5:
-				main_text = str(soup1.findAll('td', 'BlackText11')[1])
-				main_text = p.sub(' ', main_text)
+				description = str(soup1.findAll('td', 'BlackText11')[1])
+				description = p.sub(' ', description)
 			try:
-				attach_text = str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0].contents[0])
-				attach_url = 'http://www.teilar.gr/' + str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0]).split('"')[3]
+				attachment_text = str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0].contents[0])
+				attachment_url = 'http://www.teilar.gr/' + str(soup1.findAll('td', 'BlackText11')[2].contents[0].contents[0]).split('"')[3]
 			except:
 				pass
-			if len(main_text) == 0:
-				unique = attach_url
+			if len(description) == 0:
+				unique = attachment_url
 			else:
-				unique = main_text.strip()
+				unique = description.strip()
 			try:
 				title = str(soup1.findAll('td', 'BlackText11')[0].contents[0].contents[0]).strip()
 			except IndexError:
@@ -122,31 +124,31 @@ def professors():
 			teachers_teilar_gr = Announcements(
 				title = title,
 				urlid = getid('pid', pid),
-				description = main_text.strip(),
+				description = description.strip(),
 				unique = unique,
-				attachment_text = attach_text,
-				attachment_url = attach_url,
-				url = link,
+				attachment_text = attachment_text,
+				attachment_url = attachment_url,
+				url = url,
 			)
 			try:
 				teachers_teilar_gr.save()
-				print 'NEW: ' + title
-				print '    from: ' + str(getid('pid', pid))
+				print 'NEW: %s' % title
+				print '    from: %s\n' % str(getid('pid', pid))
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'NEW: ' + title
-				print '    from: ' + str(getid('pid', pid))
-				print 'WARNING: ' + str(warning)
+				print 'NEW: %s' % title
+				print '    from: %s' % str(getid('pid', pid))
+				print 'WARNING: %s\n' % str(warning)
 				pass
 			except Exception as error:
-				print 'ERROR: ' + title
-				print 'ERROR: ' + str(error)
+				print 'ERROR: %s' % title
+				print 'ERROR: %s\n' % str(error)
 				pass
 
 def eclass_teilar_gr():
 	b = StringIO.StringIO()
-	cookie_file_name = os.tempnam('/tmp', 'eclass')
+	fd, cookie_path = tempfile.mkstemp(prefix='eclass_', dir='/tmp')
 	login_form_seq = [
 		('uname', settings.ECLASS_USER),
 		('pass', settings.ECLASS_PASSWORD),
@@ -154,8 +156,8 @@ def eclass_teilar_gr():
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
 	conn.setopt(pycurl.FOLLOWLOCATION, 1)
-	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
+	conn.setopt(pycurl.COOKIEFILE, cookie_path)
+	conn.setopt(pycurl.COOKIEJAR, cookie_path)
 	conn.setopt(pycurl.URL, 'http://openclass.teilar.gr/index.php')
 	conn.setopt(pycurl.POST,1)
 	conn.setopt(pycurl.POSTFIELDS, login_form_data)
@@ -163,83 +165,82 @@ def eclass_teilar_gr():
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(output).find('table', 'FormData')
-
 	i = 0
-
-	for item in soup.findAll('a'):
+	tempa = soup.findAll('a')
+	for item in tempa:
 		if (i%2 == 0):
 			cid = str(item.contents[0]).split('-')[0].strip()
-			link = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
-
+			url = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
 			b = StringIO.StringIO()
 			conn.setopt(pycurl.FOLLOWLOCATION, 1)
-			conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-			conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
-			conn.setopt(pycurl.URL, link)
+			conn.setopt(pycurl.COOKIEFILE, cookie_path)
+			conn.setopt(pycurl.COOKIEJAR, cookie_path)
+			conn.setopt(pycurl.URL, url)
 			conn.setopt(pycurl.POST, 1)
-			conn.setopt(pycurl.COOKIE, cookie_file_name)
+			conn.setopt(pycurl.COOKIE, cookie_path)
 			conn.setopt(pycurl.POSTFIELDS, login_form_data)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
 			output = unicode(b.getvalue(), 'utf-8', 'ignore')
-
 			# in case there are no announcements for the specific lesson
 			if not (BeautifulSoup(output).find('p', 'alert1')):
 				soup1 = BeautifulSoup(output).find('table')
-
 				j = 0
 				k = 1
-				
-				for item in soup1.findAll('small'):
-					main_text = ''
+				tempsmall = soup1.findAll('small')
+				for item in tempsmall:
+					description = ''
 					unique = ''
-					name = ''
 					title = ''
-
 					l = 0
-
 					# in case there is another table/td inside the announcement OR there is no content
+					temptd = soup1.findAll('td')
 					try:
-						for item1 in soup1.findAll('td')[k].contents:
-							main_text += str(soup1.findAll('td')[k].contents[l])
+						for item1 in temptd[k].contents:
+							description += str(temptd[k].contents[l])
 							l += 1
-						main_text = p.sub(' ', main_text).strip()
-						main_text = ''.join(main_text.split(')')[1:])
+						description = p.sub(' ', description).strip()
+						description = ''.join(description.split(')')[1:])
 					except IndexError:
 						pass
-
 					# in case there is no title
 					try:
-						if (len(str(soup1.findAll('td')[k].b)) > 8):
-							name = soup1.findAll('td')[k].b.contents[0].strip()
+						if (len(str(temptd[k].b)) > 8):
+							title = temptd[k].b.contents[0].strip()
 						else: 
-							name = 'No Title'
+							title = ''
 					except IndexError:
 						pass
-
-					if (main_text == ''):
-						unique = name
+					if not description:
+						unique = title
 					else:
-						unique = main_text
-
-						eclass_teilar_gr = Announcements(
-							title = name,
-							urlid = geteclassid(cid),
-							description = main_text,
-							unique = unique,
-							url = link,
-							attachment_url = '',
-							attachment_text = ''
-						)
-
+						unique = description
+					eclass_teilar_gr = Announcements(
+						title = title,
+						urlid = geteclassid(cid),
+						description = description,
+						unique = unique,
+						url = url,
+						attachment_url = '',
+						attachment_text = ''
+					)
 					try:
 						eclass_teilar_gr.save()
-					except:
+						print 'NEW: %s' % title
+						print '    from: %s\n' % str(geteclassid(cid))
+					except IntegrityError:
 						pass
-
+					except MySQLdb.Warning, warning:
+						print 'NEW: %s' % title
+						print '    from %s' % str(geteclassid(cid))
+						print 'WARNING: %s\n' % str(warning)
+						pass
+					except Exception as error:
+						print 'ERROR: %s' % title
+						print 'ERROR: %s\n' % str(error)
+						pass
 					j += 1
 					k += 2
-
 		i += 1
 
 def noc_teilar_gr():
@@ -249,31 +250,28 @@ def noc_teilar_gr():
 	conn.perform()
 	output = (b.getvalue()).decode('windows-1253')
 	soup = BeautifulSoup(output)
-
 	for i in xrange(2):
 		for j in xrange(5):
-			link = str(soup.findAll('tr', 'sectiontableentry' + str(i + 1))[j].contents[1].contents[1]).split('"')[1].replace('&amp;', '&')
-			
+			tempurl = str(soup.findAll('tr', 'sectiontableentry' + str(i + 1))[j].contents[1].contents[1])
+			url = tempurl.split('"')[1].replace('&amp;', '&')
 			b = StringIO.StringIO()
 			conn.setopt(pycurl.URL, link)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
 			output = (b.getvalue()).decode('windows-1253')
 			soup1 = BeautifulSoup(output)
-
-			main_text = str(soup1.findAll('table', 'contentpaneopen')[1])
-			main_text = p.sub(' ', main_text)
-
+			description = str(soup1.findAll('table', 'contentpaneopen')[1])
+			description = p.sub(' ', main_text)
+			title = tempurl.contents[0].strip()
 			noc_teilar_gr = Announcements(
-				title = str(soup.findAll('tr', 'sectiontableentry' + str(i + 1))[j].contents[1].contents[1].contents[0]).strip(),
-				url = link,
-				unique = link,
+				title = title,
+				url = url,
+				unique = url,
 				urlid = getid('cid', 50),
-				description = main_text.strip(),
+				description = description.strip(),
 				attachment_text = '',
 				attachment_url = '',
 			)
-
 			try:
 				noc_teilar_gr.save()
 			except:
@@ -477,13 +475,13 @@ def pr_teilar_gr():
 def main():
 	www_teilar_gr()
 	professors()
-	'''eclass_teilar_gr()
-	noc_teilar_gr()
-	career_teilar_gr()
-	linuxteam_cs_teilar_gr()
-	dionysos_teilar_gr()
-	library_teilar_gr()
-	pr_teilar_gr()'''
+	eclass_teilar_gr()
+	#noc_teilar_gr()
+	#career_teilar_gr()
+	#linuxteam_cs_teilar_gr()
+	#dionysos_teilar_gr()
+	#library_teilar_gr()
+	#pr_teilar_gr()'''
 	print 'DONE'
 
 if __name__ == '__main__':
