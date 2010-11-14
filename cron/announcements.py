@@ -155,7 +155,6 @@ def eclass_teilar_gr():
 		('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82'),
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
-	conn.setopt(pycurl.FOLLOWLOCATION, 1)
 	conn.setopt(pycurl.COOKIEFILE, cookie_path)
 	conn.setopt(pycurl.COOKIEJAR, cookie_path)
 	conn.setopt(pycurl.URL, 'http://openclass.teilar.gr/index.php')
@@ -172,7 +171,6 @@ def eclass_teilar_gr():
 			cid = str(item.contents[0]).split('-')[0].strip()
 			url = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
 			b = StringIO.StringIO()
-			conn.setopt(pycurl.FOLLOWLOCATION, 1)
 			conn.setopt(pycurl.COOKIEFILE, cookie_path)
 			conn.setopt(pycurl.COOKIEJAR, cookie_path)
 			conn.setopt(pycurl.URL, url)
@@ -252,29 +250,41 @@ def noc_teilar_gr():
 	soup = BeautifulSoup(output)
 	for i in xrange(2):
 		for j in xrange(5):
-			tempurl = str(soup.findAll('tr', 'sectiontableentry' + str(i + 1))[j].contents[1].contents[1])
-			url = tempurl.split('"')[1].replace('&amp;', '&')
+			tempurl = soup.findAll('tr', 'sectiontableentry' + str(i + 1))[j].contents[1].contents[1]
+			url = str(tempurl).split('"')[1].replace('&amp;', '&')
 			b = StringIO.StringIO()
-			conn.setopt(pycurl.URL, link)
+			conn.setopt(pycurl.URL, url)
 			conn.setopt(pycurl.WRITEFUNCTION, b.write)
 			conn.perform()
 			output = (b.getvalue()).decode('windows-1253')
 			soup1 = BeautifulSoup(output)
 			description = str(soup1.findAll('table', 'contentpaneopen')[1])
-			description = p.sub(' ', main_text)
-			title = tempurl.contents[0].strip()
+			description = p.sub(' ', description)
+			title = str(tempurl.contents[0]).strip()
+			name = getid('cid', 50)
 			noc_teilar_gr = Announcements(
 				title = title,
 				url = url,
 				unique = url,
-				urlid = getid('cid', 50),
+				urlid = name,
 				description = description.strip(),
 				attachment_text = '',
 				attachment_url = '',
 			)
 			try:
 				noc_teilar_gr.save()
-			except:
+				print 'NEW: %s' % title
+				print '    from: %s\n' % name
+			except IntegrityError:
+				pass
+			except MySQLdb.Warning, warning:
+				print 'NEW: %s' % title
+				print '    from %s' % name
+				print 'WARNING: %s\n' % str(warning)
+				pass
+			except Exception as error:
+				print 'ERROR: %s' % title
+				print 'ERROR: %s\n' % str(error)
 				pass
 
 def career_teilar_gr():
@@ -284,12 +294,11 @@ def career_teilar_gr():
 	conn.perform()
 	output = unicode(b.getvalue(), 'utf-8', 'ignore')
 	soup = BeautifulSoup(str(BeautifulSoup(output).findAll('table')[5]))
-
+	tempa = soup.findAll('a')
 	for i in xrange(20):
-		link = 'http://www.career.teilar.gr/' + str(soup.findAll('a')[i]).split('"')[1]
-
+		url = 'http://www.career.teilar.gr/' + str(tempa[i]).split('"')[1]
 		b = StringIO.StringIO()
-		conn.setopt(pycurl.URL, link)
+		conn.setopt(pycurl.URL, url)
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
 		conn.perform()
 		output = unicode(b.getvalue(), 'utf-8', 'ignore')
@@ -476,7 +485,7 @@ def main():
 	www_teilar_gr()
 	professors()
 	eclass_teilar_gr()
-	#noc_teilar_gr()
+	noc_teilar_gr()
 	#career_teilar_gr()
 	#linuxteam_cs_teilar_gr()
 	#dionysos_teilar_gr()
