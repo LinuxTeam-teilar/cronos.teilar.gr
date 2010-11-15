@@ -28,6 +28,10 @@ MEDIA_ROOT = PROJECT_ROOT + 'media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
+# Change LOGDIR to reflect the dir you want to store log files
+# Make sure the path is writable from the user running the app
+LOGDIR='/var/log/cronos'
+
 # Blowfish key, used by encryptPassword and decryptPassword functions in cronos.teilar.login module
 BLOWFISH_KEY = 'secret'
 
