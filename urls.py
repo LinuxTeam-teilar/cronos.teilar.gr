@@ -9,8 +9,8 @@ from cronos.dionysos.views import *
 from cronos.eclass.views import *
 from cronos.login.views import *
 from cronos.recover.views import *
-from cronos.signup.forms import SignupCronos, SignupDionysos, SignupEclass, SignupWebmail
-from cronos.signup.views import SignupWizard
+from cronos.signup.forms import *
+from cronos.signup.views import *
 from cronos.teachers.views import *
 from cronos.user.views import *
 from cronos.webmail.views import *
@@ -39,7 +39,7 @@ urlpatterns = patterns('',
 
 	#url(r'^ldap/', include('cronos.ldap_groups.urls')),
 
-	(r'^signup/', SignupWizard([SignupDionysos, SignupEclass, SignupWebmail, SignupCronos])),
+	(r'^signup/', signup),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 

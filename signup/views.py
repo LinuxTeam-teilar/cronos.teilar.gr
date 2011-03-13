@@ -9,13 +9,28 @@ from cronos.user.update import *
 from django.conf import settings
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.contrib.formtools.wizard import FormWizard
 from django.core.mail import send_mail
 import datetime
 import ldap
 import ldap.modlist as modlist
 import os
 
+credentials = {
+	'username':'', 
+	'first_name':'', 
+	'last_name':'', 
+	'password':'',
+	'school':'',
+	'semester':'',
+	'introduction_year':'', 
+	'registration_number':'',
+	'dionysos_username':'',
+	'dionysos_password':'',
+	'eclass_username':'',
+	'eclass_password':'',
+	'webmail_username':'',
+	'webmail_password':'',
+}
 
 class MyError(Exception):
 	def __init__(self, value):
@@ -50,7 +65,8 @@ def logSignup(error):
 		pass
 
 
-def checkDionysos(credentials):
+def checkDionysos():
+	global credentials
 	output = dionysos_login(0, credentials['dionysos_username'], decryptPassword(credentials['dionysos_password']))
 	if output == 1:
 		raise MyError('Λάθος Στοιχεία dionysos')
@@ -114,18 +130,21 @@ def checkDionysos(credentials):
 		logSignup(error)
 		raise MyError('Αδυναμία ανάκτησης Βαθμολογίας')
 
-def checkEclass(credentials):
+def checkEclass():
+	global credentials
 	output = eclass_login(credentials['eclass_username'], decryptPassword(credentials['eclass_password']))
 	if output == 1:
 		raise MyError('Λάθος Στοιχεία e-class')
 	credentials['eclass_lessons'] = eclass_lessons_update(output)
 		
-def checkWebmail(credentials):
+def checkWebmail():
+	global credentials
 	output = webmail_login(0, credentials['webmail_username'], decryptPassword(credentials['webmail_password']))
 	if output == 1:
 		raise MyError('Λάθος Στοιχεία webmail')
 
-def checkLDAPData(credentials):	
+def checkLDAPData():
+	global credentials
 	try:
 		l=ldap.initialize(settings.LDAP_URL)
 		l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
@@ -146,7 +165,8 @@ def checkLDAPData(credentials):
 		if l.search_s(settings.SEARCH_DN,ldap.SCOPE_SUBTREE,'webmailUsername=%s' % (credentials['webmail_username']),settings.SEARCH_FIELDS):
 			raise MyError('Το webmail υπάρχει ήδη')
 
-def allDataToLDAP(credentials):
+def allDataToLDAP():
+	global credentials
 	attrs = {}
 	attrs['objectClass'] = ['person', 'top', 'teilarStudent', 'posixAccount']
 	attrs['uid'] =  [credentials['username']]
@@ -172,12 +192,12 @@ def allDataToLDAP(credentials):
 			attrs['grades'].append(','.join(item))
 	except KeyError:
 		pass
-	if credentials['eclass_username']:
+	if credentials['eclass_username'] != -1:
 		attrs['eclassUsername'] = [credentials['eclass_username']]
 		attrs['eclassPassword'] = [credentials['eclass_password']]
-	if credentials['eclass_lessons']:
-		attrs['eclassLessons'] = credentials['eclass_lessons']
-	if credentials['webmail_username']:
+		if credentials['eclass_lessons']:
+			attrs['eclassLessons'] = credentials['eclass_lessons']
+	if credentials['webmail_username'] != -1:
 		attrs['webmailUsername'] = [credentials['webmail_username']]
 		attrs['webmailPassword'] = [credentials['webmail_password']]
 		attrs['cronosEmail'] = [credentials['webmail_username'] + '@teilar.gr']
@@ -223,80 +243,73 @@ def allDataToLDAP(credentials):
 		raise MyError('Αποτυχία Εισαγωγής Στοιχείων')
 	l.unbind_s()
 
-def sendToTemplate(request, credentials, uid):
-	title = 'Cronos user No.%s: %s' % (uid, credentials['username'])
-	message = 'Name: %s %s \nDepartment: %s\nSemester: %s' % (credentials['first_name'], credentials['last_name'], credentials['school'], credentials['semester'])
-	notifyAdmin(title, message)
 
-	return render_to_response('welcome.html', {
-		'username': credentials['username'],
-		'eclass_username': credentials['eclass_username'],
-		'dionysos_username': credentials['dionysos_username'],
-		'webmail_username': credentials['webmail_username'],
-		'first_name': credentials['first_name'],
-		'last_name': credentials['last_name'],
-		'semester': credentials['semester'],
-		'school': credentials['school'],
-		'introduction_year': credentials['introduction_year'],
-		'registration_number': credentials['registration_number'],
-	}, context_instance = RequestContext(request))
+def collectCredentials(request, form):
+	global credentials
+	credentials['dionysos_username'] = str(request.POST.get('dionysos_username'))
+	credentials['dionysos_password'] = encryptPassword(str(request.POST.get('dionysos_password')))
+	temp = str(request.POST.get('eclass_username'))
+	if temp:
+		credentials['eclass_username'] = temp
+		credentials['eclass_password'] = encryptPassword(str(request.POST.get('eclass_password')))
+	else:
+		credentials['eclass_username'] = -1
+	temp = str(request.POST.get('webmail_username'))
+	if temp:
+		credentials['webmail_username'] = temp
+		credentials['webmail_password'] = encryptPassword(str(request.POST.get('webmail_password')))
+	else:
+		credentials['webmail_username'] = -1
+	# check passwords
+	password1 = str(request.POST.get('password1'))
+	password2 = str(request.POST.get('password2'))
+	if password1 == password2:
+		credentials['password'] = sha1Password(password1)
+		credentials['username'] = str(request.POST.get('username'))
+		return credentials
+	else:
+		raise MyError('Οι κωδικοί δεν ταιριάζουν')
 
-class SignupWizard(FormWizard):
-	def collectCredentials(self, request, form_list):
-		credentials = {}
-		credentials['dionysos_username'] = str([form.cleaned_data for form in form_list][0]['dionysos_username'])
-		credentials['dionysos_password'] = encryptPassword(str([form.cleaned_data for form in form_list][0]['dionysos_password']))
-		temp = str([form.cleaned_data for form in form_list][1]['eclass_username'])
-		if temp:
-			credentials['eclass_username'] = temp
-			credentials['eclass_password'] = encryptPassword(str([form.cleaned_data for form in form_list][1]['eclass_password']))
-		temp = str([form.cleaned_data for form in form_list][2]['webmail_username'])
-		if temp:
-			credentials['webmail_username'] = temp
-			credentials['webmail_password'] = encryptPassword(str([form.cleaned_data for form in form_list][2]['webmail_password']))
-		# check passwords
-		password1 = str([form.cleaned_data for form in form_list][3]['password1'])
-		password2 = str([form.cleaned_data for form in form_list][3]['password2'])
-		if password1 == password2:
-			credentials['password'] = sha1Password(password1)
-			credentials['username'] = str([form.cleaned_data for form in form_list][3]['username'])
-			return credentials
-		else:
-			raise MyError('Οι κωδικοί δεν ταιριάζουν')
-
-	def sendErrorTemplate(self, request, form_list, msg):
-		return self.render(self.get_form(0), request, 0, context = {
-				'msg': msg,
-			})
-
-	def done(self, request, form_list):
-	# in case there is no exception in the above, send the user to a welcome site
-		uid = ''
-		try:
-			credentials = self.collectCredentials(request, form_list)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		try:
-			checkDionysos(credentials)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		try:
-			checkEclass(credentials)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		try:
-			checkWebmail(credentials)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		try:
-			checkLDAPData(credentials)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		try:
-			uid = allDataToLDAP(credentials)
-		except MyError as e:
-			self.sendErrorTemplate(request, form_list, e.value)
-		sendToTemplate(request, credentials, uid)
-
-	def get_template(self, step):
-		return settings.PROJECT_ROOT + 'templates/signup.html'
+def signup(request):
+	global credentials
+	uid = ''
+	msg = ''
+	if request.method == 'POST':
+		form = SignupForm(request.POST)
+		if form.is_valid():
+			try:
+				credentials = collectCredentials(request, form)
+			except MyError as e:
+				errorSignup(request, e.value, form)
+			try:
+				checkDionysos()
+			except MyError as e:
+				errorSignup(request, e.value, form)
+			if (credentials['eclass_username'] != -1):
+				try:
+					checkEclass()
+				except MyError as e:
+					errorSignup(request, e.value, form)
+			if (credentials['webmail_username'] != -1):
+				try:
+					checkWebmail()
+				except MyError as e:
+					errorSignup(request, e.value, form)
+			try:
+				checkLDAPData()
+			except MyError as e:
+				errorSignup(request, e.value, form)
+			try:
+				uid = allDataToLDAP()
+			except MyError as e:
+				errorSignup(request, e.value, form)
+		title = 'Cronos user No.%s: %s' % (uid, credentials['username'])
+		message = 'Name: %s %s \nDepartment: %s\nSemester: %s' % (credentials['first_name'], credentials['last_name'], credentials['school'], credentials['semester'])
+		notifyAdmin(title, message)
+		return render_to_response('welcome.html', credentials, context_instance = RequestContext(request))
+	else:
+		form = SignupForm()
+		return render_to_response('signup.html', {
+			'msg': msg,
+			'form': form,
+		}, context_instance = RequestContext(request))

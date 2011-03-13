@@ -17,8 +17,8 @@
 			<p>Είναι υποχρεωτική η συμπλήρωση των στοιχείων για τα cronos και dionysos, ενώ για τα eclass και webmail είναι προαιρετικά. Θα γίνει επαλήθευση όσων στοιχείων συμπληρώσετε.</p>
 		</div>
 		<div id="login-form">
-			<form action="." method="post">{% csrf_token %}
-				<div style="font-weight:bold; text-align: center; margin-top: 5px; color: #786721;">Βήμα {{ step }} Από {{ step_count }}</div>
+			<form action="." method="post">
+				<!--div style="font-weight:bold; text-align: center; margin-top: 5px; color: #786721;">Βήμα {{ step }} Από {{ step_count }}</div>
 				<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
 				{{ previous_fields|safe }}
 				{% for field in form %}
@@ -31,6 +31,13 @@
 					"Επόμενο"
 					{% endifequal %}
 					/>
+				{% if msg %}
+				<p class="messages">{{ msg }}</p>
+				{% endif %}-->
+				{% for field in form %}
+				{{field.label_tag}}{{field}}
+				{% endfor %}
+				<input class="button" type="submit" value="Εγγραφή" />
 				{% if msg %}
 				<p class="messages">{{ msg }}</p>
 				{% endif %}
