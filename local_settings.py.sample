@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Sample configuration file for cronos.teilar.gr website
-# Rename to local_settings.py and change accordingly the vars
+# Rename to local_settings.py and change accordingly the variables
 
 # Change to True for development boxes
 DEBUG = False
