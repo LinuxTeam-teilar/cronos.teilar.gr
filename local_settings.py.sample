@@ -8,7 +8,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Change them to reflect your own db settings
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_ENGINE = 'mysql'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'secret'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'secret'             # Not used with sqlite3.
 DATABASE_PASSWORD = 'secret'         # Not used with sqlite3.
@@ -19,7 +19,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 SECRET_KEY = 'secret'
 
 # Change PROJECT_ROOT to reflect your own dir
-PROJECT_ROOT = '/var/code/cronos/'
+PROJECT_ROOT = '/home/$USER/cronos/'
 
 # Create a media/ dir for you own static content
 # and create an admin_media symlink pointing to django's media
