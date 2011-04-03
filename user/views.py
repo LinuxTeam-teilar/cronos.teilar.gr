@@ -11,8 +11,6 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import ldap
-import ldap.modlist as modlist
 
 
 def getmail(request):
@@ -57,14 +55,6 @@ def user_settings(request):
 					user = User.objects.get(username = request.user.username)
 					if user.check_password(request.POST.get('old_password')):
 						try:
-							l = ldap.initialize(settings.LDAP_URL)
-							l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-							mod_attrs = [(ldap.MOD_DELETE, 'userPassword', None)]
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-							mod_attrs = [(ldap.MOD_ADD, 'userPassword', sha1Password(request.POST.get('password1')))]
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-							l.unbind_s()
-							
 							user.set_password(request.POST.get('password1'))
 							user.save()
 
@@ -88,14 +78,6 @@ def user_settings(request):
 						if registration_number != request.user.get_profile().registration_number:
 							msg = 'Οι Αριθμοί Μητρώου δεν ταιριάζουν'
 							raise
-						l = ldap.initialize(settings.LDAP_URL)
-						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-						mod_attrs = modlist.modifyModlist({'dionysosUsername': [request.user.get_profile().dionysos_username]}, {'dionysosUsername': [str(request.POST.get('dionysos_username'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-						mod_attrs = modlist.modifyModlist({'dionysosPassword': [request.user.get_profile().dionysos_password]}, {'dionysosPassword': [encryptPassword(request.POST.get('dionysos_password'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-						l.unbind_s()
-
 						user = LdapProfile.objects.get(user__username = request.user.username)
 						user.dionysos_username = request.POST.get('dionysos_username')
 						user.dionysos_password = encryptPassword(request.POST.get('dionysos_password'))
@@ -113,34 +95,10 @@ def user_settings(request):
 				try:
 					output = eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
 					if output != 1:
-						l = ldap.initialize(settings.LDAP_URL)
-						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-						try:
-							result = l.search_s('ou=teilarStudents,dc=teilar,dc=gr', ldap.SCOPE_SUBTREE, 'eclassUsername=%s' % (request.POST.get('eclass_username')), ['*'])
-						except:
-							result = ''
-							pass
 						if result and result[0][1]['eclassUsername'][0] != request.user.get_profile().eclass_username:
 							msg = 'Ο χρήστης eclass υπάρχει ήδη'
 							raise
-						mod_attrs = modlist.modifyModlist({'eclassUsername': [request.user.get_profile().eclass_username]}, {'eclassUsername': [str(request.POST.get('eclass_username'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-						mod_attrs = modlist.modifyModlist({'eclassPassword': [request.user.get_profile().eclass_password]}, {'eclassPassword': [encryptPassword(request.POST.get('eclass_password'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-
 						eclass_lessons = eclass_lessons_update(output)
-
-						try:
-							mod_attrs = [(ldap.MOD_DELETE, 'eclassLessons', None)]
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-							mod_attrs = []
-							for item in eclass_lessons:
-								mod_attrs.append((ldap.MOD_ADD, 'eclassLessons', item))
-							l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-							l.unbind_s()
-						except:
-							pass
-
 						user = LdapProfile.objects.get(user__username = request.user.username)
 						user.eclass_username = request.POST.get('eclass_username')
 						user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
@@ -159,22 +117,9 @@ def user_settings(request):
 				try:
 					output = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
 					if output != 1:
-						l = ldap.initialize(settings.LDAP_URL)
-						l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-						try:
-							result = l.search_s('ou=teilarStudents,dc=teilar,dc=gr', ldap.SCOPE_SUBTREE, 'webmailUsername=%s' % (request.POST.get('webmail_username')), ['*'])
-						except:
-							result = ''
-							pass
 						if result and result[0][1]['webmailUsername'][0] != request.user.get_profile().webmail_username:
 							msg = 'Ο χρήστης webmail υπάρχει ήδη'
 							raise
-						mod_attrs = modlist.modifyModlist({'webmailUsername': [request.user.get_profile().webmail_username]}, {'webmailUsername': [str(request.POST.get('webmail_username'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-						mod_attrs = modlist.modifyModlist({'webmailPassword': [request.user.get_profile().webmail_password]}, {'webmailPassword': [encryptPassword(request.POST.get('webmail_password'))]})
-						l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-						l.unbind_s()
-
 						user = LdapProfile.objects.get(user__username = request.user.username)
 						user.webmail_username = request.POST.get('webmail_username')
 						user.webmail_password = encryptPassword(request.POST.get('webmail_password'))
@@ -190,19 +135,10 @@ def user_settings(request):
 			email_form = EmailForm(request.POST)
 			if email_form.is_valid():
 				try:
-					l = ldap.initialize(settings.LDAP_URL)
-					l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-					mod_attrs = modlist.modifyModlist({'cronosEmail': [getmail(request)]}, {'cronosEmail': [str(request.POST.get('email'))]})
-					# skip this step to the end of the procedure, as django user db does a check if the given string is a valid mail
-					#l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-
 					user = User.objects.get(username = request.user.username)
 					user.email = request.POST.get('email')
 					user.save()
 
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
-					
 					msg = 'Η ανανέωση του email σας ήταν επιτυχής'
 				except:
 					msg = 'Παρουσιάστηκε Σφάλμα'
@@ -212,22 +148,7 @@ def user_settings(request):
 				link = 'http://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
 				output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 				declaration = declaration_update(output)
-
-				l = ldap.initialize(settings.LDAP_URL)
-				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'declaration', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-	
 				if declaration:
-					mod_attrs = []
-					for item in declaration:
-						mod_attrs.append((ldap.MOD_ADD, 'declaration', ','.join(item)))
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
-				
 					user = LdapProfile.objects.get(user__username = request.user.username)
 					temp = []
 					for item in declaration:
@@ -245,22 +166,7 @@ def user_settings(request):
 				link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
 				output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 				grades = grades_update(output)
-
-				l = ldap.initialize(settings.LDAP_URL)
-				l.bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'grades', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-	
 				if grades:
-					mod_attrs = []
-					for item in grades:
-						mod_attrs.append((ldap.MOD_ADD, 'grades', ','.join(item)))
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-					l.unbind_s()
-				
 					user = LdapProfile.objects.get(user__username = request.user.username)
 					temp = []
 					for item in grades:
@@ -277,21 +183,6 @@ def user_settings(request):
 			try:
 				output = eclass_login(request.user.get_profile().eclass_username, decryptPassword(request.user.get_profile().dionysos_password))
 				eclass_lessons = eclass_lessons_update(output)
-
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'eclassLessons', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-				mod_attrs = []
-				for item in eclass_lessons:
-					mod_attrs.append((ldap.MOD_ADD, 'eclassLessons', item))
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				l.unbind_s()
-
 				user = LdapProfile.objects.get(user__username = request.user.username)
 				user.eclass_lessons = ','.join(eclass_lessons)
 				user.save()
@@ -300,20 +191,6 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:34] == '<QueryDict: {u\'teacherann_selected':
 			try:
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'teacherAnnouncements', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-				mod_attrs = []
-				for item in request.POST.getlist('teacherann_selected'):
-					mod_attrs.append((ldap.MOD_ADD, 'teacherAnnouncements', str(item)))
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				l.unbind_s()
-
 				user = LdapProfile.objects.get(user__username = request.user.username)
 				user.teacher_announcements = ','.join(request.POST.getlist('teacherann_selected'))
 				user.save()
@@ -322,20 +199,6 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:32] == '<QueryDict: {u\'otherann_selected':
 			try:
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'otherAnnouncements', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-				mod_attrs = []
-				for item in request.POST.getlist('otherann_selected'):
-					mod_attrs.append((ldap.MOD_ADD, 'otherAnnouncements', str(item)))
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				l.unbind_s()
-
 				user = LdapProfile.objects.get(user__username = request.user.username)
 				user.other_announcements = ','.join(request.POST.getlist('otherann_selected'))
 				user.save()
@@ -344,15 +207,6 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('delete1'):
 			try:
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'teacherAnnouncements', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-
 				user = LdapProfile.objects.get(user__username = request.user.username)
 				user.teacher_announcements = ''
 				user.save()
@@ -361,15 +215,6 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('delete2'):
 			try:
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-
-				try:
-					mod_attrs = [(ldap.MOD_DELETE, 'otherAnnouncements', None)]
-					l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.user), mod_attrs)
-				except:
-					pass
-
 				user = LdapProfile.objects.get(user__username = request.user.username)
 				user.other_announcements = ''
 				user.save()

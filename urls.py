@@ -37,8 +37,6 @@ urlpatterns = patterns('',
 
 	url(r'^library/', include('cronos.library.urls')),
 
-	#url(r'^ldap/', include('cronos.ldap_groups.urls')),
-
 	(r'^signup/', signup),
 
 	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),

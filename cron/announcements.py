@@ -6,6 +6,7 @@ import sys
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from cronos.announcements.models import *
+from cronos.libraries.log import cronosDebug
 from django.conf import settings
 from django.db.utils import IntegrityError
 from BeautifulSoup import BeautifulSoup
@@ -19,6 +20,7 @@ import urlparse
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
+logfile = 'cron_announcements.log'
 
 def getid(id, i):
 	for item in Id.objects.filter(urlid__exact = (id + str(i))):
@@ -74,18 +76,23 @@ def www_teilar_gr():
 			)
 			try:
 				teilar_gr.save()
-				print 'NEW: %s' % title
-				print '    from: %s\n' % str(getid('cid', cid))
+				status = 'NEW: %s from: %s' % (title, str(getid('cid', cid)))
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'NEW: %s' % title
-				print '    from: %s' % str(getid('cid', cid))
-				print 'WARNING: %s\n' % str(warning)
+				status = 'NEW: %s from: %s' % (title, str(getid('cid', cid)))
+				print status
+				cronosDebug(status, logfile)
+				warningstatus = 'WARNING: %s\n' % str(warning)
+				print warningstatus
+				cronosDebug(warningstatus, logfile)
 				pass
 			except Exception as error:
-				print 'ERROR: %s' % title
-				print 'ERROR: %s\n' % str(error)
+				errorstatus = 'ERROR: %s  %s' % (title, str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
 				pass
 			i += 1
 
@@ -132,18 +139,23 @@ def professors():
 			)
 			try:
 				teachers_teilar_gr.save()
-				print 'NEW: %s' % title
-				print '    from: %s\n' % str(getid('pid', pid))
+				status = 'NEW: %s from: %s' % (title, str(getid('pid', pid)))
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'NEW: %s' % title
-				print '    from: %s' % str(getid('pid', pid))
-				print 'WARNING: %s\n' % str(warning)
+				status = 'NEW: %s from: %s' % (title, str(getid('pid', pid)))
+				print status
+				cronosDebug(status, logfile)
+				warningstatus = 'WARNING: %s' % str(warning)
+				print warningstatus
+				cronosDebug(warningstatus, logfile)
 				pass
 			except Exception as error:
-				print 'ERROR: %s' % title
-				print 'ERROR: %s\n' % str(error)
+				errorstatus = 'ERROR: %s %s' % (title, str(error))
+				print errorstatus
+				cronosDebug(error, logfile)
 				pass
 
 def eclass_teilar_gr():
@@ -170,6 +182,7 @@ def eclass_teilar_gr():
 		if (i%2 == 0):
 			cid = str(item.contents[0]).split('-')[0].strip()
 			url = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
+			print url
 			b = StringIO.StringIO()
 			conn.setopt(pycurl.COOKIEFILE, cookie_path)
 			conn.setopt(pycurl.COOKIEJAR, cookie_path)
@@ -224,18 +237,23 @@ def eclass_teilar_gr():
 					)
 					try:
 						eclass_teilar_gr.save()
-						print 'NEW: %s' % title
-						print '    from: %s\n' % str(geteclassid(cid))
+						status = 'NEW: %s from: %s' % (title, str(geteclassid(cid)))
+						print status
+						cronosDebug(status, logfile)
 					except IntegrityError:
 						pass
 					except MySQLdb.Warning, warning:
-						print 'NEW: %s' % title
-						print '    from %s' % str(geteclassid(cid))
-						print 'WARNING: %s\n' % str(warning)
+						status = 'NEW: %s from %s' % (title, str(geteclassid(cid)))
+						print status
+						cronosDebug(status, logfile)
+						warningstatus = 'WARNING: %s' % str(warning)
+						print warningstatus
+						cronosDebug(warningstatus, logfile)
 						pass
 					except Exception as error:
-						print 'ERROR: %s' % title
-						print 'ERROR: %s\n' % str(error)
+						errorstatus = 'ERROR: %s %s' % (title, str(error))
+						print errorstatus
+						cronosDebug(error, logfile)
 						pass
 					j += 1
 					k += 2
@@ -273,18 +291,23 @@ def noc_teilar_gr():
 			)
 			try:
 				noc_teilar_gr.save()
-				print 'NEW: %s' % title
-				print '    from: %s\n' % name
+				status = 'NEW: %s from: %s' % (title, name)
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'NEW: %s' % title
-				print '    from %s' % name
-				print 'WARNING: %s\n' % str(warning)
+				status = 'NEW: %s from %s' % (title, name)
+				print status
+				cronosDebug(status,logfile)
+				warningstatus = 'WARNING: %s' % str(warning)
+				print warningstatus
+				cronosDebug(warningstatus, logfile)
 				pass
 			except Exception as error:
-				print 'ERROR: %s' % title
-				print 'ERROR: %s\n' % str(error)
+				errorstatus = 'ERROR: %s %s' % (title, str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
 				pass
 
 def career_teilar_gr():
@@ -482,16 +505,18 @@ def pr_teilar_gr():
 				pass
 
 def main():
-	www_teilar_gr()
-	professors()
+	#www_teilar_gr()
+	#professors()
 	eclass_teilar_gr()
-	noc_teilar_gr()
+	#noc_teilar_gr()
 	#career_teilar_gr()
 	#linuxteam_cs_teilar_gr()
 	#dionysos_teilar_gr()
 	#library_teilar_gr()
-	#pr_teilar_gr()'''
-	print 'DONE'
+	#pr_teilar_gr()
+
+	cronosDebug('Announcements cron job finished', logfile)
+	print "DONE"
 
 if __name__ == '__main__':
 	main()

@@ -7,6 +7,7 @@ sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
+from cronos.libraries.log import cronosDebug
 from django.conf import settings
 from django.db.utils import IntegrityError
 import MySQLdb
@@ -19,6 +20,8 @@ import urlparse
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
+logfile = 'cron_id.log'
+success = 'YES'
 
 def www_teilar_gr():
 	for cid in xrange(30):
@@ -45,12 +48,16 @@ def www_teilar_gr():
 			)
 			try:
 				depart.save()
-				print 'ADDED ' + school
+				status = 'ADDED ' + school
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except Exception as error:
-				print 'ERROR: ' + school.strip() 
-				print 'ERROR: ' + str(error)
+				errorstatus = 'ERROR: %s %s' % (school.strip(), str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
+				success = 'NO'
 				pass
 
 def extra_sites():
@@ -72,12 +79,16 @@ def extra_sites():
 		)
 		try:
 			dest[i][0].save()
-			print 'ADDED ' + str(dest[i][1])
+			status = 'ADDED ' + str(dest[i][1])
+			print status
+			cronosDebug(status, logfile)
 		except IntegrityError:
 			pass
 		except Exception as error:
-			print 'ERROR: ' + str(dest[i][1]) 
-			print 'ERROR: ' + str(error)
+			errorstatus = 'ERROR: %s %s' % (str(dest[i][1]), str(error))
+			print errorstatus
+			cronosDebug(errorstatus, logfile)
+			success = 'NO'
 			pass
 
 def professors():
@@ -122,12 +133,16 @@ def professors():
 			)
 			try:
 				teachers.save()
-				print 'ADDED ' + teacher
+				status = 'ADDED ' + teacher
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except Exception as error:
-				print 'ERROR: ' + teacher 
-				print 'ERROR: ' + str(error)
+				errorstatus = 'ERROR: %s %s' % (teacher, str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
+				success = 'NO'
 				pass
 
 
@@ -169,16 +184,25 @@ def eclass_teilar_gr():
 			)
 			try:
 				eclass.save()
-				print 'ADDED ' + lesson.strip()
+				status = 'ADDED ' + lesson.strip()
+				print status
+				cronosDebug(status, logfile)
 			except IntegrityError:
 				pass
 			except MySQLdb.Warning, warning:
-				print 'ADDED ' + lesson.strip()
-				print 'WARNING: ' + str(warning)
+				status = 'ADDED %s' % lesson.strip()
+				warningstatus = 'WARNING: %s' % str(warning)
+				print status
+				cronosDebug(status, logfile)
+				print warningstatus
+				cronosDebug(warningstatus, logfile)
+				success = 'NO'
 				pass
 			except Exception as error:
-				print 'ERROR: ' + lesson.strip() 
-				print 'ERROR: ' + str(error)
+				errorstatus = 'ERROR: %s %s' % (lesson.strip(), str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
+				success = 'NO'
 				pass
 		i += 1
 	os.close(fd)
@@ -189,6 +213,11 @@ def main():
 	extra_sites()
 	professors()
 	eclass_teilar_gr()
+
+	if success == 'YES':
+		cronosDebug('Id cron job finished successfully', logfile)
+	else:
+		cronosDebug('Id cron job finished but with Errors', logfile)
 	print "DONE"
 
 if __name__ == "__main__":

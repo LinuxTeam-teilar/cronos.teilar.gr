@@ -9,7 +9,6 @@ from django.core.mail import send_mail
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from random import choice
-import ldap
 import string
 
 def recover(request):
@@ -39,14 +38,6 @@ def recover(request):
 				if user.email[-13:] == 'emptymail.com':
 					msg = 'Ο χρήστης δεν έχει δηλώσει email'
 					raise
-
-				l = ldap.initialize(settings.LDAP_URL)
-				l.simple_bind_s(settings.BIND_USER, settings.BIND_PASSWORD)
-				mod_attrs = [(ldap.MOD_DELETE, 'userPassword', None)]
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.POST.get('username')), mod_attrs)
-				mod_attrs = [(ldap.MOD_ADD, 'userPassword', sha1Password(new_password))]
-				l.modify_s('uid=%s,ou=teilarStudents,dc=teilar,dc=gr' % (request.POST.get('username')), mod_attrs)
-				l.unbind_s()
 
 				user.set_password(new_password)
 				user.save()

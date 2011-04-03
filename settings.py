@@ -10,7 +10,10 @@ SEND_BROKEN_LINK_EMAILS = False
 
 MANAGERS = ADMINS
 
-from local_settings import *
+try:
+	from local_settings import *
+except:
+	pass
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -50,8 +53,7 @@ TEMPLATE_DIRS = (
 	# Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
 	# Always use forward slashes, even on Windows.
 	# Don't forget to use absolute paths, not relative paths.
-	os.path.join(os.path.dirname(__file__), 'templates'),
-#	PROJECT_ROOT + 'templates/',
+	PROJECT_ROOT + 'templates/',
 )
 
 INSTALLED_APPS = (
@@ -61,24 +63,11 @@ INSTALLED_APPS = (
 	'django.contrib.sites',
 	'django.contrib.admin',
 	'cronos.announcements',
-	'cronos.ldap_groups',
 	'cronos.user',
-)
-
-AUTHENTICATION_BACKENDS = (
-	'cronos.ldap_groups.accounts.backends.ActiveDirectoryGroupMembershipSSLBackend',
-	'django.contrib.auth.backends.ModelBackend',
 )
 
 # Needed for the decorator
 LOGIN_URL = '/'
 
 # Needed for the custom user profile
-AUTH_PROFILE_MODULE = 'user.LdapProfile'
-
-# LDAP
-LDAP_SERVER = 'localhost'
-LDAP_PORT = 389
-LDAP_URL = 'ldap://%s:%s' % (LDAP_SERVER, LDAP_PORT)
-SEARCH_DN = 'ou=teilarStudents,dc=teilar,dc=gr'
-SEARCH_FIELDS = ['*']
+AUTH_PROFILE_MODULE = 'user.UserProfile'
