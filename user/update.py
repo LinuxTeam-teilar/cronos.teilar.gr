@@ -1,36 +1,40 @@
 # -*- coding: utf-8 -*-
 
-def declaration_update(output):
-	from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
+from cronos.libraries.log import cronosDebug
 
+logfile = 'update.log'
+
+def declaration_update(output):
 	try:
 		soup = BeautifulSoup(output)
 		soup1 = BeautifulSoup(str(soup.findAll('table')[14]))
-		declaration = []
-		declaration.append([])
-		for item in soup1.findAll('td', 'error'):
-			declaration[0].append(str(item.contents[0]))
-		k = 8
-		for i in xrange(len(soup1.findAll('span', 'underline'))):
-			declaration.append([
-				str(soup1.findAll('td')[k].contents[2][6:]),
-				str(soup1.findAll('span', 'underline')[i].contents[0]).strip(),
-				str(soup1.findAll('td')[k+2].contents[0]),
-				str(soup1.findAll('td')[k+3].contents[0]),
-				str(soup1.findAll('td')[k+4].contents[0]),
-				str(soup1.findAll('td')[k+5].contents[0])
-			])
+		declaration = ''
+		temptderror = soup1.findAll('td', 'error')
+		temptd = soup1.findAll('td')
+		for item in temptderror:
+			declaration += item.contents[0] + ','
+		k = 9
+		tempspanunderline = soup1.findAll('span', 'underline')
+		for item in tempspanunderline:
+			declaration += '%s,%s,%s,%s,%s,%s,' % (
+				temptd[k].contents[2][6:],
+				item.contents[0].strip(),
+				temptd[k+2].contents[0],
+				temptd[k+3].contents[0],
+				temptd[k+4].contents[0],
+				temptd[k+5].contents[0],
+			)
 			k += 7
-		return declaration
-	except:
+		return declaration[:-1]
+	except Exception as error:
+		cronosDebug(error, logfile)
 		return None
 
 def grades_update(output):
-	from BeautifulSoup import BeautifulSoup
-
 	try:
 		soup = BeautifulSoup(output)
-		grades = []
+		grades = ''
 		i = 0
 		item = soup.findAll('table')[13].findAll('td')
 		length_all_td = len(item)
@@ -39,11 +43,11 @@ def grades_update(output):
 		while i < length_all_td:
 			item0 = item[i]
 			if item0 in semesters:
-				grades.append([str(item0.contents[0])])
+				grades += str(item0.contents[0]) + ','
 			if item0 in lessons:
 				year = str(item[i+6].contents[0].i.contents[0]).strip()
 				year = year[:10] + year[-9:]
-				grades.append([
+				grades += '%s,%s,%s,%s,%s,%s,%s,' % (
 					str(item0.contents[0]).strip(),
 					str(item[i+1].contents[0]).strip(),
 					str(item[i+2].contents[0]).strip(),
@@ -51,12 +55,12 @@ def grades_update(output):
 					str(item[i+4].contents[0]).strip(),
 					str(item[i+5].span.contents[0]).strip().replace(',', '.'),
 					year.replace('--', '-'),
-				])
+				)
 				try:
 					if item[i+9].contents[1][-3:] == '(Θ)' or item[i+9].contents[1][-3:] == '(Ε)':
 						year = str(item[i+14].contents[0].i.contents[0]).strip()
 						year = year[:10] + year[-9:]
-						grades.append([
+						grades += '%s,%s,%s,%s,%s,%s,%s' % (
 							str(item[i+9].contents[1]).strip(),
 							'',
 							str(item[i+10].i.contents[0]).strip(),
@@ -64,10 +68,10 @@ def grades_update(output):
 							str(item[i+12].contents[0]).strip(),
 							str(item[i+13].contents[0]).strip().replace(',', '.'),
 							year.replace('--', '-'),
-						])
+						)
 						year = str(item[i+22].contents[0].i.contents[0])
 						year = year[:10] + year[-9:]
-						grades.append([
+						grades += '%s,%s,%s,%s,%s,%s,%s,' % (
 							str(item[i+17].contents[1]).strip(),
 							'',
 							str(item[i+18].i.contents[0]).strip(),
@@ -75,41 +79,40 @@ def grades_update(output):
 							str(item[i+20].contents[0]).strip(),
 							str(item[i+21].contents[0]).strip().replace(',', '.'),
 							year.replace('--', '-'),
-						])
+						)
 						i += 11
 				except:
 					pass
 				i += 6
 			try:
 				if item0.contents[0][:6] == 'Σύνολα':
-					grades.append([
+					grades += '%s,%s,%s,%s,%s,%s,' % (
 						str(item0.b.contents[0]),
 						str(item[i+1].contents[1].contents[0]).strip(),
 						str(item[i+1].contents[3].contents[0]).strip(),
 						str(item[i+1].contents[5].contents[0]).strip(),
 						str(item[i+1].contents[7].contents[0]).strip(),
 						'total' + str(i),
-					])
+					)
 					i += 1
 			except:
 				pass
 			i += 1
 
 		general = soup.findAll('table')[13].findAll('tr', 'subHeaderBack')[-1]
-		grades.append([
+		grades += '%s,%s,%s,%s,%s,' % (
 			str(general.b.contents[2][-2:]),
 			str(general.contents[1].span.contents[0]),
 			str(general.contents[1].b.contents[3].contents[0]),
 			str(general.contents[1].b.contents[5].contents[0]),
 			str(general.contents[1].b.contents[7].contents[0]),
-		])
+		)
 		return grades
-	except:
+	except Exception as error:
+		cronosDebug(error, logfile)
 		return None
 
 def eclass_lessons_update(output):
-	from BeautifulSoup import BeautifulSoup
-	
 	try:
 		soup = BeautifulSoup(output).find('table', 'FormData')
 		eclass_lessons = []
