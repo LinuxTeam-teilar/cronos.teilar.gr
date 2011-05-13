@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 def cronosDebug(msg, logfile):
-	logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s: %(message)s', filename = settings.LOGDIR + logfile, filemode = 'w')
+	logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s: %(message)s', filename = settings.LOGDIR + logfile, filemode = 'a+')
 	logging.debug(msg)
 
 def mailCronosAdmin(title, message):
