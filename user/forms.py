@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.announcements.models import *
-from cronos.user.models import LdapProfile
+from cronos.user.models import UserProfile
 from django import forms
 from django.db.models import Q
 
