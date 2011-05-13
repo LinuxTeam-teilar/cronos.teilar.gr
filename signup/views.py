@@ -7,6 +7,7 @@ from cronos.libraries.log import CronosError, cronosDebug, mailCronosAdmin
 from cronos.login.encryption import sha1Password, encryptPassword, decryptPassword
 from cronos.login.teilar import *
 from cronos.user.update import *
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -122,6 +123,18 @@ def collectCredentials(request):
 	else:
 		raise CronosError('Οι κωδικοί δεν ταιριάζουν')
 
+def addDataToAuthDB():
+	user = User(
+		username = credentials['username'],
+		first_name = credentials['first_name'],
+		last_name = credentials['last_name'],
+		email = credentials['username'] + '@emptymail.com'
+	)
+	user.is_staff = False
+	user.is_superuser = False
+	user.set_password(credentials['password'])
+	user.save()
+
 def signup(request):
 	global credentials
 	uid = ''
@@ -136,14 +149,14 @@ def signup(request):
 					checkEclass()
 				if credentials['webmail_username']:
 					checkWebmail()
-				#uid = allDataToDB()
-				title = 'Cronos user No.%s: %s' % (uid, credentials['username'])
+				addDataToAuthDB()
+				'''title = 'Cronos user No.%s: %s' % (uid, credentials['username'])
 				message = 'Name: %s %s \nDepartment: %s\nSemester: %s' % (
-							credentials['first_name'],
+						credentials['first_name'],
 						credentials['last_name'],
 						credentials['school'],
 						credentials['semester'])
-				mailCronosAdmin(title, message)
+				mailCronosAdmin(title, message)'''
 				return render_to_response('welcome.html', credentials, context_instance = RequestContext(request))
 			except CronosError as error:
 				msg = error.value
