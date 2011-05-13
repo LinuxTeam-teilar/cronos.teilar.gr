@@ -57,10 +57,13 @@ def grades_update(output):
 					year.replace('--', '-'),
 				)
 				try:
-					if item[i+9].contents[1][-3:] == '(Θ)' or item[i+9].contents[1][-3:] == '(Ε)':
+					print (item[i+9].contents[1].strip())[4]
+					print item[i+9].contents[1]
+					if item[i+9].contents[1].strip()[4] in [u'Θ', u'Ε']:
+						print 'yes'
 						year = str(item[i+14].contents[0].i.contents[0]).strip()
 						year = year[:10] + year[-9:]
-						grades += '%s,%s,%s,%s,%s,%s,%s' % (
+						grades += '%s,%s,%s,%s,%s,%s,%s,' % (
 							str(item[i+9].contents[1]).strip(),
 							'',
 							str(item[i+10].i.contents[0]).strip(),
@@ -85,7 +88,7 @@ def grades_update(output):
 					pass
 				i += 6
 			try:
-				if item0.contents[0][:6] == 'Σύνολα':
+				if item0.contents[0][:6] == u'Σύνολα':
 					grades += '%s,%s,%s,%s,%s,%s,' % (
 						str(item0.b.contents[0]),
 						str(item[i+1].contents[1].contents[0]).strip(),
@@ -107,7 +110,7 @@ def grades_update(output):
 			str(general.contents[1].b.contents[5].contents[0]),
 			str(general.contents[1].b.contents[7].contents[0]),
 		)
-		return grades
+		return grades[:-1]
 	except Exception as error:
 		cronosDebug(error, logfile)
 		return None

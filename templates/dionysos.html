@@ -11,8 +11,8 @@
 
 	<div class="entry" id="declaration">
 	<h3>Δήλωση μαθημάτων</h3>
-	{% if msg %}
-		{{ msg }}
+	{% if not user.get_profile.grades %}
+		Παρακαλούμε πατήστε ανανέωση στο πεδίο της Δήλωσης στις <a href="/settings/#other">ρυθμίσεις</a>
 	{% else %}
 		<table>
 			<th style="width: 120px;">Κωδικός</th>

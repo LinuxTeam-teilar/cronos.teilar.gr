@@ -15,7 +15,6 @@ def recover(request):
 	msg = ''
 	html_captcha = captcha.displayhtml(settings.RECAPTCHA_PUB_KEY)
 	if request.method == 'POST':
-		print request
 		check_captcha = captcha.submit(
 			request.POST['recaptcha_challenge_field'],
 			request.POST['recaptcha_response_field'],
