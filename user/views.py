@@ -78,7 +78,7 @@ def user_settings(request):
 						if registration_number != request.user.get_profile().registration_number:
 							msg = 'Οι Αριθμοί Μητρώου δεν ταιριάζουν'
 							raise
-						user = LdapProfile.objects.get(user__username = request.user.username)
+						user = UserProfile.objects.get(user__username = request.user.username)
 						user.dionysos_username = request.POST.get('dionysos_username')
 						user.dionysos_password = encryptPassword(request.POST.get('dionysos_password'))
 						user.save()
@@ -99,7 +99,7 @@ def user_settings(request):
 							msg = 'Ο χρήστης eclass υπάρχει ήδη'
 							raise
 						eclass_lessons = eclass_lessons_update(output)
-						user = LdapProfile.objects.get(user__username = request.user.username)
+						user = UserProfile.objects.get(user__username = request.user.username)
 						user.eclass_username = request.POST.get('eclass_username')
 						user.eclass_password = encryptPassword(request.POST.get('eclass_password'))
 						user.eclass_lessons = ','.join(eclass_lessons)
@@ -120,7 +120,7 @@ def user_settings(request):
 						if result and result[0][1]['webmailUsername'][0] != request.user.get_profile().webmail_username:
 							msg = 'Ο χρήστης webmail υπάρχει ήδη'
 							raise
-						user = LdapProfile.objects.get(user__username = request.user.username)
+						user = UserProfile.objects.get(user__username = request.user.username)
 						user.webmail_username = request.POST.get('webmail_username')
 						user.webmail_password = encryptPassword(request.POST.get('webmail_password'))
 						user.save()
@@ -149,7 +149,7 @@ def user_settings(request):
 				output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 				declaration = declaration_update(output)
 				if declaration:
-					user = LdapProfile.objects.get(user__username = request.user.username)
+					user = UserProfile.objects.get(user__username = request.user.username)
 					temp = []
 					for item in declaration:
 						temp += item
@@ -167,7 +167,7 @@ def user_settings(request):
 				output = dionysos_login(link, request.user.get_profile().dionysos_username, decryptPassword(request.user.get_profile().dionysos_password))
 				grades = grades_update(output)
 				if grades:
-					user = LdapProfile.objects.get(user__username = request.user.username)
+					user = UserProfile.objects.get(user__username = request.user.username)
 					temp = []
 					for item in grades:
 						temp += item
@@ -183,7 +183,7 @@ def user_settings(request):
 			try:
 				output = eclass_login(request.user.get_profile().eclass_username, decryptPassword(request.user.get_profile().dionysos_password))
 				eclass_lessons = eclass_lessons_update(output)
-				user = LdapProfile.objects.get(user__username = request.user.username)
+				user = UserProfile.objects.get(user__username = request.user.username)
 				user.eclass_lessons = ','.join(eclass_lessons)
 				user.save()
 				msg = 'Η ανανέωση των μαθημάτων του e-class ήταν επιτυχής'
@@ -191,7 +191,7 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:34] == '<QueryDict: {u\'teacherann_selected':
 			try:
-				user = LdapProfile.objects.get(user__username = request.user.username)
+				user = UserProfile.objects.get(user__username = request.user.username)
 				user.teacher_announcements = ','.join(request.POST.getlist('teacherann_selected'))
 				user.save()
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
@@ -199,7 +199,7 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if str(request.POST)[:32] == '<QueryDict: {u\'otherann_selected':
 			try:
-				user = LdapProfile.objects.get(user__username = request.user.username)
+				user = UserProfile.objects.get(user__username = request.user.username)
 				user.other_announcements = ','.join(request.POST.getlist('otherann_selected'))
 				user.save()
 				msg = 'Η ανανέωση πραγματοποιήθηκε με επιτυχία'
@@ -207,7 +207,7 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('delete1'):
 			try:
-				user = LdapProfile.objects.get(user__username = request.user.username)
+				user = UserProfile.objects.get(user__username = request.user.username)
 				user.teacher_announcements = ''
 				user.save()
 				msg = 'Η διαγραφή πραγματοποιήθηκε με επιτυχία'
@@ -215,7 +215,7 @@ def user_settings(request):
 				msg = 'Παρουσιάστηκε Σφάλμα'
 		if request.POST.get('delete2'):
 			try:
-				user = LdapProfile.objects.get(user__username = request.user.username)
+				user = UserProfile.objects.get(user__username = request.user.username)
 				user.other_announcements = ''
 				user.save()
 				msg = 'Η διαγραφή πραγματοποιήθηκε με επιτυχία'

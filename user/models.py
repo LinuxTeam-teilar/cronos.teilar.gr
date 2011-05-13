@@ -4,7 +4,7 @@ from cronos.announcements.models import Id
 from django.contrib.auth.models import User
 from django.db import models
 
-class LdapProfile(models.Model):
+class UserProfile(models.Model):
 	user = models.ForeignKey(User, unique = True)
 	dionysos_username = models.CharField(max_length = 15, unique = True)
 	dionysos_password = models.CharField(max_length = 30)
