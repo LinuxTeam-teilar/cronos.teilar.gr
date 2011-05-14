@@ -15,6 +15,7 @@ import pycurl
 import re
 import StringIO
 import tempfile
+import time
 import urllib
 import urlparse
 
