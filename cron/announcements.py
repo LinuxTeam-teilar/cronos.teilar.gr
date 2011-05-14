@@ -15,9 +15,9 @@ import pycurl
 import re
 import StringIO
 import tempfile
+import time
 import urllib
 import urlparse
-import time
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
