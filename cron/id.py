@@ -23,7 +23,7 @@ p = re.compile(r'<[^<]*?/?>')
 
 datetimeStamp = time.strftime('%Y%m%d-%H%M')
 logfile = 'cron_id-%s.log' % datetimeStamp
-success = 'YES'
+success = True
 
 def www_teilar_gr():
 	for cid in xrange(30):
@@ -59,7 +59,7 @@ def www_teilar_gr():
 				errorstatus = 'ERROR: %s %s' % (school.strip(), str(error))
 				print errorstatus
 				cronosDebug(errorstatus, logfile)
-				success = 'NO'
+				success = False
 				pass
 
 def extra_sites():
@@ -90,7 +90,7 @@ def extra_sites():
 			errorstatus = 'ERROR: %s %s' % (str(dest[i][1]), str(error))
 			print errorstatus
 			cronosDebug(errorstatus, logfile)
-			success = 'NO'
+			success = False
 			pass
 
 def professors():
@@ -144,7 +144,7 @@ def professors():
 				errorstatus = 'ERROR: %s %s' % (teacher, str(error))
 				print errorstatus
 				cronosDebug(errorstatus, logfile)
-				success = 'NO'
+				success = False
 				pass
 
 
@@ -198,13 +198,13 @@ def eclass_teilar_gr():
 				cronosDebug(status, logfile)
 				print warningstatus
 				cronosDebug(warningstatus, logfile)
-				success = 'NO'
+				success = False
 				pass
 			except Exception as error:
 				errorstatus = 'ERROR: %s %s' % (lesson.strip(), str(error))
 				print errorstatus
 				cronosDebug(errorstatus, logfile)
-				success = 'NO'
+				success = False
 				pass
 		i += 1
 	os.close(fd)
@@ -216,7 +216,7 @@ def main():
 	professors()
 	eclass_teilar_gr()
 
-	if success == 'YES':
+	if success:
 		cronosDebug('Id cron job finished successfully', logfile)
 	else:
 		cronosDebug('Id cron job finished but with Errors', logfile)

@@ -24,6 +24,7 @@ p = re.compile(r'<[^<]*?/?>')
 
 datetimeStamp = time.strftime('%Y%m%d-%H%M')
 logfile = 'cron_announcements-%s.log' % datetimeStamp
+success = True
 
 def getid(id, i):
 	for item in Id.objects.filter(urlid__exact = (id + str(i))):
@@ -91,11 +92,13 @@ def www_teilar_gr():
 				warningstatus = 'WARNING: %s\n' % str(warning)
 				print warningstatus
 				cronosDebug(warningstatus, logfile)
+				success = False
 				pass
 			except Exception as error:
 				errorstatus = 'ERROR: %s  %s' % (title, str(error))
 				print errorstatus
 				cronosDebug(errorstatus, logfile)
+				success = False
 				pass
 			i += 1
 
@@ -154,11 +157,13 @@ def professors():
 				warningstatus = 'WARNING: %s' % str(warning)
 				print warningstatus
 				cronosDebug(warningstatus, logfile)
+				success = False
 				pass
 			except Exception as error:
 				errorstatus = 'ERROR: %s %s' % (title, str(error))
 				print errorstatus
 				cronosDebug(error, logfile)
+				success = False
 				pass
 
 def eclass_teilar_gr():
@@ -254,11 +259,13 @@ def eclass_teilar_gr():
 						warningstatus = 'WARNING: %s' % str(warning)
 						print warningstatus
 						cronosDebug(warningstatus, logfile)
+						success = False
 						pass
 					except Exception as error:
 						errorstatus = 'ERROR: %s %s' % (title, str(error))
 						print errorstatus
 						cronosDebug(error, logfile)
+						success = False
 						pass
 					j += 1
 					k += 2
@@ -308,11 +315,13 @@ def noc_teilar_gr():
 				warningstatus = 'WARNING: %s' % str(warning)
 				print warningstatus
 				cronosDebug(warningstatus, logfile)
+				success = False
 				pass
 			except Exception as error:
 				errorstatus = 'ERROR: %s %s' % (title, str(error))
 				print errorstatus
 				cronosDebug(errorstatus, logfile)
+				success = False
 				pass
 
 def career_teilar_gr():
@@ -336,22 +345,38 @@ def career_teilar_gr():
 
 		main_text = str(soup1.findAll('table')[5])
 		main_text = p.sub(' ', main_text)
+		name = getid('cid', 51)
 
 		career_teilar_gr = Announcements(
 			title = str(soup.findAll('a')[i].contents[0]),
 			url = link,
 			unique = link,
-			urlid = getid('cid', 51),
+			urlid = name,
 			description = main_text.strip(),
 			attachment_text = '',
 			attachment_url = '',
 		)
-
 		try:
 			career_teilar_gr.save()
-		except MySQLdb.IntegrityError:
+			status = 'NEW: %s from: %s' % (title, name)
+			print status
+			cronosDebug(status, logfile)
+		except IntegrityError:
 			pass
-		except:
+		except MySQLdb.Warning, warning:
+			status = 'NEW: %s from %s' % (title, name)
+			print status
+			cronosDebug(status,logfile)
+			warningstatus = 'WARNING: %s' % str(warning)
+			print warningstatus
+			cronosDebug(warningstatus, logfile)
+			success = False
+			pass
+		except Exception as error:
+			errorstatus = 'ERROR: %s %s' % (title, str(error))
+			print errorstatus
+			cronosDebug(errorstatus, logfile)
+			success = False
 			pass
 
 def linuxteam_cs_teilar_gr():
@@ -371,27 +396,41 @@ def linuxteam_cs_teilar_gr():
 		conn.perform()
 		output = b.getvalue()
 		soup1 = BeautifulSoup(output)
-
 		main_text = ''
-
 		main_text = str(soup1.findAll('div', 'content')[4].contents[0])
 		main_text = p.sub(' ', main_text)
+		name = getid('cid', 52)
 
-		linuxteam = Announcements(
+		linuxteam_teilar_gr = Announcements(
 			title = str(soup.findAll('h2', 'title')[i].contents[0].contents[0]),
 			url = link,
 			unique = link,
-			urlid = getid('cid', 52),
+			urlid = name,
 			description = main_text.strip(),
 			attachment_text = '',
 			attachment_url = '',
 		)
-
 		try:
-			linuxteam.save()
-		except MySQLdb.IntegrityError:
+			linuxteam_teilar_gr.save()
+			status = 'NEW: %s from: %s' % (title, name)
+			print status
+			cronosDebug(status, logfile)
+		except IntegrityError:
 			pass
-		except:
+		except MySQLdb.Warning, warning:
+			status = 'NEW: %s from %s' % (title, name)
+			print status
+			cronosDebug(status,logfile)
+			warningstatus = 'WARNING: %s' % str(warning)
+			print warningstatus
+			cronosDebug(warningstatus, logfile)
+			success = False
+			pass
+		except Exception as error:
+			errorstatus = 'ERROR: %s %s' % (title, str(error))
+			print errorstatus
+			cronosDebug(errorstatus, logfile)
+			success = False
 			pass
 
 def dionysos_teilar_gr():
@@ -409,22 +448,38 @@ def dionysos_teilar_gr():
 		for item in soup.findAll('th')[i+1].b.contents:
 			main_text += str(item)
 		main_text = p.sub(' ', main_text)
+		name = getid('cid', 53)
 
-		dionysos = Announcements(
+		dionysos_teilar_gr = Announcements(
 			title = 'No Title',
 			url = link,
-			urlid = getid('cid', 53),
+			urlid = name,
 			description = main_text.strip(),
 			unique = 'dionysos' + main_text.strip(),
 			attachment_url = '',
 			attachment_text = '',
 		)
-
 		try:
-			dionysos.save()
-		except MySQLdb.IntegrityError:
+			dionysos_teilar_gr.save()
+			status = 'NEW: %s from: %s' % (title, name)
+			print status
+			cronosDebug(status, logfile)
+		except IntegrityError:
 			pass
-		except:
+		except MySQLdb.Warning, warning:
+			status = 'NEW: %s from %s' % (title, name)
+			print status
+			cronosDebug(status,logfile)
+			warningstatus = 'WARNING: %s' % str(warning)
+			print warningstatus
+			cronosDebug(warningstatus, logfile)
+			success = False
+			pass
+		except Exception as error:
+			errorstatus = 'ERROR: %s %s' % (title, str(error))
+			print errorstatus
+			cronosDebug(errorstatus, logfile)
+			success = False
 			pass
 
 def library_teilar_gr():
@@ -447,22 +502,38 @@ def library_teilar_gr():
 		soup1 = BeautifulSoup(output)
 		main_text = soup1.findAll('td', 'BlackText11')[2].contents[0]
 		main_text = p.sub(' ', main_text)
+		name = getid('cid', 54)
 		
-		library = Announcements(
+		library_teilar_gr = Announcements(
 			title = title,
 			url = link,
-			urlid = getid('cid', 54),
+			urlid = name,
 			description = main_text.strip(),
 			unique = link,
 			attachment_url = '',
 			attachment_text = '',
 		)
-
 		try:
-			library.save()
-		except MySQLdb.IntegrityError:
+			library_teilar_gr.save()
+			status = 'NEW: %s from: %s' % (title, name)
+			print status
+			cronosDebug(status, logfile)
+		except IntegrityError:
 			pass
-		except:
+		except MySQLdb.Warning, warning:
+			status = 'NEW: %s from %s' % (title, name)
+			print status
+			cronosDebug(status,logfile)
+			warningstatus = 'WARNING: %s' % str(warning)
+			print warningstatus
+			cronosDebug(warningstatus, logfile)
+			success = False
+			pass
+		except Exception as error:
+			errorstatus = 'ERROR: %s %s' % (title, str(error))
+			print errorstatus
+			cronosDebug(errorstatus, logfile)
+			success = False
 			pass
 
 def pr_teilar_gr():
@@ -491,36 +562,55 @@ def pr_teilar_gr():
 			for item1 in soup1.findAll('td', 'subject')[0].contents:
 				main_text += str(item1)
 			main_text = p.sub(' ', main_text)
+			name = getid('cid', 55)
 
-			pr = Announcements(
+			pr_teilar_gr = Announcements(
 				title = title,
 				url = link1,
-				urlid = getid('cid', 55),
+				urlid = name,
 				description = main_text,
 				unique = link1,
 				attachment_url = '',
 				attachment_text = '',
 			)
-
 			try:
-				pr.save()
-			except MySQLdb.IntegrityError:
+				pr_teilar_gr.save()
+				status = 'NEW: %s from: %s' % (title, name)
+				print status
+				cronosDebug(status, logfile)
+			except IntegrityError:
 				pass
-			except:
+			except MySQLdb.Warning, warning:
+				status = 'NEW: %s from %s' % (title, name)
+				print status
+				cronosDebug(status,logfile)
+				warningstatus = 'WARNING: %s' % str(warning)
+				print warningstatus
+				cronosDebug(warningstatus, logfile)
+				success = False
+				pass
+			except Exception as error:
+				errorstatus = 'ERROR: %s %s' % (title, str(error))
+				print errorstatus
+				cronosDebug(errorstatus, logfile)
+				success = False
 				pass
 
 def main():
-	#www_teilar_gr()
-	#professors()
+	www_teilar_gr()
+	professors()
 	eclass_teilar_gr()
-	#noc_teilar_gr()
-	#career_teilar_gr()
-	#linuxteam_cs_teilar_gr()
-	#dionysos_teilar_gr()
-	#library_teilar_gr()
-	#pr_teilar_gr()
+	noc_teilar_gr()
+	career_teilar_gr()
+	linuxteam_cs_teilar_gr()
+	dionysos_teilar_gr()
+	library_teilar_gr()
+	pr_teilar_gr()
 
-	cronosDebug('Announcements cron job finished', logfile)
+	if success:
+		cronosDebug('Announcements cron job finished successfully', logfile)
+	else:
+		cronosDebug('Announcements cron job finished but with Errors', logfile)
 	print "DONE"
 
 if __name__ == '__main__':
