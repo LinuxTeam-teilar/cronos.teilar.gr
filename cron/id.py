@@ -20,7 +20,9 @@ import urlparse
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
-logfile = 'cron_id.log'
+
+datetimeStamp = time.strftime('%Y%m%d-%H%M')
+logfile = 'cron_id-%s.log' % datetimeStamp
 success = 'YES'
 
 def www_teilar_gr():

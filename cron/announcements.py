@@ -16,11 +16,14 @@ import re
 import StringIO
 import tempfile
 import urllib
-import urlparse 
+import urlparse
+import time
 
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
-logfile = 'cron_announcements.log'
+
+datetimeStamp = time.strftime('%Y%m%d-%H%M')
+logfile = 'cron_announcements-%s.log' % datetimeStamp
 
 def getid(id, i):
 	for item in Id.objects.filter(urlid__exact = (id + str(i))):
@@ -167,6 +170,7 @@ def eclass_teilar_gr():
 		('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82'),
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
+	conn.setopt(pycurl.FOLLOWLOCATION, 1)
 	conn.setopt(pycurl.COOKIEFILE, cookie_path)
 	conn.setopt(pycurl.COOKIEJAR, cookie_path)
 	conn.setopt(pycurl.URL, 'http://openclass.teilar.gr/index.php')
@@ -184,6 +188,7 @@ def eclass_teilar_gr():
 			url = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
 			print url
 			b = StringIO.StringIO()
+			conn.setopt(pycurl.FOLLOWLOCATION, 1)
 			conn.setopt(pycurl.COOKIEFILE, cookie_path)
 			conn.setopt(pycurl.COOKIEJAR, cookie_path)
 			conn.setopt(pycurl.URL, url)
@@ -237,13 +242,13 @@ def eclass_teilar_gr():
 					)
 					try:
 						eclass_teilar_gr.save()
-						status = 'NEW: %s from: %s' % (title, str(geteclassid(cid)))
+						status = 'NEW: %s from: %s' % (title, geteclassid(cid))
 						print status
 						cronosDebug(status, logfile)
 					except IntegrityError:
 						pass
 					except MySQLdb.Warning, warning:
-						status = 'NEW: %s from %s' % (title, str(geteclassid(cid)))
+						status = 'NEW: %s from %s' % (title, geteclassid(cid))
 						print status
 						cronosDebug(status, logfile)
 						warningstatus = 'WARNING: %s' % str(warning)
