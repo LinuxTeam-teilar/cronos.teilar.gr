@@ -345,9 +345,10 @@ def career_teilar_gr():
 		main_text = str(soup1.findAll('table')[5])
 		main_text = p.sub(' ', main_text)
 		name = getid('cid', 51)
+		title = soup.findAll('a')[i].contents[0]
 
 		career_teilar_gr = Announcements(
-			title = str(soup.findAll('a')[i].contents[0]),
+			title = title,
 			url = url,
 			unique = url,
 			urlid = name,
@@ -399,9 +400,10 @@ def linuxteam_cs_teilar_gr():
 		main_text = str(soup1.findAll('div', 'content')[4].contents[0])
 		main_text = p.sub(' ', main_text)
 		name = getid('cid', 52)
+		title = soup.findAll('h2', 'title')[i].contents[0].contents[0]
 
 		linuxteam_teilar_gr = Announcements(
-			title = str(soup.findAll('h2', 'title')[i].contents[0].contents[0]),
+			title = title,
 			url = link,
 			unique = link,
 			urlid = name,
