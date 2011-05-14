@@ -598,15 +598,25 @@ def pr_teilar_gr():
 				pass
 
 def main():
+	cronosDebug('started', logfile)
 	www_teilar_gr()
+	cronosDebug('teilar finished', logfile)
 	professors()
+	cronosDebug('professors finished', logfile)
 	eclass_teilar_gr()
+	cronosDebug('eclass finished', logfile)
 	noc_teilar_gr()
+	cronosDebug('noc finished', logfile)
 	career_teilar_gr()
+	cronosDebug('career finished', logfile)
 	linuxteam_cs_teilar_gr()
+	cronosDebug('linuxteam finished', logfile)
 	dionysos_teilar_gr()
+	cronosDebug('dionysos finished', logfile)
 	library_teilar_gr()
+	cronosDebug('library finished', logfile)
 	pr_teilar_gr()
+	cronosDebug('pr finished', logfile)
 
 	if success:
 		cronosDebug('Announcements cron job finished successfully', logfile)
