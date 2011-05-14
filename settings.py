@@ -3,10 +3,8 @@
 # Django settings for cronos project.
 
 ADMINS = (
-	('cephalon, tampakrap', ''),
+	('cephalon, tampakrap', 'cronos@teilar.gr'),
 )
-
-SEND_BROKEN_LINK_EMAILS = False
 
 MANAGERS = ADMINS
 
