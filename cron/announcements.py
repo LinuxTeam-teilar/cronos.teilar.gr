@@ -191,7 +191,6 @@ def eclass_teilar_gr():
 		if (i%2 == 0):
 			cid = str(item.contents[0]).split('-')[0].strip()
 			url = 'http://openclass.teilar.gr/index.php?perso=2&c=' + cid
-			print url
 			b = StringIO.StringIO()
 			conn.setopt(pycurl.FOLLOWLOCATION, 1)
 			conn.setopt(pycurl.COOKIEFILE, cookie_path)
@@ -349,8 +348,8 @@ def career_teilar_gr():
 
 		career_teilar_gr = Announcements(
 			title = str(soup.findAll('a')[i].contents[0]),
-			url = link,
-			unique = link,
+			url = url,
+			unique = url,
 			urlid = name,
 			description = main_text.strip(),
 			attachment_text = '',
