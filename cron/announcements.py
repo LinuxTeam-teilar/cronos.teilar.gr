@@ -373,7 +373,7 @@ def career_teilar_gr():
 			success = False
 			pass
 		except Exception as error:
-			errorstatus = 'ERROR: %s %s' % (title, str(error))
+			errorstatus = 'ERROR: %s %s' % (title, error)
 			print errorstatus
 			cronosDebug(errorstatus, logfile)
 			success = False
