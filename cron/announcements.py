@@ -367,7 +367,7 @@ def career_teilar_gr():
 			status = 'NEW: %s from %s' % (title, name)
 			print status
 			cronosDebug(status,logfile)
-			warningstatus = 'WARNING: %s' % str(warning)
+			warningstatus = 'WARNING: %s' % warning
 			print warningstatus
 			cronosDebug(warningstatus, logfile)
 			success = False
@@ -422,7 +422,7 @@ def linuxteam_cs_teilar_gr():
 			status = 'NEW: %s from %s' % (title, name)
 			print status
 			cronosDebug(status,logfile)
-			warningstatus = 'WARNING: %s' % str(warning)
+			warningstatus = 'WARNING: %s' % warning
 			print warningstatus
 			cronosDebug(warningstatus, logfile)
 			success = False
