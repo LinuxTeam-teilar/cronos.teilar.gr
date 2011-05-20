@@ -22,8 +22,9 @@ import urlparse
 conn = pycurl.Curl()
 p = re.compile(r'<[^<]*?/?>')
 
-datetimeStamp = time.strftime('%Y%m%d-%H%M')
-logfile = 'cron_id-%s.log' % datetimeStamp
+date_full = time.strftime('%Y%m%d-%H%M')
+date_minimal = time.strftime('%Y%m')
+logfile = 'cron_id/%s/cron_id-%s.log' % (date_minimal, date_full)
 success = True
 
 def www_teilar_gr():
