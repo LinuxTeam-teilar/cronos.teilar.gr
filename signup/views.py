@@ -3,9 +3,9 @@
 from BeautifulSoup import BeautifulSoup
 from cronos.signup.forms import *
 from cronos.announcements.models import Id
+from cronos.libraries.encryption import encryptPassword, decryptPassword
 from cronos.libraries.log import CronosError, cronosDebug, mailCronosAdmin
-from cronos.login.encryption import encryptPassword, decryptPassword
-from cronos.login.teilar import *
+from cronos.libraries.login import *
 from cronos.user.update import *
 from cronos.user.models import UserProfile
 from django.conf import settings

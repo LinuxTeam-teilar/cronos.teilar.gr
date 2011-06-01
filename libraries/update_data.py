@@ -115,12 +115,13 @@ def grades_update(output):
 def eclass_lessons_update(output):
 	try:
 		soup = BeautifulSoup(output).find('table', 'FormData')
-		eclass_lessons = []
+		eclass_lessons = ''
 		i = 0
 		for item in soup.findAll('a'):
 			if (i % 2 == 0):
-				eclass_lessons.append(str(item.contents[0].split('-')[0]).strip())
+				eclass_lessons += '%s,' % (str(item.contents[0].split('-')[0]).strip())
 			i += 1
-		return eclass_lessons
-	except:
+		return eclass_lessons[:-1]
+	except Exception as error:
+		cronosDebug(error,logfile)
 		return None

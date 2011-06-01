@@ -2,8 +2,8 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
-from cronos.login.encryption import decryptPassword
-from cronos.login.teilar import *
+from cronos.libraries.encryption import decryptPassword
+from cronos.libraries.login import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
