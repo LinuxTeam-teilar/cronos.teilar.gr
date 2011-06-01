@@ -106,7 +106,7 @@ def checkEclass():
 	output = eclass_login(credentials['eclass_username'], decryptPassword(credentials['eclass_password']))
 	if output == 1:
 		raise CronosError('Λάθος Στοιχεία e-class')
-	credentials['eclass_lessons'] = eclass_lessons_update(output)
+	credentials['eclass_lessons'] = ','.join(eclass_lessons_update(output))
 
 def checkWebmail():
 	global credentials
