@@ -25,7 +25,10 @@ def eclass(request):
 			status = soup1.findAll('span')[i].contents[0]
 			deadlines.append([lesson, title, date, status])
 			i += 1
+	except:
+		deadlines = None
 
+	try:
 		soup1 = BeautifulSoup(str(soup.findAll('tr', 'odd')[4]))
 		documents = []
 		i = 0
@@ -39,11 +42,8 @@ def eclass(request):
 				date = soup1.findAll('a', 'square_bullet2')[j].contents[0].contents[0].split(' - (')[1][:-1]
 				documents.append([lesson, title, date])
 				j += 1
-
 	except:
-		deadlines = ''
-		documents = ''
-		pass
+		documents = None
 
 	eclass_lessons = []
 	for item in Id.objects.filter(urlid__in = request.user.get_profile().eclass_lessons.split(',')):

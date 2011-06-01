@@ -57,10 +57,7 @@ def grades_update(output):
 					year.replace('--', '-'),
 				)
 				try:
-					print (item[i+9].contents[1].strip())[4]
-					print item[i+9].contents[1]
 					if item[i+9].contents[1].strip()[4] in [u'Θ', u'Ε']:
-						print 'yes'
 						year = str(item[i+14].contents[0].i.contents[0]).strip()
 						year = year[:10] + year[-9:]
 						grades += '%s,%s,%s,%s,%s,%s,%s,' % (
