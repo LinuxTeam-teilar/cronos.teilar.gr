@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.login.encryption import sha1Password
+from cronos.libraries.encryption import sha1Password
 from cronos.recover import captcha
 from cronos.recover.forms import *
 from django.conf import settings

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
-from cronos.login.encryption import sha1Password, encryptPassword, decryptPassword
-from cronos.login.teilar import *
+from cronos.libraries.encryption import sha1Password, encryptPassword, decryptPassword
+from cronos.libraries.login import *
 from cronos.user.forms import *
 from cronos.user.update import *
 from django.conf import settings
