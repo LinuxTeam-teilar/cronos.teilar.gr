@@ -3,8 +3,8 @@
 from BeautifulSoup import BeautifulSoup
 from cronos.libraries.encryption import sha1Password, encryptPassword, decryptPassword
 from cronos.libraries.login import *
+from cronos.libraries.update_data import *
 from cronos.user.forms import *
-from cronos.user.update import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
