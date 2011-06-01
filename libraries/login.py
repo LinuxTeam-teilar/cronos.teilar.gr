@@ -33,7 +33,7 @@ def dionysos_login(link, username, password):
 	if link == 0:
 		soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
 		try:
-			soup.find('td', 'whiteheader').b.contents[0] == 'Είσοδος Φοιτητή'
+			soup.find('td', 'whiteheader').b.contents[0] == u'Είσοδος Φοιτητή'
 			return 1
 		except:
 			return (b.getvalue()).decode('windows-1253')

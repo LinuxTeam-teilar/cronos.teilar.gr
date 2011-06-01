@@ -6,7 +6,7 @@ from cronos.announcements.models import Id
 from cronos.libraries.encryption import encryptPassword, decryptPassword
 from cronos.libraries.log import CronosError, cronosDebug, mailCronosAdmin
 from cronos.libraries.login import *
-from cronos.user.update import *
+from cronos.libraries.update_data import *
 from cronos.user.models import UserProfile
 from django.conf import settings
 from django.contrib.auth.models import User
