@@ -77,7 +77,7 @@ def eclass_login(username, password):
 def webmail_login(link, username, password):
     b = StringIO.StringIO()
     conn = pycurl.Curl()
-    fd, cookie_path = tempfile.mkstemp(prefix='dionysos_', dir='/tmp'
+    fd, cookie_path = tempfile.mkstemp(prefix='webmail_', dir='/tmp')
     login_form_seq = [
         ('login_username', username),
         ('secretkey', password),
