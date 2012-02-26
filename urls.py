@@ -9,6 +9,7 @@ from cronos.dionysos.views import *
 from cronos.eclass.views import *
 from cronos.login.views import *
 from cronos.recover.views import *
+from cronos.psigeia.views import *
 from cronos.signup.forms import *
 from cronos.signup.views import *
 from cronos.teachers.views import *
@@ -30,6 +31,7 @@ urlpatterns = patterns('',
     (r'^webmail/', webmail),
     (r'^logout/', mylogout),
     (r'^user/', user),
+    (r'^psigeia/', psigeia),
     (r'^settings/', user_settings),
     (r'^teachers/', teachers),
     (r'^about/', about),
