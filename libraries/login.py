@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
+from BeautifulSoup import BeautifulSoup
+import pycurl
+import StringIO
+import urllib
+import os
+import tempfile
+import urlparse
 
 def dionysos_login(link, username, password):
-	from BeautifulSoup import BeautifulSoup
-	import pycurl
-	import StringIO
-	import urllib
-	import os
-	import urlparse
-
 	conn = pycurl.Curl()
 	b = StringIO.StringIO()
-	
-	cookie_file_name = os.tempnam('/tmp','dionysos')
+
+	fd, cookie_path = tempfile.mkstemp(prefix='dionysos_', dir='/tmp')
 	login_form_seq = [
 		('userName', username),
 		('pwd', password),
@@ -20,12 +20,12 @@ def dionysos_login(link, username, password):
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
 	conn.setopt(pycurl.FOLLOWLOCATION, 1)
-	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
-	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/')
+	conn.setopt(pycurl.COOKIEFILE, cookie_path)
+	conn.setopt(pycurl.COOKIEJAR, cookie_path)
+	conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/')
 	conn.setopt(pycurl.POST, 0)
 	conn.perform()
-	conn.setopt(pycurl.URL, 'http://dionysos.teilar.gr/unistudent/login.asp')
+	conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/login.asp')
 	conn.setopt(pycurl.POST, 1)
 	conn.setopt(pycurl.POSTFIELDS, login_form_data)
 	conn.setopt(pycurl.WRITEFUNCTION, b.write)
@@ -34,6 +34,8 @@ def dionysos_login(link, username, password):
 		soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
 		try:
 			soup.find('td', 'whiteheader').b.contents[0] == u'Είσοδος Φοιτητή'
+			os.close(fd)
+			os.remove(cookie_path)
 			return 1
 		except:
 			return (b.getvalue()).decode('windows-1253')
@@ -42,19 +44,14 @@ def dionysos_login(link, username, password):
 		conn.setopt(pycurl.URL, link)
 		conn.setopt(pycurl.POST, 1)
 		conn.setopt(pycurl.POSTFIELDS, login_form_data)
-		conn.setopt(pycurl.COOKIE, cookie_file_name)
+		conn.setopt(pycurl.COOKIE, cookie_path)
 		conn.setopt(pycurl.WRITEFUNCTION, b.write)
 		conn.perform()
+		os.close(fd)
+		os.remove(cookie_path)
 		return (b.getvalue()).decode('windows-1253')
 
 def eclass_login(username, password):
-	from BeautifulSoup import BeautifulSoup
-	import pycurl
-	import StringIO
-	import urllib
-	import os
-	import urlparse
-	
 	b = StringIO.StringIO()
 	conn = pycurl.Curl()
 	login_form_seq = [
@@ -78,16 +75,9 @@ def eclass_login(username, password):
 		return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def webmail_login(link, username, password):
-	from BeautifulSoup import BeautifulSoup
-	import pycurl
-	import StringIO
-	import urllib
-	import os
-	import urlparse
-	
 	b = StringIO.StringIO()
 	conn = pycurl.Curl()
-	cookie_file_name = os.tempnam('/tmp','webmail')
+	fd, cookie_path = tempfile.mkstemp(prefix='dionysos_', dir='/tmp'
 	login_form_seq = [
 		('login_username', username),
 		('secretkey', password),
@@ -96,8 +86,8 @@ def webmail_login(link, username, password):
 	]
 	login_form_data = urllib.urlencode(login_form_seq)
 	conn.setopt(pycurl.FOLLOWLOCATION, 0)
-	conn.setopt(pycurl.COOKIEFILE, cookie_file_name)
-	conn.setopt(pycurl.COOKIEJAR, cookie_file_name)
+	conn.setopt(pycurl.COOKIEFILE, cookie_path)
+	conn.setopt(pycurl.COOKIEJAR, cookie_path)
 	conn.setopt(pycurl.URL, 'http://myweb.teilar.gr')
 	conn.setopt(pycurl.POST, 0)
 	conn.perform()
@@ -114,7 +104,7 @@ def webmail_login(link, username, password):
 		if link == 0:
 			return (b.getvalue()).decode('iso-8859-7')
 		conn.setopt(pycurl.URL, link)
-		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php')
-		#conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/right_main.php?PG_SHOWALL=1&use_mailbox_cache=0&startMessage=1&mailbox=INBOX')
 		conn.perform()
+		os.close(fd)
+		os.remove(cookie_path)
 		return (b.getvalue()).decode('iso-8859-7')
