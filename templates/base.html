@@ -1,61 +1,61 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<title>{% block title %}{% endblock %}Cronos</title>
-		<link rel="icon" href="{{MEDIA_URL}}images/logo.png" type="image/x-icon">
-		<link rel="stylesheet" href="{{MEDIA_URL}}css/reset.css">
-		<link rel="stylesheet" href="{{MEDIA_URL}}css/style.css">
-		{% block more %}{% endblock %}
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-		{% block extra_css %}{% endblock %}
-		{% block extra_js_top %}{% endblock %}
-	</head>
-	<body>
-		<div id="container">
-			<div id="header">
-				<h1>CRONOS</h1>
-				<div id="sidebar">
-					<ul id="navigation">
-						<li><a href="/">&raquo;&emsp;Αρχική</a></li>
-						{% if user.is_authenticated %}
-							<li><a href="/announcements/">&raquo;&emsp;Ανακοινώσεις</a></li>
-							{% if user.get_profile.eclass_username %}
-							<li><a href="/eclass/">&raquo;&emsp;E-class</a></li>
-							{% endif %}
-							{% if user.get_profile.webmail_username %}
-							<li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
-							{% endif %}
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>{% block title %}{% endblock %}Cronos</title>
+        <link rel="icon" href="{{MEDIA_URL}}images/logo.png" type="image/x-icon">
+        <link rel="stylesheet" href="{{MEDIA_URL}}css/reset.css">
+        <link rel="stylesheet" href="{{MEDIA_URL}}css/style.css">
+        {% block more %}{% endblock %}
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        {% block extra_css %}{% endblock %}
+        {% block extra_js_top %}{% endblock %}
+    </head>
+    <body>
+        <div id="container">
+            <div id="header">
+                <h1>CRONOS</h1>
+                <div id="sidebar">
+                    <ul id="navigation">
+                        <li><a href="/">&raquo;&emsp;Αρχική</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="/announcements/">&raquo;&emsp;Ανακοινώσεις</a></li>
+                            {% if user.get_profile.eclass_username %}
+                            <li><a href="/eclass/">&raquo;&emsp;E-class</a></li>
+                            {% endif %}
+                            {% if user.get_profile.webmail_username %}
+                            <li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
+                            {% endif %}
                             <li><a href="/dionysos/">&raquo;&emsp;Στοιχεία Γραμματείας</a></li>
                             {% if user.get_profile.school == cid6 %}
                             <li><a href="/psigeia/">&raquo;&emsp;Ψυκτικά φορτία</a></li>
                             {% endif %}
-						{% endif %}
-						<li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
-						<li><a href="/teachers/">&raquo;&emsp;Λίστα Καθηγητών</a></li>
-						<li><a href="/about/">&raquo;&emsp;Σχετικά</a></li>
-						{% if user.is_authenticated %}
-						<li><a href="/settings/">&raquo;&emsp;Ρυθμίσεις</a></li>
-							{% if user.is_superuser %}
-							<li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
-							<li><a href="/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
-							<li><a href="/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
-							<li><a href="http://cephalon.teilar.gr/cgi-bin/awstats.pl?config=cronos.teilar.gr">&raquo;&emsp;Στατιστικά</a></li>
-							{% endif %}
-						{% endif %}
-					</ul>
-				</div>
-			</div>
-			{% if user.is_authenticated %}
-			<div id="profile">
-				<p>{{user.first_name}} {{user.last_name}}&emsp;&mdash;&emsp;{{user.get_profile.registration_number}}</p>
-				<a class="button" href="/logout/">Αποσύνδεση</a>
-			</div>
-			{% endif %}
-			<div id="content">
-				{% block content %}{% endblock %}
-			</div>
-		</div>
-		{% block extra_js_bottom %}{% endblock %}
-	</body>
+                        {% endif %}
+                        <li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
+                        <li><a href="/teachers/">&raquo;&emsp;Λίστα Καθηγητών</a></li>
+                        <li><a href="/about/">&raquo;&emsp;Σχετικά</a></li>
+                        {% if user.is_authenticated %}
+                        <li><a href="/settings/">&raquo;&emsp;Ρυθμίσεις</a></li>
+                            {% if user.is_superuser %}
+                            <li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
+                            <li><a href="/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
+                            <li><a href="/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
+                            <li><a href="http://cephalon.teilar.gr/cgi-bin/awstats.pl?config=cronos.teilar.gr">&raquo;&emsp;Στατιστικά</a></li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <div id="profile">
+                <p>{{user.first_name}} {{user.last_name}}&emsp;&mdash;&emsp;{{user.get_profile.registration_number}}</p>
+                <a class="button" href="/logout/">Αποσύνδεση</a>
+            </div>
+            {% endif %}
+            <div id="content">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        {% block extra_js_bottom %}{% endblock %}
+    </body>
 </html>

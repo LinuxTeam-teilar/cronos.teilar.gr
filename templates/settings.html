@@ -1,234 +1,234 @@
 {% extends "base.html" %}
 
 {% block title %}
-	Ρυθμίσεις χρήστη {{user}} | 
+    Ρυθμίσεις χρήστη {{user}} | 
 {% endblock %}
 
 {% block extra_js_top %}
-	<script type="text/javascript" src="{{MEDIA_URL}}js/multibox.js"></script>
+    <script type="text/javascript" src="{{MEDIA_URL}}js/multibox.js"></script>
 {% endblock %}
 
 {% block content %}
-	{% if msg %}
-		<div id="notifications">
-			<p>{{ msg }}</p>
-		</div>
-	{% endif %}
+    {% if msg %}
+        <div id="notifications">
+            <p>{{ msg }}</p>
+        </div>
+    {% endif %}
 
-	<div class="entry" id="cronos">
-		<h3>Στοιχεία για το Cronos</h3>
-		<table>
-			<tr><th><i>Όνομα Χρήστη: </i>{{user.username}}</th><tr>
-			<form action="." method="POST" align="center">
-					{% for field in cronos_form %}
-						<tr><td>{{ field.label_tag }}<br />{{ field }}</td></tr>
-					{% endfor %}
-				<tr><td><input class="button" type="submit" value="Αλλαγή Κωδικού" /></td></tr>
-			</form>
-		</table>
-	</div>
+    <div class="entry" id="cronos">
+        <h3>Στοιχεία για το Cronos</h3>
+        <table>
+            <tr><th><i>Όνομα Χρήστη: </i>{{user.username}}</th><tr>
+            <form action="." method="POST" align="center">
+                    {% for field in cronos_form %}
+                        <tr><td>{{ field.label_tag }}<br />{{ field }}</td></tr>
+                    {% endfor %}
+                <tr><td><input class="button" type="submit" value="Αλλαγή Κωδικού" /></td></tr>
+            </form>
+        </table>
+    </div>
 
-	<div class="entry" id="teilar">
-		<h3>Στοιχεία άλλων υπηρεσιών ΤΕΙ Λάρισας</h3>
-		<table>
-			<tr>
-				<th><i>Dionysos: </i>{{ user.get_profile.dionysos_username }}</th>
-				<th><i>Eclass: </i>
-					{% if user.get_profile.eclass_username %}
-						{{ user.get_profile.eclass_username }}
-					{% else %}
-						----
-					{% endif %}
-				</th>
-				<th><i>Webmail: </i>
-					{% if user.get_profile.webmail_username %}
-						{{ user.get_profile.webmail_username }}
-					{% else %}
-						----
-					{% endif %}
-				</th>
-			</tr>
-			<tr>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in dionysos_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value="Ανανέωση" />
-					</form>
-				</td>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in eclass1_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value=
-						{% if user.get_profile.eclass_username %}
-							"Ανανέωση"
-						{% else %}
-							"Προσθήκη"
-						{% endif %}
-						/>
-					</form>
-				</td>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in webmail_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value=
-						{% if user.get_profile.webmail_username %}
-							"Ανανέωση"
-						{% else %}
-							"Προσθήκη"
-						{% endif %}
-						/>
-					</form>
-					</form>
-				</td>
-			</tr>
-		</table>
-	</div>
+    <div class="entry" id="teilar">
+        <h3>Στοιχεία άλλων υπηρεσιών ΤΕΙ Λάρισας</h3>
+        <table>
+            <tr>
+                <th><i>Dionysos: </i>{{ user.get_profile.dionysos_username }}</th>
+                <th><i>Eclass: </i>
+                    {% if user.get_profile.eclass_username %}
+                        {{ user.get_profile.eclass_username }}
+                    {% else %}
+                        ----
+                    {% endif %}
+                </th>
+                <th><i>Webmail: </i>
+                    {% if user.get_profile.webmail_username %}
+                        {{ user.get_profile.webmail_username }}
+                    {% else %}
+                        ----
+                    {% endif %}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in dionysos_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value="Ανανέωση" />
+                    </form>
+                </td>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in eclass1_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value=
+                        {% if user.get_profile.eclass_username %}
+                            "Ανανέωση"
+                        {% else %}
+                            "Προσθήκη"
+                        {% endif %}
+                        />
+                    </form>
+                </td>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in webmail_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value=
+                        {% if user.get_profile.webmail_username %}
+                            "Ανανέωση"
+                        {% else %}
+                            "Προσθήκη"
+                        {% endif %}
+                        />
+                    </form>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-	<div id="notifications">
-		<p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης για κάποια από τρεις υπηρεσίες (<a href="http://dionysos.teilar.gr/">dionysos</a>, <a href="http://e-class.teilar.gr/">eclass</a>, <a href="http://myweb.teilar.gr">webmail</a>), ή θέλετε να προσθέσετε μια νέα στο λογαριασμό σας, συμπληρώστε τα νέα στοιχεία στην κατάλληλη φόρμα</p>
-	</div>
+    <div id="notifications">
+        <p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης για κάποια από τρεις υπηρεσίες (<a href="http://dionysos.teilar.gr/">dionysos</a>, <a href="http://e-class.teilar.gr/">eclass</a>, <a href="http://myweb.teilar.gr">webmail</a>), ή θέλετε να προσθέσετε μια νέα στο λογαριασμό σας, συμπληρώστε τα νέα στοιχεία στην κατάλληλη φόρμα</p>
+    </div>
 
-	<div class="entry" id="other">
-		<h3>Άλλα Στοιχεία</h3>
-		<table>
-			<tr>
-				<th><i>Email:</i>
-					{% ifequal mail '' %}
-						-----
-					{% else %}
-						<a href="mailto:{{ mail }}" >{{ mail }}</a>
-					{% endifequal %}
-				</th>
-				<th><a href="/dionysos/#declaration">Δήλωση Μαθημάτων</a></th>
-				<th><a href="/dionysos/#grades">Βαθμολογία</a></th>
-				{% if user.get_profile.eclass_username %}
-					<th><a href="/eclass">Μαθήματα E-class</a></th>
-				{% else %}
-					<th>Μαθήματα E-class</th>
-				{% endif %}
-			</tr>
-			<tr>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in email_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value=
-						{% ifequal mail 'unset' %}
-							Προσθήκη
-						{% else %}
-							Αλλαγή
-						{% endifequal %}
-						"" />
-					</form>
-				</td>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in declaration_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value="Ανανέωση" />
-					</form>
-				</td>
-				<td>
-					<form action="." method="POST" align="center">
-						{% for field in grades_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value="Ανανέωση" />
-					</form>
-				</td>
-				<td>
-					{% if user.get_profile.eclass_username %}
-					<form action="." method="POST" align="center">
-						{% for field in eclass2_form %}
-							{{ field }}
-						{% endfor %}
-						<input class="button" type="submit" value="Ανανέωση" />
-					</form>
-					{% endif %}
-				</td>
-			</tr>
-		</table>
-	</div>
-	
-	<div class="entry" id="theacher">
-		<h3>Ανακοινώσεις Καθηγητών</h3>
-		<div>
-			<form action="." method="POST" id="teacherann">
-				<select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
-					{% for i in teacher_announcements_all %}
-						{% for j in i %}
-							{% if forloop.counter0 = 0 %}
-								<option value="{{j|safe}}">
-							{% else %}
-								{{j|safe}}</option>
-							{% endif %}
-						{% endfor %}
-					{% endfor %}
-				</select>
-				<select multiple="multiple" name="teacherann_selected" id="teacherann_selected">
-					{% for i in teacher_announcements_selected %}
-						{% for j in i %}
-							{% if forloop.counter0 = 0 %}
-								<option value="{{j|safe}}">
-							{% else %}
-								{{j|safe}}</option>
-							{% endif %}
-						{% endfor %}
-					{% endfor %}
-				</select>
-				<div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
-				<div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
-				<br /><br /><br />
-				<input class="button" type="submit" value="Ανανέωση" />
-			</form>
-			<form action="." method="POST">
-				<input class="button" type="submit" value="Διαγραφή Όλων" />
-			</form>
-		</div>
-	</div>
+    <div class="entry" id="other">
+        <h3>Άλλα Στοιχεία</h3>
+        <table>
+            <tr>
+                <th><i>Email:</i>
+                    {% ifequal mail '' %}
+                        -----
+                    {% else %}
+                        <a href="mailto:{{ mail }}" >{{ mail }}</a>
+                    {% endifequal %}
+                </th>
+                <th><a href="/dionysos/#declaration">Δήλωση Μαθημάτων</a></th>
+                <th><a href="/dionysos/#grades">Βαθμολογία</a></th>
+                {% if user.get_profile.eclass_username %}
+                    <th><a href="/eclass">Μαθήματα E-class</a></th>
+                {% else %}
+                    <th>Μαθήματα E-class</th>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in email_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value=
+                        {% ifequal mail 'unset' %}
+                            Προσθήκη
+                        {% else %}
+                            Αλλαγή
+                        {% endifequal %}
+                        "" />
+                    </form>
+                </td>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in declaration_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value="Ανανέωση" />
+                    </form>
+                </td>
+                <td>
+                    <form action="." method="POST" align="center">
+                        {% for field in grades_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value="Ανανέωση" />
+                    </form>
+                </td>
+                <td>
+                    {% if user.get_profile.eclass_username %}
+                    <form action="." method="POST" align="center">
+                        {% for field in eclass2_form %}
+                            {{ field }}
+                        {% endfor %}
+                        <input class="button" type="submit" value="Ανανέωση" />
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="entry" id="theacher">
+        <h3>Ανακοινώσεις Καθηγητών</h3>
+        <div>
+            <form action="." method="POST" id="teacherann">
+                <select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
+                    {% for i in teacher_announcements_all %}
+                        {% for j in i %}
+                            {% if forloop.counter0 = 0 %}
+                                <option value="{{j|safe}}">
+                            {% else %}
+                                {{j|safe}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <select multiple="multiple" name="teacherann_selected" id="teacherann_selected">
+                    {% for i in teacher_announcements_selected %}
+                        {% for j in i %}
+                            {% if forloop.counter0 = 0 %}
+                                <option value="{{j|safe}}">
+                            {% else %}
+                                {{j|safe}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
+                <div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
+                <br /><br /><br />
+                <input class="button" type="submit" value="Ανανέωση" />
+            </form>
+            <form action="." method="POST">
+                <input class="button" type="submit" value="Διαγραφή Όλων" />
+            </form>
+        </div>
+    </div>
 
-	<div class="entry" id="otherann">
-		<h3>Άλλες Ανακοινώσεις</h3>
-		<div>
-			<form action="." method="POST" id="otherann">
-			<select multiple="multiple" name="other_announcements" id="id_other_announcements">
-				{% for i in other_announcements_all %}
-					{% for j in i %}
-						{% if forloop.counter0 = 0 %}
-							<option value="{{j|safe}}">
-						{% else %}
-							{{j|safe}}</option>
-						{% endif %}
-					{% endfor %}
-				{% endfor %}
-			</select>
-				<select multiple="multiple" name="otherann_selected" id="otherann_selected">
-					{% for i in other_announcements_selected %}
-						{% for j in i %}
-							{% if forloop.counter0 = 0 %}
-								<option value="{{j|safe}}">
-							{% else %}
-								{{j|safe}}</option>
-							{% endif %}
-						{% endfor %}
-					{% endfor %}
-				</select>
-				<div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
-				<div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
-				<br /><br /><br />
-				<input class="button" type="submit" value="Ανανέωση" name="update" />
-			</form>
-			<form action="." method="POST">
-				<input class="button" type="submit" value="Διαγραφή Όλων" name="delete2" />
-			</form>
-		</div>
-	</div>
+    <div class="entry" id="otherann">
+        <h3>Άλλες Ανακοινώσεις</h3>
+        <div>
+            <form action="." method="POST" id="otherann">
+            <select multiple="multiple" name="other_announcements" id="id_other_announcements">
+                {% for i in other_announcements_all %}
+                    {% for j in i %}
+                        {% if forloop.counter0 = 0 %}
+                            <option value="{{j|safe}}">
+                        {% else %}
+                            {{j|safe}}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+                <select multiple="multiple" name="otherann_selected" id="otherann_selected">
+                    {% for i in other_announcements_selected %}
+                        {% for j in i %}
+                            {% if forloop.counter0 = 0 %}
+                                <option value="{{j|safe}}">
+                            {% else %}
+                                {{j|safe}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
+                <div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
+                <br /><br /><br />
+                <input class="button" type="submit" value="Ανανέωση" name="update" />
+            </form>
+            <form action="." method="POST">
+                <input class="button" type="submit" value="Διαγραφή Όλων" name="delete2" />
+            </form>
+        </div>
+    </div>
 {% endblock %}

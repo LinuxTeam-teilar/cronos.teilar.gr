@@ -4,32 +4,32 @@
 Βιβλιοθήκη | 
 {% endblock %}
 {% block content %}
-	<div class="entry">
-		<h2>Αναζήτηση</h2>
-		<form action="/library/" method="get">
-			{% for field in form %}
-			{{ field.label.tag }}{{ field }}
-			{% endfor %}
-			<input type="submit" value="Αναζήτηση" />
-		</form>
-	</div>
-	{% if msg %}
-	<div id="notifications">
-		<p>{{msg}}</p>
-	</div>
-	{% endif %}
-	{% if results %}
-		<div class="entry">
-			<h2>Αποτελέσματα</h2>
-			<ul>
-			{% for i in results %}
-				<li>
-				{% for j in i %}
-					{% cycle '<b>' '</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;<i>Συγγραφέας:</i> ' '</i><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Εκδοτικός Οίκος:</i> ' ', ' %}{{j|safe}}
-				{% endfor %}
-				</li>
-			{% endfor %}
-			</ul>
-		</div>
-	{% endif %}
+    <div class="entry">
+        <h2>Αναζήτηση</h2>
+        <form action="/library/" method="get">
+            {% for field in form %}
+            {{ field.label.tag }}{{ field }}
+            {% endfor %}
+            <input type="submit" value="Αναζήτηση" />
+        </form>
+    </div>
+    {% if msg %}
+    <div id="notifications">
+        <p>{{msg}}</p>
+    </div>
+    {% endif %}
+    {% if results %}
+        <div class="entry">
+            <h2>Αποτελέσματα</h2>
+            <ul>
+            {% for i in results %}
+                <li>
+                {% for j in i %}
+                    {% cycle '<b>' '</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;<i>Συγγραφέας:</i> ' '</i><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Εκδοτικός Οίκος:</i> ' ', ' %}{{j|safe}}
+                {% endfor %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
