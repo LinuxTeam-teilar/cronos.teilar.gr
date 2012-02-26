@@ -1,39 +1,39 @@
 {% extends "intro.html" %}
 
 {% block title %}
-	Είσοδος | 
+    Είσοδος | 
 {% endblock %}
 
 {% block content %}
-	<div id="login">
-		<div id="info">
-			<h3>Εγγραφή</h3>
-			<p>Πατήστε στο κουμπί "Εγγραφή" και εισάγετε τα στοιχεία που θα σας ζητηθούν.</p>
-			<h3>Είσοδος</h3>
-			<p>Εισάγετε τα στοιχεία που είχατε επιλέξει κατά την εγγραφή.</p>
-			<h3>Αναφορά Σφάλματος</h3>
-			<p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a href="/about/#contact">επικοινωνήστε μαζί μας.</a><br /><a href="/about/">Σχετικά με το Cronos</a>.
-		</div>
-		<div id="login-form">
-			<form action="." method="POST">
-				{% for field in form %}
-					{% ifequal forloop.counter0 2 %}
-						<br />
-						{{ field}}
-						<label style="display: inline; margin: 0 0 0 0" for="remember">Nα με θυμάσαι</label>
-						<br />
-					{% else %}
-						{{ field.label_tag }}{{ field }}
-					{% endifequal %}
-				{% endfor %}
-				<input class="button" type="submit" value="Είσοδος" name="submit" />
-				<input class="button" type="submit" value="Εγγραφή" name="signup" />
-				<br />
-				<a href="/recover">Ξεχάσατε τον κωδικό σας;</a>
-				{% if msg %}
-					<p class="messages">{{ msg }}</p>
-				{% endif %}
-			</form>
-		</div>
-	</div>
+    <div id="login">
+        <div id="info">
+            <h3>Εγγραφή</h3>
+            <p>Πατήστε στο κουμπί "Εγγραφή" και εισάγετε τα στοιχεία που θα σας ζητηθούν.</p>
+            <h3>Είσοδος</h3>
+            <p>Εισάγετε τα στοιχεία που είχατε επιλέξει κατά την εγγραφή.</p>
+            <h3>Αναφορά Σφάλματος</h3>
+            <p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a href="/about/#contact">επικοινωνήστε μαζί μας.</a><br /><a href="/about/">Σχετικά με το Cronos</a>.
+        </div>
+        <div id="login-form">
+            <form action="." method="POST">
+                {% for field in form %}
+                    {% ifequal forloop.counter0 2 %}
+                        <br />
+                        {{ field}}
+                        <label style="display: inline; margin: 0 0 0 0" for="remember">Nα με θυμάσαι</label>
+                        <br />
+                    {% else %}
+                        {{ field.label_tag }}{{ field }}
+                    {% endifequal %}
+                {% endfor %}
+                <input class="button" type="submit" value="Είσοδος" name="submit" />
+                <input class="button" type="submit" value="Εγγραφή" name="signup" />
+                <br />
+                <a href="/recover">Ξεχάσατε τον κωδικό σας;</a>
+                {% if msg %}
+                    <p class="messages">{{ msg }}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 {% endblock %}

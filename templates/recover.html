@@ -1,28 +1,28 @@
 {% extends "intro.html" %}
 
 {% block title %}
-	Επαναφορά Κωδικού | 
+    Επαναφορά Κωδικού | 
 {% endblock %}
 
 {% block content %}
-	<div id="login">
-		<div id="info">
-			<h3>Επαναφορά Κωδικού</h3>
-			<p>Συμπληρώστε το όνομα χρήστη του Cronos που είχατε δηλώσει κατά την εγγραφή. Ο κωδικός σας θα αλλάξει και θα σας αποσταλεί email με τον καινούργιο κωδικό. Σε περίπτωση που δεν είχατε δηλώσει email στο προφίλ σας ή δεν θυμάστε το όνομα χρήστη, παρακαλούμε επικοινωνήστε με τους διαχειριστές του Cronos στο email <a href="mailto:cronos@teilar.gr">cronos@teilar.gr</a></p>
-		</div>
-		<div id="login-form">
-			<form action="." method="POST">
-				{% for field in form %}
-					<br />
-					{{ field.label_tag }}{{ field }}
-					<br />
-				{% endfor %}
-				<input class="button" type="submit" value="Αποστολή" name="submit" />
-				{{html_captcha|safe}}
-				{% if msg %}
-					<p class="messages">{{ msg }}</p>
-				{% endif %}
-			</form>
-		</div>
-	</div>
+    <div id="login">
+        <div id="info">
+            <h3>Επαναφορά Κωδικού</h3>
+            <p>Συμπληρώστε το όνομα χρήστη του Cronos που είχατε δηλώσει κατά την εγγραφή. Ο κωδικός σας θα αλλάξει και θα σας αποσταλεί email με τον καινούργιο κωδικό. Σε περίπτωση που δεν είχατε δηλώσει email στο προφίλ σας ή δεν θυμάστε το όνομα χρήστη, παρακαλούμε επικοινωνήστε με τους διαχειριστές του Cronos στο email <a href="mailto:cronos@teilar.gr">cronos@teilar.gr</a></p>
+        </div>
+        <div id="login-form">
+            <form action="." method="POST">
+                {% for field in form %}
+                    <br />
+                    {{ field.label_tag }}{{ field }}
+                    <br />
+                {% endfor %}
+                <input class="button" type="submit" value="Αποστολή" name="submit" />
+                {{html_captcha|safe}}
+                {% if msg %}
+                    <p class="messages">{{ msg }}</p>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 {% endblock %}

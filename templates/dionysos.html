@@ -1,82 +1,82 @@
 {% extends "base.html" %}
 
 {% block title %}
-	Στοιχεία Γραμματείας | 
+    Στοιχεία Γραμματείας | 
 {% endblock %}
 
 {% block content %}
-	<div id="notifications">
-		<p>Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
-	</div>
+    <div id="notifications">
+        <p>Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
+    </div>
 
-	<div class="entry" id="declaration">
-	<h3>Δήλωση μαθημάτων</h3>
-	{% if not user.get_profile.grades %}
-		Παρακαλούμε πατήστε ανανέωση στο πεδίο της Δήλωσης στις <a href="/settings/#other">ρυθμίσεις</a>
-	{% else %}
-		<table>
-			<th style="width: 120px;">Κωδικός</th>
-			<th style="width: 280px;">Τίτλος</th>
-			<th style="width: 80px;">Εξάμηνο</th>
-			<th style="width: 80px;">Τύπος</th>
-			<th style="width: 80px;">ΔΜ</th>
-			<th style="width: 80px;">Ώρες</th>
-			{% for i in declaration_lessons %}
-				<tr>
-				{% for j in i %}
-					<td
-					{% ifequal forloop.counter0 2 %} style="text-align: center;" {% endifequal %}
-					{% ifequal forloop.counter0 3 %} style="text-align: center;" {% endifequal %}
-					{% ifequal forloop.counter0 4 %} style="text-align: center;" {% endifequal %}
-					{% ifequal forloop.counter0 5 %} style="text-align: center;" {% endifequal %}
-					>{{j|safe}}</td>
-				{% endfor %}
-				</tr>
-			{% endfor %}
-			<tr style="height: 30px;"><td></td></tr>
-			{% for i in summary %}
-				<tr><td colspan="5" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}</i></td><td align="right">{{i}}</td></tr>
-			{% endfor %}
-		</table>
-	{% endif %}
-	</div>
+    <div class="entry" id="declaration">
+    <h3>Δήλωση μαθημάτων</h3>
+    {% if not user.get_profile.grades %}
+        Παρακαλούμε πατήστε ανανέωση στο πεδίο της Δήλωσης στις <a href="/settings/#other">ρυθμίσεις</a>
+    {% else %}
+        <table>
+            <th style="width: 120px;">Κωδικός</th>
+            <th style="width: 280px;">Τίτλος</th>
+            <th style="width: 80px;">Εξάμηνο</th>
+            <th style="width: 80px;">Τύπος</th>
+            <th style="width: 80px;">ΔΜ</th>
+            <th style="width: 80px;">Ώρες</th>
+            {% for i in declaration_lessons %}
+                <tr>
+                {% for j in i %}
+                    <td
+                    {% ifequal forloop.counter0 2 %} style="text-align: center;" {% endifequal %}
+                    {% ifequal forloop.counter0 3 %} style="text-align: center;" {% endifequal %}
+                    {% ifequal forloop.counter0 4 %} style="text-align: center;" {% endifequal %}
+                    {% ifequal forloop.counter0 5 %} style="text-align: center;" {% endifequal %}
+                    >{{j|safe}}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            <tr style="height: 30px;"><td></td></tr>
+            {% for i in summary %}
+                <tr><td colspan="5" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}</i></td><td align="right">{{i}}</td></tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    </div>
 
-	<div class="entry" id="grades">
-		<h3>Βαθμολογία</h3>
-		{% if not user.get_profile.grades %}
-			Παρακαλούμε πατήστε ανανέωση στο πεδίο της Βαθμολογίας στις <a href="/settings/#other">ρυθμίσεις</a>
-		{% else %}
-			<table>
-				{% for i in grades %}
-					<tr>
-						{% for j in i %}
-							{% ifequal i|length 1 %}
-								<th style="font-size: 18px; text-align: left; padding-top: 30px; padding-bottom: 7px;">{{j|safe}}</th>
-								</tr><tr>
-								<th style="width: 400px; text-align:center;">Μάθημα</th>
-								<th style="width: 80px; text-align:center;">Ώρες</th>
-								<th style="width: 80px; text-align:center;">Βαθμός</th>
-								<th style="width: 140px; text-align:center;">Εξεταστική</th>
-							{% endifequal %}
-							{% ifequal i|length 4 %}
-								<td style="text-align:
-									{% ifequal forloop.counter0 0 %}
-									left
-									{% else %}
-									center
-									{% endifequal %}
-									;">{{j|safe}}</td>
-							{% endifequal %}
-							{% ifequal i|length 3 %}
-								</tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Σύνολα περασμένων μαθημάτων εξαμήνου: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{j|safe}}</td>
-							{% endifequal %}
-						{% endfor %}
-					</tr>
-				{% endfor %}
-				{% for item in total %}
-					<tr><td colspan="3" align="right" 	{% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Γενικά σύνολα περασμένων μαθημάτων: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{item|safe}}</td></tr>
-				{% endfor %}
-			</table>
-		{% endif %}
-	</div>
+    <div class="entry" id="grades">
+        <h3>Βαθμολογία</h3>
+        {% if not user.get_profile.grades %}
+            Παρακαλούμε πατήστε ανανέωση στο πεδίο της Βαθμολογίας στις <a href="/settings/#other">ρυθμίσεις</a>
+        {% else %}
+            <table>
+                {% for i in grades %}
+                    <tr>
+                        {% for j in i %}
+                            {% ifequal i|length 1 %}
+                                <th style="font-size: 18px; text-align: left; padding-top: 30px; padding-bottom: 7px;">{{j|safe}}</th>
+                                </tr><tr>
+                                <th style="width: 400px; text-align:center;">Μάθημα</th>
+                                <th style="width: 80px; text-align:center;">Ώρες</th>
+                                <th style="width: 80px; text-align:center;">Βαθμός</th>
+                                <th style="width: 140px; text-align:center;">Εξεταστική</th>
+                            {% endifequal %}
+                            {% ifequal i|length 4 %}
+                                <td style="text-align:
+                                    {% ifequal forloop.counter0 0 %}
+                                    left
+                                    {% else %}
+                                    center
+                                    {% endifequal %}
+                                    ;">{{j|safe}}</td>
+                            {% endifequal %}
+                            {% ifequal i|length 3 %}
+                                </tr><td colspan="3" align="right"     {% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Σύνολα περασμένων μαθημάτων εξαμήνου: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{j|safe}}</td>
+                            {% endifequal %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                {% for item in total %}
+                    <tr><td colspan="3" align="right"     {% ifequal forloop.counter0 0 %} style="padding-top: 20px;" {% endifequal %} ><i>{% cycle 'Γενικά σύνολα περασμένων μαθημάτων: ' 'ΜΟ: ' 'Ώρες: ' %}</i></td><td align="right">{{item|safe}}</td></tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
 {% endblock %}
