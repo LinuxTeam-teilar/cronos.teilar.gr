@@ -26,7 +26,10 @@
 							{% if user.get_profile.webmail_username %}
 							<li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
 							{% endif %}
-							<li><a href="/dionysos/">&raquo;&emsp;Στοιχεία Γραμματείας</a></li>
+                            <li><a href="/dionysos/">&raquo;&emsp;Στοιχεία Γραμματείας</a></li>
+                            {% if user.get_profile.school == cid6 %}
+                            <li><a href="/psigeia/">&raquo;&emsp;Ψυκτικά φορτία</a></li>
+                            {% endif %}
 						{% endif %}
 						<li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
 						<li><a href="/teachers/">&raquo;&emsp;Λίστα Καθηγητών</a></li>
