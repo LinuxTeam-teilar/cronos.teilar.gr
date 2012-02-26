@@ -18,37 +18,37 @@ from cronos.webmail.views import *
 admin.autodiscover()
 
 feeds = {
-	'announcements': AnnouncementFeed,
-	}
+    'announcements': AnnouncementFeed,
+    }
 
 handler500 = 'cronos.login.views.server_error'
 
 urlpatterns = patterns('',
-	(r'^$', mylogin),
-	(r'^eclass/', eclass),
-	(r'^dionysos/', dionysos),
-	(r'^webmail/', webmail),
-	(r'^logout/', mylogout),
-	(r'^user/', user),
-	(r'^settings/', user_settings),
-	(r'^teachers/', teachers),
-	(r'^about/', about),
-	(r'^recover/', recover),
+    (r'^$', mylogin),
+    (r'^eclass/', eclass),
+    (r'^dionysos/', dionysos),
+    (r'^webmail/', webmail),
+    (r'^logout/', mylogout),
+    (r'^user/', user),
+    (r'^settings/', user_settings),
+    (r'^teachers/', teachers),
+    (r'^about/', about),
+    (r'^recover/', recover),
 
-	url(r'^library/', include('cronos.library.urls')),
+    url(r'^library/', include('cronos.library.urls')),
 
-	(r'^signup/', signup),
+    (r'^signup/', signup),
 
-	(r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
 
-	(r'^announcements/', announcements),
-	
-	(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
-	
-	# Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-	# to INSTALLED_APPS to enable admin documentation:
-	# (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    (r'^announcements/', announcements),
 
-	# Uncomment the next line to enable the admin:
-	(r'^admin/', include(admin.site.urls)),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
+
+    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
+    # to INSTALLED_APPS to enable admin documentation:
+    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+
+    # Uncomment the next line to enable the admin:
+    (r'^admin/', include(admin.site.urls)),
 )
