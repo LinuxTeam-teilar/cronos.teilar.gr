@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.login.forms import *
+from cronos.libraries.log import CronosError
 from django import http
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponseRedirect
@@ -8,23 +9,24 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 
 def mylogin(request):
-    msg = ''
-    form = ''
+    msg = None
+    form = None
+    user = None
     if request.method == "POST":
         if request.POST.get('signup'):
             return HttpResponseRedirect('/signup')
         form = LoginForm(request.POST)
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(username = username, password = password)
-        if user is not None:
+        try:
+            user = authenticate(username = username, password = password)
             if user.is_active:
                 login(request, user)
                 if not request.POST.get('remember'):
                     request.session.set_expiry(0)
                 return HttpResponseRedirect('/user')
-        else:
-            msg = 'Λάθος Κωδικός'
+        except CronosError as error:
+            msg = error.value
     else:
         if request.user.is_authenticated():
             return HttpResponseRedirect('/user')
