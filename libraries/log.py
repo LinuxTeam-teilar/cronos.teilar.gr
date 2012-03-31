@@ -3,11 +3,11 @@ import logging
 from django.conf import settings
 from django.core.mail import send_mail
 
-def cronosDebug(msg, logfile):
+def cronos_debug(msg, logfile):
     logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s: %(message)s', filename = settings.LOGDIR + logfile, filemode = 'a+')
     logging.debug(msg)
 
-def mailCronosAdmin(title, message):
+def mail_cronos_admin(title, message):
     try:
         send_mail(title, message, 'notification@cronos.teilar.gr', ['cronos@teilar.gr'])
     except:
@@ -16,5 +16,5 @@ def mailCronosAdmin(title, message):
 class CronosError(Exception):
     def __init__(self, value):
         self.value = value
-    def __str__(self):
+    def __unicode__(self):
         return repr(self.value)
