@@ -61,11 +61,19 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'cronos.announcements',
-    'cronos.user',
+    'cronos.accounts',
 )
 
 # Needed for the decorator
-LOGIN_URL = '/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout/'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Needed for the custom user profile
-AUTH_PROFILE_MODULE = 'user.UserProfile'
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+AUTHENTICATION_BACKENDS = (
+    'cronos.accounts.backends.CronosAuthentication',
+    'django.contrib.auth.backends.ModelBackend',
+)

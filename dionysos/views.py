@@ -14,13 +14,14 @@ def dionysos(request):
     declaration_lessons = []
     if request.user.get_profile().declaration:
         declaration_full = request.user.get_profile().declaration.split(',')
-        i = 3
-        summary = declaration_full[:i]
-        while i <= len(declaration_full) - len(summary):
+        i = 0
+        print len(declaration_full)
+        while i <= len(declaration_full):
             declaration_lessons.append(declaration_full[i:i+6])
             i += 6
 
     grades = []
+    '''
     if request.user.get_profile().grades:
         grades_full = request.user.get_profile().grades.split(',')
         length = len(grades_full)
@@ -55,7 +56,8 @@ def dionysos(request):
             #str(grades_full[i+2]),
             grades_full[i+3],
             #str(grades_full[i+4]),
-        ]
+        ]'''
+    print declaration_lessons
     return  render_to_response('dionysos.html', {
             'summary': summary,
             'declaration_lessons': declaration_lessons,

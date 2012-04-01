@@ -35,7 +35,7 @@ class Announcements(models.Model):
 
     def __unicode__(self):
         return self.title
-    
+
     def body(self):    
         if (len(self.attachment_url) > 1):
             return u'%s<br /><br /><a href="%s">%s</a><br /><br /><a href="%s">Περισσότερα</a>' % (self.description, self.attachment_url, self.attachment_text, self.url)

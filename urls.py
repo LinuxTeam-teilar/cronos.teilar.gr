@@ -1,56 +1,40 @@
-# -*- coding: utf-8 -*-
-
-from django.conf.urls.defaults import *
+from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
-from cronos.announcements.feeds import *
-from cronos.announcements.views import *
-from cronos.dionysos.views import *
-from cronos.eclass.views import *
-from cronos.login.views import *
-from cronos.recover.views import *
-from cronos.psigeia.views import *
-from cronos.signup.forms import *
-from cronos.signup.views import *
-from cronos.teachers.views import *
-from cronos.user.views import *
-from cronos.webmail.views import *
+from cronos.accounts.views import about, index, preferences
+from cronos.announcements.views import announcements
+from cronos.announcements.feeds import AnnouncementFeed
+from cronos.dionysos.views import dionysos
+from cronos.eclass.views import eclass
+from cronos.library.views import library
+from cronos.login.views import cronos_login
+from cronos.psigeia.views import psigeia
+from cronos.teachers.views import teachers
+from cronos.webmail.views import webmail
+
 
 admin.autodiscover()
 
 feeds = {
     'announcements': AnnouncementFeed,
-    }
+}
 
 handler500 = 'cronos.login.views.server_error'
 
 urlpatterns = patterns('',
-    (r'^$', mylogin),
-    (r'^eclass/', eclass),
-    (r'^dionysos/', dionysos),
-    (r'^webmail/', webmail),
-    (r'^logout/', mylogout),
-    (r'^user/', user),
-    (r'^psigeia/', psigeia),
-    (r'^settings/', user_settings),
-    (r'^teachers/', teachers),
+    (r'^$', index),
     (r'^about/', about),
-    (r'^recover/', recover),
-
-    url(r'^library/', include('cronos.library.urls')),
-
-    (r'^signup/', signup),
-
-    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
-
-    (r'^announcements/', announcements),
-
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
-
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
-    # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
+    (r'^announcements/', announcements),
+    (r'^dionysos/', dionysos),
+    (r'^eclass/', eclass),
+    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
+    (r'^library/', library),
+    (r'^login/', cronos_login),
+    (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}),
+    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT, 'show_indexes': True }),
+    (r'^preferences/', preferences),
+    (r'^psigeia/', psigeia),
+    (r'^teachers/', teachers),
+    (r'^webmail/', webmail),
 )

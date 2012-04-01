@@ -7,10 +7,8 @@
 {% block content %}
     <div id="login">
         <div id="info">
-            <h3>Εγγραφή</h3>
-            <p>Πατήστε στο κουμπί "Εγγραφή" και εισάγετε τα στοιχεία που θα σας ζητηθούν.</p>
             <h3>Είσοδος</h3>
-            <p>Εισάγετε τα στοιχεία που είχατε επιλέξει κατά την εγγραφή.</p>
+            <p>Εισάγετε το όνομα χρήστη και κωδικό πρόσβασης που έχετε στο <a href="dionysos.teilar.gr">dionysos.teilar.gr</a></p>
             <h3>Αναφορά Σφάλματος</h3>
             <p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a href="/about/#contact">επικοινωνήστε μαζί μας.</a><br /><a href="/about/">Σχετικά με το Cronos</a>.
         </div>
@@ -27,9 +25,7 @@
                     {% endifequal %}
                 {% endfor %}
                 <input class="button" type="submit" value="Είσοδος" name="submit" />
-                <input class="button" type="submit" value="Εγγραφή" name="signup" />
                 <br />
-                <a href="/recover">Ξεχάσατε τον κωδικό σας;</a>
                 {% if msg %}
                     <p class="messages">{{ msg }}</p>
                 {% endif %}

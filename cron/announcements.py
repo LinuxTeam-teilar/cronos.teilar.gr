@@ -6,7 +6,7 @@ import sys
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from cronos.announcements.models import *
-from cronos.libraries.log import cronosDebug
+from cronos.libraries.log import cronos_debug
 from django.conf import settings
 from django.db.utils import IntegrityError
 from BeautifulSoup import BeautifulSoup
@@ -83,22 +83,22 @@ def www_teilar_gr():
                 teilar_gr.save()
                 status = 'NEW: %s from: %s' % (title, str(getid('cid', cid)))
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
             except IntegrityError:
                 pass
             except MySQLdb.Warning, warning:
                 status = 'NEW: %s from: %s' % (title, str(getid('cid', cid)))
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
                 warningstatus = 'WARNING: %s\n' % str(warning)
                 print warningstatus
-                cronosDebug(warningstatus, logfile)
+                cronos_debug(warningstatus, logfile)
                 success = False
                 pass
             except Exception as error:
                 errorstatus = 'ERROR: %s  %s' % (title, str(error))
                 print errorstatus
-                cronosDebug(errorstatus, logfile)
+                cronos_debug(errorstatus, logfile)
                 success = False
                 pass
             i += 1
@@ -148,22 +148,22 @@ def professors():
                 teachers_teilar_gr.save()
                 status = 'NEW: %s from: %s' % (title, str(getid('pid', pid)))
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
             except IntegrityError:
                 pass
             except MySQLdb.Warning, warning:
                 status = 'NEW: %s from: %s' % (title, str(getid('pid', pid)))
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
                 warningstatus = 'WARNING: %s' % str(warning)
                 print warningstatus
-                cronosDebug(warningstatus, logfile)
+                cronos_debug(warningstatus, logfile)
                 success = False
                 pass
             except Exception as error:
                 errorstatus = 'ERROR: %s %s' % (title, str(error))
                 print errorstatus
-                cronosDebug(error, logfile)
+                cronos_debug(error, logfile)
                 success = False
                 pass
 
@@ -249,22 +249,22 @@ def eclass_teilar_gr():
                         eclass_teilar_gr.save()
                         status = 'NEW: %s from: %s' % (title, geteclassid(cid))
                         print status
-                        cronosDebug(status, logfile)
+                        cronos_debug(status, logfile)
                     except IntegrityError:
                         pass
                     except MySQLdb.Warning, warning:
                         status = 'NEW: %s from %s' % (title, geteclassid(cid))
                         print status
-                        cronosDebug(status, logfile)
+                        cronos_debug(status, logfile)
                         warningstatus = 'WARNING: %s' % str(warning)
                         print warningstatus
-                        cronosDebug(warningstatus, logfile)
+                        cronos_debug(warningstatus, logfile)
                         success = False
                         pass
                     except Exception as error:
                         errorstatus = 'ERROR: %s %s' % (title, str(error))
                         print errorstatus
-                        cronosDebug(error, logfile)
+                        cronos_debug(error, logfile)
                         success = False
                         pass
                     j += 1
@@ -305,22 +305,22 @@ def noc_teilar_gr():
                 noc_teilar_gr.save()
                 status = 'NEW: %s from: %s' % (title, name)
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
             except IntegrityError:
                 pass
             except MySQLdb.Warning, warning:
                 status = 'NEW: %s from %s' % (title, name)
                 print status
-                cronosDebug(status,logfile)
+                cronos_debug(status,logfile)
                 warningstatus = 'WARNING: %s' % str(warning)
                 print warningstatus
-                cronosDebug(warningstatus, logfile)
+                cronos_debug(warningstatus, logfile)
                 success = False
                 pass
             except Exception as error:
                 errorstatus = 'ERROR: %s %s' % (title, str(error))
                 print errorstatus
-                cronosDebug(errorstatus, logfile)
+                cronos_debug(errorstatus, logfile)
                 success = False
                 pass
 
@@ -361,22 +361,22 @@ def career_teilar_gr():
             career_teilar_gr.save()
             status = 'NEW: %s from: %s' % (title, name)
             print status
-            cronosDebug(status, logfile)
+            cronos_debug(status, logfile)
         except IntegrityError:
             pass
         except MySQLdb.Warning, warning:
             status = 'NEW: %s from %s' % (title, name)
             print status
-            cronosDebug(status,logfile)
+            cronos_debug(status,logfile)
             warningstatus = 'WARNING: %s' % warning
             print warningstatus
-            cronosDebug(warningstatus, logfile)
+            cronos_debug(warningstatus, logfile)
             success = False
             pass
         except Exception as error:
             errorstatus = 'ERROR: %s %s' % (title, error)
             print errorstatus
-            cronosDebug(errorstatus, logfile)
+            cronos_debug(errorstatus, logfile)
             success = False
             pass
 
@@ -416,22 +416,22 @@ def linuxteam_cs_teilar_gr():
             linuxteam_teilar_gr.save()
             status = 'NEW: %s from: %s' % (title, name)
             print status
-            cronosDebug(status, logfile)
+            cronos_debug(status, logfile)
         except IntegrityError:
             pass
         except MySQLdb.Warning, warning:
             status = 'NEW: %s from %s' % (title, name)
             print status
-            cronosDebug(status,logfile)
+            cronos_debug(status,logfile)
             warningstatus = 'WARNING: %s' % warning
             print warningstatus
-            cronosDebug(warningstatus, logfile)
+            cronos_debug(warningstatus, logfile)
             success = False
             pass
         except Exception as error:
             errorstatus = 'ERROR: %s %s' % (title, str(error))
             print errorstatus
-            cronosDebug(errorstatus, logfile)
+            cronos_debug(errorstatus, logfile)
             success = False
             pass
 
@@ -465,22 +465,22 @@ def dionysos_teilar_gr():
             dionysos_teilar_gr.save()
             status = 'NEW: %s from: %s' % (title, name)
             print status
-            cronosDebug(status, logfile)
+            cronos_debug(status, logfile)
         except IntegrityError:
             pass
         except MySQLdb.Warning, warning:
             status = 'NEW: %s from %s' % (title, name)
             print status
-            cronosDebug(status,logfile)
+            cronos_debug(status,logfile)
             warningstatus = 'WARNING: %s' % str(warning)
             print warningstatus
-            cronosDebug(warningstatus, logfile)
+            cronos_debug(warningstatus, logfile)
             success = False
             pass
         except Exception as error:
             errorstatus = 'ERROR: %s %s' % (title, str(error))
             print errorstatus
-            cronosDebug(errorstatus, logfile)
+            cronos_debug(errorstatus, logfile)
             success = False
             pass
 
@@ -519,22 +519,22 @@ def library_teilar_gr():
             library_teilar_gr.save()
             status = 'NEW: %s from: %s' % (title, name)
             print status
-            cronosDebug(status, logfile)
+            cronos_debug(status, logfile)
         except IntegrityError:
             pass
         except MySQLdb.Warning, warning:
             status = 'NEW: %s from %s' % (title, name)
             print status
-            cronosDebug(status,logfile)
+            cronos_debug(status,logfile)
             warningstatus = 'WARNING: %s' % str(warning)
             print warningstatus
-            cronosDebug(warningstatus, logfile)
+            cronos_debug(warningstatus, logfile)
             success = False
             pass
         except Exception as error:
             errorstatus = 'ERROR: %s %s' % (title, str(error))
             print errorstatus
-            cronosDebug(errorstatus, logfile)
+            cronos_debug(errorstatus, logfile)
             success = False
             pass
 
@@ -579,50 +579,50 @@ def pr_teilar_gr():
                 pr_teilar_gr.save()
                 status = 'NEW: %s from: %s' % (title, name)
                 print status
-                cronosDebug(status, logfile)
+                cronos_debug(status, logfile)
             except IntegrityError:
                 pass
             except MySQLdb.Warning, warning:
                 status = 'NEW: %s from %s' % (title, name)
                 print status
-                cronosDebug(status,logfile)
+                cronos_debug(status,logfile)
                 warningstatus = 'WARNING: %s' % str(warning)
                 print warningstatus
-                cronosDebug(warningstatus, logfile)
+                cronos_debug(warningstatus, logfile)
                 success = False
                 pass
             except Exception as error:
                 errorstatus = 'ERROR: %s %s' % (title, str(error))
                 print errorstatus
-                cronosDebug(errorstatus, logfile)
+                cronos_debug(errorstatus, logfile)
                 success = False
                 pass
 
 def main():
-    cronosDebug('started', logfile)
+    cronos_debug('started', logfile)
     www_teilar_gr()
-    cronosDebug('teilar finished', logfile)
+    cronos_debug('teilar finished', logfile)
     professors()
-    cronosDebug('professors finished', logfile)
+    cronos_debug('professors finished', logfile)
     eclass_teilar_gr()
-    cronosDebug('eclass finished', logfile)
+    cronos_debug('eclass finished', logfile)
     noc_teilar_gr()
-    cronosDebug('noc finished', logfile)
+    cronos_debug('noc finished', logfile)
     career_teilar_gr()
-    cronosDebug('career finished', logfile)
+    cronos_debug('career finished', logfile)
     linuxteam_cs_teilar_gr()
-    cronosDebug('linuxteam finished', logfile)
+    cronos_debug('linuxteam finished', logfile)
     dionysos_teilar_gr()
-    cronosDebug('dionysos finished', logfile)
+    cronos_debug('dionysos finished', logfile)
     library_teilar_gr()
-    cronosDebug('library finished', logfile)
+    cronos_debug('library finished', logfile)
     pr_teilar_gr()
-    cronosDebug('pr finished', logfile)
+    cronos_debug('pr finished', logfile)
 
     if success:
-        cronosDebug('Announcements cron job finished successfully', logfile)
+        cronos_debug('Announcements cron job finished successfully', logfile)
     else:
-        cronosDebug('Announcements cron job finished but with Errors', logfile)
+        cronos_debug('Announcements cron job finished but with Errors', logfile)
     print "DONE"
 
 if __name__ == '__main__':

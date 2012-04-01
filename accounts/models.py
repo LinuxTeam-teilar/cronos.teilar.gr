@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from cronos.announcements.models import Id
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -21,10 +18,9 @@ class UserProfile(models.Model):
     other_announcements = models.TextField(null = True, blank = True)
     declaration = models.TextField(null = True, blank = True)
     grades = models.TextField(null = True, blank = True)
-#    choice_field = models.ManyToManyField(Id)
 
     def __str__(self):
         return self.user.username
-    
+
     class Admin:
         pass
