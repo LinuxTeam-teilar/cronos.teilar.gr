@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from BeautifulSoup import BeautifulSoup
 import pycurl
 import StringIO
@@ -36,7 +37,7 @@ def dionysos_login(link, username, password):
             soup.find('td', 'whiteheader').b.contents[0] == u'Είσοδος Φοιτητή'
             os.close(fd)
             os.remove(cookie_path)
-            return 1
+            return
         except:
             return (b.getvalue()).decode('windows-1253')
     else:
