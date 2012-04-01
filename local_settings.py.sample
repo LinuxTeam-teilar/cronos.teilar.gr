@@ -28,9 +28,9 @@ MEDIA_ROOT = PROJECT_ROOT + 'media/'
 MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
-# Change LOGFILE to reflect the file that stores log messages
+# Change LOGDIR to reflect the file that stores log messages
 # Make sure the path is writable from the user running the app
-LOGDIR='/var/log/cronos.log'
+LOGDIR='/var/log/cronos'
 
 # Blowfish key, used by encryptPassword and decryptPassword functions in cronos.teilar.login module
 BLOWFISH_KEY = 'secret'
@@ -43,7 +43,3 @@ ECLASS_PASSWORD = 'secret'
 
 # used to send mails by sendmail
 EMAIL_HOST_USER = 'root'
-
-# recaptcha keys
-RECAPTCHA_PUB_KEY = 'secret'
-RECAPTCHA_PRIVATE_KEY = 'secret'
