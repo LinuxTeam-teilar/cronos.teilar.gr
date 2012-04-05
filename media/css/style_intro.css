@@ -89,8 +89,8 @@ a:hover {
 #login-form form>a { margin: 20px 0 0 30px; }
 
 #login-form p.messages {
-	width: 100px;
-	margin: 20px 0 0 30px; padding: 8px 10px 9px 10px;
+	width: 200px;
+	margin: 10px 0 0 30px; padding: 8px 10px 9px 10px;
 	background: #ffd0d0; color: #e92525;
 	font: 13px Verdana,Arial,sans-serif;
 	border: solid 1px #e92525;
