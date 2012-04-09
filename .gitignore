@@ -1,4 +1,3 @@
 *.pyc
 local_settings.*
 proj_root.*
-static/*
