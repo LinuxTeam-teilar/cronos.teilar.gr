@@ -8,7 +8,7 @@ import os
 import tempfile
 import urlparse
 
-def dionysos_login(link, username, password):
+def dionysos_login(username, password, link = None):
     conn = pycurl.Curl()
     b = StringIO.StringIO()
 
@@ -31,7 +31,7 @@ def dionysos_login(link, username, password):
     conn.setopt(pycurl.POSTFIELDS, login_form_data)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     conn.perform()
-    if link == 0:
+    if not link:
         soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
         try:
             soup.find('td', 'whiteheader').b.contents[0] == u'Είσοδος Φοιτητή'
@@ -39,7 +39,7 @@ def dionysos_login(link, username, password):
             os.remove(cookie_path)
             return
         except:
-            return (b.getvalue()).decode('windows-1253')
+            pass
     else:
         b = StringIO.StringIO()
         conn.setopt(pycurl.URL, link)
@@ -48,9 +48,9 @@ def dionysos_login(link, username, password):
         conn.setopt(pycurl.COOKIE, cookie_path)
         conn.setopt(pycurl.WRITEFUNCTION, b.write)
         conn.perform()
-        os.close(fd)
-        os.remove(cookie_path)
-        return (b.getvalue()).decode('windows-1253')
+    os.close(fd)
+    os.remove(cookie_path)
+    return (b.getvalue()).decode('windows-1253')
 
 def eclass_login(username, password):
     b = StringIO.StringIO()

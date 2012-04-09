@@ -13,7 +13,7 @@
             <p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a href="/about/#contact">επικοινωνήστε μαζί μας.</a><br /><a href="/about/">Σχετικά με το Cronos</a>.
         </div>
         <div id="login-form">
-            <form action="." method="POST">
+            <form action="." method="POST">{% csrf_token %}
                 {% for field in form %}
                     {% ifequal forloop.counter0 2 %}
                         <br />

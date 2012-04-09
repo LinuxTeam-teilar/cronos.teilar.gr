@@ -1,8 +1,8 @@
-body { background: #efefef url("../images/login_bg.png") repeat-x; }
+body { background: #efefef url("login_bg.png") repeat-x; }
 
 #container { width: 750px; margin: 0 auto; }
 
-h1 { width: 450px; height: 230px; margin: 0 auto; background: url("../images/logo_login.png") 0px -50px no-repeat; text-indent: -9999px; }
+h1 { width: 450px; height: 230px; margin: 0 auto; background: url("logo_login.png") 0px -50px no-repeat; text-indent: -9999px; }
 
 h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
 
@@ -59,7 +59,7 @@ a:hover {
 #login-form form {
 	height: 250px;
 	margin: 10px 0 0 30px;
-	background: #efefef url("../images/login_bg.png") -400px 0px repeat-x;
+	background: #efefef url("login_bg.png") -400px 0px repeat-x;
 	border: solid 1px #c1c1c1;
 	font: 14px verdana;
 	
@@ -101,7 +101,7 @@ a:hover {
 #signup-form form {
 	height: 550px;
 	margin: 10px 0 0 30px;
-	background: #efefef url("../images/login_bg.png") -400px 0px repeat-x;
+	background: #efefef url("login_bg.png") -400px 0px repeat-x;
 	border: solid 1px #c1c1c1;
 	font: 14px verdana;
 	

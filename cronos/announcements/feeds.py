@@ -3,9 +3,9 @@
 from cronos.announcements.models import Announcements
 from cronos.accounts.models import *
 from django.contrib.auth.models import User
-from django.contrib.syndication.feeds import *
+from django.contrib.syndication.views import Feed
 
-class AnnouncementFeed(Feed):
+class AnnouncementsFeed(Feed):
     title = 'Ανακοινώσεις ΤΕΙ Λάρισας'
     link = 'http://cronos.teilar.gr'
     description = 'Ανακοινώσεις διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας. Παρέχονται από το http://cronos.teilar.gr'

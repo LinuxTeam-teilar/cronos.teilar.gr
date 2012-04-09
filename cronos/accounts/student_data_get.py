@@ -62,6 +62,9 @@ def get_dionysos_semester(output = None, logfile = 'update.log'):
 def get_dionysos_introduction_year(output = None, logfile = 'update.log'):
     '''
     Retrieves student's introduction year from dionysos.teilar.gr
+    '''
+
+    '''
     Introduction is in the following form:
     2004 - 2005 X or 2004 - 2005 E
     first_year - second_year season
@@ -87,6 +90,7 @@ def get_dionysos_declaration(username = None, password = None, logfile = 'update
     '''
     Retrieves student's newest declaration from dionysos.teilar.gr
     '''
+
     '''
     Declaration includes the following information:
     Lesson code eg 121E
@@ -106,7 +110,7 @@ def get_dionysos_declaration(username = None, password = None, logfile = 'update
         The link is different, so we need a new HTML output from dionysos
         '''
         link = 'https://dionysos.teilar.gr/unistudent/stud_vClasses.asp?studPg=1&mnuid=diloseis;showDil&'
-        output = dionysos_login(link, username, password)
+        output = dionysos_login(username, password, link)
         soup = BeautifulSoup(output).findAll('table')[13].findAll('table')[0]
         '''
         Temp variables are named based on the HTML tags they contain. Those
@@ -147,7 +151,7 @@ def get_dionysos_grades(username = None, password = None, logfile = 'update.log'
         The link is different, so we need a new HTML output from dionysos
         '''
         link = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
-        output = dionysos_login(link, username, password)
+        output = dionysos_login(username, password, link)
         soup = BeautifulSoup(output)
         grades = u''
         i = 0
@@ -157,12 +161,9 @@ def get_dionysos_grades(username = None, password = None, logfile = 'update.log'
         same data in each time the for loop is executed.
         '''
         temp_td = soup.findAll('table')[13].findAll('td')
-        print temp_td
         length_temp_td = len(temp_td)
         semesters = soup.findAll('table')[13].findAll('td', 'groupHeader')
-        print semesters
         lessons = soup.findAll('table')[13].findAll('td', 'topBorderLight')
-        print lessons
         while i < length_all_td:
             temp_td_item = temp_td[i]
             if temp_td_item in semesters:
@@ -231,7 +232,6 @@ def get_dionysos_grades(username = None, password = None, logfile = 'update.log'
             str(general.contents[1].b.contents[7].contents[0]),
         )
         return grades[:-1]'''
-        print
     except Exception as error:
         cronos_debug(error, logfile)
         raise CronosError(u'Αδυναμία ανάκτησης Bαθμολογίας')

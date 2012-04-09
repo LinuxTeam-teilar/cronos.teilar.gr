@@ -14,6 +14,7 @@ def index(request):
     '''
     The frontpage for logged in users. Displays some personal info only.
     '''
+
     '''
     Get the school name based on the id from the Id table
     '''
@@ -31,7 +32,7 @@ def about(request):
         context_instance = RequestContext(request))
 
 @login_required
-def preferences(request):
+def accounts_settings(request):
     '''
     The user settings webpage
     '''

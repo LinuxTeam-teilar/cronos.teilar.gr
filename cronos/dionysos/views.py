@@ -9,18 +9,27 @@ from django.template import RequestContext
 
 @login_required
 def dionysos(request):
-    summary = ''
-    total = ''
+    '''
+    Retrieve the declaration and grades from the DB and print them
+    '''
+
+    '''
+    Retrieve and print the declaration
+    '''
     declaration_lessons = []
     if request.user.get_profile().declaration:
         declaration_full = request.user.get_profile().declaration.split(',')
         i = 0
-        print len(declaration_full)
         while i <= len(declaration_full):
             declaration_lessons.append(declaration_full[i:i+6])
             i += 6
 
+    '''
+    Retrieve and print the grades
+    '''
     grades = []
+    summary = None
+    total = None
     '''
     if request.user.get_profile().grades:
         grades_full = request.user.get_profile().grades.split(',')
@@ -57,7 +66,6 @@ def dionysos(request):
             grades_full[i+3],
             #str(grades_full[i+4]),
         ]'''
-    print declaration_lessons
     return  render_to_response('dionysos.html', {
             'summary': summary,
             'declaration_lessons': declaration_lessons,
