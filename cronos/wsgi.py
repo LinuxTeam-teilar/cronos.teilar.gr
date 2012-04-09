@@ -1,4 +1,4 @@
-"""
+'''
 WSGI config for tmp project.
 
 This module contains the WSGI application used by Django's development server
@@ -12,10 +12,14 @@ that later delegates to the Django one. For example, you could introduce WSGI
 middleware here, or combine a Django application with an application of another
 framework.
 
-"""
+'''
 import os
+import sys
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cronos.settings")
+# Append the current path in sys.path. We are using relative path so that this
+# wsgi config can be reusable everywhere
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cronos.settings')
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
@@ -23,6 +27,3 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cronos.settings")
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)
