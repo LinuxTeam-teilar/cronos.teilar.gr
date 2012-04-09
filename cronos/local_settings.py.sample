@@ -1,0 +1,41 @@
+# -*- coding: utf-8 -*-
+
+# Sample configuration file for cronos.teilar.gr website
+# Rename to local_settings.py and change accordingly the vars
+
+# Change to True for development boxes
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'cronos',                      # Or path to database file if using sqlite3.
+        'USER': 'cronos',                      # Not used with sqlite3.
+        'PASSWORD': 'cronos',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'secret'
+
+# Change PROJECT_ROOT to reflect your own dir
+PROJECT_ROOT = '/home/$USER/cronos/'
+
+# Blowfish key, used by encrypt_password and decrypt_password functions
+# in cronos.accounts.encryption module
+BLOWFISH_KEY = 'secret'
+
+# Path of the directory that the logfiles will be stored
+LOGDIR = '/var/log/cronos/'
+
+##### The following variables can remain unset in development boxes
+
+# e-class.teilar.gr account
+ECLASS_USER = ''
+ECLASS_PASSWORD = ''
+
+# used to send mails by sendmail
+EMAIL_HOST_USER = ''

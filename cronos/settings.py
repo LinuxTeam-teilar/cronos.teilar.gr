@@ -11,9 +11,9 @@ MANAGERS = ADMINS
 try:
     from local_settings import *
 except ImportError:
-    print 'No local_settings file found, exiting'
-    # log the above issue
-    exit
+    print 'ERROR: No local_settings.py file found'
+    import sys
+    sys.exit()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
