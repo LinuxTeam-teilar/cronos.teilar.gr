@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from cronos.accounts.models import UserProfile
 from cronos.announcements.models import Id
 from cronos.accounts.encryption import encrypt_password
+from cronos.libraries.log import CronosError, log_extra_data
+import logging
+
+logger = logging.getLogger('cronos')
 
 def add_new_student(credentials):
     '''
@@ -21,7 +25,7 @@ def add_new_student(credentials):
     try:
         user.save()
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Σφάλμα αποθήκευσης χρήστη')
     '''
     Get the school ID from the Id table, instead of storing the full school name
@@ -45,7 +49,7 @@ def add_new_student(credentials):
     try:
         user_profile.save()
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Σφάλμα αποθήκευσης χρήστη')
     '''
     If everything went fine, return the new user

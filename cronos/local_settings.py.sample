@@ -18,18 +18,15 @@ DATABASES = {
     }
 }
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'secret'
-
 # Change PROJECT_ROOT to reflect your own dir
 PROJECT_ROOT = '/home/$USER/cronos/'
+
+# Make this unique, and don't share it with anybody.
+SECRET_KEY = 'secret'
 
 # Blowfish key, used by encrypt_password and decrypt_password functions
 # in cronos.accounts.encryption module
 BLOWFISH_KEY = 'secret'
-
-# Path of the directory that the logfiles will be stored
-LOGDIR = '/var/log/cronos/'
 
 ##### The following variables can remain unset in development boxes
 

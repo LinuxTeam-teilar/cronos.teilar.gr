@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
-from cronos.libraries.log import cronos_debug, CronosError
+from cronos.libraries.log import CronosError, log_extra_data
 from cronos.libraries.login import dionysos_login
+import logging
 
-def get_dionysos_last_name(output = None, logfile = 'update.log'):
+logger = logging.getLogger('cronos')
+
+def get_dionysos_last_name(output = None):
     '''
     Retrieves student's last name from dionysos.teilar.gr
     '''
@@ -12,10 +15,10 @@ def get_dionysos_last_name(output = None, logfile = 'update.log'):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[5].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Επωνύμου')
 
-def get_dionysos_first_name(output = None, logfile = 'update.log'):
+def get_dionysos_first_name(output = None):
     '''
     Retrieves student's first name from dionysos.teilar.gr
     '''
@@ -23,10 +26,10 @@ def get_dionysos_first_name(output = None, logfile = 'update.log'):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[6].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Ονόματος')
 
-def get_dionysos_registration_number(output = None, logfile = 'update.log'):
+def get_dionysos_registration_number(output = None):
     '''
     Retrieves student's registration number from dionysos.teilar.gr
     '''
@@ -34,10 +37,10 @@ def get_dionysos_registration_number(output = None, logfile = 'update.log'):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[7].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Αριθμού Μητρώου')
 
-def get_dionysos_school(output = None, logfile = 'update.log'):
+def get_dionysos_school(output = None):
     '''
     Retrieves student's school from dionysos.teilar.gr
     '''
@@ -45,10 +48,10 @@ def get_dionysos_school(output = None, logfile = 'update.log'):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[8].findAll('td')[1].contents[0].strip()
         return unicode(soup)
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Σχολής')
 
-def get_dionysos_semester(output = None, logfile = 'update.log'):
+def get_dionysos_semester(output = None):
     '''
     Retrieves student's semester from dionysos.teilar.gr
     '''
@@ -56,10 +59,10 @@ def get_dionysos_semester(output = None, logfile = 'update.log'):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[9].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Εξαμήνου')
 
-def get_dionysos_introduction_year(output = None, logfile = 'update.log'):
+def get_dionysos_introduction_year(output = None):
     '''
     Retrieves student's introduction year from dionysos.teilar.gr
     '''
@@ -83,10 +86,10 @@ def get_dionysos_introduction_year(output = None, logfile = 'update.log'):
             year = unicode(soup.findAll('span','tablecell')[0].contents[0].split('-')[0])
         return year + season
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Έτους Εισαγωγής')
 
-def get_dionysos_declaration(username = None, password = None, logfile = 'update.log'):
+def get_dionysos_declaration(username = None, password = None):
     '''
     Retrieves student's newest declaration from dionysos.teilar.gr
     '''
@@ -139,10 +142,10 @@ def get_dionysos_declaration(username = None, password = None, logfile = 'update
                 declaration[i] = unicode(declaration[i].contents[0]).strip()
         return declaration.join(',').replace('&amp;', '&')
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Δήλωσης')
 
-def get_dionysos_grades(username = None, password = None, logfile = 'update.log'):
+def get_dionysos_grades(username = None, password = None):
     '''
     Retrieves student's grades from dionysos.teilar.gr
     '''
@@ -233,7 +236,7 @@ def get_dionysos_grades(username = None, password = None, logfile = 'update.log'
         )
         return grades[:-1]'''
     except Exception as error:
-        cronos_debug(error, logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης Bαθμολογίας')
 
 def get_eclass_lessons(output):
@@ -247,5 +250,5 @@ def get_eclass_lessons(output):
             i += 1
         return eclass_lessons[:-1]
     except Exception as error:
-        cronos_debug(error,logfile)
+        logger.error(error, extra = log_extra_data())
         raise CronosError(u'Αδυναμία ανάκτησης μαθημάτων e-class')

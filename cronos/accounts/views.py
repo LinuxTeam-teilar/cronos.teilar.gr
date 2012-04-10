@@ -6,8 +6,10 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from cronos.announcements.models import Id
 from cronos.accounts.forms import *
+from cronos.libraries.log import CronosError, log_extra_data
+import logging
 
-logfile = 'settings.log'
+logger = logging.getLogger('cronos')
 
 @login_required
 def index(request):
@@ -117,7 +119,7 @@ def accounts_settings(request):
 #                declaration_form = DeclarationForm(request.POST)
 
         except Exception as Error:
-            cronos_debug(error, logfile)
+            logger.error(error, extra = log_extra_data())
             raise CronosError('Παρουσιάστηκε σφάλμα')
     return render_to_response('preferences.html',{
         'msg': msg,

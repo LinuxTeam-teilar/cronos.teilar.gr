@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from cronos.accounts.encryption import decrypt_password
 from cronos.accounts.student_data_get import *
 from cronos.accounts.student_data_to_db import add_new_student
-from cronos.libraries.log import cronos_debug, CronosError
+from cronos.libraries.log import CronosError
 import os
 
 class CronosAuthentication(object):
@@ -73,16 +73,14 @@ class CronosAuthentication(object):
                         'username': username,
                         'password': password,
                 }
-                logfile = 'signup.log'
-                credentials['last_name'] = get_dionysos_last_name(output, logfile)
-                credentials['first_name'] = get_dionysos_first_name(output, logfile)
-                credentials['registration_number'] = get_dionysos_registration_number(output, logfile)
-                credentials['semester'] = get_dionysos_semester(output, logfile)
-                credentials['school'] = get_dionysos_school(output, logfile)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, logfile)
-                credentials['declaration'] = get_dionysos_declaration(username, password, logfile)
-                #credentials['grades'] = get_dionysos_grades(username, password, logfile)
-                #print credentials['grades']
+                credentials['last_name'] = get_dionysos_last_name(output)
+                credentials['first_name'] = get_dionysos_first_name(output)
+                credentials['registration_number'] = get_dionysos_registration_number(output)
+                credentials['semester'] = get_dionysos_semester(output)
+                credentials['school'] = get_dionysos_school(output)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output)
+                credentials['declaration'] = get_dionysos_declaration(username, password)
+                #credentials['grades'] = get_dionysos_grades(username, password)
                 user = add_new_student(credentials)
                 return user
             else:
