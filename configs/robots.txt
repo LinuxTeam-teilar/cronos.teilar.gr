@@ -1,4 +1,4 @@
 #robots.txt for http://cronos.teilar.gr/
 
 User-agent: *
-Disallow: /recover/
+Disallow: /teachers/
