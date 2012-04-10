@@ -125,6 +125,11 @@ INSTALLED_APPS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters':{
+        'cronos_formatter': {
+            'format': "cronos: %(asctime)s %(levelname)s %(client_ip)s %(username)s\ncronos: FILE:%(module)s FUNCTION:%(funcName)s LINE:%(lineno)d MSG:%(message)s",
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
@@ -135,13 +140,28 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'cronos_formatter',
+        },
+        'syslog': {
+            'level': 'INFO',
+            'class': 'logging.handlers.SysLogHandler',
+            'formatter': 'cronos_formatter',
+            'address': '/dev/log',
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'cronos': {
+            'handlers': ['console' if LOGGING_DEBUG else 'syslog'],
+            'level': 'DEBUG' if LOGGING_DEBUG else 'INFO',
         },
     }
 }
