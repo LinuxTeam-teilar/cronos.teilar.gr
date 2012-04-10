@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!-- git web interface version 1.7.8.5, (C) 2005-2006, Kay Sievers <kay.sievers@vrfy.org>, Christian Gierke -->
+<!-- git core binaries version 1.7.8.5 -->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="gitweb/1.7.8.5 git/1.7.8.5"/>
+<meta name="robots" content="index, nofollow"/>
+<title>Gentoo Overlays (git) - proj/okupy.git/summary</title>
+<link rel="stylesheet" type="text/css" href="static/gitweb.css"/>
+<link rel="alternate" title="proj/okupy.git - log - RSS feed" href="/gitweb/?p=proj/okupy.git;a=rss" type="application/rss+xml" />
+<link rel="alternate" title="proj/okupy.git - log - RSS feed (no merges)" href="/gitweb/?p=proj/okupy.git;a=rss;opt=--no-merges" type="application/rss+xml" />
+<link rel="alternate" title="proj/okupy.git - log - Atom feed" href="/gitweb/?p=proj/okupy.git;a=atom;opt=--no-merges" type="application/atom+xml" />
+<link rel="alternate" title="proj/okupy.git - log - Atom feed (no merges)" href="/gitweb/?p=proj/okupy.git;a=atom;opt=--no-merges" type="application/atom+xml" />
+<link rel="shortcut icon" href="static/git-favicon.png" type="image/png" />
+</head>
+<body>
+<div class="page_header">
+<a title="git homepage" href="http://git-scm.com/"><img class="logo" height="27" src="static/git-logo.png" alt="git" width="72" /></a><a href="/gitweb/">overlays</a> / <a href="/gitweb/?p=proj/okupy.git;a=summary">proj/okupy.git</a> / summary
+</div>
+<form method="get" action="/gitweb/" enctype="application/x-www-form-urlencoded">
+<div class="search">
+<input name="p" type="hidden" value="proj/okupy.git" />
+<input name="a" type="hidden" value="search" />
+<input name="h" type="hidden" value="HEAD" />
+<select name="st" >
+<option selected="selected" value="commit">commit</option>
+<option value="grep">grep</option>
+<option value="author">author</option>
+<option value="committer">committer</option>
+<option value="pickaxe">pickaxe</option>
+</select><sup><a href="/gitweb/?p=proj/okupy.git;a=search_help">?</a></sup> search:
+<input type="text" name="s"  />
+<span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+</form>
+<div class="page_nav">
+summary | <a href="/gitweb/?p=proj/okupy.git;a=shortlog">shortlog</a> | <a href="/gitweb/?p=proj/okupy.git;a=log">log</a> | <a href="/gitweb/?p=proj/okupy.git;a=commit;h=c0990cc4a25459b93133f844a2a8097a587aaa38">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=c0990cc4a25459b93133f844a2a8097a587aaa38">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree">tree</a><br/>
+<br/>
+</div>
+<div class="title">&nbsp;</div>
+<table class="projects_list">
+<tr id="metadata_desc"><td>description</td><td>SoC2011: Django CMS for gentoo.org, with LDAP frontend and WYSIWYG XML editor</td></tr>
+<tr id="metadata_owner"><td>owner</td><td>Theo Chatzimichos &lt;tampakrap@gentoo.org&gt;</td></tr>
+<tr id="metadata_lchange"><td>last change</td><td><span class="datetime">Sun, 8 Apr 2012 09:00:15 +0000</span> (11:00 +0200)</td></tr>
+<tr class="metadata_url"><td>URL</td><td>git://git.overlays.gentoo.org/proj/okupy.git</td></tr>
+<tr class="metadata_url"><td></td><td>http://git.overlays.gentoo.org/gitroot/proj/okupy.git</td></tr>
+<tr class="metadata_url"><td></td><td>git+ssh://git@git.overlays.gentoo.org/proj/okupy.git</td></tr>
+</table>
+<div class="header">
+<a class="title" href="/gitweb/?p=proj/okupy.git;a=shortlog">shortlog</a>
+</div>
+<table class="shortlog">
+<tr class="dark">
+<td title="2012-04-08"><i>2 days ago</i></td>
+<td class="author"><a title="Search for commits authored by Gaurish Sharma" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Gaurish+Sharma;st=author">Gaurish Sharma</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=c0990cc4a25459b93133f844a2a8097a587aaa38">Make settings Django 1.4 compatible, bug 411207</a> <span class="refs"> <span class="head" title="heads/master"><a href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/master">master</a></span></span></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=c0990cc4a25459b93133f844a2a8097a587aaa38">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=c0990cc4a25459b93133f844a2a8097a587aaa38">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=c0990cc4a25459b93133f844a2a8097a587aaa38;hb=c0990cc4a25459b93133f844a2a8097a587aaa38">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c0990cc4a25459b93133f844a2a8097a587aaa38;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c0990cc4a25459b93133f844a2a8097a587aaa38;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c0990cc4a25459b93133f844a2a8097a587aaa38;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="7 months ago"><i>2011-08-22</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf">Add LICENSE, AGPLv3</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf;hb=b9e8bf1eeb9725028452a01c5cc8576544fd2baf">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b9e8bf1eeb9725028452a01c5cc8576544fd2baf;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="7 months ago"><i>2011-08-22</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=87b1910a7ba1582617655148126912df3e2da119">identation</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=87b1910a7ba1582617655148126912df3e2da119">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=87b1910a7ba1582617655148126912df3e2da119">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=87b1910a7ba1582617655148126912df3e2da119;hb=87b1910a7ba1582617655148126912df3e2da119">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=87b1910a7ba1582617655148126912df3e2da119;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=87b1910a7ba1582617655148126912df3e2da119;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=87b1910a7ba1582617655148126912df3e2da119;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="7 months ago"><i>2011-08-22</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=18b509e2e771264897fdf94fbd838dd67d772ff7">typo</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=18b509e2e771264897fdf94fbd838dd67d772ff7">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=18b509e2e771264897fdf94fbd838dd67d772ff7">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=18b509e2e771264897fdf94fbd838dd67d772ff7;hb=18b509e2e771264897fdf94fbd838dd67d772ff7">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=18b509e2e771264897fdf94fbd838dd67d772ff7;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=18b509e2e771264897fdf94fbd838dd67d772ff7;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=18b509e2e771264897fdf94fbd838dd67d772ff7;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="7 months ago"><i>2011-08-22</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=908185d2ae75d9cf32af0ea69fb6161453a00b27">Add setup.py</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=908185d2ae75d9cf32af0ea69fb6161453a00b27">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=908185d2ae75d9cf32af0ea69fb6161453a00b27">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=908185d2ae75d9cf32af0ea69fb6161453a00b27;hb=908185d2ae75d9cf32af0ea69fb6161453a00b27">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=908185d2ae75d9cf32af0ea69fb6161453a00b27;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=908185d2ae75d9cf32af0ea69fb6161453a00b27;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=908185d2ae75d9cf32af0ea69fb6161453a00b27;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="7 months ago"><i>2011-08-22</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=512244be8566afa03124386937e8d42a69dbd177">New Addressbook under account/all</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=512244be8566afa03124386937e8d42a69dbd177">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=512244be8566afa03124386937e8d42a69dbd177">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=512244be8566afa03124386937e8d42a69dbd177;hb=512244be8566afa03124386937e8d42a69dbd177">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=512244be8566afa03124386937e8d42a69dbd177;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=512244be8566afa03124386937e8d42a69dbd177;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=512244be8566afa03124386937e8d42a69dbd177;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="7 months ago"><i>2011-08-16</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06">Merge branch 'ldap'</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06;hb=ee390f107576b7456d4a1ee06b5eebae2d5cfc06">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=ee390f107576b7456d4a1ee06b5eebae2d5cfc06;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="7 months ago"><i>2011-08-16</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" title="In edit account view, bind as the current user and update the" href="/gitweb/?p=proj/okupy.git;a=commit;h=eb972005b9203f08b8eac3824dab401f15b846be">In edit account view, bind as the current user and... </a> <span class="refs"> <span class="head" title="heads/ldap"><a href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/ldap">ldap</a></span></span></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=eb972005b9203f08b8eac3824dab401f15b846be">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=eb972005b9203f08b8eac3824dab401f15b846be">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=eb972005b9203f08b8eac3824dab401f15b846be;hb=eb972005b9203f08b8eac3824dab401f15b846be">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=eb972005b9203f08b8eac3824dab401f15b846be;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=eb972005b9203f08b8eac3824dab401f15b846be;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=eb972005b9203f08b8eac3824dab401f15b846be;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="7 months ago"><i>2011-08-16</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6">Add csrf token in the edit account template</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6;hb=a1b6966f71a252212428f7f8c1cec1aa59535fb6">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=a1b6966f71a252212428f7f8c1cec1aa59535fb6;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="7 months ago"><i>2011-08-16</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c">Bind as the current user instead of the admin account</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c;hb=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=bbc3fdf0c9262499990b34b53b6f014c8b1afd5c;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" title="Finally, fix a nasty bug in logout, it now removes the secondary" href="/gitweb/?p=proj/okupy.git;a=commit;h=b93d303fb39879b2794912579e2900bb370c6b35">Finally, fix a nasty bug in logout, it now removes... </a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=b93d303fb39879b2794912579e2900bb370c6b35">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=b93d303fb39879b2794912579e2900bb370c6b35">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=b93d303fb39879b2794912579e2900bb370c6b35;hb=b93d303fb39879b2794912579e2900bb370c6b35">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b93d303fb39879b2794912579e2900bb370c6b35;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b93d303fb39879b2794912579e2900bb370c6b35;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b93d303fb39879b2794912579e2900bb370c6b35;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=d60c7e9471c442112d66a9b15838bd22fdd76600">Exclude the salt from the returned decrypted password</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=d60c7e9471c442112d66a9b15838bd22fdd76600">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=d60c7e9471c442112d66a9b15838bd22fdd76600">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=d60c7e9471c442112d66a9b15838bd22fdd76600;hb=d60c7e9471c442112d66a9b15838bd22fdd76600">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=d60c7e9471c442112d66a9b15838bd22fdd76600;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=d60c7e9471c442112d66a9b15838bd22fdd76600;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=d60c7e9471c442112d66a9b15838bd22fdd76600;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" title="Improve gitignore to ignore the custom made settings files" href="/gitweb/?p=proj/okupy.git;a=commit;h=4e4a21e1dfd69743540a653547fca374fd158555">Improve gitignore to ignore the custom made settings... </a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=4e4a21e1dfd69743540a653547fca374fd158555">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=4e4a21e1dfd69743540a653547fca374fd158555">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=4e4a21e1dfd69743540a653547fca374fd158555;hb=4e4a21e1dfd69743540a653547fca374fd158555">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=4e4a21e1dfd69743540a653547fca374fd158555;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=4e4a21e1dfd69743540a653547fca374fd158555;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=4e4a21e1dfd69743540a653547fca374fd158555;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" href="/gitweb/?p=proj/okupy.git;a=commit;h=c372f06f2b17047de1d8c34203e07e12573b89f7">Improve login/logout:</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=c372f06f2b17047de1d8c34203e07e12573b89f7">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=c372f06f2b17047de1d8c34203e07e12573b89f7">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=c372f06f2b17047de1d8c34203e07e12573b89f7;hb=c372f06f2b17047de1d8c34203e07e12573b89f7">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c372f06f2b17047de1d8c34203e07e12573b89f7;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c372f06f2b17047de1d8c34203e07e12573b89f7;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=c372f06f2b17047de1d8c34203e07e12573b89f7;sf=zip">zip</a>)</td>
+</tr>
+<tr class="dark">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" title="New lib to cleanup the secondary password from the LDAP server" href="/gitweb/?p=proj/okupy.git;a=commit;h=11c7118dd9ff16eb138391d920b1e47e0493a176">New lib to cleanup the secondary password from the... </a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=11c7118dd9ff16eb138391d920b1e47e0493a176">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=11c7118dd9ff16eb138391d920b1e47e0493a176">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=11c7118dd9ff16eb138391d920b1e47e0493a176;hb=11c7118dd9ff16eb138391d920b1e47e0493a176">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=11c7118dd9ff16eb138391d920b1e47e0493a176;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=11c7118dd9ff16eb138391d920b1e47e0493a176;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=11c7118dd9ff16eb138391d920b1e47e0493a176;sf=zip">zip</a>)</td>
+</tr>
+<tr class="light">
+<td title="8 months ago"><i>2011-07-21</i></td>
+<td class="author"><a title="Search for commits authored by Theo Chatzimichos" class="list" href="/gitweb/?p=proj/okupy.git;a=search;s=Theo+Chatzimichos;st=author">Theo Chatzimichos</a></td><td><a class="list subject" title="Add custon widget/field that will print multivalue LDAP attributes as" href="/gitweb/?p=proj/okupy.git;a=commit;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2">Add custon widget/field that will print multivalue... </a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=commit;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2">commit</a> | <a href="/gitweb/?p=proj/okupy.git;a=commitdiff;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2">commitdiff</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2;hb=b7dfda420319ae6cd433b88c9cb93f0af11146c2">tree</a> | snapshot (<a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2;sf=tgz">tar.gz</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2;sf=tbz2">tar.bz2</a> <a href="/gitweb/?p=proj/okupy.git;a=snapshot;h=b7dfda420319ae6cd433b88c9cb93f0af11146c2;sf=zip">zip</a>)</td>
+</tr>
+<tr>
+<td colspan="4"><a href="/gitweb/?p=proj/okupy.git;a=shortlog">...</a></td>
+</tr>
+</table>
+<div class="header">
+<a class="title" href="/gitweb/?p=proj/okupy.git;a=heads">heads</a>
+</div>
+<table class="heads">
+<tr class="dark">
+<td><i>2 days ago</i></td>
+<td class="current_head"><a class="list name" href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/master">master</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/master">shortlog</a> | <a href="/gitweb/?p=proj/okupy.git;a=log;h=refs/heads/master">log</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=refs/heads/master;hb=refs/heads/master">tree</a></td>
+</tr><tr class="light">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/configs">configs</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/configs">shortlog</a> | <a href="/gitweb/?p=proj/okupy.git;a=log;h=refs/heads/configs">log</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=refs/heads/configs;hb=refs/heads/configs">tree</a></td>
+</tr><tr class="dark">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/ldap">ldap</a></td>
+<td class="link"><a href="/gitweb/?p=proj/okupy.git;a=shortlog;h=refs/heads/ldap">shortlog</a> | <a href="/gitweb/?p=proj/okupy.git;a=log;h=refs/heads/ldap">log</a> | <a href="/gitweb/?p=proj/okupy.git;a=tree;h=refs/heads/ldap;hb=refs/heads/ldap">tree</a></td>
+</tr></table>
+<div class="page_footer">
+<div class="page_footer_text">SoC2011: Django CMS for gentoo.org, with LDAP frontend and WYSIWYG XML editor</div>
+<a class="rss_logo" title="log RSS feed" href="/gitweb/?p=proj/okupy.git;a=rss">RSS</a>
+<a class="rss_logo" title="log Atom feed" href="/gitweb/?p=proj/okupy.git;a=atom">Atom</a>
+</div>
+<script type="text/javascript" src="static/gitweb.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+	var tz_cookie = { name: 'gitweb_tz', expires: 14, path: '/' };
+	onloadTZSetup('local', tz_cookie, 'datetime');
+};
+</script>
+</body>
+</html>
