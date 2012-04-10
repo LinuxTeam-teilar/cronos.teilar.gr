@@ -1,3 +1,4 @@
 *.pyc
 proj_root.*
 local_settings.py
+*.kdev4
