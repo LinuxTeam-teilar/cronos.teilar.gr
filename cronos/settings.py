@@ -138,8 +138,13 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            ##BROKEN
+            # The following is not really needed. If Debug is True, cronos will send
+            # mail to /tmp/cronos instead of actually sending it through SMTP
+            ##BROKEN
+            #'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True,
         },
         'console': {
             'level': 'DEBUG',
@@ -154,7 +159,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django.request': {
+        'mail_cronos': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
@@ -179,3 +184,14 @@ AUTHENTICATION_BACKENDS = (
     'cronos.accounts.backends.CronosAuthentication',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+# Variables regarding e-mail sending
+SERVER_EMAIL = 'cronos@teilar.gr'
+EMAIL_SUBJECT_PREFIX = '[cronos] '
+
+if DEBUG:
+    ### BROKEN ###
+    # In Debug mode, put the mails in /tmp/cronos instead of sending them
+    # through SMTP
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = '/tmp/cronos'
