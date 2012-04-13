@@ -2,7 +2,7 @@
 
 from cronos.login.forms import LoginForm
 from cronos.libraries.log import CronosError
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
@@ -16,7 +16,7 @@ def cronos_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         try:
-            user = authenticate(username = username, password = password)
+            user = authenticate(username, password, request, form)
             if not user:
                 raise CronosError(u'Λάθος στοιχεία')
             if user.is_active:
@@ -42,4 +42,4 @@ def server_error(request, template_name='500.html'):
     Override 500 error page, in order to pass MEDIA_URL to Context
     '''
     t = loader.get_template(template_name)
-    return http.HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
+    return HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))

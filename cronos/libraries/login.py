@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
+from cronos.libraries.log import CronosError, log_extra_data
+import logging
 import pycurl
 import StringIO
 import urllib
@@ -8,11 +10,22 @@ import os
 import tempfile
 import urlparse
 
-def dionysos_login(username, password, link = None):
+logger_syslog = logging.getLogger('cronos')
+logger_mail = logging.getLogger('mail_cronos')
+
+def dionysos_login(username, password, request = None, form = None, link = None):
+    '''
+    Try to connect to dionysos.teilar.gr and get the resulting HTML output.
+    If link is None, then an authentication attempt is also performed. In order
+    to verify if the authentication succeeded, we parse the final HTML output
+    and check if it still contains the login form
+    '''
     conn = pycurl.Curl()
     b = StringIO.StringIO()
-
     fd, cookie_path = tempfile.mkstemp(prefix='dionysos_', dir='/tmp')
+    '''
+    The data that will be sent to the login form of dionysos.teilar.gr
+    '''
     login_form_seq = [
         ('userName', username),
         ('pwd', password),
@@ -20,27 +33,72 @@ def dionysos_login(username, password, link = None):
         ('loginTrue', 'login')
     ]
     login_form_data = urllib.urlencode(login_form_seq)
+    '''
+    We need to perform two connections. I'm not sure yet why, probably because
+    the cookie needs to get initialized and then to be actually used.
+    '''
     conn.setopt(pycurl.FOLLOWLOCATION, 1)
     conn.setopt(pycurl.COOKIEFILE, cookie_path)
     conn.setopt(pycurl.COOKIEJAR, cookie_path)
     conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/')
     conn.setopt(pycurl.POST, 0)
-    conn.perform()
+    conn.setopt(pycurl.WRITEFUNCTION, b.write)
+    try:
+        '''
+        Perform a connection, if it fails then dionysos.teilar.gr is down
+        '''
+        conn.perform()
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
+        os.close(fd)
+        os.remove(cookie_path)
+        raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
+    soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
+    try:
+        temp_td_whiteheader = soup.find('td', 'whiteheader').b.contents[0]
+        '''
+        Check if the resulting HTML output is the expected one. If not, then
+        dionysos.teilar.gr is malfunctioning.
+        '''
+        if temp_td_whiteheader != u'Είσοδος Φοιτητή':
+            raise
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
+        os.close(fd)
+        os.remove(cookie_path)
+        raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
+    '''
+    If everything was fine so far, then dionysos.teilar.gr is up and running.
+    Now we can proceed to the actual authentication.
+    '''
     conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/login.asp')
     conn.setopt(pycurl.POST, 1)
     conn.setopt(pycurl.POSTFIELDS, login_form_data)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     conn.perform()
     if not link:
-        soup = BeautifulSoup((b.getvalue()).decode('windows-1253'))
+        '''
+        Checking if the credentials are correct
+        '''
+        soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
         try:
-            soup.find('td', 'whiteheader').b.contents[0] == u'Είσοδος Φοιτητή'
-            os.close(fd)
-            os.remove(cookie_path)
-            return
-        except:
+            temp_td_whiteheader = soup.find('td', 'whiteheader').b.contents[0]
+            if temp_td_whiteheader == u'Είσοδος Φοιτητή':
+                '''
+                The resulting HTML output still contains the login form, which means
+                that the authentication failed.
+                '''
+                os.close(fd)
+                os.remove(cookie_path)
+                return
+        except NameError:
             pass
     else:
+        '''
+        Connect to the requested link and return the HTML output
+        '''
         b = StringIO.StringIO()
         conn.setopt(pycurl.URL, link)
         conn.setopt(pycurl.POST, 1)

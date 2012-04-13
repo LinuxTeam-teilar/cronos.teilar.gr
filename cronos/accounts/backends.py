@@ -5,14 +5,13 @@ from cronos.accounts.encryption import decrypt_password
 from cronos.accounts.student_data_get import *
 from cronos.accounts.student_data_to_db import add_new_student
 from cronos.libraries.log import CronosError
-import os
 
 class CronosAuthentication(object):
     '''
     Cronos custom authentication backend. It uses dionysos.teilar.gr to
     authenticate the student.
     '''
-    def authenticate(self, username = None, password = None):
+    def authenticate(self, username = None, password = None, request = None, form = None):
         '''
         Try to authenticate the user. If there isn't such user
         in the Django DB, try to find the user in dionysos.teilar.gr
@@ -21,7 +20,7 @@ class CronosAuthentication(object):
             raise CronosError(u'Εισάγετε όνομα χρήστη')
         if not password:
             raise CronosError(u'Εισάγετε κωδικό πρόσβασης')
-        return self.get_or_create_user(username = username, password = password)
+        return self.get_or_create_user(username, password, request, form)
 
     def get_user(self, user_id):
         '''
@@ -32,7 +31,7 @@ class CronosAuthentication(object):
         except User.DoesNotExist:
             return
 
-    def get_or_create_user(self, username = None, password = None):
+    def get_or_create_user(self, username = None, password = None, request = None, form = None):
         '''
         Retrieves the user from the Django DB. If the user is not
         found in the DB, then it tries to retrieve him from
@@ -46,25 +45,23 @@ class CronosAuthentication(object):
             '''
             If the user is found in the DB, try to login with those
             credentials in dionysos.teilar.gr
-            In case that dionysos.teilar.gr is down, skip this step and try to
-            authenticate against the password that is stored in the DB
             '''
-            if not os.path.exists('/tmp/dionysos_down'):
-                output = dionysos_login(username, password)
-                if not output:
+            try:
+                if not dionysos_login(username, password, request, form):
                     return
-            else:
+            except CronosError:
+                '''
+                Connection issue with dionysos.teilar.gr. Try to authenticate
+                with the password stored in the DB instead
+                '''
                 if password != decrypt_password(user.get_profile().dionysos_password):
                     return
-            return user
         except User.DoesNotExist:
             '''
             If the user is not in the DB, try to log in with his
-            credentials in dionysos.teilar.gr
+            dionysos.teilar.gr account
             '''
-            if os.path.exists('/tmp/dionysos_down'):
-                raise CronosError(u'Σφάλμα επικοινωνίας με το dionysos. Παρακαλώ δοκιμάστε πάλι αργότερα')
-            output = dionysos_login(username, password)
+            output = dionysos_login(username, password, request, form)
             if output:
                 '''
                 The credentials worked, try to create a user based on those credentials
@@ -82,6 +79,6 @@ class CronosAuthentication(object):
                 credentials['declaration'] = get_dionysos_declaration(username, password)
                 #credentials['grades'] = get_dionysos_grades(username, password)
                 user = add_new_student(credentials)
-                return user
             else:
                 return
+        return user
