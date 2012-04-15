@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
 
 # Sample configuration file for cronos.teilar.gr website
-# Rename to local_settings.py and change accordingly the vars
+# Rename it to local_settings.py and change accordingly the vars
 
-# Change to True for development boxes
+# The listed admins will receive mail notifications
+ADMINS = (
+    ('Cronos development team', 'user@localhost')
+)
+
+# DEBUG Options: True is for development use, False is for production use
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+LOGGING_DEBUG = DEBUG
+
+# Select debug level. Choices are DEBUG, INFO, WARNING, ERROR, CRITICAL
+DEBUG_LEVEL = 'DEBUG'
 
 DATABASES = {
     'default': {
@@ -18,14 +27,13 @@ DATABASES = {
     }
 }
 
-# Change PROJECT_ROOT to reflect your own dir
-PROJECT_ROOT = '/home/$USER/cronos/'
-
-# Make this unique, and don't share it with anybody.
+# Secret key, used by Django to create hashes. Make this unique, and
+# don't share it with anybody.
 SECRET_KEY = 'secret'
 
 # Blowfish key, used by encrypt_password and decrypt_password functions
-# in cronos.accounts.encryption module
+# in cronos.accounts.encryption module. Make this unique, and don't
+# share it with anybody.
 BLOWFISH_KEY = 'secret'
 
 ##### The following variables can remain unset in development boxes
@@ -33,6 +41,3 @@ BLOWFISH_KEY = 'secret'
 # e-class.teilar.gr account
 ECLASS_USER = ''
 ECLASS_PASSWORD = ''
-
-# used to send mails by sendmail
-EMAIL_HOST_USER = ''
