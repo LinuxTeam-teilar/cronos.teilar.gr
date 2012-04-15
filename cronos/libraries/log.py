@@ -2,22 +2,13 @@
 
 from django.conf import settings
 from django.core.mail import send_mail
-import logging
-#import traceback
-
-def cronos_debug(msg, logfile):
-    '''
-    To be deprecated, along with the import logging and settings
-    '''
-    logging.basicConfig(level = logging.DEBUG, format = '%(asctime)s: %(message)s', filename = settings.LOGDIR + logfile, filemode = 'a+')
-    logging.debug(msg)
 
 def mail_cronos_admin(title, message):
     '''
     Wrapper function of send_mail
     '''
     try:
-        send_mail(title, message, 'notification@cronos.teilar.gr', ['cronos@teilar.gr'])
+        send_mail(title, message, 'notification@cronos.teilar.gr', [settings.ADMIN[0][1]])
     except:
         pass
 
