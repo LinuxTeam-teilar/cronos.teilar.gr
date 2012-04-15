@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
-from cronos.libraries.log import CronosError, log_extra_data
+from cronos.log import CronosError, log_extra_data
 import logging
 import pycurl
 import StringIO

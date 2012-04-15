@@ -2,7 +2,7 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.accounts.teilar_websites_login import dionysos_login
-from cronos.libraries.log import CronosError, log_extra_data
+from cronos.log import CronosError, log_extra_data
 import logging
 
 logger_syslog = logging.getLogger('cronos')

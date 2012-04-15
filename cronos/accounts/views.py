@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from cronos.announcements.models import Id
 from cronos.accounts.forms import *
-from cronos.libraries.log import CronosError, log_extra_data
+from cronos.log import CronosError, log_extra_data
 import logging
 
 logger = logging.getLogger('cronos')

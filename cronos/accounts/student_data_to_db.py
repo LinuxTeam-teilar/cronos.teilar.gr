@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from cronos.accounts.models import UserProfile
 from cronos.announcements.models import Id
 from cronos.accounts.encryption import encrypt_password
-from cronos.libraries.log import CronosError, log_extra_data
+from cronos.log import CronosError, log_extra_data
 import logging
 
 logger = logging.getLogger('cronos')

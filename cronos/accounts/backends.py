@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from cronos.accounts.encryption import decrypt_password
 from cronos.accounts.student_data_get import *
 from cronos.accounts.student_data_to_db import add_new_student
-from cronos.libraries.log import CronosError
+from cronos.log import CronosError
 
 class CronosAuthentication(object):
     '''

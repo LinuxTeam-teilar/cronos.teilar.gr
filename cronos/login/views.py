@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.login.forms import LoginForm
-from cronos.libraries.log import CronosError
+from cronos.log import CronosError
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render_to_response
