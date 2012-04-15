@@ -16,7 +16,7 @@ def cronos_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         try:
-            user = authenticate(username, password, request, form)
+            user = authenticate(username = username, password = password, request = request, form = form)
             if not user:
                 raise CronosError(u'Λάθος στοιχεία')
             if user.is_active:
