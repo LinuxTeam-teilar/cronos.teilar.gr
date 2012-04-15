@@ -1,24 +1,26 @@
 # -*- coding: utf-8 -*-
 
 from BeautifulSoup import BeautifulSoup
+from cronos.accounts.teilar_websites_login import dionysos_login
 from cronos.libraries.log import CronosError, log_extra_data
-from cronos.libraries.login import dionysos_login
 import logging
 
-logger = logging.getLogger('cronos')
+logger_syslog = logging.getLogger('cronos')
+logger_mail = logging.getLogger('mail_cronos')
 
-def get_dionysos_last_name(output = None):
+def get_dionysos_last_name(output = None, request = None, form = None):
     '''
     Retrieves student's last name from dionysos.teilar.gr
     '''
     try:
-        soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[5].findAll('td')[1].contents[0]
+        soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[5].findAll('td')[1].contents[1]
         return unicode(soup)
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Επωνύμου')
 
-def get_dionysos_first_name(output = None):
+def get_dionysos_first_name(output = None, request = None, form = None):
     '''
     Retrieves student's first name from dionysos.teilar.gr
     '''
@@ -26,10 +28,11 @@ def get_dionysos_first_name(output = None):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[6].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Ονόματος')
 
-def get_dionysos_registration_number(output = None):
+def get_dionysos_registration_number(output = None, request = None, form = None):
     '''
     Retrieves student's registration number from dionysos.teilar.gr
     '''
@@ -37,10 +40,11 @@ def get_dionysos_registration_number(output = None):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[7].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Αριθμού Μητρώου')
 
-def get_dionysos_school(output = None):
+def get_dionysos_school(output = None, request = None, form = None):
     '''
     Retrieves student's school from dionysos.teilar.gr
     '''
@@ -48,10 +52,11 @@ def get_dionysos_school(output = None):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[8].findAll('td')[1].contents[0].strip()
         return unicode(soup)
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Σχολής')
 
-def get_dionysos_semester(output = None):
+def get_dionysos_semester(output = None, request = None, form = None):
     '''
     Retrieves student's semester from dionysos.teilar.gr
     '''
@@ -59,25 +64,23 @@ def get_dionysos_semester(output = None):
         soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[9].findAll('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Εξαμήνου')
 
-def get_dionysos_introduction_year(output = None):
+def get_dionysos_introduction_year(output = None, request = None, form = None):
     '''
     Retrieves student's introduction year from dionysos.teilar.gr
-    '''
-
-    '''
-    Introduction is in the following form:
-    2004 - 2005 X or 2004 - 2005 E
-    first_year - second_year season
-    We need to create 2004X (YearSeason):
-    if season is 'X', then year is first_year (2004X)
-    if season is 'E', then year is second_year (2005E)
     '''
     try:
         soup = BeautifulSoup(output).findAll('table')[15]
         '''
+        Introduction is in the following form:
+        2004 - 2005 X or 2004 - 2005 E
+        first_year - second_year season
+        We need it in the form 2004X (YearSeason):
+        if season is 'X', then year is first_year (2004X)
+        if season is 'E', then year is second_year (2005E)
         '''
         season = unicode(soup.findAll('span','tablecell')[1].contents[0])[0]
         if season == u'Ε':
@@ -86,7 +89,8 @@ def get_dionysos_introduction_year(output = None):
             year = unicode(soup.findAll('span','tablecell')[0].contents[0].split('-')[0])
         return year + season
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Έτους Εισαγωγής')
 
 def get_dionysos_declaration(username = None, password = None):
@@ -101,7 +105,7 @@ def get_dionysos_declaration(username = None, password = None):
     Semester eg Β
     DM eg 2
     Hours eg 4
-    Type eg Y
+    Importance eg Y
     Grade (which in the latest declaration is always '-', so we skip it)
 
     Some of the above results are inside single HTML tags (<td>2</td>) and some
@@ -142,7 +146,8 @@ def get_dionysos_declaration(username = None, password = None):
                 declaration[i] = unicode(declaration[i].contents[0]).strip()
         return declaration.join(',').replace('&amp;', '&')
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Δήλωσης')
 
 def get_dionysos_grades(username = None, password = None):
@@ -236,10 +241,11 @@ def get_dionysos_grades(username = None, password = None):
         )
         return grades[:-1]'''
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Bαθμολογίας')
 
-def get_eclass_lessons(output):
+def get_eclass_lessons(output = None, request = None, form = None):
     try:
         soup = BeautifulSoup(output).find('table', 'FormData')
         eclass_lessons = ''
@@ -250,5 +256,6 @@ def get_eclass_lessons(output):
             i += 1
         return eclass_lessons[:-1]
     except Exception as error:
-        logger.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης μαθημάτων e-class')
