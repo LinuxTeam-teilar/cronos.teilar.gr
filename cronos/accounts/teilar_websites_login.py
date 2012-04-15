@@ -11,7 +11,6 @@ import tempfile
 import urlparse
 
 logger_syslog = logging.getLogger('cronos')
-logger_mail = logging.getLogger('mail_cronos')
 
 def dionysos_login(username, password, request = None, form = None, link = None):
     '''
@@ -49,10 +48,9 @@ def dionysos_login(username, password, request = None, form = None, link = None)
         '''
         conn.perform()
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(request, form))
-        logger_mail.exception(error)
         os.close(fd)
         os.remove(cookie_path)
+        logger_syslog.warn(error, extra = log_extra_data(request, form))
         raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
     try:
@@ -64,10 +62,9 @@ def dionysos_login(username, password, request = None, form = None, link = None)
         if temp_td_whiteheader != u'Είσοδος Φοιτητή':
             raise
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(request, form))
-        logger_mail.exception(error)
         os.close(fd)
         os.remove(cookie_path)
+        logger_syslog.warn(error, extra = log_extra_data(request, form))
         raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     '''
     If everything was fine so far, then dionysos.teilar.gr is up and running.
