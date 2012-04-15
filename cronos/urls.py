@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     (r'^login/', 'cronos.login.views.cronos_login'),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}),
     (r'^preferences/', 'cronos.accounts.views.accounts_settings'),
-    (r'^psigeia/', 'cronos.psigeia.views.psigeia'),
+    (r'^refrigerators/', 'cronos.refrigerators.views.refrigerators'),
     (r'^teachers/', 'cronos.teachers.views.teachers'),
 )
 

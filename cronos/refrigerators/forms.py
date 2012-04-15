@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.psigeia.tables import *
+from cronos.refrigerators.tables import *
 from django import forms
 
 class Psigeia1Form(forms.Form):
