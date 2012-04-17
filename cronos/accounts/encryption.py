@@ -22,7 +22,7 @@ def encrypt_password(password):
     Encrypt the password in Blowfish encryption, using the blowfish key
     specified in the settings file
     '''
-    obj = Blowfish.new(settings.BLOWFISH_KEY)
+    obj = Blowfish.new(settings.SECRET_KEY)
     if len(str(len(password))) == 1:
         length = '0' + str(len(password))
     else:
@@ -37,6 +37,6 @@ def decrypt_password(password):
     Decrypt the password from Blowfish encryption, using the blowfish key
     specified in the settings file
     '''
-    obj = Blowfish.new(settings.BLOWFISH_KEY)
+    obj = Blowfish.new(settings.SECRET_KEY)
     original_password = obj.decrypt(base64.b64decode(password))
     return original_password[2:int(original_password[:2]) + 2]
