@@ -6,9 +6,9 @@ from cronos.accounts.student_data_get import *
 from cronos.accounts.student_data_to_db import add_new_student
 from cronos.log import CronosError
 
-class CronosAuthentication(object):
+class DionysosTeilarAuthentication(object):
     '''
-    Cronos custom authentication backend. It uses dionysos.teilar.gr to
+    Custom authentication backend. It uses dionysos.teilar.gr to
     authenticate the student.
     '''
     def authenticate(self, username = None, password = None, request = None, form = None):

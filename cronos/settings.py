@@ -180,7 +180,7 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 # Custom authentication backend
 AUTHENTICATION_BACKENDS = (
-    'cronos.accounts.backends.CronosAuthentication',
+    'cronos.accounts.backends.DionysosTeilarAuthentication',
     'django.contrib.auth.backends.ModelBackend',
 )
 
