@@ -45,15 +45,23 @@ def add_department_to_db(department_id, name):
         department.save()
         status = u'Το %s με ID %s προστέθηκε στη βάση δεδομένων επιτυχώς' % (name, department_id)
         logger_syslog.info(status, extra = log_extra_data())
-        logger_mail.info(status)
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.error(error)
         raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s με ID %s' % (name, department_id))
     return
 
-def remove_department_from_db(department_id):
-    print 'Removed %s from DB' % (department_id)
+def deprecate_department_in_db(department_id):
+    department = Departments.objects.get(urlid = department_id)
+    department.deprecated = True
+    try:
+        department.save()
+        status = u'Το %s με ID %s άλλαξε κατάσταση σε deprecated = True' % (department.name, department_id)
+        logger_syslog.info(status, extra = log_extra_data())
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.error(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s με ID %s σε deprecated = True' % (department.name, department_id))
     return
 
 def update_departments():
@@ -67,7 +75,7 @@ def update_departments():
     departments_from_db = {department_id: 'name'}
     '''
     departments_from_db = {}
-    departments_from_db_q = Departments.objects.all()
+    departments_from_db_q = Departments.objects.filter(deprecated = False)
     for department in departments_from_db_q:
         departments_from_db[department.urlid] = department.name
     '''
@@ -82,12 +90,11 @@ def update_departments():
         '''
         departments_from_db_ids = set()
     '''
-    Get ex departments and remove them from the DB
+    Get ex departments and mark them as deprecated
     '''
-    # Need to find out what will happen with relations first
-    #ex_departments = departments_from_db_ids - departments_from_teilar_ids
-    #for department_id in ex_departments:
-    #    remove_department_from_db(department_id)
+    ex_departments = departments_from_db_ids - departments_from_teilar_ids
+    for department_id in ex_departments:
+        deprecate_department_in_db(department_id)
     '''
     Get new departments and remove them from the DB
     '''
