@@ -19,5 +19,5 @@ class UserProfile(models.Model):
     declaration = models.TextField(null = True, blank = True)
     grades = models.TextField(null = True, blank = True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user.username
