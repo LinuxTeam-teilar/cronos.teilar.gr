@@ -32,6 +32,9 @@ def get_departments():
     all_departments = soup.find_all('a', 'BlueText')
     for department in all_departments:
         department_id = department.get('href').split('=')[1]
+        '''
+        The string replace in the end is to keep it in track with dionysos.teilar.gr
+        '''
         name = department.contents[0].replace(u'Τεχν.', u'Τεχνολογίας')
         departments_from_teilar[int(department_id)] = name
     return departments_from_teilar
