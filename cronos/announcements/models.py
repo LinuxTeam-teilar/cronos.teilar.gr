@@ -1,18 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import signals
-from django.dispatch import dispatcher
-
-class Id(models.Model):
-    urlid = models.CharField("URL id", max_length = 30, unique = True)
-    name = models.CharField("Teacher, School or Lesson name", max_length = 100)
-    email = models.EmailField("Teacher's mail", null = True)
-    department = models.CharField("Teacher's department", max_length = 100, null = True)
-
-    def __unicode__(self):
-        return self.name
 
 class Announcements(models.Model):
     title = models.CharField("Title", max_length = 500)
@@ -36,8 +24,12 @@ class Announcements(models.Model):
     def __unicode__(self):
         return self.title
 
-    def body(self):    
+    def body(self):
         if (len(self.attachment_url) > 1):
-            return u'%s<br /><br /><a href="%s">%s</a><br /><br /><a href="%s">Περισσότερα</a>' % (self.description, self.attachment_url, self.attachment_text, self.url)
+            return u'%s<br /><br /><a href="%s">%s</a><br /><br /> \
+                    <a href="%s">Περισσότερα</a>' % (
+                            self.description,
+                            self.attachment_url,
+                            self.attachment_text, self.url)
         else:
             return u'%s<br /><br /><a href="%s">Περισσότερα</a>' % (self.description, self.url)
