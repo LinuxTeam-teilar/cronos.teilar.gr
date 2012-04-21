@@ -13,15 +13,15 @@ def cronos_login(request):
     user = None
     if request.method == "POST":
         form = LoginForm(request.POST)
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
         try:
             user = authenticate(username = username, password = password, request = request, form = form)
             if not user:
                 raise CronosError(u'Λάθος στοιχεία')
             if user.is_active:
                 login(request, user)
-                if not request.POST.get('remember'):
+                if not form.cleaned_data['remember']:
                     request.session.set_expiry(0)
                 return HttpResponseRedirect('/')
         except CronosError as error:
