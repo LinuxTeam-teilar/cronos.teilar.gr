@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 from cronos.announcements.models import Id
 from django.shortcuts import render_to_response
