@@ -112,8 +112,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cronos.announcements',
     'cronos.accounts',
+    'cronos.teilar',
 )
 
 # A sample logging configuration. The only tangible logging
