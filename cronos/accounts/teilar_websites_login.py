@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from cronos.log import CronosError, log_extra_data
 import logging
 import pycurl
@@ -11,6 +11,26 @@ import tempfile
 import urlparse
 
 logger_syslog = logging.getLogger('cronos')
+logger_mail = logging.getLogger('mail_cronos')
+
+def teilar_login(link = None):
+    '''
+    Try to connect to www.teilar.gr and get the resulting HTML output.
+    '''
+    conn = pycurl.Curl()
+    b = StringIO.StringIO()
+    conn.setopt(pycurl.URL, link)
+    conn.setopt(pycurl.WRITEFUNCTION, b.write)
+    try:
+        '''
+        Perform a connection, if it fails then www.teilar.gr is down
+        '''
+        conn.perform()
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το www.teilar.gr')
+    return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def dionysos_login(username, password, request = None, form = None, link = None):
     '''
