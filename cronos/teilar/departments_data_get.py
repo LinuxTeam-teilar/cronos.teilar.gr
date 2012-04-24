@@ -26,17 +26,22 @@ def get_departments():
     b = StringIO.StringIO()
     conn.setopt(pycurl.URL, 'http://www.teilar.gr/schools.php')
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
-    conn.perform()
+    try:
+        conn.perform()
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το www.teilar.gr')
     output = unicode(b.getvalue(), 'utf-8', 'ignore')
     soup = BeautifulSoup(output)
     all_departments = soup.find_all('a', 'BlueText')
     for department in all_departments:
-        department_id = department.get('href').split('=')[1]
+        department_id = int(department.get('href').split('=')[1])
         '''
         The string replace in the end is to keep it in track with dionysos.teilar.gr
         '''
         name = department.contents[0].replace(u'Τεχν.', u'Τεχνολογίας')
-        departments_from_teilar[int(department_id)] = name
+        departments_from_teilar[department_id] = name
     return departments_from_teilar
 
 def add_department_to_db(department_id, name):
@@ -46,12 +51,12 @@ def add_department_to_db(department_id, name):
     )
     try:
         department.save()
-        status = u'Το %s με ID %s προστέθηκε στη βάση δεδομένων επιτυχώς' % (name, department_id)
-        logger_syslog.info(status, extra = log_extra_data())
+        status = u'Το %s προστέθηκε επιτυχώς' % (name)
+        logger_syslog.info(status, extra = log_extra_data(cronjob = name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data())
-        logger_mail.error(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s με ID %s' % (name, department_id))
+        logger_syslog.error(error, extra = log_extra_data(cronjob = name))
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % (name))
     return
 
 def deprecate_department_in_db(department_id):
@@ -59,12 +64,12 @@ def deprecate_department_in_db(department_id):
     department.deprecated = True
     try:
         department.save()
-        status = u'Το %s με ID %s άλλαξε κατάσταση σε deprecated = True' % (department.name, department_id)
-        logger_syslog.info(status, extra = log_extra_data())
+        status = u'Το %s άλλαξε κατάσταση σε deprecated' % (department.name)
+        logger_syslog.info(status, extra = log_extra_data(cronjob = department.name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data())
-        logger_mail.error(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s με ID %s σε deprecated = True' % (department.name, department_id))
+        logger_syslog.error(error, extra = log_extra_data(cronjob = department.name))
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s σε deprecated' % (department.name))
     return
 
 def update_departments():
@@ -99,7 +104,7 @@ def update_departments():
     for department_id in ex_departments:
         deprecate_department_in_db(department_id)
     '''
-    Get new departments and remove them from the DB
+    Get new departments and add them from the DB
     '''
     new_departments = departments_from_teilar_ids - departments_from_db_ids
     for department_id in new_departments:
@@ -110,4 +115,4 @@ if __name__ == '__main__':
     try:
         update_departments()
     except CronosError as error:
-        logger_syslog.error(error, extra = log_extra_data)
+        logger_syslog.error(error.value, extra = log_extra_data())
