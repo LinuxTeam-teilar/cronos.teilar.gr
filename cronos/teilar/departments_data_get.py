@@ -6,6 +6,7 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from bs4 import BeautifulSoup
+from cronos.teilar.websites_login import teilar_login
 from cronos.log import CronosError, log_extra_data
 from cronos.teilar.models import Departments
 import logging
@@ -22,17 +23,7 @@ def get_departments():
     departments_from_teilar = { department_id: 'name'}
     '''
     departments_from_teilar = {}
-    conn = pycurl.Curl()
-    b = StringIO.StringIO()
-    conn.setopt(pycurl.URL, 'http://www.teilar.gr/schools.php')
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
-    try:
-        conn.perform()
-    except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data())
-        logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το www.teilar.gr')
-    output = unicode(b.getvalue(), 'utf-8', 'ignore')
+    output = teilar_login('http://www.teilar.gr/schools.php')
     soup = BeautifulSoup(output)
     all_departments = soup.find_all('a', 'BlueText')
     for department in all_departments:
