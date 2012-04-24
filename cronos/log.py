@@ -21,7 +21,7 @@ class CronosError(Exception):
     def __unicode__(self):
         return repr(self.value)
 
-def log_extra_data(request = None, form = None):
+def log_extra_data(request = None, form = None, cronjob = None):
     '''
     Extra data needed by the custom formatter
     All values default to None
@@ -29,6 +29,7 @@ def log_extra_data(request = None, form = None):
     log_extra_data = {
         'client_ip': request.META.get('REMOTE_ADDR','None') if request else '',
         'username': '',
+        'cronjob': cronjob if cronjob else '',
     }
     if form:
         log_extra_data['username'] = form.data.get('username', 'None')

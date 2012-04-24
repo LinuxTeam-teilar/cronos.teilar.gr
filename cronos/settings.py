@@ -126,7 +126,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters':{
         'cronos_formatter': {
-            'format': "cronos: %(levelname)s %(client_ip)s %(username)s Message: %(message)s\ncronos: File: %(module)s Function: %(funcName)s Line: %(lineno)d",
+            'format': "cronos: %(levelname)s %(client_ip)s %(username)s %(cronjob)s Message: %(message)s \
+                    \ncronos: File: %(module)s Function: %(funcName)s Line: %(lineno)d",
         },
     },
     'filters': {
