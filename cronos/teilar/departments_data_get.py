@@ -6,9 +6,9 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from bs4 import BeautifulSoup
-from cronos.teilar.websites_login import teilar_login
 from cronos.log import CronosError, log_extra_data
 from cronos.teilar.models import Departments
+from cronos.teilar.websites_login import teilar_login
 import logging
 import StringIO
 import pycurl
@@ -51,6 +51,9 @@ def add_department_to_db(department_id, name):
     return
 
 def deprecate_department_in_db(department_id):
+    '''
+    Mark departments as deprecated
+    '''
     department = Departments.objects.get(urlid = department_id)
     department.deprecated = True
     try:
