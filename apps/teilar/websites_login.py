@@ -13,12 +13,21 @@ import urlparse
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def teilar_login(link = None):
+def teilar_login(subdomain = None, url = None, id = None):
     '''
-    Try to connect to www.teilar.gr and get the resulting HTML output.
+    Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
     conn = pycurl.Curl()
     b = StringIO.StringIO()
+    if subdomain == 'teilar':
+        subdomain = 'www'
+    elif subdomain == 'eclass':
+        subdomain == openclass
+    link = 'http://%s.teilar.gr/' % subdomain
+    if url == 'departments':
+        link = link + 'schools.php'
+    elif url == 'teachers':
+        link = link + 'person.php?pid=' + str(id)
     conn.setopt(pycurl.URL, link)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
@@ -29,7 +38,7 @@ def teilar_login(link = None):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το www.teilar.gr')
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s.teilar.gr' % subdomain)
     return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def dionysos_login(username, password, request = None, form = None, link = None):

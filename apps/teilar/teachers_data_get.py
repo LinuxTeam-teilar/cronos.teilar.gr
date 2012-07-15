@@ -26,7 +26,7 @@ def get_teachers():
         Perform connections to each of the teacher's profile page. From the HTML
         output we grab the name, email and department
         '''
-        output = teilar_login('http://www.teilar.gr/person.php?pid=' + str(pid))
+        output = teilar_login('teilar', 'teachers', pid)
         soup = BeautifulSoup(output)
         name = None
         email = None

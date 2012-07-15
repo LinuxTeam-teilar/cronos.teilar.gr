@@ -21,7 +21,7 @@ def get_departments():
     departments_from_teilar = { department_id: 'name'}
     '''
     departments_from_teilar = {}
-    output = teilar_login('http://www.teilar.gr/schools.php')
+    output = teilar_login('teilar', 'departments')
     soup = BeautifulSoup(output)
     all_departments = soup.find_all('a', 'BlueText')
     for department in all_departments:
