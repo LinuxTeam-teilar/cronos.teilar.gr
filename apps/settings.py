@@ -93,10 +93,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'cronos.urls'
+ROOT_URLCONF = 'apps.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'cronos.wsgi.application'
+WSGI_APPLICATION = 'apps.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -112,8 +112,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cronos.accounts',
-    'cronos.teilar',
+    'apps.accounts',
+    'apps.teilar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -181,7 +181,7 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 # Custom authentication backend
 AUTHENTICATION_BACKENDS = (
-    'cronos.accounts.backends.DionysosTeilarAuthentication',
+    'apps.accounts.backends.DionysosTeilarAuthentication',
     'django.contrib.auth.backends.ModelBackend',
 )
 

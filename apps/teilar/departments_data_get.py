@@ -4,11 +4,11 @@ import os
 import sys
 from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
+from apps import CronosError, log_extra_data
+from apps.teilar.models import Departments
+from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
-from cronos.log import CronosError, log_extra_data
-from cronos.teilar.models import Departments
-from cronos.teilar.websites_login import teilar_login
 import logging
 import StringIO
 import pycurl
