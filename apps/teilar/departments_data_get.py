@@ -10,8 +10,6 @@ from apps.teilar.models import Departments
 from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 import logging
-import StringIO
-import pycurl
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')

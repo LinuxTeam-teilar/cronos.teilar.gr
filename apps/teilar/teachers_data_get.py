@@ -10,8 +10,6 @@ from apps.teilar.models import Departments, Teachers
 from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 import logging
-import StringIO
-import pycurl
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
@@ -23,13 +21,11 @@ def get_teachers():
     teachers_from_teilar = { teacher_id: ['name', 'email', 'department'] }
     '''
     teachers_from_teilar = {}
-    conn = pycurl.Curl()
     for pid in range(400):
         '''
         Perform connections to each of the teacher's profile page. From the HTML
         output we grab the name, email and department
         '''
-        b = StringIO.StringIO()
         output = teilar_login('http://www.teilar.gr/person.php?pid=' + str(pid))
         soup = BeautifulSoup(output)
         name = None
