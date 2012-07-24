@@ -72,7 +72,7 @@ def update_departments():
     departments_from_teilar = get_departments()
     '''
     Get all the departments from the DB and put them in a dictionary in the structure:
-    departments_from_db = {department_id: 'name'}
+    departments_from_db = { department_id: 'name' }
     '''
     departments_from_db = {}
     departments_from_db_q = Departments.objects.filter(deprecated = False)
@@ -96,7 +96,7 @@ def update_departments():
     for department_id in ex_departments:
         deprecate_department_in_db(department_id)
     '''
-    Get new departments and add them from the DB
+    Get new departments and add them to the DB
     '''
     new_departments = departments_from_teilar_ids - departments_from_db_ids
     for department_id in new_departments:
