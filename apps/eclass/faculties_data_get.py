@@ -6,7 +6,7 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
-from apps.teilar.models import EclassFaculties
+from apps.eclass.models import Faculties
 from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 import logging
@@ -34,7 +34,7 @@ def get_faculties():
 def add_faculty_to_db(faculty_id, attributes):
     name = attributes[0]
     code = attributes[1]
-    faculty = EclassFaculties(
+    faculty = Faculties(
         urlid = faculty_id,
         name = name,
         code = code,
@@ -76,7 +76,7 @@ def update_faculties():
     faculties_from_db = { faculty_id: ['name', 'code'] }
     '''
     faculties_from_db = {}
-    faculties_from_db_q = EclassFaculties.objects.filter(deprecated = False)
+    faculties_from_db_q = Faculties.objects.filter(deprecated = False)
     for faculty in faculties_from_db_q:
         faculties_from_db[faculty.urlid] = [faculty.name, faculty.code]
     '''
@@ -87,7 +87,7 @@ def update_faculties():
         faculties_from_db_ids = set(faculties_from_db.keys())
     except AttributeError:
         '''
-        EclassFaculties table is empty in the DB
+        Faculties table is empty in the DB
         '''
         faculties_from_db_ids = set()
     '''
@@ -108,7 +108,7 @@ def update_faculties():
     existing_faculties = faculties_from_eclass_ids & faculties_from_db_ids
     for faculty_id in existing_faculties:
         i = 0
-        faculty = EclassFaculties.objects.get(urlid = faculty_id)
+        faculty = Faculties.objects.get(urlid = faculty_id)
         for attribute in faculties_from_eclass[faculty_id]:
             if faculties_from_db[faculty_id][i] != attribute:
                 if i == 0:
