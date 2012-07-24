@@ -22,12 +22,14 @@ def teilar_login(subdomain = None, url = None, id = None):
     if subdomain == 'teilar':
         subdomain = 'www'
     elif subdomain == 'eclass':
-        subdomain == openclass
+        subdomain = 'openclass'
     link = 'http://%s.teilar.gr/' % subdomain
     if url == 'departments':
         link = link + 'schools.php'
     elif url == 'teachers':
         link = link + 'person.php?pid=' + str(id)
+    elif url == 'faculties':
+        link = link + 'modules/auth/listfaculte.php'
     conn.setopt(pycurl.URL, link)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
