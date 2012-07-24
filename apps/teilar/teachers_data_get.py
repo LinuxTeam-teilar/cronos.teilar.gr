@@ -59,19 +59,22 @@ def get_teachers():
 
 def add_teacher_to_db(teacher_id, attributes):
     try:
+        name = attributes[0]
+        email = attributes[1]
+        department = Departments.objects.get(name = attributes[2])
         teachers = Teachers(
             urlid = teacher_id,
-            name = attributes[0],
-            email = attributes[1],
-            department = Departments.objects.get(name = attributes[2])
+            name = name,
+            email = email,
+            department = department,
         )
         teachers.save()
-        status = u'Ο/Η %s προστέθηκε επιτυχώς' % (attributes[0])
+        status = u'Ο/Η %s προστέθηκε επιτυχώς' % name
         logger_syslog.info(status, extra = log_extra_data())
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = attributes[0]))
+        logger_syslog.error(error, extra = log_extra_data(cronjob = name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % (attributes[0]))
+        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % name)
     return
 
 def deprecate_teacher_in_db(teacher_id):
