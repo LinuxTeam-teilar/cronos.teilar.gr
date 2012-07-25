@@ -18,7 +18,7 @@ def get_lessons():
     '''
     Retrieves the lessons from eclass.teilar.gr
     The output is dictionary with the following structure:
-    lessons_from_eclass = { 'lesson_id': 'name', 'teacher', 'faculty', 'ltype' }
+    lessons_from_eclass = { 'lesson_id': ['name', 'teacher', 'faculty', 'ltype'] }
     '''
     lessons_from_eclass = {}
     faculties = Faculties.objects.all()
@@ -48,12 +48,12 @@ def get_lessons():
                 except IndexError:
                     teacher = None
                 if i == 0:
-                    ltype = 'Undergraduate'
+                    ltype = u'Προπτυχιακό'
                 elif i == 1:
-                    ltype = 'Graduate'
+                    ltype = u'Μεταπτυχιακό'
                 elif i == 2:
-                    ltype == 'Other'
-                lessons_from_eclass[lesson_id] = [name, teacher, faculty.name, ltype]
+                    ltype == u'Άλλο'
+                lessons_from_eclass[lesson_id] = [unicode(name), unicode(teacher), faculty.name, ltype]
     return lessons_from_eclass
 
 def add_lesson_to_db(lesson_id, attributes):
@@ -102,7 +102,7 @@ def update_lessons():
     lessons_from_eclass = get_lessons()
     '''
     Get all the lessons from the DB and put them in a dictionary in the structure:
-    lessons_from_db = { lesson_id: ['name', 'code'] }
+    lessons_from_db = { 'lesson_id': ['name', 'teacher', 'faculty', 'ltype'] }
     '''
     lessons_from_db = {}
     lessons_from_db_q = Lessons.objects.filter(deprecated = False)
