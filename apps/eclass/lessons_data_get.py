@@ -144,15 +144,12 @@ def update_lessons():
                     attr_name = u'name'
                     lesson.name = attribute
                 elif i == 1:
-                    attr_name = u'code'
-                    lesson.code = attribute
-                elif i == 2:
                     attr_name = u'teacher'
                     lesson.teacher = attribute
-                elif i == 3:
+                elif i == 2:
                     attr_name = u'faculty'
                     lesson.faculty = attribute
-                elif i == 4:
+                elif i == 3:
                     attr_name = u'ltype'
                     lesson.ltype = attribute
                 try:
