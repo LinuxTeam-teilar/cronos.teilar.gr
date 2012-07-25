@@ -18,7 +18,7 @@ def get_faculties():
     '''
     Retrieves the faculties from eclass.teilar.gr
     The output is dictionary with the following structure:
-    faculties_from_eclass = { faculty_id: 'name', 'code' }
+    faculties_from_eclass = { faculty_id: ['name', 'code'] }
     '''
     faculties_from_eclass = {}
     output = teilar_login('eclass', 'faculties')

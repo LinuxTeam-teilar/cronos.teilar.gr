@@ -10,11 +10,11 @@ class Faculties(models.Model):
         return self.name
 
 class Lessons(models.Model):
-    urlid = models.CharField(max_length = 10, unique = True)
-    name = models.CharField("Lesson name", max_length = 200)
-    teacher = models.CharField("Teacher's name", max_length = 200)
+    urlid = models.CharField(max_length = 20, unique = True)
+    name = models.CharField("Lesson name", max_length = 500)
+    teacher = models.CharField("Teacher's name", max_length = 500)
     faculty = models.ForeignKey(Faculties)
-    ltype = models.CharField("Type of lesson", max_length = 50)
+    ltype = models.CharField("Type of lesson", max_length = 100)
     deprecated = models.BooleanField(default = False)
 
     def __unicode__(self):
