@@ -147,8 +147,15 @@ def update_lessons():
                     attr_name = u'teacher'
                     lesson.teacher = attribute
                 elif i == 2:
+                    '''
+                    The faculty is stored as a foreign key of the
+                    Faculties table, thus it needs an extra check
+                    '''
+                    if attribute.strip() == unicode(lesson.faculty).strip():
+                        i += 1
+                        continue
                     attr_name = u'faculty'
-                    lesson.faculty = attribute
+                    lesson.faculty = Faculties.objects.get(name = attribute)
                 elif i == 3:
                     attr_name = u'ltype'
                     lesson.ltype = attribute
