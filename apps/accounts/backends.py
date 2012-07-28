@@ -11,12 +11,12 @@ class DionysosTeilarAuthentication(object):
     Custom authentication backend. It uses dionysos.teilar.gr to
     authenticate the student.
     '''
-    def authenticate(self, username = None, password = None, request = None, form = None):
+    def authenticate(self, username = None, password = None):
         '''
         Try to authenticate the user. If there isn't such user
         in the Django DB, try to find the user in dionysos.teilar.gr
         '''
-        return self.get_or_create_user(username, password, request, form)
+        return self.get_or_create_user(username, password)
 
     def get_user(self, user_id):
         '''
@@ -27,7 +27,7 @@ class DionysosTeilarAuthentication(object):
         except User.DoesNotExist:
             return
 
-    def get_or_create_user(self, username = None, password = None, request = None, form = None):
+    def get_or_create_user(self, username = None, password = None):
         '''
         Retrieves the user from the Django DB. If the user is not
         found in the DB, then it tries to retrieve him from
@@ -43,7 +43,7 @@ class DionysosTeilarAuthentication(object):
             credentials in dionysos.teilar.gr
             '''
             try:
-                if not dionysos_login(username, password, request, form):
+                if not dionysos_login(username, password):
                     return
             except CronosError:
                 '''
@@ -66,12 +66,12 @@ class DionysosTeilarAuthentication(object):
                         'username': username,
                         'password': password,
                 }
-                credentials['last_name'] = get_dionysos_last_name(output, form)
-                credentials['first_name'] = get_dionysos_first_name(output, form)
-                credentials['registration_number'] = get_dionysos_registration_number(output, form)
-                credentials['semester'] = get_dionysos_semester(output, form)
-                credentials['school'] = get_dionysos_school(output, form)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, form)
+                credentials['last_name'] = get_dionysos_last_name(output, username)
+                credentials['first_name'] = get_dionysos_first_name(output, username)
+                credentials['registration_number'] = get_dionysos_registration_number(output, username)
+                credentials['semester'] = get_dionysos_semester(output, username)
+                credentials['school'] = get_dionysos_school(output, username)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output, username)
                 credentials['declaration'] = get_dionysos_declaration(username, password)
                 #credentials['grades'] = get_dionysos_grades(username, password)
                 user = add_student_to_db(credentials)
