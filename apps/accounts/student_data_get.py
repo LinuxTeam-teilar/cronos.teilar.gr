@@ -130,25 +130,17 @@ def get_dionysos_declaration(username = None, password = None):
         i = 0
         while i < len(declaration):
             try:
-                if unicode(declaration[i].contents[0].contents[0]) == u'-':
-                    '''
-                    Grade is always marked as - in the newest declaration, thus
-                    we skip it.
-                    '''
-                    declaration.pop(i)
-                    i -= 1
-                else:
-                    '''
-                    Any other information that is inside double HTML tags is added.
-                    '''
-                    declaration[i] = unicode(declaration[i].contents[0].contents[0]).strip()
+                '''
+                Add information that is inside double HTML tags
+                '''
+                declaration[i] = unicode(declaration[i].contents[0].contents[0]).strip()
             except AttributeError:
                 '''
                 Add information that is inside single HTML tags
                 '''
                 declaration[i] = unicode(declaration[i].contents[0]).strip()
             i += 1
-        return ','.join(declaration).replace('&amp;', '&')
+        return ':'.join(declaration).replace('&amp;', '&')
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(username = username))
         logger_mail.exception(error)

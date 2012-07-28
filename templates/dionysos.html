@@ -18,25 +18,17 @@
             <th style="width: 120px;">Κωδικός</th>
             <th style="width: 3000px;">Τίτλος</th>
             <th style="width: 60px;">Εξάμηνο</th>
-            <th style="width: 60px;">Τύπος</th>
             <th style="width: 60px;">ΔΜ</th>
             <th style="width: 60px;">Ώρες</th>
+            <th style="width: 60px;">Τύπος</th>
+            <th style="width: 60px;">Βαθμός</th>
             {% for i in declaration_lessons %}
                 <tr>
                 {% for j in i %}
-                    <td
-                    {% ifequal forloop.counter0 2 %} style="text-align: center;" {% endifequal %}
-                    {% ifequal forloop.counter0 3 %} style="text-align: center;" {% endifequal %}
-                    {% ifequal forloop.counter0 4 %} style="text-align: center;" {% endifequal %}
-                    {% ifequal forloop.counter0 5 %} style="text-align: center;" {% endifequal %}
-                    >{{j|safe}}</td>
+                    <td style="text-align: center;">{{j|safe}}</td>
                 {% endfor %}
                 </tr>
             {% endfor %}
-            <!--tr style="height: 30px;"><td></td></tr>
-            {% for i in summary %}
-                <tr><td colspan="5" align="right"><i>{% cycle 'Σύνολο Μαθημάτων: ' 'Σύνολο Διδακτικών Μονάδων: ' 'Σύνολο ωρών: ' %}</i></td><td align="right">{{i}}</td></tr>
-                {% endfor %}-->
         </table>
     {% endif %}
     </div>

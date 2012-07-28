@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.announcements.models import *
-from cronos.dionysos.forms import *
+from apps.dionysos.forms import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render_to_response
@@ -18,11 +17,11 @@ def dionysos(request):
     '''
     declaration_lessons = []
     if request.user.get_profile().declaration:
-        declaration_full = request.user.get_profile().declaration.split(',')
+        declaration_full = request.user.get_profile().declaration.split(':')
         i = 0
         while i <= len(declaration_full):
-            declaration_lessons.append(declaration_full[i:i+6])
-            i += 6
+            declaration_lessons.append(declaration_full[i:i+7])
+            i += 7
 
     '''
     Retrieve and print the grades
