@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from BeautifulSoup import BeautifulSoup
-from cronos.teilar.websites_login import dionysos_login
-from cronos.log import CronosError, log_extra_data
+from apps import CronosError, log_extra_data
+from apps.teilar.websites_login import dionysos_login
+from bs4 import BeautifulSoup
 import logging
 
 logger_syslog = logging.getLogger('cronos')
@@ -13,7 +13,7 @@ def get_dionysos_last_name(output = None, request = None, form = None):
     Retrieves student's last name from dionysos.teilar.gr
     '''
     try:
-        soup = BeautifulSoup(output).findAll('table')[14].findAll('tr')[5].findAll('td')[1].contents[1]
+        soup = BeautifulSoup(output).find_all('table')[14].find_all('tr')[5].find_all('td')[1].contents[0]
         return unicode(soup)
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request, form))
@@ -93,7 +93,7 @@ def get_dionysos_introduction_year(output = None, request = None, form = None):
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Έτους Εισαγωγής')
 
-def get_dionysos_declaration(username = None, password = None):
+def get_dionysos_declaration(username = None, password = None, request = None, form = None):
     '''
     Retrieves student's newest declaration from dionysos.teilar.gr
     '''
@@ -117,15 +117,17 @@ def get_dionysos_declaration(username = None, password = None):
         The link is different, so we need a new HTML output from dionysos
         '''
         link = 'https://dionysos.teilar.gr/unistudent/stud_vClasses.asp?studPg=1&mnuid=diloseis;showDil&'
-        output = dionysos_login(username, password, link)
-        soup = BeautifulSoup(output).findAll('table')[13].findAll('table')[0]
+        output = dionysos_login(username = username, password = password, request = request, form = form, link = link)
+        soup = BeautifulSoup(output).find_all('table')[13].find_all('table')[0]
+
         '''
         Temp variables are named based on the HTML tags they contain. Those
         variables give faster results, since we don't have to regenerate the
         same data in each time the for loop is executed.
         '''
-        temp_td_bottom = soup.findAll('td', 'bottomborderLight')
+        temp_td_bottom = soup.find_all('td', 'bottomborderLight')
         declaration = temp_td_bottom
+        i = 0
         while i < len(declaration):
             try:
                 if unicode(declaration[i].contents[0].contents[0]) == u'-':
@@ -134,6 +136,7 @@ def get_dionysos_declaration(username = None, password = None):
                     we skip it.
                     '''
                     declaration.pop(i)
+                    i -= 1
                 else:
                     '''
                     Any other information that is inside double HTML tags is added.
@@ -144,7 +147,8 @@ def get_dionysos_declaration(username = None, password = None):
                 Add information that is inside single HTML tags
                 '''
                 declaration[i] = unicode(declaration[i].contents[0]).strip()
-        return declaration.join(',').replace('&amp;', '&')
+            i += 1
+        return ','.join(declaration).replace('&amp;', '&')
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request, form))
         logger_mail.exception(error)
