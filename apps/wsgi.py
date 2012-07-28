@@ -19,7 +19,7 @@ import sys
 # Append the current path in sys.path. We are using relative path so that this
 # wsgi config can be reusable everywhere
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cronos.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'apps.settings')
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
