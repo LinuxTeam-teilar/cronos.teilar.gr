@@ -25,6 +25,9 @@ def log_extra_data(username = None, request = None, form = None, cronjob = None)
     '''
     Extra data needed by the custom formatter
     All values default to None
+    It provides three data: client_ip, username and cronjob name
+    Username can be passed directly as argument, or it can be retrieved by
+    either the request var or the form
     '''
     log_extra_data = {
         'client_ip': request.META.get('REMOTE_ADDR','None') if request else '',
