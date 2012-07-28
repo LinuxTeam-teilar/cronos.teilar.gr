@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from apps import CronosError
+from apps.accounts.encryption import decrypt_password
+from apps.accounts.student_data_get import *
+from apps.accounts.student_data_to_db import add_student_to_db
 from django.contrib.auth.models import User
-from cronos.accounts.encryption import decrypt_password
-from cronos.accounts.student_data_get import *
-from cronos.accounts.student_data_to_db import add_new_student
-from cronos.log import CronosError
 
 class DionysosTeilarAuthentication(object):
     '''
@@ -16,10 +16,6 @@ class DionysosTeilarAuthentication(object):
         Try to authenticate the user. If there isn't such user
         in the Django DB, try to find the user in dionysos.teilar.gr
         '''
-        if not username:
-            raise CronosError(u'Εισάγετε όνομα χρήστη')
-        if not password:
-            raise CronosError(u'Εισάγετε κωδικό πρόσβασης')
         return self.get_or_create_user(username, password, request, form)
 
     def get_user(self, user_id):
@@ -70,15 +66,15 @@ class DionysosTeilarAuthentication(object):
                         'username': username,
                         'password': password,
                 }
-                credentials['last_name'] = get_dionysos_last_name(output)
-                credentials['first_name'] = get_dionysos_first_name(output)
-                credentials['registration_number'] = get_dionysos_registration_number(output)
-                credentials['semester'] = get_dionysos_semester(output)
-                credentials['school'] = get_dionysos_school(output)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output)
+                credentials['last_name'] = get_dionysos_last_name(output, form)
+                credentials['first_name'] = get_dionysos_first_name(output, form)
+                credentials['registration_number'] = get_dionysos_registration_number(output, form)
+                credentials['semester'] = get_dionysos_semester(output, form)
+                credentials['school'] = get_dionysos_school(output, form)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output, form)
                 credentials['declaration'] = get_dionysos_declaration(username, password)
                 #credentials['grades'] = get_dionysos_grades(username, password)
-                user = add_new_student(credentials)
+                user = add_student_to_db(credentials)
             else:
                 return
         return user
