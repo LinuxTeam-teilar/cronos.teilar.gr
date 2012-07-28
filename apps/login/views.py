@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from cronos.login.forms import LoginForm
-from cronos.log import CronosError
+from apps import CronosError
+from apps.login.forms import LoginForm
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render_to_response
@@ -13,8 +13,12 @@ def cronos_login(request):
     user = None
     if request.method == "POST":
         form = LoginForm(request.POST)
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+        else:
+            username = None
+            password = None
         try:
             user = authenticate(username = username, password = password, request = request, form = form)
             if not user:
