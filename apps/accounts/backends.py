@@ -57,7 +57,7 @@ class DionysosTeilarAuthentication(object):
             If the user is not in the DB, try to log in with his
             dionysos.teilar.gr account
             '''
-            output = dionysos_login(username, password, request, form)
+            output = dionysos_login(username, password)
             if output:
                 '''
                 The credentials worked, try to create a user based on those credentials
