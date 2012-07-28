@@ -45,7 +45,7 @@ def teilar_login(subdomain = None, url = None, id = None):
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s.teilar.gr' % subdomain)
     return unicode(b.getvalue(), 'utf-8', 'ignore')
 
-def dionysos_login(username, password, request = None, form = None, link = None):
+def dionysos_login(username, password, link = None):
     '''
     Try to connect to dionysos.teilar.gr and get the resulting HTML output.
     If link is None, then an authentication attempt is also performed. In order
@@ -83,8 +83,8 @@ def dionysos_login(username, password, request = None, form = None, link = None)
     except Exception as error:
         os.close(fd)
         os.remove(cookie_path)
-        logger_syslog.warn(error, extra = log_extra_data(request, form))
-        raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
+        logger_syslog.warn(error, extra = log_extra_data(username = username))
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
     try:
         temp_td_whiteheader = soup.find('td', 'whiteheader').b.contents[0]
@@ -97,12 +97,13 @@ def dionysos_login(username, password, request = None, form = None, link = None)
     except Exception as error:
         os.close(fd)
         os.remove(cookie_path)
-        logger_syslog.warn(error, extra = log_extra_data(request, form))
-        raise CronosError('Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
+        logger_syslog.warn(error, extra = log_extra_data(username = username))
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     '''
     If everything was fine so far, then dionysos.teilar.gr is up and running.
     Now we can proceed to the actual authentication.
     '''
+    b = StringIO.StringIO()
     conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/login.asp')
     conn.setopt(pycurl.POST, 1)
     conn.setopt(pycurl.POSTFIELDS, login_form_data)
@@ -124,6 +125,8 @@ def dionysos_login(username, password, request = None, form = None, link = None)
                 os.remove(cookie_path)
                 return
         except NameError:
+            pass
+        except AttributeError:
             pass
     else:
         '''
