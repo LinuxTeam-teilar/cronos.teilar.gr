@@ -17,7 +17,7 @@
             <li>Ονοματεπώνυμο: {{ user.first_name }} {{ user.last_name }}</li>
             {% if mail %} <li>Email: {{ user.email }}</li> {% endif %}
             <li>Αριθμός Μητρώου: {{ user.get_profile.registration_number }}</li>
-            <li>Σχολή: {{ school }}</li>
+            <li>Σχολή: {{ user.get_profile.school }}</li>
             <li>Εξάμηνο: {{ user.get_profile.semester }}</li>
             <li>Έτος Εισαγωγής: {{ user.get_profile.introduction_year }}</li>
         </ul>

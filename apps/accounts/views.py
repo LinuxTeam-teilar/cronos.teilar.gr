@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from apps import CronosError, log_extra_data
+from apps.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
-from cronos.announcements.models import Id
-from cronos.accounts.forms import *
-from cronos.log import CronosError, log_extra_data
 import logging
 
 logger = logging.getLogger('cronos')
@@ -16,14 +15,7 @@ def index(request):
     '''
     The frontpage for logged in users. Displays some personal info only.
     '''
-
-    '''
-    Get the school name based on the id from the Id table
-    '''
-    for item in Id.objects.filter(urlid__exact = request.user.get_profile().school):
-       school = item.name
     return render_to_response('index.html', {
-        'school': school,
         }, context_instance = RequestContext(request))
 
 def about(request):
