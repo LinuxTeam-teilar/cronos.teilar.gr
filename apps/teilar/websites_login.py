@@ -32,6 +32,8 @@ def teilar_login(subdomain = None, url = None, id = None):
         link = link + 'modules/auth/listfaculte.php'
     elif url == 'lessons':
         link = link + 'modules/auth/opencourses.php?fc=' + str(id)
+    else:
+        link = link + url
     conn.setopt(pycurl.URL, link)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
