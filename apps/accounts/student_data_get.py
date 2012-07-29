@@ -105,11 +105,11 @@ def get_dionysos_declaration(username = None, password = None):
     Semester eg Β
     DM eg 2
     Hours eg 4
-    Importance eg Y
-    Grade (which in the latest declaration is always '-', so we skip it)
+    Type eg Y
+    Grade
 
     Some of the above results are inside single HTML tags (<td>2</td>) and some
-    are in double ones (<td><span ...>4</span</td>). We work around this with a
+    are in double ones (<td><span>4</span</td>). We work around this with a
     try/except block.
     '''
     try:

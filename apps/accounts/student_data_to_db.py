@@ -28,7 +28,7 @@ def add_student_to_db(credentials):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(username = credentials['username']))
         logger_mail.exception(error)
-        raise CronosError(u'Σφάλμα αποθήκευσης χρήστη')
+        raise CronosError(u'Σφάλμα αποθήκευσης βασικών στοιχείων χρήστη')
     '''
     Additional information are added in the userprofile table
     '''
@@ -48,7 +48,7 @@ def add_student_to_db(credentials):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(username = credentials['username']))
         logger_mail.exception(error)
-        raise CronosError(u'Σφάλμα αποθήκευσης χρήστη')
+        raise CronosError(u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
     '''
     If everything went fine, return the new user
     '''
