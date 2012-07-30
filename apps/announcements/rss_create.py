@@ -6,7 +6,6 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
-from apps.rss_creator.models import AnnouncementsTeilar
 from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 from datetime import date as proper_date
@@ -21,20 +20,18 @@ This is a temporary lib that creates RSS feeds for the teachers and some other
 webpages of teilar.gr that don't provide an RSS yet.
 '''
 
-f = feedgenerator.Rss201rev2Feed(title = 'test', link = 'test', description = 'test', author_name = 'test')
-
-'''
-Grab a list of urlids from the announcements that are in the DB already
-'''
-announcements_from_db = []
-announcements_from_db_q = AnnouncementsTeilar.objects.all()
-for announcement in announcements_from_db_q:
-    announcements_from_db.append(announcement.urlid)
+custom_rss_file = '/tmp/custom_teilar_announcements.rss'
+custom_rss = feedgenerator.Rss201rev2Feed(
+    title = 'custom',
+    link = 'custom',
+    description = 'custom',
+    author_name = 'custom'
+)
 
 for cid in [1, 2, 5, 6, 'tmimatanews.php']:
     '''
     Grab announcements for the following websites and
-    put them in the DB:
+    put them in a custom RSS file:
      - http://teilar.gr/news.php?cid=1
      - http://teilar.gr/news.php?cid=2
      - http://teilar.gr/news.php?cid=5
@@ -63,19 +60,13 @@ for cid in [1, 2, 5, 6, 'tmimatanews.php']:
     announcement = {}
     for item in announcements_all[::-1]:
         announcement['urlid'] = item['href'].split('nid=')[1]
-#        if int(announcement['urlid']) in announcements_from_db:
-#            '''
-#            If the announcement is already in the DB skip it
-#            '''
-            #continue
-#            print 'continue'
         '''
         Get inside the announcement to get the rest of the info
         '''
-        ann_link = 'news_detail.php?nid='
+        ann_link = 'news_detail.php?nid=' + announcement['urlid']
         if type(cid) != int:
             ann_link = 'tmimata/' + ann_link
-        output = teilar_login('teilar', ann_link + announcement['urlid'])
+        output = teilar_login('teilar', ann_link)
         soup = BeautifulSoup(output)
         if not author_global:
             author = soup.find('span', 'OraTextBold').contents[0].split(' >')[0].replace(u'Τεχν.', u'Τεχνολογίας')
@@ -87,34 +78,24 @@ for cid in [1, 2, 5, 6, 'tmimatanews.php']:
         title = temp_td_oratext[1].contents[0]
         summary = soup.find('td', 'BlackText11').contents[0]
         try:
-            attachment = soup.find('a', 'BlackText11Bold')['href']
+            # TODO: A list of cases for known mimetypes eg .doc
+            attachment = feedgenerator.Enclosure(soup.find('a', 'BlackText11Bold')['href'], 'Unknown', 'Unknown')
         except:
             attachment = None
         '''
-        Add the announcement in DB
+        Write the item in the RSS feed
         '''
-        '''announcement_teilar = AnnouncementsTeilar(
-            urlid = int(announcement['urlid']),
-            author = unicode(author),
-            title = unicode(title),
-            date = date,
-            summary = unicode(summary),
-            attachment = attachment,
+        custom_rss.add_item(
+            title = title,
+            link = 'http://teilar.gr/' + ann_link,
+            pubdate = date,
+            description = summary,
+            author_name = author,
+            enclosure = attachment
         )
-        try:
-            announcement_teilar.save()
-            status = u'Επιτυχής προσθήκη της ανακοίνωσης %s' % title
-            logger_syslog.info(status, extra = log_extra_data(cronjob = author))
-        except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(cronjob = author))
-            logger_mail.exception(error)
-            raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη της ανακοίνωσης %s' % title)'''
-        '''
-        Add item to feed
-        '''
-        if attachment:
-            attachment = feedgenerator.Enclosure(attachment, 'doc', 'test')
-        f.add_item(title = title, link = announcement['urlid'], pubdate = date, description = summary, author_name = author, enclosure = attachment)
-teilarfeed = open('/tmp/announcements_teilar.rss', 'w')
-f.write(teilarfeed, 'UTF-8')
+'''
+Create the file
+'''
+teilarfeed = open('/tmp/custom_teilar_announcements.rss', 'w')
+custom_rss.write(teilarfeed, 'UTF-8')
 teilarfeed.close()

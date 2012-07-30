@@ -115,7 +115,6 @@ INSTALLED_APPS = (
     'apps.accounts',
     'apps.eclass',
     'apps.teilar',
-    'apps.rss_creator',
 )
 
 # A sample logging configuration. The only tangible logging

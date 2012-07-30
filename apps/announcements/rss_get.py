@@ -36,9 +36,9 @@ for lesson in eclass_lessons:
     sites[lesson.name] = 'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.urlid
 
 '''
-Add the teilar.gr announcements in the list of RSS sites
+Add the custom made RSS in the list of RSS sites
 '''
-sites['announcements_teilar'] = '/tmp/announcements_teilar.rss'
+sites['announcements_teilar'] = '/tmp/custom_teilar_announcements.rss'
 
 for author, site in sites.iteritems():
     rss = feedparser.parse(site)
