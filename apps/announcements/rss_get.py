@@ -13,20 +13,28 @@ import feedparser
 List of sites that offer RSS
 '''
 sites = {
+    '''
+    Remote RSS files
+    '''
     u'Γενικές ανακοινώσες openclass.teilar.gr': 'http://openclass.teilar.gr/rss.php',
     u'LinuxTeam ΤΕΙ Λάρισας': 'http://linuxteam.teilar.gr/rss.xml',
     u'Κέντρο Διαχείρισης Δικτύου ΤΕΙ Λάρισας': 'http://noc.teilar.gr/index.php/2012-05-10-08-28-35.feed?type=atom',
     u'Μονάδα Καινοτομίας και Επιχειρηματικότητας': 'http://mke.teilar.gr/business/mathimata-ann.feed',
     u'Πύλη ΑμΕΑ ΤΕΙ Λάρισας': 'http://disabled.teilar.gr/index.php?format=feed&type=rss',
+    # PR?
+    # TODO: cronos!
+    # TODO: diogenis!
+    '''
+    Custom made RSS files
+    '''
+    u'Ανακοινώσεις teilar.gr': '/tmp/custom_teilar.rss',
+    #u'Τμήμα Διοίκησης και Διαχείρισης έργων': '/tmp/custom_dde.rss'
+    u'Ανακοινώσεις καθηγητών teilar.gr': '/tmp/custom_teachers.rss',
+    #u'Γραμματεία ΤΕΙ Λάρισας': '/tmp/custom_dionysos.rss',
+    #u'Βιβλιοθήκη ΤΕΙ Λάρισας': '/tmp/custom_library.rss',
+    #u'carrer?': '/tmp/custom_career.rss',
+    #u'Μονάδα Διασφάλισης Ποιότητας ΤΕΙ Λάρισας': '/tmp/custom_modip.rss',
 }
-
-'''
-Add the Departments from the DB in the list of RSS sites
-EDIT: They don't offer good RSS, I am recreating it
-'''
-#departments = Departments.objects.filter(deprecated = False)
-#for department in departments:
-#    sites[department.name] = 'http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.urlid
 
 '''
 Add the eclass lessons in the list of RSS sites
@@ -36,9 +44,12 @@ for lesson in eclass_lessons:
     sites[lesson.name] = 'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.urlid
 
 '''
-Add the custom made RSS in the list of RSS sites
+Add the Departments from the DB in the list of RSS sites
+EDIT: They don't offer good RSS, I am recreating it
 '''
-sites['announcements_teilar'] = '/tmp/custom_teilar_announcements.rss'
+#departments = Departments.objects.filter(deprecated = False)
+#for department in departments:
+#    sites[department.name] = 'http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.urlid
 
 for author, site in sites.iteritems():
     rss = feedparser.parse(site)
