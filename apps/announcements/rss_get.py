@@ -72,6 +72,12 @@ def get_sites():
 
 def get_announcements(sites):
     '''
+    Get the announcements and add them to the DB
+    '''
+    sites = get_sites()
+    get_announcements(sites)
+
+    '''
     Parse the RSS feed and grab the tags that are of interest
     '''
     for author, site in sites.iteritems():
@@ -81,8 +87,7 @@ def get_announcements(sites):
         else:
             entries = rss.entries[::-1]
         for entry in entries:
-            add_announcement_to_db()
-            print '\n\n## entry.title ##'
+            '''print '\n\n## entry.title ##'
             print entry.title
             print '## entry.link ##'
             print entry.link
@@ -107,21 +112,48 @@ def get_announcements(sites):
                 for enclosure in entry.enclosures:
                     print enclosure.href
             except:
-                pass
+                pass'''
+            title = entry.title
+            link = entry.link
+            pubdate = updated_parsed
+            summary = entry.summary
+            if author == u'DC:AUTHOR':
+                author = entry.author
+            try:
+                enclosure = entry.enclosures[0].href
+            except:
+                enclosure = None
+            unique = link + pubdate + title + author + summary
+            if enclosure:
+                unique += enclosure
+            announcement = [title, link, pubdate, summary, author, enclosure, unique]
+            add_announcement_to_db(announcement)
 
-def add_announcement_to_db():
-    return
-
-def update_announcements():
+def add_announcement_to_db(announcement):
     '''
-    Update the announcements
+    Add the announcement to the DB
     '''
-    sites = get_sites()
-    get_announcements(sites)
+    # TODO: check first that the announcement is not there using the "unique field"
+    # TODO: create an announcements_authors table that will connect authors from various tables with the announcements table
+    try:
+        new_announcement = Announcements(
+            title = announcement[0],
+            link = announcement[1],
+            pubdate = announcement[2],
+            summary = announcement[3],
+            author = announcement[4],
+            enclosure = announcement[5],
+            unique = announcement[6],
+        )
+        new_announcement.save()
+    except Exception as error:
+        logger_syslog.error(error, log_extra_data(cronjob = title))
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη ανακοίνωσης στη βάση δεδομένων')
     return
 
 if __name__ == '__main__':
     try:
-        update_announcements()
+        get_announcements()
     except CronosError as error:
         logger_syslog.error(error.value, extra = log_extra_data())

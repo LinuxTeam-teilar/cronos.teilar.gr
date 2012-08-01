@@ -4,7 +4,7 @@ from django.db import models
 
 class Announcements(models.Model):
     title = models.CharField("Title", max_length = 500)
-    date_fetched = models.DateTimeField(auto_now = True)
+    pubdate = models.DateTimeField(auto_now = True)
     urlid = models.ForeignKey(Id)
     unique = models.CharField("Unique entry", max_length = 250, unique = True)
     url = models.URLField()
