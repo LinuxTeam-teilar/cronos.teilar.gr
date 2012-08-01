@@ -57,6 +57,11 @@ def write_rss_file(custom_rss, filename):
     Write the RSS in a file
     '''
     try:
+        if not os.path.exists(settings.RSS_PATH):
+            '''
+            Create the dir if it doesn't exist
+            '''
+            os.makedirs(settings.RSS_PATH)
         teilarfeed = open('%s/%s' % (settings.RSS_PATH, filename), 'w')
         custom_rss.write(teilarfeed, 'UTF-8')
         teilarfeed.close()
