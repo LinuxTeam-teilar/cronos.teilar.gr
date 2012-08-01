@@ -3,6 +3,14 @@
 from django.conf import settings
 from django.core.mail import send_mail
 
+'''
+For unkown reason, the logger is NOT able to find a handler
+unless a settings.VARIABLE is called!!
+https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues/1
+I leave that here till the bug is fixed
+'''
+settings.DEBUG
+
 def mail_cronos_admin(title, message):
     '''
     Wrapper function of send_mail
