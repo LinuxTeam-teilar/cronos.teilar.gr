@@ -127,8 +127,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters':{
         'cronos_formatter': {
-            'format': "cronos: %(levelname)s %(client_ip)s %(username)s %(cronjob)s Message: %(message)s \
-                    \ncronos: File: %(module)s Function: %(funcName)s Line: %(lineno)d",
+            'format': 'cronos: %(levelname)s %(client_ip)s %(username)s %(cronjob)s Message: %(message)s \
+                    \ncronos: File: %(module)s Function: %(funcName)s Line: %(lineno)d',
         },
     },
     'filters': {
@@ -139,11 +139,7 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            ##BROKEN
-            # The following is not really needed. If Debug is True, cronos will send
-            # mail to /tmp/cronos instead of actually sending it through SMTP
-            ##BROKEN
-            #'filters': ['require_debug_false'],
+            'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
             'include_html': True,
         },
@@ -192,7 +188,10 @@ EMAIL_SUBJECT_PREFIX = '[cronos] '
 
 if DEBUG:
     ### BROKEN ###
-    # In Debug mode, put the mails in /tmp/cronos instead of sending them
-    # through SMTP
+    # In Debug mode, put the mails in /tmp/cronos/mail instead of
+    # sending them through SMTP
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-    EMAIL_FILE_PATH = '/tmp/cronos'
+    EMAIL_FILE_PATH = '/tmp/cronos/mail'
+
+# Path that custom RSS files are stored
+RSS_PATH = '/tmp/cronos/rss'
