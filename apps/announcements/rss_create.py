@@ -81,16 +81,20 @@ def get_teilar():
     - http://teilar.gr/news.php?cid=6
     - http://teilar.gr/tmimatanews.php
     '''
-    custom_rss = initialize_rss_file()
     for cid in [1, 2, 5, 6, 'tmimatanews.php']:
+        custom_rss = initialize_rss_file()
         if cid == 1:
             author = u'Γενικές Ανακοινώσεις'
+            rss_name = u'general.rss'
         elif cid == 2:
             author = u'Ανακοινώσεις του ΤΕΙ Λάρισας'
+            rss_name = u'teilar_ann.rss'
         elif cid == 5:
             author = u'Συνεδριάσεις Συμβουλίου ΤΕΙ Λάρισας'
+            rss_name = u'council.rss'
         elif cid == 6:
             author = u'Ανακοινώσεις της Επιτροπής Εκπαίδευσης και Ερευνών του ΤΕΙ Λάρισας'
+            rss_name = u'committee.rss'
         else:
             author = None
         if type(cid) == int:
@@ -102,12 +106,12 @@ def get_teilar():
         '''
         soup = BeautifulSoup(output)
         try:
-            announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')
+            announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')[:10]
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data())
             logger_mail.exception(error)
             raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοινώσεων')
-        for item in announcements_all[::-1]:
+        for item in announcements_all:
             '''
             Get inside the announcement to get the rest of the info
             '''
@@ -136,7 +140,7 @@ def get_teilar():
                 logger_mail.exception(error)
                 raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοίνωσης')
             add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_link, pubdate, description, author_name, enclosure)
-    write_rss_file(custom_rss, 'teilar.rss')
+        write_rss_file(custom_rss, rss_name)
     return
 
 def get_teachers():

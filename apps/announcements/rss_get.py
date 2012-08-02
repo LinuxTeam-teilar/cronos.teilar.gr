@@ -38,8 +38,11 @@ def get_sites():
         # TODO: cronos!
         # TODO: diogenis!
         ## Custom made RSS files ##
-        u'teilar_dummy': u'%s/%s' % (settings.RSS_PATH, 'teilar.rss'), # Various teilar websites' announcements
-        u'teachers_dummy': u'%s/%s' % (settings.RSS_PATH, 'teachers.rss'), # All teachers' announcements
+        u'general_dummy': u'%s/%s' % (settings.RSS_PATH, 'general.rss'),
+        u'council_dummy': u'%s/%s' % (settings.RSS_PATH, 'council.rss'),
+        u'general_dummy': u'%s/%s' % (settings.RSS_PATH, 'general.rss'),
+        u'teilar_ann_dummy': u'%s/%s' % (settings.RSS_PATH, 'teilar_ann_dummy.rss'),
+        u'teachers_dummy': u'%s/%s' % (settings.RSS_PATH, 'teachers.rss'),
         #u'Τμήμα Διοίκησης και Διαχείρισης έργων': u'%s/%s' % (settings.RSS_PATH, 'dde.rss'),
         #u'Γραμματεία ΤΕΙ Λάρισας': u'%s/%s' % (settings.RSS_PATH, 'dionysos.rss'),
         #u'Βιβλιοθήκη ΤΕΙ Λάρισας': u'%s/%s' % (settings.RSS_PATH, 'library.rss'),
