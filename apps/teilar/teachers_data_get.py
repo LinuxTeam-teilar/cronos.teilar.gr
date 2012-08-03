@@ -69,12 +69,10 @@ def add_teacher_to_db(teacher_id, attributes):
             department = department,
         )
         teachers.save()
-        status = u'Ο/Η %s προστέθηκε επιτυχώς' % name
-        logger_syslog.info(status, extra = log_extra_data())
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(cronjob = name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % name)
     return
 
 def deprecate_teacher_in_db(teacher_id):
@@ -85,12 +83,10 @@ def deprecate_teacher_in_db(teacher_id):
     teacher.deprecated = True
     try:
         teacher.save()
-        status = u'Αλλαγή κατάστασης σε deprecated'
-        logger_syslog.info(status, extra = log_extra_data(cronjob = teacher.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(cronjob = teacher.name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = teacher.name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης σε deprecated')
     return
 
 def update_teachers():
@@ -169,7 +165,6 @@ def update_teachers():
                 except Exception as error:
                     logger_syslog.error(error, extra = log_extra_data(cronjob = teacher.name))
                     logger_mail.exception(error)
-                    raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s σε %s' % (attr_name, attribute))
             i += 1
     return
 

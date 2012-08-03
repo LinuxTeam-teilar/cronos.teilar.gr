@@ -40,7 +40,7 @@ def get_lessons():
             for lesson in all_lessons:
                 lesson_id = lesson.small.contents[0].replace('(', '').replace(')', '')
                 try:
-                    name = lesson.a.contents[0]
+                    name = lesson.a.contents[0].strip()
                 except AttributeError:
                     name = lesson.find_all('td')[1].contents[0].strip()
                 try:
@@ -70,12 +70,10 @@ def add_lesson_to_db(lesson_id, attributes):
     )
     try:
         lesson.save()
-        status = u'Το %s προστέθηκε επιτυχώς' % name
-        logger_syslog.info(status, extra = log_extra_data(cronjob = name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(cronjob = name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % name)
     return
 
 def deprecate_lesson_in_db(lesson_id):
@@ -86,12 +84,10 @@ def deprecate_lesson_in_db(lesson_id):
     lesson.deprecated = True
     try:
         lesson.save()
-        status = u'Το %s άλλαξε κατάσταση σε deprecated' % (lesson.name)
-        logger_syslog.info(status, extra = log_extra_data(cronjob = lesson.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(cronjob = lesson.name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = lesson.name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s σε deprecated' % (lesson.name))
     return
 
 def update_lessons():
@@ -166,7 +162,6 @@ def update_lessons():
                 except Exception as error:
                     logger_syslog.error(error, extra = log_extra_data(cronjob = lesson.name))
                     logger_mail.exception(error)
-                    raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s σε %s' % (attr_name, attribute))
             i += 1
     return
 

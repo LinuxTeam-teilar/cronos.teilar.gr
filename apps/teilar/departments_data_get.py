@@ -40,12 +40,10 @@ def add_department_to_db(department_id, name):
     )
     try:
         department.save()
-        status = u'Το %s προστέθηκε επιτυχώς' % (name)
-        logger_syslog.info(status, extra = log_extra_data(cronjob = name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(cronjob = name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη του %s' % (name))
     return
 
 def deprecate_department_in_db(department_id):
@@ -56,12 +54,10 @@ def deprecate_department_in_db(department_id):
     department.deprecated = True
     try:
         department.save()
-        status = u'Το %s άλλαξε κατάσταση σε deprecated' % (department.name)
-        logger_syslog.info(status, extra = log_extra_data(cronjob = department.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(cronjob = department.name))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(cronjob = department.name))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την αλλαγή κατάστασης του %s σε deprecated' % (department.name))
     return
 
 def update_departments():
