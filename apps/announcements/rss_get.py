@@ -75,81 +75,6 @@ def get_sites():
     #    sites[department.name] = 'http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.urlid
     return sites
 
-def get_announcements():
-    '''
-    Get the announcements and add them to the DB
-    '''
-    sites = get_sites()
-
-    '''
-    Parse the RSS feed
-    '''
-    for creator, site in sites.iteritems():
-        try:
-            rss = feedparser.parse(site)
-        except SAXException as warning:
-            '''
-            Bad characters where found, trying to fix
-            '''
-            logger_syslog.warning(warning, extra = log_extra_data(cronjob = site))
-            response = urllib2.urlopen(site)
-            output = response.read()
-            '''
-            Clean no-break space
-            '''
-            output = output.replace('\xa0 ', ' ').replace('\xa0 ', ' ').replace('\xc2 ', '\xc2\xa0 ').replace('\xc2\xa0', '')
-            try:
-                rss = feedparser.parse(output)
-                logger_syslog.info('FIXED!', extra = log_extra_data(cronjob = site))
-            except SAXException as error:
-                '''
-                Still no success, giving up
-                '''
-                # TODO: Try to grab the <item>s with bs4 and create a custom RSS feed
-                logger_syslog.error(error, extra = log_extra_data(cronjob = site))
-                logger_mail.exception(error)
-                continue
-        '''
-        We add only the 10 latest announcements
-        '''
-        if len(rss.entries) > 10:
-            entries = rss.entries[:10][::-1]
-        else:
-            entries = rss.entries[::-1]
-        for entry in entries:
-            '''
-            Grab the tags that are of interest
-            '''
-            title = entry.title
-            link = entry.link
-            pubdate = entry.updated_parsed
-            summary = entry.summary
-            '''
-            Select either the creator of the RSS or
-            the creator from the value of the key of
-            the 'sites' dictionary
-            '''
-            if creator.endswith(u'_dummy'):
-                creator = entry.author
-            try:
-                enclosure = entry.enclosures[0].href
-            except:
-                enclosure = None
-            if site.endswith(u'teachers.rss'):
-                '''
-                Teachers have all the announcements in a
-                single page, instead of having each one
-                in its own page, thus the unique field
-                has to be combined with something else
-                '''
-                unique = link + summary
-                if enclosure:
-                    unique += enclosure
-            else:
-                unique = link
-            announcement = [title, link, pubdate, summary, creator, enclosure, unique]
-            add_announcement_to_db(announcement)
-
 def add_announcement_to_db(announcement):
     '''
     Add the announcement to the DB
@@ -187,8 +112,104 @@ def add_announcement_to_db(announcement):
         logger_mail.exception(error)
     return
 
+def parse_or_fix_rss(site):
+    '''
+    Parse the RSS feed. If there are problems, try to work around them
+    '''
+    try:
+        rss = feedparser.parse(site)
+    except SAXException as warning:
+        '''
+        Failed to parse the RSS feed, try to fix it
+        '''
+        logger_syslog.warning(warning, extra = log_extra_data(cronjob = site))
+        '''
+        Download the RSS file manually
+        '''
+        output = urllib2.urlopen(site).read()
+        '''
+        Clean no-break space
+        '''
+        output = output.replace('\xa0 ', ' ').replace('\xa0 ', ' ').replace('\xc2 ', '\xc2\xa0 ').replace('\xc2\xa0', '')
+        try:
+            rss = feedparser.parse(output)
+            logger_syslog.info('FIXED!', extra = log_extra_data(cronjob = site))
+        except Exception as error:
+            '''
+            Still no success, giving up
+            '''
+            # TODO: Try to grab the <item>s with bs4 and create a custom RSS feed
+            logger_syslog.error(error, extra = log_extra_data(cronjob = site))
+            logger_mail.exception(error)
+            return None
+    return rss
+
+def get_announcement(entry, creator, site):
+    '''
+    Return a list with the announcement's tags that are of interest
+    '''
+    title = entry.title
+    link = entry.link
+    pubdate = entry.updated_parsed
+    summary = entry.summary
+    '''
+    Select either the creator of the RSS or
+    the creator from the value of the key of
+    the 'sites' dictionary
+    '''
+    if creator.endswith(u'_dummy'):
+        creator = entry.author
+    try:
+        enclosure = entry.enclosures[0].href
+    except:
+        enclosure = None
+    if site.endswith(u'teachers.rss'):
+        '''
+        Teachers have all the announcements in a
+        single page, instead of having each one
+        in its own page, thus the unique field
+        has to be combined with something else
+        '''
+        unique = link + summary
+        if enclosure:
+            unique += enclosure
+    else:
+        unique = link
+    announcement = [title, link, pubdate, summary, creator, enclosure, unique]
+    return announcement
+
+def update_announcements():
+    '''
+    Update the DB with new announcements of all the websites listed in sites.keys()
+    '''
+    sites = get_sites()
+    for creator, site in sites.iteritems():
+        '''
+        Try to parse the RSS feed
+        In case it is broken, try to fix it as well
+        '''
+        rss = parse_or_fix_rss(site)
+        if not rss:
+            '''
+            Didn't manage to fix it, give up and move on
+            '''
+            continue
+        '''
+        Grab the latest max 10 announcements
+        '''
+        if len(rss.entries) > 10:
+            entries = rss.entries[:10][::-1]
+        else:
+            entries = rss.entries[::-1]
+        for entry in entries:
+            '''
+            Get the data of each entry and add them in DB
+            '''
+            announcement = get_announcement(entry, creator, site)
+            add_announcement_to_db(announcement)
+
 if __name__ == '__main__':
     try:
-        get_announcements()
+        update_announcements()
     except CronosError as error:
         logger_syslog.error(error.value, extra = log_extra_data())
