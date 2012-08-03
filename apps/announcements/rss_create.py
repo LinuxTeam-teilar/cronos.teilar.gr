@@ -84,19 +84,15 @@ def get_teilar():
     for cid in [1, 2, 5, 6, 'tmimatanews.php']:
         custom_rss = initialize_rss_file()
         if cid == 1:
-            author = u'Γενικές Ανακοινώσεις'
             rss_name = u'general.rss'
         elif cid == 2:
-            author = u'Ανακοινώσεις του ΤΕΙ Λάρισας'
             rss_name = u'teilar_ann.rss'
         elif cid == 5:
-            author = u'Συνεδριάσεις Συμβουλίου ΤΕΙ Λάρισας'
             rss_name = u'council.rss'
         elif cid == 6:
-            author = u'Ανακοινώσεις της Επιτροπής Εκπαίδευσης και Ερευνών του ΤΕΙ Λάρισας'
             rss_name = u'committee.rss'
         else:
-            author = None
+            rss_name = u'departments.rss'
         if type(cid) == int:
             output = teilar_login('teilar', 'news.php?cid=%s' % cid)
         else:
@@ -121,10 +117,10 @@ def get_teilar():
             output = teilar_login('teilar', ann_link)
             soup = BeautifulSoup(output)
             try:
-                if not author:
-                    author_name = soup.find('span', 'OraTextBold').contents[0].split(' >')[0].replace(u'Τεχν.', u'Τεχνολογίας')
+                if type(cid) != int:
+                    creator = soup.find('span', 'OraTextBold').contents[0].split(' >')[0].replace(u'Τεχν.', u'Τεχνολογίας')
                 else:
-                    author_name = author
+                    creator = None
                 temp_td_oratext = soup.find_all('td', 'OraText')
                 pubdate = temp_td_oratext[0].contents[0].split('/')
                 pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
@@ -139,7 +135,7 @@ def get_teilar():
                 logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_link))
                 logger_mail.exception(error)
                 raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοίνωσης')
-            add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_link, pubdate, description, author_name, enclosure)
+            add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_link, pubdate, description, creator, enclosure)
         write_rss_file(custom_rss, rss_name)
     return
 
