@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from apps import CronosError
+from apps import CronosError, log_extra_data
 from apps.accounts.encryption import decrypt_password
 from apps.accounts.student_data_get import *
 from apps.accounts.student_data_to_db import add_student_to_db
+from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 
 class DionysosTeilarAuthentication(object):
@@ -11,12 +12,12 @@ class DionysosTeilarAuthentication(object):
     Custom authentication backend. It uses dionysos.teilar.gr to
     authenticate the student.
     '''
-    def authenticate(self, username = None, password = None):
+    def authenticate(self, username = None, password = None, request = None):
         '''
         Try to authenticate the user. If there isn't such user
         in the Django DB, try to find the user in dionysos.teilar.gr
         '''
-        return self.get_or_create_user(username, password)
+        return self.get_or_create_user(username, password, request)
 
     def get_user(self, user_id):
         '''
@@ -27,7 +28,7 @@ class DionysosTeilarAuthentication(object):
         except User.DoesNotExist:
             return
 
-    def get_or_create_user(self, username = None, password = None):
+    def get_or_create_user(self, username = None, password = None, request = None):
         '''
         Retrieves the user from the Django DB. If the user is not
         found in the DB, then it tries to retrieve him from
@@ -66,15 +67,21 @@ class DionysosTeilarAuthentication(object):
                         'username': username,
                         'password': password,
                 }
-                credentials['last_name'] = get_dionysos_last_name(output, username)
-                credentials['first_name'] = get_dionysos_first_name(output, username)
-                credentials['registration_number'] = get_dionysos_registration_number(output, username)
-                credentials['semester'] = get_dionysos_semester(output, username)
-                credentials['school'] = get_dionysos_school(output, username)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, username)
-                credentials['declaration'] = get_dionysos_declaration(username, password)
-                #credentials['grades'] = get_dionysos_grades(username, password)
-                user = add_student_to_db(credentials)
+                try:
+                    front_page = BeautifulSoup(output).find_all('table')[14].find_all('tr')
+                except Exception as error:
+                    logger_syslog.error(error, extra = log_extra_data(username, request))
+                    logger_mail.exception(error)
+                    raise CronosError(u'Αδυναμία ανάκτησης στοιχείων χρήστη')
+                credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
+                credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
+                credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
+                credentials['semester'] = get_dionysos_semester(front_page, username, request)
+                credentials['school'] = get_dionysos_school(front_page, username, request)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
+                credentials['declaration'] = get_dionysos_declaration(username, password, request)
+                #credentials['grades'] = get_dionysos_grades(username, password, request)
+                user = add_student_to_db(credentials, request)
             else:
                 return
         return user

@@ -94,7 +94,7 @@ def add_announcement_to_db(announcement):
         )
         status = u'Νέα ανακοίνωση'
         new_announcement.save()
-        logger_syslog.info(status, extra = log_extra_data(cronjob = announcement[0]))
+        logger_syslog.info(status, extra = log_extra_data(announcement[0]))
     except IntegrityError as error:
         if tuple(error)[0] == 1062 and tuple(error)[1].endswith("'unique'"):
             '''
@@ -102,13 +102,13 @@ def add_announcement_to_db(announcement):
             '''
             pass
         else:
-            logger_syslog.error(error, extra = log_extra_data(cronjob= announcement[0]))
+            logger_syslog.error(error, extra = log_extra_data(announcement[0]))
             logger_mail.exception(error)
     except MySQLdb.Warning as warning:
-        logger_syslog.info(status, extra = log_extra_data(cronjob = announcement[0]))
-        logger_syslog.warning(warning, extra = log_extra_data(cronjob = announcement[0]))
+        logger_syslog.info(status, extra = log_extra_data(announcement[0]))
+        logger_syslog.warning(warning, extra = log_extra_data(announcement[0]))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = announcement[0]))
+        logger_syslog.error(error, extra = log_extra_data(announcement[0]))
         logger_mail.exception(error)
     return
 
@@ -122,7 +122,7 @@ def parse_or_fix_rss(site):
         '''
         Failed to parse the RSS feed, try to fix it
         '''
-        logger_syslog.warning(warning, extra = log_extra_data(cronjob = site))
+        logger_syslog.warning(warning, extra = log_extra_data(site))
         '''
         Download the RSS file manually
         '''
@@ -133,13 +133,13 @@ def parse_or_fix_rss(site):
         output = output.replace('\xa0 ', ' ').replace('\xa0 ', ' ').replace('\xc2 ', '\xc2\xa0 ').replace('\xc2\xa0', '')
         try:
             rss = feedparser.parse(output)
-            logger_syslog.info('FIXED!', extra = log_extra_data(cronjob = site))
+            logger_syslog.info('FIXED!', extra = log_extra_data(site))
         except Exception as error:
             '''
             Still no success, giving up
             '''
             # TODO: Try to grab the <item>s with bs4 and create a custom RSS feed
-            logger_syslog.error(error, extra = log_extra_data(cronjob = site))
+            logger_syslog.error(error, extra = log_extra_data(site))
             logger_mail.exception(error)
             return None
     return rss

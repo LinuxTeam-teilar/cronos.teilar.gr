@@ -70,9 +70,9 @@ def add_lesson_to_db(lesson_id, attributes):
     )
     try:
         lesson.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(cronjob = name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = name))
+        logger_syslog.error(error, extra = log_extra_data(name))
         logger_mail.exception(error)
     return
 
@@ -84,9 +84,9 @@ def deprecate_lesson_in_db(lesson_id):
     lesson.deprecated = True
     try:
         lesson.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(cronjob = lesson.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(lesson.name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = lesson.name))
+        logger_syslog.error(error, extra = log_extra_data(lesson.name))
         logger_mail.exception(error)
     return
 
@@ -158,9 +158,9 @@ def update_lessons():
                 try:
                     lesson.save()
                     status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                    logger_syslog.info(status, extra = log_extra_data(cronjob = lesson.name))
+                    logger_syslog.info(status, extra = log_extra_data(lesson.name))
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(cronjob = lesson.name))
+                    logger_syslog.error(error, extra = log_extra_data(lesson.name))
                     logger_mail.exception(error)
             i += 1
     return

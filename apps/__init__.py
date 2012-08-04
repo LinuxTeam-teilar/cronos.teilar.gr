@@ -29,7 +29,7 @@ class CronosError(Exception):
     def __unicode__(self):
         return repr(self.value)
 
-def log_extra_data(username = None, request = None, form = None, cronjob = None):
+def log_extra_data(id_name = None, request = None):
     '''
     Extra data needed by the custom formatter
     All values default to None
@@ -39,24 +39,15 @@ def log_extra_data(username = None, request = None, form = None, cronjob = None)
     '''
     log_extra_data = {
         'client_ip': request.META.get('REMOTE_ADDR','None') if request else '',
-        'username': username if username else '',
-        'cronjob': cronjob if cronjob else '',
+        'id_name': id_name if id_name else '',
     }
-    if not username:
-        if form:
-            log_extra_data['username'] = form.data.get('username', 'None')
-        else:
-            try:
-                if request.user.is_authenticated():
-                    '''
-                    Handle logged in users
-                    '''
-                    log_extra_data['username'] = request.user.name
-                else:
-                    '''
-                    Handle anonymous users
-                    '''
-                    log_extra_data['username'] = 'Anonymous'
-            except AttributeError:
+    if not id_name:
+        try:
+            if request.user.is_authenticated():
+                '''
+                Handle logged in users
+                '''
+                log_extra_data['id_name'] = request.user.name
+        except AttributeError:
                 pass
     return log_extra_data

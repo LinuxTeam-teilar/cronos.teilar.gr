@@ -41,9 +41,9 @@ def add_faculty_to_db(faculty_id, attributes):
     )
     try:
         faculty.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(cronjob = name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = name))
+        logger_syslog.error(error, extra = log_extra_data(name))
         logger_mail.exception(error)
     return
 
@@ -55,9 +55,9 @@ def deprecate_faculty_in_db(faculty_id):
     faculty.deprecated = True
     try:
         faculty.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(cronjob = faculty.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(faculty.name))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(cronjob = faculty.name))
+        logger_syslog.error(error, extra = log_extra_data(faculty.name))
         logger_mail.exception(error)
     return
 
@@ -116,9 +116,9 @@ def update_faculties():
                 try:
                     faculty.save()
                     status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                    logger_syslog.info(status, extra = log_extra_data(cronjob = faculty.name))
+                    logger_syslog.info(status, extra = log_extra_data(faculty.name))
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(cronjob = faculty.name))
+                    logger_syslog.error(error, extra = log_extra_data(faculty.name))
                     logger_mail.exception(error)
             i += 1
     return

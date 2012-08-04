@@ -177,7 +177,7 @@ def get_teachers():
         try:
             author_name = soup.find('td', 'BlueTextBold').i.contents[0]
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(cronjob = link))
+            logger_syslog.error(error, extra = log_extra_data(link))
             logger_mail.exception(error)
             raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση του ονόματος του καθηγητή')
         '''
@@ -186,7 +186,7 @@ def get_teachers():
         try:
             announcements_all = soup.find_all('td', 'LineDownDots')[0:number]
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(cronjob = link))
+            logger_syslog.error(error, extra = log_extra_data(link))
             logger_mail.exception(error)
             raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση του ονόματος του καθηγητή')
         for announcement in announcements_all:
@@ -204,7 +204,7 @@ def get_teachers():
                 except Exception as error:
                     enclosure = None
             except Exception as error:
-                logger_syslog.error(error, extra = log_extra_data(cronjob = author_name))
+                logger_syslog.error(error, extra = log_extra_data(author_name))
                 logger_mail.exception(error)
                 raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοινώσεων καθηγητή')
             add_rss_item(custom_rss, title, 'http://teilar.gr/' + link, pubdate, description, author_name, enclosure)

@@ -10,7 +10,7 @@ import logging
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def add_student_to_db(credentials):
+def add_student_to_db(credentials, request):
     '''
     Adds a new user in the Database, along with the collected credentials from
     dionysos.teilar.gr
@@ -26,7 +26,7 @@ def add_student_to_db(credentials):
     try:
         user.save()
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username = credentials['username']))
+        logger_syslog.error(error, extra = log_extra_data(credentials['username'], request))
         logger_mail.exception(error)
         raise CronosError(u'Σφάλμα αποθήκευσης βασικών στοιχείων χρήστη')
     '''
@@ -42,11 +42,11 @@ def add_student_to_db(credentials):
             school = Departments.objects.get(name = credentials['school']),
             introduction_year = credentials['introduction_year'],
             declaration = credentials['declaration'],
-#           grades = credentials['grades'],
+            #grades = credentials['grades'],
         )
         user_profile.save()
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username = credentials['username']))
+        logger_syslog.error(error, extra = log_extra_data(credentials['username'], request))
         logger_mail.exception(error)
         raise CronosError(u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
     '''

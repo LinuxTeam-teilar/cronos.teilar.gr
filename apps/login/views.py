@@ -20,7 +20,7 @@ def cronos_login(request):
             username = None
             password = None
         try:
-            user = authenticate(username = username, password = password)
+            user = authenticate(username = username, password = password, request = request)
             if not user:
                 raise CronosError(u'Λάθος στοιχεία')
             if user.is_active:
