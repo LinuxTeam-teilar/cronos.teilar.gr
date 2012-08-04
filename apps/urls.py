@@ -4,7 +4,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from apps.rss_creator.feeds import AnnouncementsTeilarFeed
 
 #feeds = {
 #    'announcements': AnnouncementsFeed,
@@ -19,7 +18,6 @@ urlpatterns = patterns('',
     (r'^dionysos/', 'apps.dionysos.views.dionysos'),
     (r'^eclass/', 'apps.eclass.views.eclass'),
 #    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
-    (r'^announcementsteilar/$', AnnouncementsTeilarFeed()),
     (r'^library/', 'apps.library.views.library'),
     (r'^login/', 'apps.login.views.cronos_login'),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}),
