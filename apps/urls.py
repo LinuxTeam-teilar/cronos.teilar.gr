@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}),
     (r'^preferences/', 'apps.accounts.views.accounts_settings'),
     (r'^refrigerators/', 'apps.refrigerators.views.refrigerators'),
-    (r'^teachers/', 'apps.teachers.views.teachers'),
+    (r'^teachers/', 'apps.teilar.views.teachers'),
 )
 
 urlpatterns += staticfiles_urlpatterns()
