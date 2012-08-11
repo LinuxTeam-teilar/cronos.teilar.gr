@@ -172,7 +172,7 @@ def get_teachers():
         '''
         Get inside the teacher's page which contains all the announcements
         '''
-        output = teilar_login('http://www.teilar.gr/%s', link)
+        output = teilar_login('http://www.teilar.gr/%s' % link)
         soup = BeautifulSoup(output)
         try:
             author_name = soup.find('td', 'BlueTextBold').i.contents[0]

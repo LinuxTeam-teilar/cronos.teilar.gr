@@ -29,7 +29,7 @@ def teilar_login(link = None):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s.teilar.gr' % subdomain)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % link.split('teilar.gr')]0])
     return unicode(b.getvalue(), 'utf-8', 'ignore')
 
 def dionysos_login(username, password, link = None):
