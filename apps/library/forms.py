@@ -2,5 +2,5 @@
 
 from django import forms
 
-class SearchForm(forms.Form):
+class LibraryForm(forms.Form):
     search = forms.CharField(label = 'Αναζήτηση', max_length = 100)

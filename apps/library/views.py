@@ -1,42 +1,43 @@
 # -*- coding: utf-8 -*-
 
-from BeautifulSoup import BeautifulSoup
-from cronos.library.forms import *
+from apps.library.forms import LibraryForm
+from apps.teilar.websites_login import teilar_login
+from bs4 import BeautifulSoup
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import httplib
-import pycurl
-import StringIO
-import urllib
 
 def library(request):
-    msg = ''
-    results = ''
+    '''
+    Perform search in library.teilar.gr and print the results
+    '''
+    msg = None
     if request.method == 'GET':
-        form = SearchForm(request.GET)
+        form = LibraryForm(request.GET)
         if form.is_valid():
-            link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=40&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % (str(request.GET.get('search')))
-            b = StringIO.StringIO()
-            conn = pycurl.Curl()
-            conn.setopt(pycurl.URL, link)
-            conn.setopt(pycurl.WRITEFUNCTION, b.write)
-            conn.perform()
-            output = unicode(b.getvalue(), 'utf-8', 'ignore')
-            soup = BeautifulSoup(output).findAll('table')[24]
+            link = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=40&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % str(request.GET.get('search'))
+            output = teilar_login(link)
+            soup = BeautifulSoup(output).find_all('table')[24]
             results = []
-            i = 4
-            k = 0
-            for item in (soup.findAll('a', 'mediumBoldAnchor')):
-                title = str(soup.findAll('td')[i].contents[0].contents[0])
-                try:
-                    author = ''.join(str(soup.findAll('td')[i+1].contents[0].contents[1:]))[4:-5]
-                    editor = str(soup.findAll('td')[i+2].contents[0].contents[0]).split(' : ')[1]
-                    city = str(soup.findAll('td')[i+2].contents[0].contents[0]).split(' : ')[0]
-                except:
-                    pass
+            temp_a_mediumboldanchor = soup.find_all('a', 'mediumBoldAnchor')
+            temp_td = soup.find_all('td')
+            i = 5
+            for item in temp_a_mediumboldanchor:
+                title = item.contents[0]
+                '''
+                The authors are in <i> tags. Take the list of them by
+                taking a list of the contents of <i> tags, and then
+                join the list with commas for prettier output
+                '''
+                authors = []
+                tmp_authors = temp_td[i].find_all('i')
+                for author in tmp_authors:
+                    authors.append(author.contents[0].replace(',', '').strip())
+                authors = ', '.join(authors)
+                editor = temp_td[i+1].contents[0].contents[0].split(' : ')[1]
+                city = temp_td[i+1].contents[0].contents[0].split(' : ')[0]
                 i += 10
-                results.append([title, author, editor, city])
-            if (results == []):
+                results.append([title, authors, editor, city])
+            if not results:
                 msg = 'Δεν υπάρχουν αποτελέσματα'
     else:
         form = SearchForm()
