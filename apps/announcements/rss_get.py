@@ -11,7 +11,10 @@ from apps.teilar.models import Departments
 from apps.eclass.models import Lessons
 from django.conf import settings
 from django.db.utils import IntegrityError
+from django.utils import timezone
+from time import mktime
 from xml.sax._exceptions import SAXException
+import datetime
 import MySQLdb
 import feedparser
 import logging
@@ -79,14 +82,12 @@ def add_announcement_to_db(announcement):
     '''
     Add the announcement to the DB
     '''
-    # TODO: Fix pubdate
     # TODO: create an announcements_authors table that will connect authors from various tables with the announcements table
     try:
         new_announcement = Announcements(
             title = announcement[0],
             link = announcement[1],
-            #pubdate = announcement[2],
-            pubdate = None,
+            pubdate = announcement[2],
             summary = announcement[3],
             creator = announcement[4],
             enclosure = announcement[5],
@@ -94,7 +95,7 @@ def add_announcement_to_db(announcement):
         )
         status = u'Νέα ανακοίνωση'
         new_announcement.save()
-        logger_syslog.info(status, extra = log_extra_data(announcement[0]))
+        logger_syslog.info(status, extra = log_extra_data(announcement[1]))
     except IntegrityError as error:
         if tuple(error)[0] == 1062 and tuple(error)[1].endswith("'unique'"):
             '''
@@ -102,13 +103,13 @@ def add_announcement_to_db(announcement):
             '''
             pass
         else:
-            logger_syslog.error(error, extra = log_extra_data(announcement[0]))
+            logger_syslog.error(error, extra = log_extra_data(announcement[1]))
             logger_mail.exception(error)
     except MySQLdb.Warning as warning:
-        logger_syslog.info(status, extra = log_extra_data(announcement[0]))
-        logger_syslog.warning(warning, extra = log_extra_data(announcement[0]))
+        logger_syslog.info(status, extra = log_extra_data(announcement[1]))
+        logger_syslog.warning(warning, extra = log_extra_data(announcement[1]))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(announcement[0]))
+        logger_syslog.error(error, extra = log_extra_data(announcement[1]))
         logger_mail.exception(error)
     return
 
@@ -150,7 +151,12 @@ def get_announcement(entry, creator, site):
     '''
     title = entry.title
     link = entry.link
-    pubdate = entry.updated_parsed
+    try:
+        pubdate = entry.updated_parsed
+        pubdate = datetime.datetime.fromtimestamp(mktime(entry.updated_parsed))
+    except AttributeError as error:
+        pubdate = datetime.datetime.now()
+    pubdate = timezone.make_aware(pubdate, timezone.get_default_timezone())
     summary = entry.summary
     '''
     Select either the creator of the RSS or
