@@ -10,20 +10,29 @@ import logging
 
 logger = logging.getLogger('cronos')
 
-@login_required
-def index(request):
-    '''
-    The frontpage for logged in users. Displays some personal info only.
-    '''
-    return render_to_response('index.html', {
-        }, context_instance = RequestContext(request))
-
 def about(request):
     '''
     The About webpage
     '''
     return render_to_response('about.html', {},
         context_instance = RequestContext(request))
+
+def server_error(request, template_name='500.html'):
+    '''
+    500 error handler.
+    Override 500 error page, in order to pass MEDIA_URL to Context
+    '''
+    t = loader.get_template(template_name)
+    return HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
+
+@login_required
+def accounts_index(request):
+    '''
+    The frontpage for logged in users. Displays some personal info only.
+    '''
+    return render_to_response('index.html', {
+        }, context_instance = RequestContext(request))
+
 
 @login_required
 def accounts_settings(request):

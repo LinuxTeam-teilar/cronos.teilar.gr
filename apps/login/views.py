@@ -8,6 +8,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 
 def cronos_login(request):
+    '''
+    The login page (also the front page)
+    '''
     msg = None
     form = None
     user = None
@@ -20,6 +23,10 @@ def cronos_login(request):
             username = None
             password = None
         try:
+            '''
+            Perform authentication, if it retrieves a user object then
+            it was successful. If it retrieves None then it failed to login
+            '''
             user = authenticate(username = username, password = password, request = request)
             if not user:
                 raise CronosError(u'Λάθος στοιχεία')
@@ -39,11 +46,3 @@ def cronos_login(request):
        'msg': msg,
        'form': form,
         }, context_instance = RequestContext(request))
-
-def server_error(request, template_name='500.html'):
-    '''
-    500 error handler.
-    Override 500 error page, in order to pass MEDIA_URL to Context
-    '''
-    t = loader.get_template(template_name)
-    return HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
