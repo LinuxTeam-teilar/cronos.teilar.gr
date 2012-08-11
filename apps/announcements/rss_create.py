@@ -94,9 +94,9 @@ def get_teilar():
         else:
             rss_name = u'departments.rss'
         if type(cid) == int:
-            output = teilar_login('teilar', 'news.php?cid=%s' % cid)
+            output = teilar_login('http://www.teilar.gr/news.php?cid=%s' % cid)
         else:
-            output = teilar_login('teilar', cid)
+            output = teilar_login('http://www.teilar.gr/%s' % cid)
         '''
         Parse the urlid of the announcement
         '''
@@ -114,7 +114,7 @@ def get_teilar():
             ann_link = 'news_detail.php?nid=' + item['href'].split('nid=')[1]
             if type(cid) != int:
                 ann_link = 'tmimata/' + ann_link
-            output = teilar_login('teilar', ann_link)
+            output = teilar_login('http://www.teilar.gr/%s' % ann_link)
             soup = BeautifulSoup(output)
             try:
                 if type(cid) != int:
@@ -145,7 +145,7 @@ def get_teachers():
     a custom RSS file.
     '''
     custom_rss = initialize_rss_file()
-    output = teilar_login('teilar', 'profannnews.php')
+    output = teilar_login('http://www.teilar.gr/profannnews.php')
     soup = BeautifulSoup(output)
     try:
         announcements_all = soup.find_all('a', 'BlackText11')
@@ -172,7 +172,7 @@ def get_teachers():
         '''
         Get inside the teacher's page which contains all the announcements
         '''
-        output = teilar_login('teilar', link)
+        output = teilar_login('http://www.teilar.gr/%s', link)
         soup = BeautifulSoup(output)
         try:
             author_name = soup.find('td', 'BlueTextBold').i.contents[0]

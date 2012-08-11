@@ -23,7 +23,7 @@ def get_lessons():
     lessons_from_eclass = {}
     faculties = Faculties.objects.all()
     for faculty in faculties:
-        output = teilar_login('eclass', 'lessons', faculty.urlid)
+        output = teilar_login('http://openclass.teilar.gr/modules/auth/opencourses.php?fc=%s' % faculty.urlid)
         soup = BeautifulSoup(output)
         for i in range(2):
             '''

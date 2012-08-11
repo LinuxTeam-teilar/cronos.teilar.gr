@@ -21,7 +21,7 @@ def get_faculties():
     faculties_from_eclass = { faculty_id: ['name', 'code'] }
     '''
     faculties_from_eclass = {}
-    output = teilar_login('eclass', 'faculties')
+    output = teilar_login('http://openclass.teilar.gr/modules/auth/listfaculte.php')
     soup = BeautifulSoup(output)
     all_faculties = soup.table('td')
     for faculty in all_faculties:

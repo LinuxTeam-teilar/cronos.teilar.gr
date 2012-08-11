@@ -13,27 +13,12 @@ import urlparse
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def teilar_login(subdomain = None, url = None, id = None):
+def teilar_login(link = None):
     '''
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
     conn = pycurl.Curl()
     b = StringIO.StringIO()
-    if subdomain == 'teilar':
-        subdomain = 'www'
-    elif subdomain == 'eclass':
-        subdomain = 'openclass'
-    link = 'http://%s.teilar.gr/' % subdomain
-    if url == 'departments':
-        link = link + 'schools.php'
-    elif url == 'teachers':
-        link = link + 'person.php?pid=' + str(id)
-    elif url == 'faculties':
-        link = link + 'modules/auth/listfaculte.php'
-    elif url == 'lessons':
-        link = link + 'modules/auth/opencourses.php?fc=' + str(id)
-    else:
-        link = link + url
     conn.setopt(pycurl.URL, link)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
