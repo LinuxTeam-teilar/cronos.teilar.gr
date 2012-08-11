@@ -9,10 +9,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #    'announcements': AnnouncementsFeed,
 #}
 
-handler500 = 'apps.login.views.server_error'
+handler500 = 'apps.accounts.views.server_error'
 
 urlpatterns = patterns('',
-    (r'^$', 'apps.accounts.views.index'),
+    (r'^$', 'apps.accounts.views.accounts_index'),
     (r'^about/', 'apps.accounts.views.about'),
 #    (r'^announcements/', 'apps.announcements.views.announcements'),
     (r'^dionysos/', 'apps.dionysos.views.dionysos'),
