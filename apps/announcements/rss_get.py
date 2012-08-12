@@ -113,38 +113,6 @@ def add_announcement_to_db(announcement):
         logger_mail.exception(error)
     return
 
-def parse_or_fix_rss(site):
-    '''
-    Parse the RSS feed. If there are problems, try to work around them
-    '''
-    try:
-        rss = feedparser.parse(site)
-    except SAXException as warning:
-        '''
-        Failed to parse the RSS feed, try to fix it
-        '''
-        logger_syslog.warning(warning, extra = log_extra_data(site))
-        '''
-        Download the RSS file manually
-        '''
-        output = urllib2.urlopen(site).read()
-        '''
-        Clean no-break space
-        '''
-        output = output.replace('\xa0 ', ' ').replace('\xa0 ', ' ').replace('\xc2 ', '\xc2\xa0 ').replace('\xc2\xa0', '')
-        try:
-            rss = feedparser.parse(output)
-            logger_syslog.info('FIXED!', extra = log_extra_data(site))
-        except Exception as error:
-            '''
-            Still no success, giving up
-            '''
-            # TODO: Try to grab the <item>s with bs4 and create a custom RSS feed
-            logger_syslog.error(error, extra = log_extra_data(site))
-            logger_mail.exception(error)
-            return None
-    return rss
-
 def get_announcement(entry, creator, site):
     '''
     Return a list with the announcement's tags that are of interest
@@ -191,14 +159,16 @@ def update_announcements():
     sites = get_sites()
     for creator, site in sites.iteritems():
         '''
-        Try to parse the RSS feed
-        In case it is broken, try to fix it as well
+        Parse the RSS feed
         '''
-        rss = parse_or_fix_rss(site)
-        if not rss:
+        try:
+            rss = feedparser.parse(site)
+        except Exception as error:
             '''
-            Didn't manage to fix it, give up and move on
+            Something went wrong, skip it and go to the next one
             '''
+            logger_syslog.error(error, extra = log_extra_data(site))
+            logger_mail.exception(error)
             continue
         '''
         Grab the latest max 10 announcements
