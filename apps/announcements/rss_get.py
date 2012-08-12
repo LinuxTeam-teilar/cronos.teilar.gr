@@ -40,9 +40,9 @@ def get_sites():
         u'Κέντρο Διαχείρισης Δικτύου ΤΕΙ Λάρισας': u'http://noc.teilar.gr/index.php/2012-05-10-08-28-35.feed?type=atom',
         u'Μονάδα Καινοτομίας και Επιχειρηματικότητας': u'http://mke.teilar.gr/business/mathimata-ann.feed',
         u'Πύλη ΑμΕΑ ΤΕΙ Λάρισας': u'http://disabled.teilar.gr/index.php?format=feed&type=rss',
+        u'Ηλεκτρονική εγγραφή εργαστηρίων': u'https://www.facebook.com/feeds/page.php?format=atom10&id=153439198094399',
         # PR? It seems to provide RSS, but there are no announcements there yet to check how good it is
         # TODO: cronos!
-        # TODO: diogenis!
         ## Custom made RSS files ##
         u'Γενικές Ανακοινώσεις': u'%s/%s' % (settings.RSS_PATH, 'general.rss'),
         u'Ανακοινώσεις του ΤΕΙ Λάρισας': u'%s/%s' % (settings.RSS_PATH, 'teilar_ann_dummy.rss'),
