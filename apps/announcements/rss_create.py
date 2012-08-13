@@ -74,7 +74,7 @@ def write_rss_file(custom_rss, filename):
 def get_teilar():
     '''
     Grab announcements from the following websites and
-    put them in a custom RSS file:
+    put them in separate custom RSS files:
     - http://teilar.gr/news.php?cid=1
     - http://teilar.gr/news.php?cid=2
     - http://teilar.gr/news.php?cid=5
