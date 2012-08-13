@@ -19,7 +19,7 @@ def teilar_login(link = None):
     '''
     conn = pycurl.Curl()
     b = StringIO.StringIO()
-    conn.setopt(pycurl.URL, link)
+    conn.setopt(pycurl.URL, str(link))
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
         '''
