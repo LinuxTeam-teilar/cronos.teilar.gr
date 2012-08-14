@@ -49,7 +49,6 @@ def add_rss_item(custom_rss, title, link, pubdate, description, author_name, enc
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(title))
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την προσθήκη στοιχείου στο RSS')
     return
 
 def write_rss_file(custom_rss, filename):
@@ -68,7 +67,6 @@ def write_rss_file(custom_rss, filename):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστησε σφάλμα κατά την εγγραφή του RSS σε αρχείο')
     return
 
 def get_teilar():
@@ -81,32 +79,25 @@ def get_teilar():
     - http://teilar.gr/news.php?cid=6
     - http://teilar.gr/tmimatanews.php
     '''
-    for cid in [1, 2, 5, 6, 'tmimatanews.php']:
+    rss_filenames = {
+        1: 'general.rss',
+        2: 'teilar_ann.rss',
+        5: 'council.rss',
+        6: 'committee.rss',
+        'tmimatanews.php': 'departments.rss',
+    }
+    for cid, rss_name in rss_filenames.iteritems():
         custom_rss = initialize_rss_file()
-        if cid == 1:
-            rss_name = u'general.rss'
-        elif cid == 2:
-            rss_name = u'teilar_ann.rss'
-        elif cid == 5:
-            rss_name = u'council.rss'
-        elif cid == 6:
-            rss_name = u'committee.rss'
-        else:
-            rss_name = u'departments.rss'
         if type(cid) == int:
             output = teilar_login('http://www.teilar.gr/news.php?cid=%s' % cid)
         else:
             output = teilar_login('http://www.teilar.gr/%s' % cid)
-        '''
-        Parse the urlid of the announcement
-        '''
         soup = BeautifulSoup(output)
         try:
             announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')[:10]
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data())
             logger_mail.exception(error)
-            raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοινώσεων')
         for item in announcements_all:
             '''
             Get inside the announcement to get the rest of the info
@@ -134,7 +125,6 @@ def get_teilar():
             except Exception as error:
                 logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_link))
                 logger_mail.exception(error)
-                raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοίνωσης')
             add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_link, pubdate, description, creator, enclosure)
         write_rss_file(custom_rss, rss_name)
     return
@@ -152,7 +142,6 @@ def get_teachers():
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
-        raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοινώσεων καθηγητών')
     authors = {}
     for item in announcements_all:
         '''
@@ -179,7 +168,6 @@ def get_teachers():
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(link))
             logger_mail.exception(error)
-            raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση του ονόματος του καθηγητή')
         '''
         Select only the number of announcements we want
         '''
@@ -188,7 +176,6 @@ def get_teachers():
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(link))
             logger_mail.exception(error)
-            raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση του ονόματος του καθηγητή')
         for announcement in announcements_all:
             '''
             Parse data from each announcement
@@ -206,7 +193,6 @@ def get_teachers():
             except Exception as error:
                 logger_syslog.error(error, extra = log_extra_data(author_name))
                 logger_mail.exception(error)
-                raise CronosError(u'Παρουσιάστηκε σφάλμα κατά την ανάκτηση ανακοινώσεων καθηγητή')
             add_rss_item(custom_rss, title, 'http://teilar.gr/' + link, pubdate, description, author_name, enclosure)
     write_rss_file(custom_rss, 'teachers.rss')
     return
