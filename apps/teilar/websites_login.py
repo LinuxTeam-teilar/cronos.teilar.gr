@@ -13,13 +13,13 @@ import urlparse
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def teilar_login(link = None):
+def teilar_login(url = None):
     '''
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
     conn = pycurl.Curl()
     b = StringIO.StringIO()
-    conn.setopt(pycurl.URL, str(link))
+    conn.setopt(pycurl.URL, str(url))
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
         '''
@@ -29,14 +29,14 @@ def teilar_login(link = None):
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
-        site = link.split('/')[2]
+        site = url.split('/')[2]
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
     return unicode(b.getvalue(), 'utf-8', 'ignore')
 
-def dionysos_login(username, password, link = None):
+def dionysos_login(username, password, url = None):
     '''
     Try to connect to dionysos.teilar.gr and get the resulting HTML output.
-    If link is None, then an authentication attempt is also performed. In order
+    If URL is None, then an authentication attempt is also performed. In order
     to verify if the authentication succeeded, we parse the final HTML output
     and check if it still contains the login form
     '''
@@ -97,7 +97,7 @@ def dionysos_login(username, password, link = None):
     conn.setopt(pycurl.POSTFIELDS, login_form_data)
     conn.setopt(pycurl.WRITEFUNCTION, b.write)
     conn.perform()
-    if not link:
+    if not url:
         '''
         Checking if the credentials are correct
         '''
@@ -118,10 +118,10 @@ def dionysos_login(username, password, link = None):
             pass
     else:
         '''
-        Connect to the requested link and return the HTML output
+        Connect to the requested URL and return the HTML output
         '''
         b = StringIO.StringIO()
-        conn.setopt(pycurl.URL, link)
+        conn.setopt(pycurl.URL, url)
         conn.setopt(pycurl.POST, 1)
         conn.setopt(pycurl.POSTFIELDS, login_form_data)
         conn.setopt(pycurl.COOKIE, cookie_path)
@@ -154,7 +154,7 @@ def eclass_login(username, password):
     except:
         return unicode(b.getvalue(), 'utf-8', 'ignore')
 
-def webmail_login(link, username, password):
+def webmail_login(url, username, password):
     b = StringIO.StringIO()
     conn = pycurl.Curl()
     fd, cookie_path = tempfile.mkstemp(prefix='webmail_', dir='/tmp')
@@ -181,9 +181,9 @@ def webmail_login(link, username, password):
         if soup.title.contents[0].split('-')[2].strip() == 'Άγνωστος χρήστης η εσφαλμένος κωδικός.':
             return 1
     except:
-        if link == 0:
+        if url == 0:
             return (b.getvalue()).decode('iso-8859-7')
-        conn.setopt(pycurl.URL, link)
+        conn.setopt(pycurl.URL, url)
         conn.perform()
         os.close(fd)
         os.remove(cookie_path)

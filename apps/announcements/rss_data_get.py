@@ -25,8 +25,8 @@ logger_mail = logging.getLogger('mail_cronos')
 
 def get_sites():
     '''
-    Retrieves the sites that offer RSS, both from local files
-    and from the DB
+    Retrieves RSS feeds from remote files, local files or from
+    the DB
     The sites dictionary has the creator's name as key, and the
     URL or path as value.
     If we want to use the <dc:creator> tag of the RSS instead
@@ -86,7 +86,7 @@ def add_announcement_to_db(announcement):
     try:
         new_announcement = Announcements(
             title = announcement[0],
-            link = announcement[1],
+            url = announcement[1],
             pubdate = announcement[2],
             summary = announcement[3],
             creator = announcement[4],
@@ -118,7 +118,7 @@ def get_announcement(entry, creator, site):
     Return a list with the announcement's tags that are of interest
     '''
     title = entry.title
-    link = entry.link
+    url = entry.link
     try:
         pubdate = entry.updated_parsed
         pubdate = datetime.datetime.fromtimestamp(mktime(entry.updated_parsed))
@@ -144,12 +144,12 @@ def get_announcement(entry, creator, site):
         in its own page, thus the unique field
         has to be combined with something else
         '''
-        unique = link + summary
+        unique = url + summary
         if enclosure:
             unique += enclosure
     else:
-        unique = link
-    announcement = [title, link, pubdate, summary, creator, enclosure, unique]
+        unique = url
+    announcement = [title, url, pubdate, summary, creator, enclosure, unique]
     return announcement
 
 def update_announcements():

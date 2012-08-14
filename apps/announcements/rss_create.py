@@ -33,14 +33,14 @@ def initialize_rss_file():
     )
     return custom_rss
 
-def add_rss_item(custom_rss, title, link, pubdate, description, author_name, enclosure):
+def add_rss_item(custom_rss, title, url, pubdate, description, author_name, enclosure):
     '''
     Append an item in the RSS feed
     '''
     try:
         custom_rss.add_item(
             title = title,
-            link = link,
+            link = url,
             pubdate = pubdate,
             description = description,
             author_name = author_name,
@@ -102,10 +102,10 @@ def get_teilar():
             '''
             Get inside the announcement to get the rest of the info
             '''
-            ann_link = 'news_detail.php?nid=' + item['href'].split('nid=')[1]
+            ann_url = 'news_detail.php?nid=' + item['href'].split('nid=')[1]
             if type(cid) != int:
-                ann_link = 'tmimata/' + ann_link
-            output = teilar_login('http://www.teilar.gr/%s' % ann_link)
+                ann_url = 'tmimata/' + ann_url
+            output = teilar_login('http://www.teilar.gr/%s' % ann_url)
             soup = BeautifulSoup(output)
             try:
                 if type(cid) != int:
@@ -123,9 +123,9 @@ def get_teilar():
                 except:
                     enclosure = None
             except Exception as error:
-                logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_link))
+                logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_url))
                 logger_mail.exception(error)
-            add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_link, pubdate, description, creator, enclosure)
+            add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_url, pubdate, description, creator, enclosure)
         write_rss_file(custom_rss, rss_name)
     return
 
@@ -150,23 +150,23 @@ def get_teachers():
         page how many times a teacher's name is mentioned, and we
         parse the same number of the teacher's top announcements.
         The results are kept in a dictionary with the following structure:
-        authors = {'link': number_of_announcements}
+        authors = {'url': number_of_announcements}
         '''
-        link = item['href']
-        if link in authors.keys():
-            authors[link] = authors[link] + 1
+        url = item['href']
+        if url in authors.keys():
+            authors[url] = authors[url] + 1
         else:
-            authors[link] = 1
-    for link, number in authors.iteritems():
+            authors[url] = 1
+    for url, number in authors.iteritems():
         '''
         Get inside the teacher's page which contains all the announcements
         '''
-        output = teilar_login('http://www.teilar.gr/%s' % link)
+        output = teilar_login('http://www.teilar.gr/%s' % url)
         soup = BeautifulSoup(output)
         try:
             author_name = soup.find('td', 'BlueTextBold').i.contents[0]
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(link))
+            logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
         '''
         Select only the number of announcements we want
@@ -174,7 +174,7 @@ def get_teachers():
         try:
             announcements_all = soup.find_all('td', 'LineDownDots')[0:number]
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(link))
+            logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
         for announcement in announcements_all:
             '''
@@ -193,7 +193,7 @@ def get_teachers():
             except Exception as error:
                 logger_syslog.error(error, extra = log_extra_data(author_name))
                 logger_mail.exception(error)
-            add_rss_item(custom_rss, title, 'http://teilar.gr/' + link, pubdate, description, author_name, enclosure)
+            add_rss_item(custom_rss, title, 'http://teilar.gr/' + url, pubdate, description, author_name, enclosure)
     write_rss_file(custom_rss, 'teachers.rss')
     return
 

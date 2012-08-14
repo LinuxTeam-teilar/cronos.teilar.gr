@@ -7,7 +7,7 @@ class Announcements(models.Model):
     pubdate = models.DateTimeField()
     creator = models.CharField(max_length = 200)
     unique = models.CharField(max_length = 250, unique = True)
-    link = models.URLField()
+    url = models.URLField()
     summary = models.TextField(null = True)
     enclosure = models.CharField("Attachment URL", max_length = 200, null = True)
 
