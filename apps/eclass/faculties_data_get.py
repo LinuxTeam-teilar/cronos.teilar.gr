@@ -18,46 +18,46 @@ def get_faculties():
     '''
     Retrieves the faculties from eclass.teilar.gr
     The output is dictionary with the following structure:
-    faculties_from_eclass = { faculty_id: ['name', 'code'] }
+    faculties_from_eclass = {'url': ['name', 'code']}
     '''
     faculties_from_eclass = {}
     output = teilar_login('http://openclass.teilar.gr/modules/auth/listfaculte.php')
     soup = BeautifulSoup(output)
     all_faculties = soup.table('td')
     for faculty in all_faculties:
-        faculty_id = int(faculty.a.get('href').split('=')[1])
+        url = 'http://openclass.teilar.gr/modules/auth/' + faculty.a.get('href')
         name = faculty.a.contents[0].strip()
         code = faculty.small.contents[0].split(')')[0].replace('(', '').strip()
-        faculties_from_eclass[faculty_id] = [name, code]
+        faculties_from_eclass[url] = [name, code]
     return faculties_from_eclass
 
-def add_faculty_to_db(faculty_id, attributes):
+def add_faculty_to_db(url, attributes):
     name = attributes[0]
     code = attributes[1]
     faculty = Faculties(
-        urlid = faculty_id,
+        url = url,
         name = name,
         code = code,
     )
     try:
         faculty.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
-def deprecate_faculty_in_db(faculty_id):
+def deprecate_faculty_in_db(url):
     '''
     Mark faculties as deprecated
     '''
-    faculty = Faculties.objects.get(urlid = faculty_id)
+    faculty = Faculties.objects.get(url = url)
     faculty.deprecated = True
     try:
         faculty.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(faculty.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(faculty.name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
@@ -69,12 +69,12 @@ def update_faculties():
     faculties_from_eclass = get_faculties()
     '''
     Get all the faculties from the DB and put them in a dictionary in the structure:
-    faculties_from_db = { faculty_id: ['name', 'code'] }
+    faculties_from_db = {'url': ['name', 'code']}
     '''
     faculties_from_db = {}
     faculties_from_db_q = Faculties.objects.filter(deprecated = False)
     for faculty in faculties_from_db_q:
-        faculties_from_db[faculty.urlid] = [faculty.name, faculty.code]
+        faculties_from_db[faculty.url] = [faculty.name, faculty.code]
     '''
     Get the faculty_IDs in set data structure format, for easier comparisons
     '''
@@ -90,23 +90,23 @@ def update_faculties():
     Get ex faculties and mark them as deprecated
     '''
     ex_faculties = faculties_from_db_ids - faculties_from_eclass_ids
-    for faculty_id in ex_faculties:
-        deprecate_faculty_in_db(faculty_id)
+    for url in ex_faculties:
+        deprecate_faculty_in_db(url)
     '''
     Get new faculties and add them to the DB
     '''
     new_faculties = faculties_from_eclass_ids - faculties_from_db_ids
-    for faculty_id in new_faculties:
-        add_faculty_to_db(faculty_id, faculties_from_eclass[faculty_id])
+    for url in new_faculties:
+        add_faculty_to_db(url, faculties_from_eclass[url])
     '''
     Get all the existing faculties, and check if any of their attributes were updated
     '''
     existing_faculties = faculties_from_eclass_ids & faculties_from_db_ids
-    for faculty_id in existing_faculties:
+    for url in existing_faculties:
         i = 0
-        faculty = Faculties.objects.get(urlid = faculty_id)
-        for attribute in faculties_from_eclass[faculty_id]:
-            if faculties_from_db[faculty_id][i] != attribute:
+        faculty = Faculties.objects.get(url = url)
+        for attribute in faculties_from_eclass[url]:
+            if faculties_from_db[url][i] != attribute:
                 if i == 0:
                     attr_name = u'name'
                     faculty.name = attribute
@@ -116,9 +116,9 @@ def update_faculties():
                 try:
                     faculty.save()
                     status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                    logger_syslog.info(status, extra = log_extra_data(faculty.name))
+                    logger_syslog.info(status, extra = log_extra_data(url))
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(faculty.name))
+                    logger_syslog.error(error, extra = log_extra_data(url))
                     logger_mail.exception(error)
             i += 1
     return

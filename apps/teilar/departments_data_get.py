@@ -18,45 +18,45 @@ def get_departments():
     '''
     Retrieves the departments from teilar.gr
     The output is dictionary with the following structure:
-    departments_from_teilar = { department_id: 'name'}
+    departments_from_teilar = {'url': 'name'}
     '''
     departments_from_teilar = {}
     output = teilar_login('http://www.teilar.gr/schools.php')
     soup = BeautifulSoup(output)
     all_departments = soup.find_all('a', 'BlueText')
     for department in all_departments:
-        department_id = int(department.get('href').split('=')[1])
+        url = 'http://www.teilar.gr/' + department.get('href')
         '''
         The string replace in the end is to keep it in track with dionysos.teilar.gr
         '''
         name = department.contents[0].replace(u'Τεχν.', u'Τεχνολογίας')
-        departments_from_teilar[department_id] = name
+        departments_from_teilar[url] = name
     return departments_from_teilar
 
-def add_department_to_db(department_id, name):
+def add_department_to_db(url, name):
     department = Departments(
-        urlid = department_id,
-        name = name
+        url = url,
+        name = name,
     )
     try:
         department.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
-def deprecate_department_in_db(department_id):
+def deprecate_department_in_db(url):
     '''
     Mark departments as deprecated
     '''
-    department = Departments.objects.get(urlid = department_id)
+    department = Departments.objects.get(url = url)
     department.deprecated = True
     try:
         department.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(department.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(department.name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
@@ -68,35 +68,35 @@ def update_departments():
     departments_from_teilar = get_departments()
     '''
     Get all the departments from the DB and put them in a dictionary in the structure:
-    departments_from_db = { department_id: 'name' }
+    departments_from_db = {'url': 'name'}
     '''
     departments_from_db = {}
     departments_from_db_q = Departments.objects.filter(deprecated = False)
     for department in departments_from_db_q:
-        departments_from_db[department.urlid] = department.name
+        departments_from_db[department.url] = department.name
     '''
-    Get the department_IDs in set data structure format, for easier comparisons
+    Get the URLs in set data structure format, for easier comparisons
     '''
-    departments_from_teilar_ids = set(departments_from_teilar.keys())
+    departments_from_teilar_urls = set(departments_from_teilar.keys())
     try:
-        departments_from_db_ids = set(departments_from_db.keys())
+        departments_from_db_urls = set(departments_from_db.keys())
     except AttributeError:
         '''
         Departments table is empty in the DB
         '''
-        departments_from_db_ids = set()
+        departments_from_db_urls = set()
     '''
     Get ex departments and mark them as deprecated
     '''
-    ex_departments = departments_from_db_ids - departments_from_teilar_ids
-    for department_id in ex_departments:
-        deprecate_department_in_db(department_id)
+    ex_departments = departments_from_db_urls - departments_from_teilar_urls
+    for url in ex_departments:
+        deprecate_department_in_db(url)
     '''
     Get new departments and add them to the DB
     '''
-    new_departments = departments_from_teilar_ids - departments_from_db_ids
-    for department_id in new_departments:
-        add_department_to_db(department_id, departments_from_teilar[department_id])
+    new_departments = departments_from_teilar_urls - departments_from_db_urls
+    for url in new_departments:
+        add_department_to_db(url, departments_from_teilar[url])
     return
 
 if __name__ == '__main__':

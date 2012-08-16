@@ -18,7 +18,7 @@ def get_teachers():
     '''
     Retrieves the teachers from teilar.gr
     The output is dictionary with the following structure:
-    teachers_from_teilar = { teacher_id: ['name', 'email', 'department'] }
+    teachers_from_teilar = {'url': ['name', 'email', 'department']}
     '''
     teachers_from_teilar = {}
     for pid in range(400):
@@ -26,7 +26,8 @@ def get_teachers():
         Perform connections to each of the teacher's profile page. From the HTML
         output we grab the name, email and department
         '''
-        output = teilar_login('http://www.teilar.gr/person.php?pid=%s' % pid)
+        url = 'http://www.teilar.gr/person.php?pid=%s' % pid
+        output = teilar_login(url)
         soup = BeautifulSoup(output)
         name = None
         email = None
@@ -54,38 +55,43 @@ def get_teachers():
             department = soup.findAll('td', 'BlackText11')[2].contents[0].strip().replace(u'Τεχν.', u'Τεχνολογίας')
         except IndexError:
             pass
-        teachers_from_teilar[pid] = [name, email, department]
+        teachers_from_teilar[url] = [name, email, department]
     return teachers_from_teilar
 
-def add_teacher_to_db(teacher_id, attributes):
+def add_teacher_to_db(url, attributes):
+    name = attributes[0]
+    email = attributes[1]
     try:
-        name = attributes[0]
-        email = attributes[1]
-        department = Departments.objects.get(name = attributes[2])
-        teachers = Teachers(
-            urlid = teacher_id,
-            name = name,
-            email = email,
-            department = department,
-        )
-        teachers.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
+        department = Departments.objects.filter(deprecated = False).get(name = attributes[2])
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(name))
+        logger_syslog.error(error, extra = log_extra_data(url))
+        logger_mail.exception(error)
+        return
+    teachers = Teachers(
+        url = url,
+        name = name,
+        email = email,
+        department = department,
+    )
+    try:
+        teachers.save()
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
-def deprecate_teacher_in_db(teacher_id):
+def deprecate_teacher_in_db(url):
     '''
     Mark teachers as deprecated
     '''
-    teacher = Teachers.objects.get(urlid = teacher_id)
+    teacher = Teachers.objects.get(url = url)
     teacher.deprecated = True
     try:
         teacher.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(teacher.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(teacher.name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
@@ -99,50 +105,50 @@ def update_teachers():
     teachers_from_teilar = get_teachers()
     '''
     Get all the teachers from the DB and put them in a dictionary in the structure:
-    teachers_from_db = { teacher_id: ['name', 'email', 'department'] }
+    teachers_from_db = {'url': ['name', 'email', 'department']}
     '''
     teachers_from_db = {}
     try:
         teachers_from_db_q = Teachers.objects.filter(deprecated = False)
         for teacher in teachers_from_db_q:
-            teachers_from_db[teacher.urlid] = [teacher.name, teacher.email, teacher.department]
+            teachers_from_db[teacher.url] = [teacher.name, teacher.email, teacher.department]
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
 
     '''
-    Get the teacher_IDs in set data structure, for easier comparisons
+    Get the teacher_URLs in set data structure, for easier comparisons
     '''
-    teachers_from_teilar_ids = set(teachers_from_teilar.keys())
+    teachers_from_teilar_urls = set(teachers_from_teilar.keys())
     try:
-        teachers_from_db_ids = set(teachers_from_db.keys())
+        teachers_from_db_urls = set(teachers_from_db.keys())
     except AttributeError:
         '''
         Teachers table is empty in the DB
         '''
-        teachers_from_db_ids = set()
+        teachers_from_db_urls = set()
     '''
     Get ex teachers and mark them as deprecated
     '''
-    ex_teachers = teachers_from_db_ids - teachers_from_teilar_ids
-    for teacher_id in ex_teachers:
-        deprecate_teacher_in_db(teacher_id)
+    ex_teachers = teachers_from_db_urls - teachers_from_teilar_urls
+    for url in ex_teachers:
+        deprecate_teacher_in_db(url)
     '''
     Get new teachers and add them to the DB
     '''
-    new_teachers = teachers_from_teilar_ids - teachers_from_db_ids
-    for teacher_id in new_teachers:
-        add_teacher_to_db(teacher_id, teachers_from_teilar[teacher_id])
+    new_teachers = teachers_from_teilar_urls - teachers_from_db_urls
+    for url in new_teachers:
+        add_teacher_to_db(url, teachers_from_teilar[url])
     '''
     Get all the existing teachers, and check if any of their attributes were updated
     '''
-    existing_teachers = teachers_from_teilar_ids & teachers_from_db_ids
-    for teacher_id in existing_teachers:
+    existing_teachers = teachers_from_teilar_urls & teachers_from_db_urls
+    for url in existing_teachers:
         i = 0
-        teacher = Teachers.objects.get(urlid = teacher_id)
-        for attribute in teachers_from_teilar[teacher_id]:
-            if teachers_from_db[teacher_id][i] != attribute:
+        teacher = Teachers.objects.get(url = url)
+        for attribute in teachers_from_teilar[url]:
+            if teachers_from_db[url][i] != attribute:
                 if i == 0:
                     attr_name = u'name'
                     teacher.name = attribute
@@ -157,13 +163,13 @@ def update_teachers():
                     if attribute.strip() == unicode(teacher.department).strip():
                         continue
                     attr_name = u'department'
-                    teacher.department = Departments.objects.get(name = attribute)
+                    teacher.department = Departments.objects.filter(deprecated = False).get(name = attribute)
                 try:
                     teacher.save()
                     status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                    logger_syslog.info(status, extra = log_extra_data(teacher.name))
+                    logger_syslog.info(status, extra = log_extra_data(url))
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(teacher.name))
+                    logger_syslog.error(error, extra = log_extra_data(url))
                     logger_mail.exception(error)
             i += 1
     return

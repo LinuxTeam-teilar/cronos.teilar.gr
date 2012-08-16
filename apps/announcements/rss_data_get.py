@@ -63,7 +63,7 @@ def get_sites():
     try:
         eclass_lessons = Lessons.objects.filter(deprecated = False)
         for lesson in eclass_lessons:
-            sites[lesson.name] = u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.urlid
+            sites[lesson.name] = u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.url.split('/')[4]
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
@@ -75,7 +75,7 @@ def get_sites():
     '''
     #departments = Departments.objects.filter(deprecated = False)
     #for department in departments:
-    #    sites[department.name] = 'http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.urlid
+    #    sites[department.name] = 'http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.url.split('=')[1]
     return sites
 
 def add_announcement_to_db(announcement):

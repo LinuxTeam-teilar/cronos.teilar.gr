@@ -1,7 +1,7 @@
 from django.db import models
 
 class Faculties(models.Model):
-    urlid = models.IntegerField(unique = True)
+    url = models.URLField(unique = True)
     name = models.CharField("Faculty name", max_length = 200)
     code = models.CharField("Faculty code", max_length = 10)
     deprecated = models.BooleanField(default = False)
@@ -10,7 +10,7 @@ class Faculties(models.Model):
         return self.name
 
 class Lessons(models.Model):
-    urlid = models.CharField(max_length = 20, unique = True)
+    url = models.URLField(unique = True)
     name = models.CharField("Lesson name", max_length = 500)
     teacher = models.CharField("Teacher's name", max_length = 500)
     faculty = models.ForeignKey(Faculties)

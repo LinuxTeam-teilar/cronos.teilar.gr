@@ -18,12 +18,12 @@ def get_lessons():
     '''
     Retrieves the lessons from eclass.teilar.gr
     The output is dictionary with the following structure:
-    lessons_from_eclass = { 'lesson_id': ['name', 'teacher', 'faculty', 'ltype'] }
+    lessons_from_eclass = {'url': ['name', 'teacher', 'faculty', 'ltype'] }
     '''
     lessons_from_eclass = {}
-    faculties = Faculties.objects.all()
+    faculties = Faculties.objects.filter(deprecated = False)
     for faculty in faculties:
-        output = teilar_login('http://openclass.teilar.gr/modules/auth/opencourses.php?fc=%s' % faculty.urlid)
+        output = teilar_login(faculty.url)
         soup = BeautifulSoup(output)
         for i in range(2):
             '''
@@ -38,7 +38,8 @@ def get_lessons():
                 continue
             all_lessons = ltype.find_all('tr', 'even') + ltype.find_all('tr', 'odd')
             for lesson in all_lessons:
-                lesson_id = lesson.small.contents[0].replace('(', '').replace(')', '')
+                url = lesson.small.contents[0].replace('(', '').replace(')', '')
+                url = u'http://openclass.teilar.gr/courses/%s/' % url
                 try:
                     name = lesson.a.contents[0].strip()
                 except AttributeError:
@@ -53,16 +54,16 @@ def get_lessons():
                     ltype = u'Μεταπτυχιακό'
                 elif i == 2:
                     ltype == u'Άλλο'
-                lessons_from_eclass[lesson_id] = [unicode(name), unicode(teacher), faculty.name, ltype]
+                lessons_from_eclass[url] = [unicode(name), unicode(teacher), faculty.name, ltype]
     return lessons_from_eclass
 
-def add_lesson_to_db(lesson_id, attributes):
+def add_lesson_to_db(url, attributes):
     name = attributes[0]
     teacher = attributes[1]
-    faculty = Faculties.objects.get(name = attributes[2])
+    faculty = Faculties.objects.filter(deprecated = False).get(name = attributes[2])
     ltype = attributes[3]
     lesson = Lessons(
-        urlid = lesson_id,
+        url = url,
         name = name,
         teacher = teacher,
         faculty = faculty,
@@ -70,23 +71,23 @@ def add_lesson_to_db(lesson_id, attributes):
     )
     try:
         lesson.save()
-        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(name))
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
-def deprecate_lesson_in_db(lesson_id):
+def deprecate_lesson_in_db(url):
     '''
     Mark lessons as deprecated
     '''
-    lesson = Lessons.objects.get(urlid = lesson_id)
+    lesson = Lessons.objects.get(url = url)
     lesson.deprecated = True
     try:
         lesson.save()
-        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(lesson.name))
+        logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(lesson.name))
+        logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
     return
 
@@ -98,44 +99,44 @@ def update_lessons():
     lessons_from_eclass = get_lessons()
     '''
     Get all the lessons from the DB and put them in a dictionary in the structure:
-    lessons_from_db = { 'lesson_id': ['name', 'teacher', 'faculty', 'ltype'] }
+    lessons_from_db = {'url': ['name', 'teacher', 'faculty', 'ltype']}
     '''
     lessons_from_db = {}
     lessons_from_db_q = Lessons.objects.filter(deprecated = False)
     for lesson in lessons_from_db_q:
-        lessons_from_db[lesson.urlid] = [lesson.name, lesson.teacher, lesson.faculty, lesson.ltype]
+        lessons_from_db[lesson.url] = [lesson.name, lesson.teacher, lesson.faculty, lesson.ltype]
     '''
     Get the lesson_IDs in set data structure format, for easier comparisons
     '''
-    lessons_from_eclass_ids = set(lessons_from_eclass.keys())
+    lessons_from_eclass_urls = set(lessons_from_eclass.keys())
     try:
-        lessons_from_db_ids = set(lessons_from_db.keys())
+        lessons_from_db_urls = set(lessons_from_db.keys())
     except AttributeError:
         '''
         Lessons table is empty in the DB
         '''
-        lessons_from_db_ids = set()
+        lessons_from_db_urls = set()
     '''
     Get ex lessons and mark them as deprecated
     '''
-    ex_lessons = lessons_from_db_ids - lessons_from_eclass_ids
-    for lesson_id in ex_lessons:
-        deprecate_lesson_in_db(lesson_id)
+    ex_lessons = lessons_from_db_urls - lessons_from_eclass_urls
+    for url in ex_lessons:
+        deprecate_lesson_in_db(url)
     '''
     Get new lessons and add them to the DB
     '''
-    new_lessons = lessons_from_eclass_ids - lessons_from_db_ids
-    for lesson_id in new_lessons:
-        add_lesson_to_db(lesson_id, lessons_from_eclass[lesson_id])
+    new_lessons = lessons_from_eclass_urls - lessons_from_db_urls
+    for url in new_lessons:
+        add_lesson_to_db(url, lessons_from_eclass[url])
     '''
     Get all the existing lessons, and check if any of their attributes were updated
     '''
-    existing_lessons = lessons_from_eclass_ids & lessons_from_db_ids
-    for lesson_id in existing_lessons:
+    existing_lessons = lessons_from_eclass_urls & lessons_from_db_urls
+    for url in existing_lessons:
         i = 0
-        lesson = Lessons.objects.get(urlid = lesson_id)
-        for attribute in lessons_from_eclass[lesson_id]:
-            if lessons_from_db[lesson_id][i] != attribute:
+        lesson = Lessons.objects.get(url = url)
+        for attribute in lessons_from_eclass[url]:
+            if lessons_from_db[url][i] != attribute:
                 if i == 0:
                     attr_name = u'name'
                     lesson.name = attribute
@@ -158,9 +159,9 @@ def update_lessons():
                 try:
                     lesson.save()
                     status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                    logger_syslog.info(status, extra = log_extra_data(lesson.name))
+                    logger_syslog.info(status, extra = log_extra_data(url))
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(lesson.name))
+                    logger_syslog.error(error, extra = log_extra_data(url))
                     logger_mail.exception(error)
             i += 1
     return
