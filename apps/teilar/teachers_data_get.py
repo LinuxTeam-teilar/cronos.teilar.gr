@@ -67,14 +67,14 @@ def add_teacher_to_db(url, attributes):
         logger_syslog.error(error, extra = log_extra_data(url))
         logger_mail.exception(error)
         return
-    teachers = Teachers(
+    teacher = Teachers(
         url = url,
         name = name,
         email = email,
         department = department,
     )
     try:
-        teachers.save()
+        teacher.save()
         logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(url))
