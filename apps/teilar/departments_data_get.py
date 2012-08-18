@@ -46,11 +46,11 @@ def add_department_to_db(url, name):
         logger_mail.exception(error)
     return
 
-def deprecate_department_in_db(url):
+def deprecate_department_in_db(url, departments_from_db_q):
     '''
     Mark departments as deprecated
     '''
-    department = Departments.objects.get(url = url)
+    department = departments_from_db_q.get(url = url)
     department.deprecated = True
     try:
         department.save()
@@ -71,9 +71,15 @@ def update_departments():
     departments_from_db = {'url': 'name'}
     '''
     departments_from_db = {}
-    departments_from_db_q = Departments.objects.filter(deprecated = False)
-    for department in departments_from_db_q:
-        departments_from_db[department.url] = department.name
+    try:
+        departments_from_db_q = Departments.objects.filter(deprecated = False)
+        for department in departments_from_db_q:
+            departments_from_db[department.url] = department.name
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
+
     '''
     Get the URLs in set data structure format, for easier comparisons
     '''

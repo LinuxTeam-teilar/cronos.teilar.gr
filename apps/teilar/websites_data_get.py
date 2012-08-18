@@ -6,7 +6,6 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
-from apps.announcements.models import Authors
 from apps.teilar.models import Websites
 from django.conf import settings
 import logging
@@ -140,11 +139,11 @@ def add_website_to_db(rss, attributes):
         logger_mail.exception(error)
     return
 
-def deprecate_website_in_db(rss):
+def deprecate_website_in_db(rss, websites_from_db_q):
     '''
     Mark websites as deprecated
     '''
-    website = Websites.objects.get(rss = rss)
+    website = websites_from_db_q.get(rss = rss)
     website.deprecated = True
     try:
         website.save()

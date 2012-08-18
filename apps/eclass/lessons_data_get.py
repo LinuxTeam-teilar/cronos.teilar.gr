@@ -14,15 +14,14 @@ import logging
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def get_lessons():
+def get_lessons(faculties_from_db_q):
     '''
     Retrieves the lessons from eclass.teilar.gr
     The output is dictionary with the following structure:
     lessons_from_eclass = {'url': ['name', 'teacher', 'faculty', 'ltype'] }
     '''
     lessons_from_eclass = {}
-    faculties = Faculties.objects.filter(deprecated = False)
-    for faculty in faculties:
+    for faculty in faculties_from_db_q:
         output = teilar_login(faculty.url)
         soup = BeautifulSoup(output)
         for i in range(2):
@@ -57,10 +56,10 @@ def get_lessons():
                 lessons_from_eclass[url] = [unicode(name), unicode(teacher), faculty.name, ltype]
     return lessons_from_eclass
 
-def add_lesson_to_db(url, attributes):
+def add_lesson_to_db(url, attributes, faculties_from_db_q):
     name = attributes[0]
     teacher = attributes[1]
-    faculty = Faculties.objects.filter(deprecated = False).get(name = attributes[2])
+    faculty = faculties_from_db_q.get(name = attributes[2])
     ltype = attributes[3]
     lesson = Lessons(
         url = url,
@@ -77,11 +76,11 @@ def add_lesson_to_db(url, attributes):
         logger_mail.exception(error)
     return
 
-def deprecate_lesson_in_db(url):
+def deprecate_lesson_in_db(url, lessons_from_db_q):
     '''
     Mark lessons as deprecated
     '''
-    lesson = Lessons.objects.get(url = url)
+    lesson = lessons_from_db_q.get(url = url)
     lesson.deprecated = True
     try:
         lesson.save()
@@ -96,7 +95,13 @@ def update_lessons():
     1) Find lessons that are no longer valid and remove them
     2) Find new lessons and add them
     '''
-    lessons_from_eclass = get_lessons()
+    try:
+        faculties_from_db_q = Faculties.objects.filter(deprecated = False)
+        lessons_from_eclass = get_lessons(faculties_from_db_q)
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
     '''
     Get all the lessons from the DB and put them in a dictionary in the structure:
     lessons_from_db = {'url': ['name', 'teacher', 'faculty', 'ltype']}
@@ -121,20 +126,20 @@ def update_lessons():
     '''
     ex_lessons = lessons_from_db_urls - lessons_from_eclass_urls
     for url in ex_lessons:
-        deprecate_lesson_in_db(url)
+        deprecate_lesson_in_db(url, lessons_from_db_q)
     '''
     Get new lessons and add them to the DB
     '''
     new_lessons = lessons_from_eclass_urls - lessons_from_db_urls
     for url in new_lessons:
-        add_lesson_to_db(url, lessons_from_eclass[url])
+        add_lesson_to_db(url, lessons_from_eclass[url], faculties_from_db_q)
     '''
     Get all the existing lessons, and check if any of their attributes were updated
     '''
     existing_lessons = lessons_from_eclass_urls & lessons_from_db_urls
     for url in existing_lessons:
         i = 0
-        lesson = Lessons.objects.get(url = url)
+        lesson = lessons_from_db_q
         for attribute in lessons_from_eclass[url]:
             if lessons_from_db[url][i] != attribute:
                 if i == 0:
@@ -152,7 +157,7 @@ def update_lessons():
                         i += 1
                         continue
                     attr_name = u'faculty'
-                    lesson.faculty = Faculties.objects.get(name = attribute)
+                    lesson.faculty = faculties_from_db_q
                 elif i == 3:
                     attr_name = u'ltype'
                     lesson.ltype = attribute

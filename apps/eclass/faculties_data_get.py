@@ -47,11 +47,11 @@ def add_faculty_to_db(url, attributes):
         logger_mail.exception(error)
     return
 
-def deprecate_faculty_in_db(url):
+def deprecate_faculty_in_db(url, faculties_from_db_q):
     '''
     Mark faculties as deprecated
     '''
-    faculty = Faculties.objects.get(url = url)
+    faculty = faculties_from_db_q.get(url = url)
     faculty.deprecated = True
     try:
         faculty.save()
@@ -71,10 +71,15 @@ def update_faculties():
     Get all the faculties from the DB and put them in a dictionary in the structure:
     faculties_from_db = {'url': ['name', 'code']}
     '''
-    faculties_from_db = {}
-    faculties_from_db_q = Faculties.objects.filter(deprecated = False)
-    for faculty in faculties_from_db_q:
-        faculties_from_db[faculty.url] = [faculty.name, faculty.code]
+    try:
+        faculties_from_db = {}
+        faculties_from_db_q = Faculties.objects.filter(deprecated = False)
+        for faculty in faculties_from_db_q:
+            faculties_from_db[faculty.url] = [faculty.name, faculty.code]
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data())
+        logger_mail.exception(error)
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
     '''
     Get the faculty_IDs in set data structure format, for easier comparisons
     '''
@@ -91,7 +96,7 @@ def update_faculties():
     '''
     ex_faculties = faculties_from_db_ids - faculties_from_eclass_ids
     for url in ex_faculties:
-        deprecate_faculty_in_db(url)
+        deprecate_faculty_in_db(url, faculties_from_db_q)
     '''
     Get new faculties and add them to the DB
     '''
@@ -104,7 +109,7 @@ def update_faculties():
     existing_faculties = faculties_from_eclass_ids & faculties_from_db_ids
     for url in existing_faculties:
         i = 0
-        faculty = Faculties.objects.get(url = url)
+        faculty = faculties_from_db_q.get(url = url)
         for attribute in faculties_from_eclass[url]:
             if faculties_from_db[url][i] != attribute:
                 if i == 0:
