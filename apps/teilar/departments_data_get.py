@@ -92,24 +92,24 @@ def update_departments():
     '''
     Get the URLs in set data structure format, for easier comparisons
     '''
-    departments_from_teilar_urls = set(departments_from_teilar.keys())
+    departments_from_teilar_set = set(departments_from_teilar.keys())
     try:
-        departments_from_db_urls = set(departments_from_db.keys())
+        departments_from_db_set = set(departments_from_db.keys())
     except AttributeError:
         '''
         Departments table is empty in the DB
         '''
-        departments_from_db_urls = set()
+        departments_from_db_set = set()
     '''
     Get ex departments and mark them as deprecated
     '''
-    ex_departments = departments_from_db_urls - departments_from_teilar_urls
+    ex_departments = departments_from_db_set - departments_from_teilar_set
     for url in ex_departments:
         deprecate_department_in_db(url, departments_from_db_q)
     '''
     Get new departments and add them to the DB
     '''
-    new_departments = departments_from_teilar_urls - departments_from_db_urls
+    new_departments = departments_from_teilar_set - departments_from_db_set
     for url in new_departments:
         add_department_to_db(url, departments_from_teilar[url])
     return

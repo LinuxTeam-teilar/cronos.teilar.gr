@@ -129,30 +129,30 @@ def update_teachers():
     '''
     Get the teacher_URLs in set data structure, for easier comparisons
     '''
-    teachers_from_teilar_urls = set(teachers_from_teilar.keys())
+    teachers_from_teilar_set = set(teachers_from_teilar.keys())
     try:
-        teachers_from_db_urls = set(teachers_from_db.keys())
+        teachers_from_db_set = set(teachers_from_db.keys())
     except AttributeError:
         '''
         Teachers table is empty in the DB
         '''
-        teachers_from_db_urls = set()
+        teachers_from_db_set = set()
     '''
     Get ex teachers and mark them as deprecated
     '''
-    ex_teachers = teachers_from_db_urls - teachers_from_teilar_urls
+    ex_teachers = teachers_from_db_set - teachers_from_teilar_set
     for url in ex_teachers:
         deprecate_teacher_in_db(url, teachers_from_db_q)
     '''
     Get new teachers and add them to the DB
     '''
-    new_teachers = teachers_from_teilar_urls - teachers_from_db_urls
+    new_teachers = teachers_from_teilar_set - teachers_from_db_set
     for url in new_teachers:
         add_teacher_to_db(url, teachers_from_teilar[url], departments_from_db_q)
     '''
     Get all the existing teachers, and check if any of their attributes were updated
     '''
-    existing_teachers = teachers_from_teilar_urls & teachers_from_db_urls
+    existing_teachers = teachers_from_teilar_set & teachers_from_db_set
     for url in existing_teachers:
         i = 0
         teacher = teachers_from_db_q.get(url = url)

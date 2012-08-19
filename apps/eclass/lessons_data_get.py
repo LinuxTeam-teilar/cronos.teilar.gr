@@ -122,33 +122,33 @@ def update_lessons():
     '''
     Get the lesson_IDs in set data structure format, for easier comparisons
     '''
-    lessons_from_eclass_urls = set(lessons_from_eclass.keys())
+    lessons_from_eclass_set = set(lessons_from_eclass.keys())
     try:
-        lessons_from_db_urls = set(lessons_from_db.keys())
+        lessons_from_db_set = set(lessons_from_db.keys())
     except AttributeError:
         '''
         Lessons table is empty in the DB
         '''
-        lessons_from_db_urls = set()
+        lessons_from_db_set = set()
     '''
     Get ex lessons and mark them as deprecated
     '''
-    ex_lessons = lessons_from_db_urls - lessons_from_eclass_urls
+    ex_lessons = lessons_from_db_set - lessons_from_eclass_set
     for url in ex_lessons:
         deprecate_lesson_in_db(url, lessons_from_db_q)
     '''
     Get new lessons and add them to the DB
     '''
-    new_lessons = lessons_from_eclass_urls - lessons_from_db_urls
+    new_lessons = lessons_from_eclass_set - lessons_from_db_set
     for url in new_lessons:
         add_lesson_to_db(url, lessons_from_eclass[url], faculties_from_db_q)
     '''
     Get all the existing lessons, and check if any of their attributes were updated
     '''
-    existing_lessons = lessons_from_eclass_urls & lessons_from_db_urls
+    existing_lessons = lessons_from_eclass_set & lessons_from_db_set
     for url in existing_lessons:
         i = 0
-        lesson = lessons_from_db_q
+        lesson = lessons_from_db_q.get(url = url)
         for attribute in lessons_from_eclass[url]:
             if lessons_from_db[url][i] != attribute:
                 if i == 0:

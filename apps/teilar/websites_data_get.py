@@ -120,12 +120,12 @@ def get_websites():
     return websites
 
 def add_website_to_db(rss, attributes):
-    name = attributes[0]
-    url = attributes[1]
-    email = attributes[2]
     '''
     Add the website to the DB
     '''
+    name = attributes[0]
+    url = attributes[1]
+    email = attributes[2]
     website = Websites(
         rss = rss,
         name = name,
@@ -184,32 +184,32 @@ def update_websites():
        logger_mail.exception(error)
        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
     '''
-    Get the website_RSSs in set data structure, for easier comparisons
+    Get the websites' RSS URLs in set data structure, for easier comparisons
     '''
-    websites_rss = set(websites.keys())
+    websites_from_teilar_set = set(websites.keys())
     try:
-        websites_from_db_rss = set(websites_from_db.keys())
+        websites_from_db_set = set(websites_from_db.keys())
     except AttributeError:
         '''
         Websites table is empty in the DB
         '''
-        websites_from_db_rss = set()
+        websites_from_db_set = set()
     '''
     Get ex websites and mark them as deprecated
     '''
-    ex_websites = websites_from_db_rss - websites_rss
+    ex_websites = websites_from_db_set - websites_from_teilar_set
     for rss in ex_websites:
         deprecate_website_in_db(rss)
     '''
     Get new websites and add them to the DB
     '''
-    new_websites = websites_rss - websites_from_db_rss
+    new_websites = websites_from_teilar_set - websites_from_db_set
     for rss in new_websites:
        add_website_to_db(rss, websites[rss])
     '''
     Get all the existing websites, and check if any of their attributes were updated
     '''
-    existing_websites = websites_rss & websites_from_db_rss
+    existing_websites = websites_from_teilar_set & websites_from_db_set
     for rss in existing_websites:
         i = 0
         website = websites_from_db_q.get(rss = rss)

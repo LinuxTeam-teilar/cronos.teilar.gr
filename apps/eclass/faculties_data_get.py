@@ -92,30 +92,30 @@ def update_faculties():
     '''
     Get the faculty_IDs in set data structure format, for easier comparisons
     '''
-    faculties_from_eclass_ids = set(faculties_from_eclass.keys())
+    faculties_from_eclass_set = set(faculties_from_eclass.keys())
     try:
-        faculties_from_db_ids = set(faculties_from_db.keys())
+        faculties_from_db_set = set(faculties_from_db.keys())
     except AttributeError:
         '''
         Faculties table is empty in the DB
         '''
-        faculties_from_db_ids = set()
+        faculties_from_db_set = set()
     '''
     Get ex faculties and mark them as deprecated
     '''
-    ex_faculties = faculties_from_db_ids - faculties_from_eclass_ids
+    ex_faculties = faculties_from_db_set - faculties_from_eclass_set
     for url in ex_faculties:
         deprecate_faculty_in_db(url, faculties_from_db_q)
     '''
     Get new faculties and add them to the DB
     '''
-    new_faculties = faculties_from_eclass_ids - faculties_from_db_ids
+    new_faculties = faculties_from_eclass_set - faculties_from_db_set
     for url in new_faculties:
         add_faculty_to_db(url, faculties_from_eclass[url])
     '''
     Get all the existing faculties, and check if any of their attributes were updated
     '''
-    existing_faculties = faculties_from_eclass_ids & faculties_from_db_ids
+    existing_faculties = faculties_from_eclass_set & faculties_from_db_set
     for url in existing_faculties:
         i = 0
         faculty = faculties_from_db_q.get(url = url)
