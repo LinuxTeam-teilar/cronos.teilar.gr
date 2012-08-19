@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 from datetime import date
 from django.conf import settings
 from django.utils import feedgenerator
+import mimetypes
 import logging
 
 logger_syslog = logging.getLogger('cronos')
@@ -118,8 +119,10 @@ def get_teilar():
                 title = temp_td_oratext[1].contents[0]
                 description = soup.find('td', 'BlackText11').contents[0]
                 try:
-                    # TODO: A list of cases for known mimetypes eg .doc
-                    enclosure = feedgenerator.Enclosure(soup.find('a', 'BlackText11Bold')['href'], 'Unknown', 'Unknown')
+                    enclosure_link = soup.find('a', 'BlackText11Bold')['href']
+                    mimetypes.init()
+                    enclosure_mimetype = mimetypes.type_map[enclosure_link.split('.')[-1]]
+                    enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
                 except:
                     enclosure = None
             except Exception as error:
@@ -187,7 +190,10 @@ def get_teachers():
                 pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
                 description = temp_td_blacktext11[1]
                 try:
-                    enclosure = feedgenerator.Enclosure(announcement.find('a', 'OraText')['href'], 'Unknown', 'Unknown')
+                    enclosure_link = announcement.find('a', 'OraText')['href']
+                    mimetypes = init()
+                    enclosure_mimetype = mimetypes.type_map[enclosure_link.split('.')[-1]]
+                    enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
                 except Exception as error:
                     enclosure = None
             except Exception as error:
