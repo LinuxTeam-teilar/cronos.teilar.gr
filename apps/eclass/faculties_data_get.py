@@ -6,6 +6,7 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
+from apps.announcements.models import Authors
 from apps.eclass.models import Faculties
 from apps.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
@@ -41,6 +42,14 @@ def add_faculty_to_db(url, attributes):
     )
     try:
         faculty.save()
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(url))
+        logger_mail.exception(error)
+        return
+    author = Authors(content_object = faculty)
+    try:
+        author.save()
         logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(url))

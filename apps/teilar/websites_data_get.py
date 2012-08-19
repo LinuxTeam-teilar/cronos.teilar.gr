@@ -6,6 +6,7 @@ from proj_root import PROJECT_ROOT
 sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
+from apps.announcements.models import Authors
 from apps.teilar.models import Websites
 from django.conf import settings
 import logging
@@ -133,6 +134,14 @@ def add_website_to_db(rss, attributes):
     )
     try:
         website.save()
+        logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(rss))
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(rss))
+        logger_mail.exception(error)
+        return
+    author = Authors(content_object = website)
+    try:
+        author.save()
         logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(rss))
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(rss))

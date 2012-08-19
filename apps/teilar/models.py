@@ -18,3 +18,13 @@ class Teachers(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class Websites(models.Model):
+    rss = models.URLField(unique = True)
+    name = models.CharField(max_length = 255)
+    url = models.URLField()
+    email = models.EmailField(null = True)
+    deprecated = models.BooleanField(default = False)
+
+    def __unicode__(self):
+        return self.name
