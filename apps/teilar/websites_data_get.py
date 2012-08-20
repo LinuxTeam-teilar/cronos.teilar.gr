@@ -55,11 +55,11 @@ def get_websites():
             u'http://diogenis.teilar.gr',
             u'diogenis@teilar.gr',
         ],
-        #u'http://linuxteam.teilar.gr/TODO': [
-        #    u'Υπηρεσία ενοποίησης πληροφοριών',
-        #    u'http://cronos.teilar.gr',
-        #    u'cronos@teilar.gr',
-        #],
+        u'http://linuxteam.teilar.gr/blog/1464/feed': [
+            u'Υπηρεσία ενοποίησης πληροφοριών',
+            u'http://cronos.teilar.gr',
+            u'cronos@teilar.gr',
+        ],
         #u'http://www.pr.teilar.gr/TODO': [
         #    u'Γραφείο Δημοσίων & Διεθνών Σχέσεων',
         #    u'http://www.pr.teilar.gr',
