@@ -9,6 +9,7 @@ import urllib
 import os
 import tempfile
 import urlparse
+import urllib2
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
@@ -17,21 +18,18 @@ def teilar_login(url = None):
     '''
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
-    conn = pycurl.Curl()
-    b = StringIO.StringIO()
-    conn.setopt(pycurl.URL, str(url))
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
-        '''
-        Perform a connection, if it fails then www.teilar.gr is down
-        '''
-        conn.perform()
+        site = urllib2.urlopen(url)
+        output = site.read()
     except Exception as error:
+        '''
+        *.teilar.gr is down
+        '''
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
         site = url.split('/')[2]
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
-    return unicode(b.getvalue(), 'utf-8', 'ignore')
+    return unicode(output, 'utf-8', 'ignore')
 
 def dionysos_login(username, password, url = None):
     '''
