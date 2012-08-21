@@ -5,9 +5,9 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
 class Authors(models.Model):
-    author = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
-    content_object = generic.GenericForeignKey('author', 'object_id')
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     def __unicode__(self):
         return self.content_object.name
