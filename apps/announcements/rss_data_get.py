@@ -7,9 +7,11 @@ sys.path.append(PROJECT_ROOT)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
 from apps import CronosError, log_extra_data
 from apps.announcements.models import Authors, Announcements
-from apps.teilar.models import Departments, Websites
+from apps.teilar.models import Departments, Teachers, Websites
 from apps.eclass.models import Lessons
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import MultipleObjectsReturned
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from time import mktime
@@ -18,7 +20,6 @@ import datetime
 import MySQLdb
 import feedparser
 import logging
-import urllib2
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
@@ -27,23 +28,30 @@ def get_authors():
     '''
     Retrieves the authors from the DB tables:
     Departments, Teachers, Lessons, Websites
+    It returns a dictionary with the following structure:
+    authors = {'rss': 'url' OR 'rss'}
+    (depending on what of those two is unique in each table)
     '''
     authors = {}
+    '''
+    Add the teilar.gr various websites. It also includes some
+    recreated RSS feeds, since the ones that teilar provides are not good
+    '''
     try:
         websites = Websites.objects.filter(deprecated = False)
         for website in websites:
-            authors[website.rss] = website.name
+            authors[website.rss] = website.rss
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
     '''
-    Add the eclass lessons in the list of RSS sites
+    Add the eclass lessons in the list of RSS authors
     '''
     try:
         eclass_lessons = Lessons.objects.filter(deprecated = False)
         for lesson in eclass_lessons:
-            authors[u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.url.split('/')[4]] = lesson.name
+            authors[u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.url.split('/')[4]] = lesson.url
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data())
         logger_mail.exception(error)
@@ -54,30 +62,48 @@ def get_authors():
     '''
     #departments = Departments.objects.filter(deprecated = False)
     #for department in departments:
-    #    authors['http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.url.split('=')[1] = department.name
+    #    authors['http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.url.split('=')[1] = department.url
     return authors
 
-def add_announcement_to_db(announcement):
+def add_announcement_to_db(announcement, unique_url):
     '''
     Add the announcement to the DB
     '''
-    try:
+    for model in [Lessons, Websites, Teachers, Departments]:
         '''
-        Get a creator object from the Authors table
+        Check for a unique_url match (which is either RSS or URL
+        depending on the table) in all of those models
         '''
-        for item in Authors.objects.all():
-            if item.content_object.name == announcement[4]:
-                creator = item
-                break
-        new_announcement = Announcements(
+        try:
+            if model == Websites:
+                author = model.objects.get(rss = unique_url)
+            else:
+                author = model.objects.get(url = unique_url)
+            '''
+            Success, exit the loop
+            '''
+            break
+        except:
+            '''
+            Not found, proceed to the next model
+            '''
+            continue
+    '''
+    Below are the necessary db relations between the above model
+    and the Authors table
+    '''
+    author_type = ContentType.objects.get_for_model(author)
+    creator = Authors.objects.get(content_type__pk = author_type.id, object_id = author.id)
+    new_announcement = Announcements(
             title = announcement[0],
             url = announcement[1],
             pubdate = announcement[2],
             summary = announcement[3],
             creator = creator,
-            enclosure = announcement[5],
-            unique = announcement[6],
-        )
+            enclosure = announcement[4],
+            unique = announcement[5],
+    )
+    try:
         status = u'Νέα ανακοίνωση'
         new_announcement.save()
         logger_syslog.info(status, extra = log_extra_data(announcement[1]))
@@ -98,7 +124,7 @@ def add_announcement_to_db(announcement):
         logger_mail.exception(error)
     return
 
-def get_announcement(creator, entry, rss_url):
+def get_announcement(entry, rss_url):
     '''
     Return a list with the announcement's tags that are of interest
     '''
@@ -111,13 +137,6 @@ def get_announcement(creator, entry, rss_url):
         pubdate = datetime.datetime.now()
     pubdate = timezone.make_aware(pubdate, timezone.get_default_timezone())
     summary = entry.summary
-    '''
-    Select either the creator of the RSS or
-    the creator from the value of the key of
-    the 'authors' dictionary
-    '''
-    if creator.endswith(u'_dummy'):
-        creator = entry.author
     try:
         enclosure = entry.enclosures[0].href
     except:
@@ -133,7 +152,7 @@ def get_announcement(creator, entry, rss_url):
         unique += summary
         if enclosure:
             unique += enclosure
-    announcement = [title, url, pubdate, summary, creator, enclosure, unique]
+    announcement = [title, url, pubdate, summary, enclosure, unique]
     return announcement
 
 def update_announcements():
@@ -141,7 +160,7 @@ def update_announcements():
     Update the DB with new announcements of all the websites listed in authors.keys()
     '''
     authors = get_authors()
-    for rss_url, creator in authors.iteritems():
+    for rss_url, unique_url in authors.iteritems():
         '''
         Parse the RSS feed
         '''
@@ -165,8 +184,8 @@ def update_announcements():
             '''
             Get the data of each entry and add them in DB
             '''
-            announcement = get_announcement(creator, entry, rss_url)
-            add_announcement_to_db(announcement)
+            announcement = get_announcement(entry, rss_url)
+            add_announcement_to_db(announcement, unique_url)
 
 if __name__ == '__main__':
     try:
