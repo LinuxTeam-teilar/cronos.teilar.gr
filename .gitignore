@@ -4,3 +4,5 @@ local_settings.py
 *.kdev4
 *.swp
 *.swo
+.bash*
+.vim*
