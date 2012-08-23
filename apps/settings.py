@@ -185,6 +185,7 @@ AUTHENTICATION_BACKENDS = (
 # Variables regarding e-mail sending
 SERVER_EMAIL = 'cronos@teilar.gr'
 EMAIL_SUBJECT_PREFIX = '[cronos] '
+EMAIL_HOST = 'cronos.teilar.gr'
 
 if DEBUG:
     ### BROKEN ###
