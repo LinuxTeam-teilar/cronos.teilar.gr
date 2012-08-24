@@ -32,3 +32,5 @@ python apps/announcements/rss_create.py
 for script in ${SCRIPTS[@]}; do
     python apps/${script}_data_get.py
 done
+
+popd > /dev/null
