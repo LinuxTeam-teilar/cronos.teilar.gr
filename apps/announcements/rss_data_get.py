@@ -20,9 +20,12 @@ import datetime
 import MySQLdb
 import feedparser
 import logging
+import warnings
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
+
+warnings.filterwarnings("error", category=MySQLdb.Warning)
 
 def get_authors():
     '''
@@ -119,6 +122,13 @@ def add_announcement_to_db(announcement, unique_url):
     except MySQLdb.Warning as warning:
         logger_syslog.info(status, extra = log_extra_data(announcement[1]))
         logger_syslog.warning(warning, extra = log_extra_data(announcement[1]))
+        if str(warning).startswith("Data truncated for column 'unique' at row"):
+            '''
+            If the warning is about truncated unique column, ignore it
+            '''
+            pass
+        else:
+            logger_mail.exception(warning)
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(announcement[1]))
         logger_mail.exception(error)
