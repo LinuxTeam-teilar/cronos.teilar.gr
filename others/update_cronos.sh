@@ -1,6 +1,8 @@
 #!/bin/bash
 # Cronos cronjob. It requires the application's path as argument
 # TODO: Check if the path exists and it contains cronos
+# TODO: Add support for switches so we can perform only one of the
+# following actions manually
 
 # Variables
 CRONOS_PATH=$1
