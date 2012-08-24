@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# manage.py script of cronos
+
 import os
 import sys
 
