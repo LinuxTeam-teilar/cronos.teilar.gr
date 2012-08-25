@@ -5,7 +5,7 @@
 import os
 
 # Full path of the project dir
-PROJECT_ROOT = os.getcwd()
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__)) + '/..'
 
 try:
     from local_settings import *
