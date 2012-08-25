@@ -4,6 +4,7 @@ from apps import CronosError, log_extra_data
 from apps.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 import logging

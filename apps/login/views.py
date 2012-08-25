@@ -3,9 +3,9 @@
 from apps import CronosError
 from apps.login.forms import LoginForm
 from django.contrib.auth import login, authenticate
-from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext, loader
+from django.template import RequestContext
 
 def cronos_login(request):
     '''
