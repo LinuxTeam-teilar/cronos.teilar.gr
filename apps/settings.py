@@ -119,6 +119,22 @@ INSTALLED_APPS = (
     'apps.teilar',
 )
 
+# If the site name is cronos.teilar.gr, then
+# it is the official production website. In this
+# case the logger uses syslog_production handler
+# and the logs are going to /var/log/cronos_${level}.log
+# Else the logger uses syslog_development handler
+# (even when DEBUG = False), and the logs are going
+# to /var/log/cronos-dev_${level}.log
+HANDLER_SUFFIX = 'development'
+
+if not DEBUG:
+    from django.contrib.sites.models import Site
+
+    current_site = Site.objects.get_current()
+    if current_site.name == u'cronos.teilar.gr':
+        HANDLER_SUFFIX = 'production'
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -128,8 +144,11 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters':{
-        'cronos_formatter': {
+        'production': {
             'format': 'cronos: %(levelname)s %(id_name)s %(client_ip)s Message: %(message)s File: %(module)s Function: %(funcName)s Line: %(lineno)d',
+        },
+        'development': {
+            'format': 'cronos-dev: %(levelname)s %(id_name)s %(client_ip)s Message: %(message)s File: %(module)s Function: %(funcName)s Line: %(lineno)d',
         },
     },
     'filters': {
@@ -147,12 +166,18 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'cronos_formatter',
+            'formatter': 'development',
         },
-        'syslog': {
+        'syslog_production': {
             'level': 'INFO',
             'class': 'logging.handlers.SysLogHandler',
-            'formatter': 'cronos_formatter',
+            'formatter': 'production',
+            'address': '/dev/log',
+        },
+        'syslog_development': {
+            'level': 'INFO',
+            'class': 'logging.handlers.SysLogHandler',
+            'formatter': 'development',
             'address': '/dev/log',
         },
     },
@@ -163,7 +188,7 @@ LOGGING = {
             'propagate': True,
         },
         'cronos': {
-            'handlers': ['console' if LOGGING_DEBUG else 'syslog'],
+            'handlers': ['console' if LOGGING_DEBUG else 'syslog_' + HANDLER_SUFFIX],
             'level': 'DEBUG' if LOGGING_DEBUG else 'INFO',
         },
     }
