@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-/var/log/cronos_info.log /var/log/cronos_warning.log /var/log/cronos_error.log {
+/var/log/cronos/info.log /var/log/cronos/warning.log /var/log/cronos/error.log {
     create 660 root cronos
     sharedscripts
     missingok
