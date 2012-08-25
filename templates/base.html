@@ -4,9 +4,9 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <title>{% block title %}{% endblock %}Cronos</title>
-        <link rel="icon" href="{% static "logo.png" %}" type="image/x-icon">
-        <link rel="stylesheet" href="{% static "reset.css" %}">
-        <link rel="stylesheet" href="{% static "style.css" %}">
+        <link rel="icon" href="{% static "img/logo.png" %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static "css/reset.css" %}">
+        <link rel="stylesheet" href="{% static "css/style.css" %}">
         {% block more %}{% endblock %}
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
         {% block extra_css %}{% endblock %}
@@ -37,12 +37,6 @@
                         <li><a href="/about/">&raquo;&emsp;Σχετικά</a></li>
                         {% if user.is_authenticated %}
                         <li><a href="/preferences/">&raquo;&emsp;Ρυθμίσεις</a></li>
-                            {% if user.is_superuser %}
-                            <li><a href="/admin">&raquo;&emsp;Διαχείριση Django</a></li>
-                            <li><a href="/phpldapadmin">&raquo;&emsp;Διαχείριση LDAP</a></li>
-                            <li><a href="/phpmyadmin">&raquo;&emsp;Διαχείριση MySQL</a></li>
-                            <li><a href="http://cephalon.teilar.gr/cgi-bin/awstats.pl?config=cronos.teilar.gr">&raquo;&emsp;Στατιστικά</a></li>
-                            {% endif %}
                         {% endif %}
                     </ul>
                 </div>
