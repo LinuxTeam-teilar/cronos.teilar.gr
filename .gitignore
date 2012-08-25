@@ -5,3 +5,4 @@ local_settings.py
 *.swo
 .bash*
 .vim*
+.ssh*
