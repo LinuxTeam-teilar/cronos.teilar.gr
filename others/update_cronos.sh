@@ -86,11 +86,12 @@ fi
 
 if [[ -n ${DB} ]]; then
     [[ -n ${VERBOSE} ]] && echo "Populating the DB"
-    # Generate the custom RSS files
+    [[ -n ${VERBOSE} ]] && echo "Generate the custom RSS files"
     python apps/announcements/rss_create.py
 
-    # Populate the DB
+    [[ -n ${VERBOSE} ]] && echo "Populate the DB"
     for script in ${SCRIPTS[@]}; do
+        [[ -n ${VERBOSE} ]] && echo "Run ${script}_data_get.py"
         python apps/${script}_data_get.py
     done
 fi
