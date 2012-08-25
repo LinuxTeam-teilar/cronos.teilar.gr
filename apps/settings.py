@@ -188,8 +188,8 @@ LOGGING = {
             'propagate': True,
         },
         'cronos': {
-            'handlers': ['console' if LOGGING_DEBUG else 'syslog_' + HANDLER_SUFFIX],
-            'level': 'DEBUG' if LOGGING_DEBUG else 'INFO',
+            'handlers': ['console' if DEBUG else 'syslog_' + HANDLER_SUFFIX],
+            'level': 'DEBUG' if DEBUG else 'INFO',
         },
     }
 }

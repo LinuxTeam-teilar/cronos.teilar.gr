@@ -11,7 +11,6 @@ ADMINS = (
 # DEBUG Options: Select "True" for development use, "False" for production use
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-LOGGING_DEBUG = DEBUG
 
 DATABASES = {
     'default': {
