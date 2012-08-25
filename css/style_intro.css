@@ -44,6 +44,10 @@ a:hover {
 
 #info ul>li { font: normal 14px/18px Verdana,Arial,sans-serif; }
 
+#info .logos img { padding-left:10px; padding-right:10px; }
+
+.logos { margin-left: auto; margin-right: auto; text-align: center; }
+
 #welcome { width: 365px; height: 270px; float: right; border-right: solid 1px #efefef; }
 
 #welcome h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
