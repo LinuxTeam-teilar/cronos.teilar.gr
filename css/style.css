@@ -20,7 +20,7 @@ th { color: #786721; width: 280px; }
 
 #header {
 	width: 260px; height: 100%; position: fixed; top: 0; left: 0; z-index: 2;
-	background: #dfdfdf url("img/header_bg.png") top right repeat-y;
+	background: #dfdfdf url("/static/img/header_bg.png") top right repeat-y;
 	border-right: solid 1px #aaa;
 }
 
@@ -30,7 +30,7 @@ th { color: #786721; width: 280px; }
 	font: bold 38px Georgia, Times New Roman, Times, serif;
 	color: #786721;
 	text-indent: -9999px;
-	background: url("img/logo_sidebar.png") -10px -20px no-repeat;
+	background: url("/static/img/logo_sidebar.png") -10px -20px no-repeat;
 }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
@@ -58,16 +58,16 @@ th { color: #786721; width: 280px; }
 #navigation>li a:link, #navigation>li a:visited {
 	padding: 8px 12px 9px 12px;
 	color: #786721;
-	background: #FFE699 url("img/navigation_bg_link.png") top left repeat-x;
+	background: #FFE699 url("/static/img/navigation_bg_link.png") top left repeat-x;
 	border: solid 1px #786721; border-top: 0;
 	text-shadow: #FFF2CC 1px 1px 0px;
 }
 #navigation>li a:hover, #navigation>li a:focus {
 	color: #f4f4f4; text-shadow: #000 0px 1px 0px;
-	background: #786721 url("img/navigation_bg_over.png") top left repeat-x;
+	background: #786721 url("/static/img/navigation_bg_over.png") top left repeat-x;
 	border: solid 1px #64561B; border-top: 0; border-bottom: solid 1px #504416;
 }
-#navigation>li a:active { background: #786721 url("img/navigation_bg_active.png") top left repeat-x; }
+#navigation>li a:active { background: #786721 url("/static/img/navigation_bg_active.png") top left repeat-x; }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 /*FOR PROFILE-----------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -102,14 +102,14 @@ th { color: #786721; width: 280px; }
 }
 
 #profile a.button:link, #profile a.button:visited {
-	background: #FFE699 url("img/button_bg_link.png") bottom left repeat-x;
+	background: #FFE699 url("/static/img/button_bg_link.png") bottom left repeat-x;
 	color: #64561B;
 	border: solid 1px #786721;
 	text-shadow: #FFE699 0px 1px 0px;
 }
 
 #profile a.button:hover, #profile a.button:focus {
-	background: #786721 url("img/button_bg_over.png") top left repeat-x;
+	background: #786721 url("/static/img/button_bg_over.png") top left repeat-x;
 	color: #f5f5f5;
 	border: solid 1px #504416;
 	text-shadow: #504416 0px -1px 0px;
@@ -122,7 +122,7 @@ th { color: #786721; width: 280px; }
 #content {
 	width: 77.7%; min-width: 730px; height: 80%; min-height: 522px; position: relative; top: 10px; left: 270px;
 	padding-top: 25px;	
-/*	background-image: url("img/logo_bg.png");
+/*	background-image: url("/static/img/logo_bg.png");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center center;*/
@@ -195,7 +195,7 @@ th { color: #786721; width: 280px; }
 	width: 260px; height: 55px; display: block;
 	padding: 1px 0 0 42px;
 	border: 0; color: #E6AC00; text-shadow: #fff 0px 1px 0px;
-	background: url("img/rss.png") top left no-repeat;
+	background: url("/static/img/rss.png") top left no-repeat;
 }
 #content .rss-promo a:hover, #content .rss-promo a:focus { border: 0; color: #B38600; }
 #content .rss-promo p { color: #786721; }
