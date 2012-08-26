@@ -23,6 +23,12 @@ def get_teachers():
     '''
     teachers_from_teilar = {}
     for pid in range(400):
+        if pid == 386:
+            '''
+            Dirty workaround to avoid a teacher who has no matching department,
+            probably because they are testing something
+            '''
+            continue
         '''
         Perform connections to each of the teacher's profile page. From the HTML
         output we grab the name, email and department
