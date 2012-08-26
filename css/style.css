@@ -75,7 +75,7 @@ th { color: #786721; width: 280px; }
 
 #profile {
     position: relative; height: 52px; top: 0; right: 0; display: block;
-    background: #e3e3e3 url("profile_bg.jpg") repeat;
+    background: #e3e3e3 url("/static/img/profile_bg.jpg") repeat;
     text-align: right;
     border-bottom: solid 1px #aaa;
 
