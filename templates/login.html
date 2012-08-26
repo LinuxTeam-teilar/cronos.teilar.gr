@@ -8,11 +8,11 @@
     <div id="login">
         <div id="info">
             <h3>Σχετικά</h3>
-            <p>Η υπηρεσία Cronos αποτελεί μία υπηρεσία ενοποίησης των διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας! <a href="/about">Περισσότερα για το Cronos</a></p>
+            <p>Η υπηρεσία Cronos αποτελεί μία υπηρεσία ενοποίησης των διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας! <a class="links" href="/about">Περισσότερα για το Cronos</a></p>
             <h3>Είσοδος</h3>
-            <p>Εισάγετε το όνομα χρήστη και κωδικό πρόσβασης που έχετε στο <a href="http://dionysos.teilar.gr">dionysos.teilar.gr</a></p>
+            <p>Εισάγετε το όνομα χρήστη και κωδικό πρόσβασης που έχετε στο <a class="links" href="http://dionysos.teilar.gr">dionysos.teilar.gr</a></p>
             <h3>Αναφορά Σφάλματος</h3>
-            <p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a href="/about/#contact">επικοινωνήστε μαζί μας.</a></p>
+            <p>Αν αντιμετωπίζετε οποιοδήποτε πρόβλημα με την υπηρεσία, παρακαλούμε <a class="links" href="/about/#contact">επικοινωνήστε μαζί μας.</a></p>
         </div>
         <div id="login-form">
             <form action="." method="POST">{% csrf_token %}
@@ -34,4 +34,12 @@
             </form>
         </div>
     </div>
+    <p class="social-icon">
+        <a href="https://www.facebook.com/cronos.teilar.gr" title="Join us on Facebook" ><img src="/static/img/facebook.png" width="47" height="47"></a>
+        <a href="https://twitter.com/CronosTeilarGr"><img src="/static/img/twitter.png" title="Follow us on Twitter" width="47" height="47"></a>
+        <a href="http://linuxteam.teilar.gr/blog/1464" title="Cronos Blog" ><img src="/static/img/linuxteam_blog.png" width="47" height="47"></a>
+        <a href="https://github.com/LinuxTeam-teilar/cronos.teilar.gr" title="Our project on Github" ><img src="/static/img/github.png" width="49" height="49"></a>
+        <a href="http://linuxteam.teilar.gr/blog/1464/feed" title="Subscribe to RSS Feed" ><img src="/static/img/rss_intro.png" width="47" height="47"></a>
+        <a href="mailto:cronos@teilar.gr" title="Email"><img src="/static/img/mail_green.ico" width="50" height="50"></a>
+     </p>
 {% endblock %}
