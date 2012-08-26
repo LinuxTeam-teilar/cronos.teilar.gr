@@ -119,14 +119,26 @@ INSTALLED_APPS = (
     'apps.teilar',
 )
 
-# If the site name is cronos.teilar.gr, then
-# it is the official production website. In this
-# case the logger uses syslog_production handler
+# Get the site name and check if it matches
+# 'cronos.teilar.gr' which makes it the official
+# production instance
+PRODUCTION = False
+if not DEBUG:
+    from django.contrib.sites.models import Site
+
+    current_site = Site.objects.get_current()
+    if current_site.name == u'cronos.teilar.gr':
+        PRODUCTION = True
+
+# Check if this is the official production instance.
+# In this case the logger uses syslog_production handler
 # and the logs are going to /var/log/cronos_${level}.log
 # Else the logger uses syslog_development handler
 # (even when DEBUG = False), and the logs are going
 # to /var/log/cronos-dev_${level}.log
 HANDLER_SUFFIX = 'development'
+if PRODUCTION:
+    HANDLER_SUFFIX = 'production'
 
 if not DEBUG:
     from django.contrib.sites.models import Site
@@ -208,10 +220,11 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# Variables regarding e-mail sending
-SERVER_EMAIL = 'cronos@teilar.gr'
-EMAIL_SUBJECT_PREFIX = '[cronos] '
-EMAIL_HOST = 'cronos.teilar.gr'
+# e-mail sending variables regarding server authentication
+# and configuration should be specified in local_settings
+EMAIL_SUBJECT_PREFIX = '[cronos-dev] '
+if PRODUCTION:
+    EMAIL_SUBJECT_PREFIX = '[cronos] '
 
 if DEBUG:
     ### BROKEN ###

@@ -28,3 +28,7 @@ DATABASES = {
 # to encrypt/decrypt blowfish passwords.
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'
+
+# Variables regarding e-mail sending (host, credentials) go here
+# EMAIL_HOST = 'localhost'
+# SERVER_EMAIL = 'cronos@teilar.gr'
