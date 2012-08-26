@@ -58,7 +58,10 @@ class DionysosTeilarAuthentication(object):
             If the user is not in the DB, try to log in with his
             dionysos.teilar.gr account
             '''
-            output = dionysos_login(username, password)
+            try:
+                output = dionysos_login(username, password, request = request)
+            except CronosError:
+                raise
             if output:
                 '''
                 The credentials worked, try to create a user based on those credentials
@@ -73,15 +76,18 @@ class DionysosTeilarAuthentication(object):
                     logger_syslog.error(error, extra = log_extra_data(username, request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης στοιχείων χρήστη')
-                credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
-                credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
-                credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
-                credentials['semester'] = get_dionysos_semester(front_page, username, request)
-                credentials['school'] = get_dionysos_school(front_page, username, request)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
-                credentials['declaration'] = get_dionysos_declaration(username, password, request)
-                #credentials['grades'] = get_dionysos_grades(username, password, request)
-                user = add_student_to_db(credentials, request)
+                try:
+                    credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
+                    credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
+                    credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
+                    credentials['semester'] = get_dionysos_semester(front_page, username, request)
+                    credentials['school'] = get_dionysos_school(front_page, username, request)
+                    credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
+                    credentials['declaration'] = get_dionysos_declaration(username, password, request)
+                    #credentials['grades'] = get_dionysos_grades(username, password, request)
+                    user = add_student_to_db(credentials, request)
+                except CronosError:
+                    raise
             else:
                 return
         return user

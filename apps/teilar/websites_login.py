@@ -31,7 +31,7 @@ def teilar_login(url = None):
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
     return unicode(output, 'utf-8', 'ignore')
 
-def dionysos_login(username, password, url = None):
+def dionysos_login(username, password, url = None, request = None):
     '''
     Try to connect to dionysos.teilar.gr and get the resulting HTML output.
     If URL is None, then an authentication attempt is also performed. In order
@@ -69,7 +69,7 @@ def dionysos_login(username, password, url = None):
     except Exception as error:
         os.close(fd)
         os.remove(cookie_path)
-        logger_syslog.warn(error, extra = log_extra_data(username = username))
+        logger_syslog.warning(error, extra = log_extra_data(username, request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
     try:
@@ -83,7 +83,7 @@ def dionysos_login(username, password, url = None):
     except Exception as error:
         os.close(fd)
         os.remove(cookie_path)
-        logger_syslog.warn(error, extra = log_extra_data(username = username))
+        logger_syslog.warning(error, extra = log_extra_data(username, request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     '''
     If everything was fine so far, then dionysos.teilar.gr is up and running.
@@ -110,9 +110,7 @@ def dionysos_login(username, password, url = None):
                 os.close(fd)
                 os.remove(cookie_path)
                 return
-        except NameError:
-            pass
-        except AttributeError:
+        except (NameError, AttributeError):
             pass
     else:
         '''
