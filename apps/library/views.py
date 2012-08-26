@@ -11,13 +11,13 @@ def library(request):
     Perform search in library.teilar.gr and print the results
     '''
     msg = None
+    results = []
     if request.method == 'GET':
         form = LibraryForm(request.GET)
         if form.is_valid():
             url = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=40&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % str(request.GET.get('search'))
             output = teilar_login(url)
             soup = BeautifulSoup(output).find_all('table')[24]
-            results = []
             temp_a_mediumboldanchor = soup.find_all('a', 'mediumBoldAnchor')
             temp_td = soup.find_all('td')
             i = 5
