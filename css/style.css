@@ -190,6 +190,15 @@ th { color: #786721; width: 280px; }
     color: #111;
 }
 
+#content .entry ul {
+    list-style: circle;
+    margin-left: 2em;
+    padding-left: 0;
+}
+#content .entry p {
+    margin-top: 0.5em;
+}
+
 #content .rss-promo { background: #FFECB3; border: solid 1px #E6AC00; }
 #content .rss-promo a:link, #content .rss-promo a:visited {
     width: 260px; height: 55px; display: block;
