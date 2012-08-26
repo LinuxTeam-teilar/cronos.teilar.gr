@@ -79,7 +79,7 @@ fi
 if [[ -n ${COLLECTSTATIC} ]]; then
     [[ -n ${VERBOSE} ]] && echo "Collecting the static data"
     # Clean the directory to get rid of old files
-    rm -rf scripts/*
+    rm -rf static/*
     python manage.py collectstatic --noinput -l --ignore *.sh \
         --ignore *.conf --ignore logrotate.d* --ignore cron.d* > /dev/null
 fi
