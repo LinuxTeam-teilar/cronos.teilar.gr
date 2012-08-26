@@ -220,7 +220,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# e-mail sending variables regarding server authentication
+# email sending variables regarding server authentication
 # and configuration should be specified in local_settings
 EMAIL_SUBJECT_PREFIX = '[cronos-dev] '
 if PRODUCTION:

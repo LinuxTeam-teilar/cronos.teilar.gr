@@ -29,6 +29,10 @@ DATABASES = {
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'
 
-# Variables regarding e-mail sending (host, credentials) go here
+# Variables regarding email sending (host, credentials)
+# SERVER_EMAIL = 'user@localhost'
 # EMAIL_HOST = 'localhost'
-# SERVER_EMAIL = 'cronos@teilar.gr'
+# EMAIL_PORT = '25'
+# EMAIL_HOST_USER = 'user'
+# EMAIL_HOST_PASSWORD = 'secret'
+# EMAIL_USE_TLS = False
