@@ -9,29 +9,29 @@ h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #78672
 p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
 
 a {
-	text-decoration: none;
-	border-bottom: 1px dashed #212121;
-	color: #212121;
+    text-decoration: none;
+    border-bottom: 1px dashed #212121;
+    color: #212121;
 }
 
 a:hover {
-	border-bottom: 1px dashed #786721;
-	color: #786721;
+    border-bottom: 1px dashed #786721;
+    color: #786721;
 }
 
 #login {
-	width: 750px; float: left;
-	margin: 30px 0 0 0; padding: 15px 15px 15px 15px;
-	background: #fff;
-	border: solid 1px #c1c1c1;
-	
-	-moz-border-radius: 11px; /* FF1+ */
-	-webkit-border-radius: 11px; /* Saf3+, Chrome */
-	border-radius: 11px; /* Opera 10.5, IE 9 */
-	
-	-moz-box-shadow: 0 0 2px #a1a1a1; /* FF3.5+ */
-	-webkit-box-shadow: 0 0 2px #a1a1a1; /* Saf3.0+, Chrome */
-	box-shadow: 0 0 2px #a1a1a1; /* Opera 10.5, IE 9.0 */
+    width: 750px; float: left;
+    margin: 30px 0 0 0; padding: 15px 15px 15px 15px;
+    background: #fff;
+    border: solid 1px #c1c1c1;
+
+    -moz-border-radius: 11px; /* FF1+ */
+    -webkit-border-radius: 11px; /* Saf3+, Chrome */
+    border-radius: 11px; /* Opera 10.5, IE 9 */
+
+    -moz-box-shadow: 0 0 2px #a1a1a1; /* FF3.5+ */
+    -webkit-box-shadow: 0 0 2px #a1a1a1; /* Saf3.0+, Chrome */
+    box-shadow: 0 0 2px #a1a1a1; /* Opera 10.5, IE 9.0 */
 }
 
 #info { width: 365px; height: 270px; float: left; }
@@ -61,19 +61,19 @@ a:hover {
 #login-form { width: 375px; height: 270px; float: left; border-left: solid 1px #d5d5d5; }
 
 #login-form form {
-	height: 250px;
-	margin: 10px 0 0 30px;
-	background: #efefef url("/static/img/login_bg.png") -400px 0px repeat-x;
-	border: solid 1px #c1c1c1;
-	font: 14px verdana;
-	
-	-moz-border-radius: 9px; /* FF1+ */
-	-webkit-border-radius: 9px; /* Saf3+, Chrome */
-	border-radius: 9px; /* Opera 10.5, IE 9 */
-	
-	-moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
-	-webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
-	box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */	
+    height: 250px;
+    margin: 10px 0 0 30px;
+    background: #efefef url("/static/img/login_bg.png") -400px 0px repeat-x;
+    border: solid 1px #c1c1c1;
+    font: 14px verdana;
+
+    -moz-border-radius: 9px; /* FF1+ */
+    -webkit-border-radius: 9px; /* Saf3+, Chrome */
+    border-radius: 9px; /* Opera 10.5, IE 9 */
+
+    -moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
+    -webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
+    box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */
 }
 
 #login-form input[type="text"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
@@ -93,29 +93,29 @@ a:hover {
 #login-form form>a { margin: 20px 0 0 30px; }
 
 #login-form p.messages {
-	width: 200px;
-	margin: 10px 0 0 30px; padding: 8px 10px 9px 10px;
-	background: #ffd0d0; color: #e92525;
-	font: 13px Verdana,Arial,sans-serif;
-	border: solid 1px #e92525;
+    width: 200px;
+    margin: 10px 0 0 30px; padding: 8px 10px 9px 10px;
+    background: #ffd0d0; color: #e92525;
+    font: 13px Verdana,Arial,sans-serif;
+    border: solid 1px #e92525;
 }
 
 #signup-form { width: 375px; height: 580px; float: left; border-left: solid 1px #d5d5d5; }
 
 #signup-form form {
-	height: 550px;
-	margin: 10px 0 0 30px;
-	background: #efefef url("/static/img/login_bg.png") -400px 0px repeat-x;
-	border: solid 1px #c1c1c1;
-	font: 14px verdana;
-	
-	-moz-border-radius: 9px; /* FF1+ */
-	-webkit-border-radius: 9px; /* Saf3+, Chrome */
-	border-radius: 9px; /* Opera 10.5, IE 9 */
-	
-	-moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
-	-webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
-	box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */	
+    height: 550px;
+    margin: 10px 0 0 30px;
+    background: #efefef url("/static/img/login_bg.png") -400px 0px repeat-x;
+    border: solid 1px #c1c1c1;
+    font: 14px verdana;
+
+    -moz-border-radius: 9px; /* FF1+ */
+    -webkit-border-radius: 9px; /* Saf3+, Chrome */
+    border-radius: 9px; /* Opera 10.5, IE 9 */
+
+    -moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
+    -webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
+    box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */
 }
 
 #signup-form input[type="text"] { margin: 5px 0 5px 30px; border: solid 1px #c1c1c1; }
@@ -135,9 +135,9 @@ a:hover {
 #signup-form form>a { margin: 20px 0 0 30px; }
 
 #signup-form p.messages {
-	width: 100px;
-	margin: 20px 0 0 30px; padding: 8px 10px 9px 10px;
-	background: #ffd0d0; color: #e92525;
-	font: 13px Verdana,Arial,sans-serif;
-	border: solid 1px #e92525;
+    width: 100px;
+    margin: 20px 0 0 30px; padding: 8px 10px 9px 10px;
+    background: #ffd0d0; color: #e92525;
+    font: 13px Verdana,Arial,sans-serif;
+    border: solid 1px #e92525;
 }
