@@ -81,7 +81,7 @@ if [[ -n ${COLLECTSTATIC} ]]; then
     # Clean the directory to get rid of old files
     rm -rf scripts/*
     python manage.py collectstatic --noinput -l --ignore *.sh \
-        --ignore *.conf --ignore logrotate > /dev/null
+        --ignore *.conf --ignore logrotate.d* --ignore cron.d* > /dev/null
 fi
 
 if [[ -n ${DB} ]]; then
