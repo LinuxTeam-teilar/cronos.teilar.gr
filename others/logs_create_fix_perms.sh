@@ -8,6 +8,7 @@ for instance in cronos cronos-dev; do
         logfile=${logpath}/${level}.log
         [[ -n ${logfile} ]] && touch ${logfile}
     done
-    chmod -R 640 ${logpath}
+    chmod 750 ${logpath}
+    chmod 640 ${logpath}/*
     chown -R root:${instance} ${logpath}
 done
