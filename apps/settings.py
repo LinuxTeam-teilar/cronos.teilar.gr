@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'apps.announcements',
     'apps.accounts',
     'apps.eclass',
+    'apps.login',
     'apps.teilar',
 )
 
