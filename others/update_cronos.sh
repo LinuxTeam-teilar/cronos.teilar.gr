@@ -18,10 +18,11 @@ help() {
     echo "You need to specify the path where the cronos source code resides"
     echo "with the -p argument"
     echo
-    echo "Possible actions:"
-    echo " - Update the repository (with -u)"
-    echo " - Collect the static files (with -c)"
-    echo " - Populate the database (with -d)"
+    echo "Options:"
+    echo " -p <path> Path of the cronos instance"
+    echo " -u        Update the repository"
+    echo " -c        Collect the static files"
+    echo " -d        Populate the database"
     echo
     exit
 }
