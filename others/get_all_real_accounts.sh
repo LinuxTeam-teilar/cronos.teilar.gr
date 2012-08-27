@@ -12,6 +12,7 @@ TMP_PATH="/tmp/cronos/fixtures"
 CRONOS_PATH=$1
 
 [[ -d ${TMP_PATH} ]] || mkdir -p ${TMP_PATH}
-$1/manage.py dumpdata -e announcements.announcements > ${TMP_PATH}/full_production_db.json
+$1/manage.py dumpdata > ${TMP_PATH}/full_production_db.json
 
-python ${CRONOS_PATH}/others/get_all_real_accounts.py ${CRONOS_PATH} > ${TMP_PATH}/all_real_accounts.py
+python ${CRONOS_PATH}/others/get_all_real_accounts.py \
+    ${CRONOS_PATH} > ${TMP_PATH}/all_real_accounts.py
