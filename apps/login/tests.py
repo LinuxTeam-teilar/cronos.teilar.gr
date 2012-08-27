@@ -16,7 +16,7 @@ try:
         'password': first_student_password
     }
 except ImportError:
-    print 'WARNING: In order to run all the tests successfully, you need first
+    print 'WARNING: In order to run all the tests successfully, you need first \
 to run the following command in the production instance: \
 \nsh /path/to/cronos/others/get_all_real_accounts.sh /path/to/cronos \
 \nThis will create two files under /tmp/cronos/fixtures, which need to be \
