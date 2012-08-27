@@ -4,9 +4,9 @@ import os
 import sys
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__)) + '/../..'
 sys.path.append(PROJECT_ROOT)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
-from apps import CronosError, log_extra_data
-from apps.teilar.websites_login import teilar_login
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
+from cronos import CronosError, log_extra_data
+from cronos.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 from datetime import date
 from django.conf import settings

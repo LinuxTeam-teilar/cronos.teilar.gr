@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from apps.teilar.models import Teachers
+from cronos.teilar.models import Teachers
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 

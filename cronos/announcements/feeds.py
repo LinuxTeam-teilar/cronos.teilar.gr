@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from apps.announcements.models import Announcements
-from apps.accounts.models import *
+from cronos.announcements.models import Announcements
+from cronos.accounts.models import *
 from django.contrib.auth.models import User
 from django.contrib.syndication.views import Feed
 

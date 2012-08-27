@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from apps.library.forms import LibraryForm
-from apps.teilar.websites_login import teilar_login
+from cronos.library.forms import LibraryForm
+from cronos.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 from django.shortcuts import render_to_response
 from django.template import RequestContext

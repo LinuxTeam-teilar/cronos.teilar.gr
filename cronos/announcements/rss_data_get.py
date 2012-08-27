@@ -4,11 +4,11 @@ import os
 import sys
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__)) + '/../..'
 sys.path.append(PROJECT_ROOT)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
-from apps import CronosError, log_extra_data
-from apps.announcements.models import Authors, Announcements
-from apps.teilar.models import Departments, Teachers, Websites
-from apps.eclass.models import Lessons
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
+from cronos import CronosError, log_extra_data
+from cronos.announcements.models import Authors, Announcements
+from cronos.teilar.models import Departments, Teachers, Websites
+from cronos.eclass.models import Lessons
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import MultipleObjectsReturned

@@ -2,10 +2,10 @@
 
 from django.test import TestCase
 from django.test.client import Client
-from apps.teilar.models import Departments
+from cronos.teilar.models import Departments
 
 try:
-    from apps.login.fixtures.all_real_accounts import all_real_accounts
+    from cronos.login.fixtures.all_real_accounts import all_real_accounts
     '''
     Get the first student
     '''
@@ -20,7 +20,7 @@ except ImportError:
 to run the following command in the production instance: \
 \nsh /path/to/cronos/others/get_all_real_accounts.sh /path/to/cronos \
 \nThis will create two files under /tmp/cronos/fixtures, which need to be \
-copied in the testing instance under apps/login/fixtures'
+copied in the testing instance under cronos/login/fixtures'
 
 class EmptyDBLoginTest(TestCase):
     def setUp(self):

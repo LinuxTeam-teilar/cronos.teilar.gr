@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from apps import CronosError, log_extra_data
-from apps.accounts.models import UserProfile
-from apps.accounts.encryption import encrypt_password
-from apps.teilar.models import Departments
+from cronos import CronosError, log_extra_data
+from cronos.accounts.models import UserProfile
+from cronos.accounts.encryption import encrypt_password
+from cronos.teilar.models import Departments
 from django.contrib.auth.models import User
 import logging
 

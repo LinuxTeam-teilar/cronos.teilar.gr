@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from apps import CronosError, log_extra_data
-from apps.accounts.encryption import decrypt_password
-from apps.accounts.student_data_get import *
-from apps.accounts.student_data_to_db import add_student_to_db
+from cronos import CronosError, log_extra_data
+from cronos.accounts.encryption import decrypt_password
+from cronos.accounts.student_data_get import *
+from cronos.accounts.student_data_to_db import add_student_to_db
 from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 

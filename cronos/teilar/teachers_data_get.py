@@ -4,11 +4,11 @@ import os
 import sys
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__)) + '/../..'
 sys.path.append(PROJECT_ROOT)
-os.environ['DJANGO_SETTINGS_MODULE'] = 'apps.settings'
-from apps import CronosError, log_extra_data
-from apps.announcements.models import Authors
-from apps.teilar.models import Departments, Teachers
-from apps.teilar.websites_login import teilar_login
+os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
+from cronos import CronosError, log_extra_data
+from cronos.announcements.models import Authors
+from cronos.teilar.models import Departments, Teachers
+from cronos.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 import logging
 

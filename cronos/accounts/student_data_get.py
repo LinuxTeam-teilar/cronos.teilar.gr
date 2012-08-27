@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from apps import CronosError, log_extra_data
-from apps.teilar.websites_login import dionysos_login
+from cronos import CronosError, log_extra_data
+from cronos.teilar.websites_login import dionysos_login
 from bs4 import BeautifulSoup
 import logging
 

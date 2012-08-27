@@ -1,4 +1,4 @@
-from apps.teilar.models import Departments
+from cronos.teilar.models import Departments
 from django.contrib.auth.models import User
 from django.db import models
 

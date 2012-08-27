@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from apps import CronosError, log_extra_data
-from apps.accounts.forms import *
+from cronos import CronosError, log_extra_data
+from cronos.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseServerError
