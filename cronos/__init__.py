@@ -3,6 +3,11 @@
 from django.conf import settings
 from django.core.mail import send_mail
 
+def get_package_version():
+    return '0.3-dev'
+
+__version__ = get_package_version()
+
 '''
 For unkown reason, the logger is NOT able to find a handler
 unless a settings.VARIABLE is called!!
