@@ -1,0 +1,2 @@
+recursive-include cronos/static *
+recursive-include cronos/templates *
