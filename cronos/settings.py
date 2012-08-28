@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     'cronos.eclass',
     'cronos.login',
     'cronos.teilar',
+    'tests_cronos',
 )
 
 # Get the site name and check if it matches
