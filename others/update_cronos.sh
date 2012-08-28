@@ -87,7 +87,6 @@ if [[ -n ${COLLECTSTATIC} ]]; then
 fi
 
 if [[ -n ${DB} ]]; then
-    [[ -n ${VERBOSE} ]] && echo "Populating the DB"
     [[ -n ${VERBOSE} ]] && echo "Generate the custom RSS files"
     python cronos/announcements/rss_create.py
 
