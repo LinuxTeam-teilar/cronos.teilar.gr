@@ -64,10 +64,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    ('img', PROJECT_ROOT + '/cronos/static/img/'),
-    ('css', PROJECT_ROOT + '/cronos/static/css/'),
-    ('js', PROJECT_ROOT + '/cronos/static/js/'),
-    PROJECT_ROOT + '/others/',
+    PROJECT_ROOT + '/cronos/static',
 )
 # List of finder classes that know how to find static files in
 # various locations.

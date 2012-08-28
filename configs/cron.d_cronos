@@ -1,0 +1,6 @@
+CRONOS_PATH="/path/to/cronos"
+#20,50 * * * * cronos ${CRONOS_PATH}/bin/update_cronos.sh -p ${CRONOS_PATH} -u -c -d
+
+CRONOS_DEV_PATH="/path/to/cronos-dev"
+12,42 * * * * cronos-dev ${CRONOS_DEV_PATH}/bin/update_cronos.sh -p ${CRONOS_DEV_PATH} -u -c -d
+8,38 * * * * root /bin/bash ${CRONOS_DEV_PATH}/bin/logs_create_fix_perms.sh

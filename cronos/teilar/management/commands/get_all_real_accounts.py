@@ -11,4 +11,4 @@ class Command(BaseCommand):
         for student in all_students_q:
             all_students[student.dionysos_username] = decrypt_password(student.dionysos_password)
 
-        self.stdout.write('all_real_accounts = %s' % str(all_students))
+        self.stdout.write('all_real_accounts = %s\n' % str(all_students))

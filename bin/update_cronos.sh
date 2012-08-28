@@ -3,12 +3,12 @@
 
 # Variables
 SCRIPTS=(
-    teilar/websites
-    teilar/departments
-    teilar/teachers
-    eclass/faculties
-    eclass/lessons
-    announcements/rss
+    websites
+    departments
+    teachers
+    eclass_faculties
+    eclass_lessons
+    rss_feeds
 )
 
 help() {
@@ -81,19 +81,17 @@ if [[ -n ${COLLECTSTATIC} ]]; then
     [[ -n ${VERBOSE} ]] && echo "Collecting the static data"
     # Clean the directory to get rid of old files
     rm -rf static/*
-    python manage.py collectstatic --noinput -l --ignore '*.sh' \
-        --ignore '*.conf' --ignore 'logrotate.d*' --ignore 'cron.d*' \
-        --ignore '*.py' > /dev/null
+    python manage.py collectstatic --noinput > /dev/null
 fi
 
 if [[ -n ${DB} ]]; then
     [[ -n ${VERBOSE} ]] && echo "Generate the custom RSS files"
-    python cronos/announcements/rss_create.py
+    python manage.py create_rss_feed
 
     [[ -n ${VERBOSE} ]] && echo "Populate the DB"
     for script in ${SCRIPTS[@]}; do
-        [[ -n ${VERBOSE} ]] && echo "Run ${script}_data_get.py"
-        python cronos/${script}_data_get.py
+        [[ -n ${VERBOSE} ]] && echo "Run manage.py get_${script}"
+        python manage.py get_${script}
     done
 fi
 
