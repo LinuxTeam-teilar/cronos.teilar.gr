@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from cronos.refrigeratos.forms import *
-from cronos.refrigeratos.tables import *
+from cronos.refrigerators.forms import *
+from cronos.refrigerators.tables import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-def refrigeratos(request):
+def refrigerators(request):
     sint_thermop1 = None
     epif_pleuras1 = None
     dt1 = None
@@ -159,7 +159,7 @@ def refrigeratos(request):
         form10 = Psigeia10Form(request.POST)
         form11 = Psigeia11Form(request.POST)
         form12 = Psigeia12Form(request.POST)
-    return render_to_response('refrigeratos.html', {
+    return render_to_response('refrigerators.html', {
         'form1': form1,
         'sint_thermop1': sint_thermop1,
         'epif_pleuras1': epif_pleuras1,
