@@ -8,7 +8,3 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'cronos.settings'
 from django.conf import settings
 
 DATABASES = settings.DATABASES
-
-#INSTALLED_APPS = ('tests_cronos')
-#INSTALLED_APPS = settings.INSTALLED_APPS + ('tests_cronos',)
-#print INSTALLED_APPS
