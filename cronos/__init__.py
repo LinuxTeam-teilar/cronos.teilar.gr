@@ -8,14 +8,6 @@ def get_package_version():
 
 __version__ = get_package_version()
 
-'''
-For unkown reason, the logger is NOT able to find a handler
-unless a settings.VARIABLE is called!!
-https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues/1
-I leave that here till the bug is fixed
-'''
-settings.DEBUG
-
 def mail_cronos_admin(title, message):
     '''
     Wrapper function of send_mail
