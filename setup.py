@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+from setuptest import test
 
 setup(
     name='cronos',
@@ -24,4 +25,5 @@ personal data for students of TEI of Larissa',
         ('configs', ['configs/logrotate.d_cronos-dev']),
         ('configs', ['configs/syslog-ng.conf']),
     ],
+    cmdclass={'test': test},
 )
