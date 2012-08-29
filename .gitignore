@@ -6,3 +6,4 @@ local_settings.py
 .bash*
 .vim*
 .ssh*
+.mysql*
