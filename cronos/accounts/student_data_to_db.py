@@ -4,7 +4,9 @@ from cronos import CronosError, log_extra_data
 from cronos.accounts.models import UserProfile
 from cronos.accounts.encryption import encrypt_password
 from cronos.teilar.models import Departments
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 import logging
 
 logger_syslog = logging.getLogger('cronos')
@@ -50,6 +52,21 @@ def add_student_to_db(credentials, request):
         logger_mail.exception(error)
         raise CronosError(u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
     '''
-    If everything went fine, return the new user
+    Everything went fine
+    Notify admins about the new registration
+    '''
+    title = u'New user No.%s: %s' % (user.id, user.username)
+    message = u'Name: %s %s\nDepartment: %s\nSemester: %s' % (
+        user.first_name, user.last_name, user_profile.school, user_profile.semester
+    )
+    logger_syslog.info(title, extra = log_extra_data(user.username, request))
+    try:
+        send_mail(settings.EMAIL_SUBJECT_PREFIX + title, message,
+            settings.SERVER_EMAIL, [settings.ADMINS[0][1]])
+    except Exception as error:
+        logger_syslog.error(error, extra = log_extra_data(user.username, request))
+        logger_mail.exception(error)
+    '''
+    Return the new user object
     '''
     return user
