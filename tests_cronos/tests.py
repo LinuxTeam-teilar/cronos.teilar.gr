@@ -44,6 +44,7 @@ class EmptyDBLoginTest(TestCase):
         '''
         response = self.client.post('/login/', first_student)
         self.assertEqual(response.context['msg'], u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
+        self.assertEqual(response.status_code, 200)
 
 class NewUserLoginTest(TestCase):
     fixtures = ['departments.json']
@@ -60,7 +61,7 @@ class NewUserLoginTest(TestCase):
             student = {'username': username, 'password': password}
             response = self.client.post('/login/', student)
             self.assertEqual(response.status_code, 302)
-#            self.assertEqual(response['Location'], 'http://testserver/')
+            self.assertEqual(response['Location'], 'http://testserver/')
 
 class ExistingUserLoginTest(TestCase):
     fixtures = ['full_production_db.json']
@@ -75,3 +76,4 @@ class ExistingUserLoginTest(TestCase):
         '''
         response = self.client.post('/login/', first_student)
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['Location'], 'http://testserver/')
