@@ -1,2 +1,3 @@
 recursive-include cronos/static *
 recursive-include cronos/templates *
+recursive-include tests_cronos/fixtures *.json
