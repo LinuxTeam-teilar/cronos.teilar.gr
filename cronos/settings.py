@@ -125,9 +125,13 @@ PRODUCTION = False
 if not DEBUG:
     from django.contrib.sites.models import Site
 
-    current_site = Site.objects.get_current()
-    if current_site.name == u'cronos.teilar.gr':
-        PRODUCTION = True
+    try:
+        current_site = Site.objects.get_current()
+        if current_site.name == u'cronos.teilar.gr':
+            PRODUCTION = True
+    except:
+        current_site = None
+        pass
 
 # Check if this is the official production instance.
 # In this case the logger uses syslog_production handler
@@ -138,13 +142,6 @@ if not DEBUG:
 HANDLER_SUFFIX = 'development'
 if PRODUCTION:
     HANDLER_SUFFIX = 'production'
-
-if not DEBUG:
-    from django.contrib.sites.models import Site
-
-    current_site = Site.objects.get_current()
-    if current_site.name == u'cronos.teilar.gr':
-        HANDLER_SUFFIX = 'production'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
