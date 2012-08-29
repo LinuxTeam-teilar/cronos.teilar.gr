@@ -12,4 +12,4 @@ TMP_PATH="/tmp/cronos/fixtures"
 
 [[ -d ${TMP_PATH} ]] || mkdir -p ${TMP_PATH}
 $1/manage.py dumpdata > ${TMP_PATH}/full_production_db.json
-$1/manage.py get_all_real_accounts.py > ${TMP_PATH}/all_real_accounts.py
+$1/manage.py get_all_real_accounts > ${TMP_PATH}/all_real_accounts.py
