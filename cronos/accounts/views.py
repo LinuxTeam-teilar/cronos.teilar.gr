@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos import CronosError, log_extra_data
+from cronos.common.log import CronosError, log_extra_data
 from cronos.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required

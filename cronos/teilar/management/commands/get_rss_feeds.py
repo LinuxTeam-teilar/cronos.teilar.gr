@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos import CronosError, log_extra_data
+from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors, Announcements
 from cronos.teilar.models import Departments, Teachers, Websites
 from cronos.eclass.models import Lessons

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos import CronosError, log_extra_data
+from cronos.common.log import CronosError, log_extra_data
 from cronos.teilar.websites_login import teilar_login
 from bs4 import BeautifulSoup
 from datetime import date

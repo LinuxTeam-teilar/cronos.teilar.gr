@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos import CronosError, log_extra_data
+from cronos.common.log import CronosError, log_extra_data
 from cronos.accounts.models import UserProfile
 from cronos.accounts.encryption import encrypt_password
 from cronos.teilar.models import Departments
