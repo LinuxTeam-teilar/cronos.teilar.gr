@@ -2,8 +2,7 @@
 
 from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors, Announcements
-from cronos.teilar.models import Departments, Teachers, Websites
-from cronos.eclass.models import Lessons
+from cronos.teilar.models import Departments, Teachers, Websites, EclassLessons
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import MultipleObjectsReturned
@@ -27,7 +26,7 @@ class Command(BaseCommand):
     def get_authors(self):
         '''
         Retrieves the authors from the DB tables:
-        Departments, Teachers, Lessons, Websites
+        Departments, Teachers, EclassLessons, Websites
         It returns a dictionary with the following structure:
         authors = {'rss': 'url' OR 'rss'}
         (depending on what of those two is unique in each table)
@@ -49,7 +48,7 @@ class Command(BaseCommand):
         Add the eclass lessons in the list of RSS authors
         '''
         try:
-            eclass_lessons = Lessons.objects.filter(deprecated = False)
+            eclass_lessons = EclassLessons.objects.filter(deprecated = False)
             for lesson in eclass_lessons:
                 authors[u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.url.split('/')[4]] = lesson.url
         except Exception as error:
@@ -69,7 +68,7 @@ class Command(BaseCommand):
         '''
         Add the announcement to the DB
         '''
-        for model in [Lessons, Websites, Teachers, Departments]:
+        for model in [EclassLessons, Websites, Teachers, Departments]:
             '''
             Check for a unique_url match (which is either RSS or URL
             depending on the table) in all of those models

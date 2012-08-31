@@ -2,7 +2,7 @@
 
 from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors
-from cronos.eclass.models import Faculties
+from cronos.teilar.models import EclassFaculties
 from cronos import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
@@ -32,7 +32,7 @@ class Command(BaseCommand):
     def add_faculty_to_db(self, url, attributes):
         name = attributes[0]
         code = attributes[1]
-        faculty = Faculties(
+        faculty = EclassFaculties(
             url = url,
             name = name,
             code = code,
@@ -79,7 +79,7 @@ class Command(BaseCommand):
         '''
         try:
             faculties_from_db = {}
-            faculties_from_db_q = Faculties.objects.filter(deprecated = False)
+            faculties_from_db_q = EclassFaculties.objects.filter(deprecated = False)
             for faculty in faculties_from_db_q:
                 faculties_from_db[faculty.url] = [faculty.name, faculty.code]
         except Exception as error:
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             faculties_from_db_set = set(faculties_from_db.keys())
         except AttributeError:
             '''
-            Faculties table is empty in the DB
+            EclassFaculties table is empty in the DB
             '''
             faculties_from_db_set = set()
         '''

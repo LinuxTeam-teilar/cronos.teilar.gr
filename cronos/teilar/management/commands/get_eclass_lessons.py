@@ -2,7 +2,7 @@
 
 from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors
-from cronos.eclass.models import Faculties, Lessons
+from cronos.teilar.models import EclassFaculties, EclassLessons
 from cronos import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
@@ -24,7 +24,7 @@ class Command(BaseCommand):
             soup = BeautifulSoup(output)
             for i in range(2):
                 '''
-                Lessons are grouped in three types:
+                EclassLessons are grouped in three types:
                 Undergraduate, Graduate, Other
                 '''
                 ltype = BeautifulSoup(str(soup.find_all('table', id='t%s' % i)))
@@ -59,7 +59,7 @@ class Command(BaseCommand):
         teacher = attributes[1]
         faculty = faculties_from_db_q.get(name = attributes[2])
         ltype = attributes[3]
-        lesson = Lessons(
+        lesson = EclassLessons(
             url = url,
             name = name,
             teacher = teacher,
@@ -102,7 +102,7 @@ class Command(BaseCommand):
         2) Find new lessons and add them
         '''
         try:
-            faculties_from_db_q = Faculties.objects.filter(deprecated = False)
+            faculties_from_db_q = EclassFaculties.objects.filter(deprecated = False)
             lessons_from_eclass = self.get_lessons(faculties_from_db_q)
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data())
@@ -113,7 +113,7 @@ class Command(BaseCommand):
         lessons_from_db = {'url': ['name', 'teacher', 'faculty', 'ltype']}
         '''
         lessons_from_db = {}
-        lessons_from_db_q = Lessons.objects.filter(deprecated = False)
+        lessons_from_db_q = EclassLessons.objects.filter(deprecated = False)
         for lesson in lessons_from_db_q:
             lessons_from_db[lesson.url] = [lesson.name, lesson.teacher, lesson.faculty, lesson.ltype]
         '''
@@ -124,7 +124,7 @@ class Command(BaseCommand):
             lessons_from_db_set = set(lessons_from_db.keys())
         except AttributeError:
             '''
-            Lessons table is empty in the DB
+            EclassLessons table is empty in the DB
             '''
             lessons_from_db_set = set()
         '''
@@ -157,7 +157,7 @@ class Command(BaseCommand):
                     elif i == 2:
                         '''
                         The faculty is stored as a foreign key of the
-                        Faculties table, thus it needs an extra check
+                        EclassFaculties table, thus it needs an extra check
                         '''
                         if attribute.strip() == unicode(lesson.faculty).strip():
                             i += 1
