@@ -2,7 +2,7 @@
 
 from cronos.teilar.forms import LibraryForm
 from cronos.teilar.models import Teachers
-from cronos.teilar.websites_login import teilar_login
+from cronos.teilar.websites_login import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -28,7 +28,7 @@ def library(request):
         form = LibraryForm(request.GET)
         if form.is_valid():
             url = 'http://hermes.lib.teilar.gr/ipac20/ipac.jsp?session=A26772NR74250.24315&menu=search&aspect=subtab22&npp=40&ipp=20&spp=20&profile=multbl--1&ri=&term=%s&index=.GEN&x=0&y=0&aspect=subtab22' % str(request.GET.get('search'))
-            output = teilar_login(url)
+            output = teilar_anon_login(url)
             soup = BeautifulSoup(output).find_all('table')[24]
             temp_a_mediumboldanchor = soup.find_all('a', 'mediumBoldAnchor')
             temp_td = soup.find_all('td')

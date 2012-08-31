@@ -105,7 +105,7 @@ def accounts_settings(request):
                     '''
                     Check if the credentials are correct
                     '''
-                    output = webmail_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
+                    output = webmail_auth_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
                     if output:
                         '''
                         Credentials are correct, update them

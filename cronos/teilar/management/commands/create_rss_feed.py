@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
-from cronos.teilar.websites_login import teilar_login
+from cronos.teilar.websites_login import teilar_anon_login
 from bs4 import BeautifulSoup
 from datetime import date
 from django.conf import settings
@@ -88,9 +88,9 @@ class Command(BaseCommand):
         for cid, rss_name in rss_filenames.iteritems():
             custom_rss = self.initialize_rss_file()
             if type(cid) == int:
-                output = teilar_login('http://www.teilar.gr/news.php?cid=%s' % cid)
+                output = teilar_anon_login('http://www.teilar.gr/news.php?cid=%s' % cid)
             else:
-                output = teilar_login('http://www.teilar.gr/%s' % cid)
+                output = teilar_anon_login('http://www.teilar.gr/%s' % cid)
             soup = BeautifulSoup(output)
             try:
                 announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')[:10]
@@ -104,7 +104,7 @@ class Command(BaseCommand):
                 ann_url = 'news_detail.php?nid=' + item['href'].split('nid=')[1]
                 if type(cid) != int:
                     ann_url = 'tmimata/' + ann_url
-                output = teilar_login('http://www.teilar.gr/%s' % ann_url)
+                output = teilar_anon_login('http://www.teilar.gr/%s' % ann_url)
                 soup = BeautifulSoup(output)
                 try:
                     if type(cid) != int:
@@ -136,7 +136,7 @@ class Command(BaseCommand):
         a custom RSS file.
         '''
         custom_rss = self.initialize_rss_file()
-        output = teilar_login('http://www.teilar.gr/profannnews.php')
+        output = teilar_anon_login('http://www.teilar.gr/profannnews.php')
         soup = BeautifulSoup(output)
         try:
             announcements_all = soup.find_all('a', 'BlackText11')
@@ -162,7 +162,7 @@ class Command(BaseCommand):
             '''
             Get inside the teacher's page which contains all the announcements
             '''
-            output = teilar_login('http://www.teilar.gr/%s' % url)
+            output = teilar_anon_login('http://www.teilar.gr/%s' % url)
             soup = BeautifulSoup(output)
             try:
                 author_name = soup.find('td', 'BlueTextBold').i.contents[0]

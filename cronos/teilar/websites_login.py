@@ -14,7 +14,7 @@ import urllib2
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def teilar_login(url = None):
+def teilar_anon_login(url = None):
     '''
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
@@ -31,7 +31,7 @@ def teilar_login(url = None):
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
     return unicode(output, 'utf-8', 'ignore')
 
-def dionysos_login(username, password, url = None, request = None):
+def dionysos_auth_login(username, password, url = None, request = None):
     '''
     Try to connect to dionysos.teilar.gr and get the resulting HTML output.
     If URL is None, then an authentication attempt is also performed. In order
@@ -150,7 +150,7 @@ def eclass_login(username, password):
     except:
         return unicode(b.getvalue(), 'utf-8', 'ignore')
 
-def webmail_login(url, username, password):
+def webmail_auth_login(url, username, password):
     b = StringIO.StringIO()
     conn = pycurl.Curl()
     fd, cookie_path = tempfile.mkstemp(prefix='webmail_', dir='/tmp')

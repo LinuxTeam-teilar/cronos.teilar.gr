@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
-from cronos.teilar.websites_login import dionysos_login
+from cronos.teilar.websites_login import dionysos_auth_login
 from bs4 import BeautifulSoup
 import logging
 
@@ -109,7 +109,7 @@ def get_dionysos_declaration(username = None, password = None, request = None):
     '''
     try:
         url = 'https://dionysos.teilar.gr/unistudent/stud_vClasses.asp?studPg=1&mnuid=diloseis;showDil&'
-        output = dionysos_login(username, password, url, request)
+        output = dionysos_auth_login(username, password, url, request)
         soup = BeautifulSoup(output).find_all('table')[13].find_all('table')[0]
 
         '''
@@ -147,7 +147,7 @@ def get_dionysos_grades(username = None, password = None):
         The URL is different, so we need a new HTML output from dionysos
         '''
         url = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
-        output = dionysos_login(username, password, url, request)
+        output = dionysos_auth_login(username, password, url, request)
         soup = BeautifulSoup(output)
         grades = u''
         i = 0

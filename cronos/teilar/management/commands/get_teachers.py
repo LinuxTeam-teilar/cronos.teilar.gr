@@ -3,7 +3,7 @@
 from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors
 from cronos.teilar.models import Departments, Teachers
-from cronos.teilar.websites_login import teilar_login
+from cronos.teilar.websites_login import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 import logging
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             output we grab the name, email and department
             '''
             url = 'http://www.teilar.gr/person.php?pid=%s' % pid
-            output = teilar_login(url)
+            output = teilar_anon_login(url)
             soup = BeautifulSoup(output)
             name = None
             email = None

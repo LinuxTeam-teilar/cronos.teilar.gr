@@ -47,7 +47,7 @@ class DionysosTeilarAuthentication(object):
             credentials in dionysos.teilar.gr
             '''
             try:
-                if not dionysos_login(username, password):
+                if not dionysos_auth_login(username, password):
                     return
             except CronosError:
                 '''
@@ -62,7 +62,7 @@ class DionysosTeilarAuthentication(object):
             dionysos.teilar.gr account
             '''
             try:
-                output = dionysos_login(username, password, request = request)
+                output = dionysos_auth_login(username, password, request = request)
             except CronosError:
                 raise
             if output:

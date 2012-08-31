@@ -3,7 +3,7 @@
 from cronos.common.log import CronosError, log_extra_data
 from cronos.announcements.models import Authors
 from cronos.eclass.models import Faculties
-from cronos.teilar.websites_login import teilar_login
+from cronos.teilar.websites_login import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 import logging
@@ -19,7 +19,7 @@ class Command(BaseCommand):
         faculties_from_eclass = {'url': ['name', 'code']}
         '''
         faculties_from_eclass = {}
-        output = teilar_login('http://openclass.teilar.gr/modules/auth/listfaculte.php')
+        output = teilar_anon_login('http://openclass.teilar.gr/modules/auth/listfaculte.php')
         soup = BeautifulSoup(output)
         all_faculties = soup.table('td')
         for faculty in all_faculties:
