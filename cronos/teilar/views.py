@@ -2,7 +2,7 @@
 
 from cronos.teilar.forms import LibraryForm
 from cronos.teilar.models import Teachers
-from cronos.teilar.websites_login import teilar_anon_login
+from cronos import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.shortcuts import render_to_response
 from django.template import RequestContext

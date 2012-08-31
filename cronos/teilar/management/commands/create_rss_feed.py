@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
-from cronos.teilar.websites_login import teilar_anon_login
+from cronos import teilar_anon_login
 from bs4 import BeautifulSoup
 from datetime import date
 from django.conf import settings
