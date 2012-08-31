@@ -24,7 +24,7 @@ DATABASES = {
 }
 
 # Secret key, used by Django to create hashes, and by the functions
-# encrypt_password/decrypt_pasword n cronos.accounts.encryption module,
+# encrypt_password/decrypt_pasword in cronos.common.encryption module,
 # to encrypt/decrypt blowfish passwords.
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'

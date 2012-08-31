@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.accounts.models import UserProfile
-from cronos.accounts.encryption import decrypt_password
+from cronos.common.encryption import decrypt_password
 from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):

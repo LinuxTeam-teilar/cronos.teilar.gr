@@ -2,7 +2,7 @@
 
 from BeautifulSoup import BeautifulSoup
 from cronos.announcements.models import *
-from cronos.libraries.encryption import decryptPassword
+from cronos.common.encryption import decryptPassword
 from cronos.libraries.login import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
