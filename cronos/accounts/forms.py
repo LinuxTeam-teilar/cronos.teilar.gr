@@ -16,3 +16,8 @@ class GradesForm(forms.Form):
 
 class EclassLessonsForm(forms.Form):
     eclass_lessons = forms.CharField(widget = forms.HiddenInput())
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length = 30, label = 'Όνομα Χρήστη:')
+    password = forms.CharField(max_length = 30, widget = forms.PasswordInput(), label = 'Κωδικός Πρόσβασης:')
+    remember = forms.BooleanField(required = False, label = 'Να με θυμάσαι')

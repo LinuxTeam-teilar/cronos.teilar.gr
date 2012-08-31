@@ -4,7 +4,7 @@ from cronos.common.log import CronosError, log_extra_data
 from cronos.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseServerError
+from django.http import HttpResponseRedirect, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 import logging
@@ -25,6 +25,46 @@ def server_error(request, template_name='500.html'):
     '''
     t = loader.get_template(template_name)
     return HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
+
+def accounts_login(request):
+    '''
+    The login page (also the front page)
+    '''
+    msg = None
+    form = None
+    user = None
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+        else:
+            username = None
+            password = None
+        try:
+            '''
+            Perform authentication, if it retrieves a user object then
+            it was successful. If it retrieves None then it failed to login
+            '''
+            user = authenticate(username = username, password = password, request = request)
+            if not user:
+                raise CronosError(u'Λάθος στοιχεία')
+            if user.is_active:
+                login(request, user)
+                if not form.cleaned_data['remember']:
+                    request.session.set_expiry(0)
+                return HttpResponseRedirect('/')
+        except CronosError as error:
+            msg = error.value
+    else:
+        if request.user.is_authenticated():
+            return HttpResponseRedirect('/')
+        else:
+            form = LoginForm()
+    return render_to_response('login.html', {
+       'msg': msg,
+       'form': form,
+        }, context_instance = RequestContext(request))
 
 @login_required
 def accounts_index(request):
