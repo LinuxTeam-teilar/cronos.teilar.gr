@@ -2,6 +2,7 @@
 # Cronos cronjob
 
 # Variables
+LOCK="/var/lock/update_cronos.lock"
 SCRIPTS=(
     websites
     departments
@@ -47,6 +48,14 @@ while getopts p:cudhv arg; do
         ?) help ;;
     esac
 done
+
+set -e
+if [ -e "${LOCK}" ]; then
+    echo "Warning: \"${LOCK}\" already present, not running backup." >> ${LOG}
+    exit 1
+fi
+touch "${LOCK}"
+trap "rm -f ${LOCK}" EXIT
 
 if [[ -z ${CRONOS_PATH} ]]; then
     help
