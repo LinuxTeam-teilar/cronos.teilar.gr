@@ -5,7 +5,7 @@ from django.test.client import Client
 from cronos.teilar.models import Departments
 
 try:
-    from tests_cronos.fixtures.all_real_accounts import all_real_accounts
+    from fixtures.all_real_accounts import all_real_accounts
     '''
     Get the first student
     '''

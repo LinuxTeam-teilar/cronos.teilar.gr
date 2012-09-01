@@ -113,7 +113,7 @@ INSTALLED_APPS = (
     'cronos.announcements',
     'cronos.accounts',
     'cronos.teilar',
-    'tests_cronos',
+    'tests',
 )
 
 # Get the site name and check if it matches
