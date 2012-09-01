@@ -2,3 +2,4 @@ recursive-include cronos/static *
 recursive-include cronos/templates *
 recursive-include tests_cronos/fixtures *.json
 include cronos/local_settings.py.sample
+exclude cronos/local_settings.py
