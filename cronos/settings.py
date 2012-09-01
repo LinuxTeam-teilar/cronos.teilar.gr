@@ -112,8 +112,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'cronos.announcements',
     'cronos.accounts',
-    'cronos.eclass',
-    'cronos.login',
     'cronos.teilar',
     'tests_cronos',
 )
