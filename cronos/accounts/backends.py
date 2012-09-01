@@ -69,10 +69,7 @@ class DionysosTeilarAuthentication(object):
                 '''
                 The credentials worked, try to create a user based on those credentials
                 '''
-                credentials = {
-                        'username': username,
-                        'password': password,
-                }
+                credentials = {'username': username, 'password': password}
                 try:
                     front_page = BeautifulSoup(output).find_all('table')[14].find_all('tr')
                 except Exception as error:

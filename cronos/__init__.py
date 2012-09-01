@@ -4,12 +4,7 @@ from cronos.common.log import CronosError, log_extra_data
 from bs4 import BeautifulSoup
 import logging
 import pycurl
-import StringIO
-import urllib
-import os
-import tempfile
-import urlparse
-import urllib2
+import requests
 
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
@@ -24,8 +19,8 @@ def teilar_anon_login(url = None):
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
     try:
-        site = urllib2.urlopen(url)
-        output = site.read()
+        response = requests.get(url)
+        response.encoding = 'utf-8'
     except Exception as error:
         '''
         *.teilar.gr is down
@@ -34,7 +29,7 @@ def teilar_anon_login(url = None):
         logger_mail.exception(error)
         site = url.split('/')[2]
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
-    return unicode(output, 'utf-8', 'ignore')
+    return response.text
 
 def dionysos_auth_login(username, password, url = None, request = None):
     '''
@@ -43,40 +38,30 @@ def dionysos_auth_login(username, password, url = None, request = None):
     to verify if the authentication succeeded, we parse the final HTML output
     and check if it still contains the login form
     '''
-    conn = pycurl.Curl()
-    b = StringIO.StringIO()
-    fd, cookie_path = tempfile.mkstemp(prefix='dionysos_', dir='/tmp')
+    dionysos_session = requests.session()
     '''
     The data that will be sent to the login form of dionysos.teilar.gr
     '''
-    login_form_seq = [
-        ('userName', username),
-        ('pwd', password),
-        ('submit1', '%C5%DF%F3%EF%E4%EF%F2'),
-        ('loginTrue', 'login')
-    ]
-    login_form_data = urllib.urlencode(login_form_seq)
+    login_data = {
+        'userName': username,
+        'pwd': password,
+        'submit1': '%C5%DF%F3%EF%E4%EF%F2',
+        'loginTrue': 'login'
+    }
     '''
     We need to perform two connections. I'm not sure yet why, probably because
     the cookie needs to get initialized and then to be actually used.
     '''
-    conn.setopt(pycurl.FOLLOWLOCATION, 1)
-    conn.setopt(pycurl.COOKIEFILE, cookie_path)
-    conn.setopt(pycurl.COOKIEJAR, cookie_path)
-    conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/')
-    conn.setopt(pycurl.POST, 0)
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
     try:
         '''
-        Perform a connection, if it fails then dionysos.teilar.gr is down
+        Perform a connection with fake data. If it fails then dionysos.teilar.gr is down
         '''
-        conn.perform()
+        response = dionysos_session.post('https://dionysos.teilar.gr/unistudent/', {'username': 'test'})
+        response.encoding = 'windows-1253'
     except Exception as error:
-        os.close(fd)
-        os.remove(cookie_path)
         logger_syslog.warning(error, extra = log_extra_data(username, request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
-    soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
+    soup = BeautifulSoup(response.text)
     try:
         temp_td_whiteheader = soup.find('td', 'whiteheader').b.contents[0]
         '''
@@ -86,25 +71,19 @@ def dionysos_auth_login(username, password, url = None, request = None):
         if temp_td_whiteheader != u'Είσοδος Φοιτητή':
             raise
     except Exception as error:
-        os.close(fd)
-        os.remove(cookie_path)
         logger_syslog.warning(error, extra = log_extra_data(username, request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     '''
     If everything was fine so far, then dionysos.teilar.gr is up and running.
     Now we can proceed to the actual authentication.
     '''
-    b = StringIO.StringIO()
-    conn.setopt(pycurl.URL, 'https://dionysos.teilar.gr/unistudent/login.asp')
-    conn.setopt(pycurl.POST, 1)
-    conn.setopt(pycurl.POSTFIELDS, login_form_data)
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
-    conn.perform()
+    response = dionysos_session.post('https://dionysos.teilar.gr/unistudent/', login_data)
+    response.encoding = 'windows-1253'
     if not url:
         '''
         Checking if the credentials are correct
         '''
-        soup = BeautifulSoup(b.getvalue().decode('windows-1253'))
+        soup = BeautifulSoup(response.text)
         try:
             temp_td_whiteheader = soup.find('td', 'whiteheader').b.contents[0]
             if temp_td_whiteheader == u'Είσοδος Φοιτητή':
@@ -112,8 +91,6 @@ def dionysos_auth_login(username, password, url = None, request = None):
                 The resulting HTML output still contains the login form, which means
                 that the authentication failed.
                 '''
-                os.close(fd)
-                os.remove(cookie_path)
                 return
         except (NameError, AttributeError):
             pass
@@ -121,16 +98,9 @@ def dionysos_auth_login(username, password, url = None, request = None):
         '''
         Connect to the requested URL and return the HTML output
         '''
-        b = StringIO.StringIO()
-        conn.setopt(pycurl.URL, url)
-        conn.setopt(pycurl.POST, 1)
-        conn.setopt(pycurl.POSTFIELDS, login_form_data)
-        conn.setopt(pycurl.COOKIE, cookie_path)
-        conn.setopt(pycurl.WRITEFUNCTION, b.write)
-        conn.perform()
-    os.close(fd)
-    os.remove(cookie_path)
-    return (b.getvalue()).decode('windows-1253')
+        response = dionysos_session.get(url)
+        response.encoding = 'windows-1253'
+    return response.text
 
 def eclass_login(username, password):
     b = StringIO.StringIO()
