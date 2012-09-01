@@ -57,11 +57,6 @@ class Command(BaseCommand):
                 u'http://cronos.teilar.gr',
                 u'cronos@teilar.gr',
             ],
-            u'http://linuxteam.teilar.gr/aggregator/rss/2': [
-                u'Blogs μελών LinuxTeam',
-                u'http://linuxteam.teilar.gr/aggregator/categories/2',
-                u'linuxteam@teilar.gr',
-            ],
             #u'http://www.pr.teilar.gr/TODO': [
             #    u'Γραφείο Δημοσίων & Διεθνών Σχέσεων',
             #    u'http://www.pr.teilar.gr',
