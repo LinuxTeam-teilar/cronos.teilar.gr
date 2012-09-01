@@ -2,18 +2,19 @@
 
 from setuptools import setup, find_packages
 from setuptest import test
-import os
+import os, sys
 
-'''
-Rename local_settings.py in order to
-be excluded from setup.py install command
-'''
-ORIG_NAME = 'cronos/local_settings.py'
-TEMP_NAME = 'cronos/local_settings.py1'
-try:
-    os.rename(ORIG_NAME, TEMP_NAME)
-except:
-    pass
+if sys.argv[1] == 'install':
+    '''
+    Rename local_settings.py in order to
+    be excluded from setup.py install command
+    '''
+    ORIG_NAME = 'cronos/local_settings.py'
+    TEMP_NAME = 'cronos/local_settings.py1'
+    try:
+        os.rename(ORIG_NAME, TEMP_NAME)
+    except:
+        pass
 
 setup(
     name='cronos',
@@ -44,10 +45,11 @@ personal data for students of TEI of Larissa',
     cmdclass={'test': test},
 )
 
-'''
-Restore local_settings.py
-'''
-try:
-    os.rename(TEMP_NAME, ORIG_NAME)
-except:
-    pass
+if sys.argv[1] == 'install':
+    '''
+    Restore local_settings.py
+    '''
+    try:
+        os.rename(TEMP_NAME, ORIG_NAME)
+    except:
+        pass
