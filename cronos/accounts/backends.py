@@ -2,6 +2,7 @@
 
 from cronos.common.log import CronosError, log_extra_data
 from cronos.common.encryption import encrypt_password, decrypt_password
+from cronos.common.get_admins import get_admins_mails
 from cronos.accounts.models import UserProfile
 from cronos.accounts.get_student import *
 from cronos.teilar.models import Departments
@@ -142,7 +143,7 @@ class DionysosTeilarAuthentication(object):
         logger_syslog.info(title, extra = log_extra_data(user.username, request))
         try:
             send_mail(settings.EMAIL_SUBJECT_PREFIX + title, message,
-                settings.SERVER_EMAIL, [settings.ADMINS[0][1]])
+                settings.SERVER_EMAIL, get_admins_mails)
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(user.username, request))
             logger_mail.exception(error)
