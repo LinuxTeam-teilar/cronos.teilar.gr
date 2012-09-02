@@ -51,22 +51,23 @@ th { color: #786721; width: 280px; }
     font: normal 14px Verdana, Arial, Helvetica, sans-serif;
     letter-spacing: 0.02em;
 }
-#navigation>li a {
-    display:block; text-decoration: none;
-    border-top: solid 1px #dfdfdf; border-bottom: solid 1px #786721;
-}
-#navigation>li a:link, #navigation>li a:visited {
+
+#navigation>li a, #navigation>li a:link, #navigation>li a:visited {
+    display:block;
+    text-decoration:none;
     padding: 8px 12px 9px 12px;
     color: #786721;
     background: #FFE699 url("/static/img/navigation_bg_link.png") top left repeat-x;
     border: solid 1px #786721; border-top: 0;
     text-shadow: #FFF2CC 1px 1px 0px;
 }
+
 #navigation>li a:hover, #navigation>li a:focus {
     color: #f4f4f4; text-shadow: #000 0px 1px 0px;
     background: #786721 url("/static/img/navigation_bg_over.png") top left repeat-x;
     border: solid 1px #64561B; border-top: 0; border-bottom: solid 1px #504416;
 }
+
 #navigation>li a:active { background: #786721 url("/static/img/navigation_bg_active.png") top left repeat-x; }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
