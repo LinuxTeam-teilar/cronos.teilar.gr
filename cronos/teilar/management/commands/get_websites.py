@@ -196,7 +196,7 @@ class Command(BaseCommand):
         '''
         ex_websites = websites_from_db_set - websites_from_teilar_set
         for rss in ex_websites:
-            self.deprecate_website_in_db(rss)
+            self.deprecate_website_in_db(rss, websites_from_db_q)
         '''
         Get new websites and add them to the DB
         '''
