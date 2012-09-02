@@ -47,7 +47,8 @@ class DionysosTeilarAuthentication(object):
             quickly login if the user is one of the listed ADMINS
             '''
             if user.username in get_admins_usernames():
-                return user
+                if user.check_password(password):
+                    return user
             '''
             If the user is found in the DB, try to login with those
             credentials in dionysos.teilar.gr
