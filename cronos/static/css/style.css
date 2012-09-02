@@ -176,7 +176,9 @@ th { color: #786721; width: 280px; }
 }
 
 #content .entry h3, #content .entry h2 {
-    text-align:center;
+    position:absolute; top: 15px;
+    text-align: center;
+    width: 90%;
     font: bold 22px Verdana, Arial, Helvetica, sans-serif;
     color: #aaa;
 }
