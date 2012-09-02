@@ -5,12 +5,10 @@ from cronos.announcements.models import Authors, Announcements
 from cronos.teilar.models import Departments, Teachers, Websites, EclassLessons
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import MultipleObjectsReturned
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from django.utils import timezone
 from time import mktime
-from xml.sax._exceptions import SAXException
 import datetime
 import MySQLdb
 import feedparser
@@ -20,6 +18,9 @@ import warnings
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
+'''
+Convert MySQL warnings to exceptions
+'''
 warnings.filterwarnings("error", category=MySQLdb.Warning)
 
 class Command(BaseCommand):
