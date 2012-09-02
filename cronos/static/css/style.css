@@ -204,8 +204,9 @@ th { color: #786721; width: 280px; }
 
 #content .rss-promo { background: #FFECB3; border: solid 1px #E6AC00; }
 #content .rss-promo a:link, #content .rss-promo a:visited {
-    width: 260px; height: 55px; display: block;
-    padding: 1px 0 0 42px;
+    text-align:center;
+    width: 260px; height: 55px;
+    padding: 7px 0 0 42px;
     border: 0; color: #E6AC00; text-shadow: #fff 0px 1px 0px;
     background: url("/static/img/rss.png") top left no-repeat;
 }
