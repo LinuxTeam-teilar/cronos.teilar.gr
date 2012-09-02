@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="entry">
-        <h2>Αναζήτηση</h2>
+        <h3>Αναζήτηση</h3>
         <form action="/library/" method="get">
             {% for field in form %}
             {{ field.label.tag }}{{ field }}
@@ -20,7 +20,7 @@
     {% endif %}
     {% if results %}
         <div class="entry">
-            <h2>Αποτελέσματα</h2>
+            <h3>Αποτελέσματα</h3>
             <ul>
             {% for i in results %}
                 <li>
