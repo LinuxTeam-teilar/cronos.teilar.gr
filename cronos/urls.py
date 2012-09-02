@@ -9,11 +9,11 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 #    'announcements': AnnouncementsFeed,
 #}
 
-handler500 = 'cronos.accounts.views.server_error'
+handler500 = 'cronos.common.views.server_error'
 
 urlpatterns = patterns('',
     (r'^$', 'cronos.accounts.views.accounts_index'),
-    (r'^about/', 'cronos.accounts.views.about'),
+    (r'^about/', 'cronos.common.views.about'),
 #    (r'^announcements/', 'cronos.announcements.views.announcements'),
     (r'^dionysos/', 'cronos.teilar.views.dionysos'),
     (r'^eclass/', 'cronos.teilar.views.eclass'),
@@ -21,8 +21,8 @@ urlpatterns = patterns('',
     (r'^library/', 'cronos.teilar.views.library'),
     (r'^login/', 'cronos.accounts.views.accounts_login'),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/login'}),
-    (r'^preferences/', 'cronos.accounts.views.accounts_settings'),
     (r'^refrigerators/', 'cronos.refrigerators.views.refrigerators'),
+    (r'^settings/', 'cronos.accounts.views.settings'),
     (r'^teachers/', 'cronos.teilar.views.teachers'),
 )
 

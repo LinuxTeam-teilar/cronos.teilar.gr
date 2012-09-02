@@ -4,27 +4,12 @@ from cronos.common.log import CronosError, log_extra_data
 from cronos.accounts.forms import *
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseServerError
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext, loader
+from django.template import RequestContext
 import logging
 
 logger = logging.getLogger('cronos')
-
-def about(request):
-    '''
-    The About webpage
-    '''
-    return render_to_response('about.html', {},
-        context_instance = RequestContext(request))
-
-def server_error(request, template_name='500.html'):
-    '''
-    500 error handler.
-    Override 500 error page, in order to pass MEDIA_URL to Context
-    '''
-    t = loader.get_template(template_name)
-    return HttpResponseServerError(t.render(RequestContext(request, {'request_path': request.path})))
 
 def accounts_login(request):
     '''
@@ -76,7 +61,7 @@ def accounts_index(request):
 
 
 @login_required
-def accounts_settings(request):
+def settings(request):
     '''
     The user settings webpage
     '''
@@ -163,7 +148,7 @@ def accounts_settings(request):
         except Exception as Error:
             logger.error(error, extra = log_extra_data())
             raise CronosError('Παρουσιάστηκε σφάλμα')
-    return render_to_response('preferences.html',{
+    return render_to_response('settings.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
         'eclass_lessons_form': eclass_lessons_form,
