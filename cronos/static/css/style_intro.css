@@ -34,7 +34,9 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
     box-shadow: 0 0 2px #a1a1a1; /* Opera 10.5, IE 9.0 */
 }
 
-#info { width: 365px; height: 270px; float: left; }
+#login h3 { text-align:center; }
+
+#info { width: 365px; height: 270px; float: left; text-align:center;}
 
 #info h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #786721; }
 
