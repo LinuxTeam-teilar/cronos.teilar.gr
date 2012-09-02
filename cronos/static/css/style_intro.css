@@ -8,13 +8,13 @@ h3 { margin: 10px 0 0 0; font: bold 20px Verdana,Arial,sans-serif; color: #78672
 
 p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-serif; }
 
-a.links {
+#login a {
     text-decoration: none;
     border-bottom: 1px dashed #212121;
     color: #212121;
 }
 
-a:hover {
+#login a:hover {
     border-bottom: 1px dashed #786721;
     color: #786721;
 }
