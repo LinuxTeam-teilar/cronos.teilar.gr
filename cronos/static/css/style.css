@@ -242,3 +242,7 @@ th { color: #786721; width: 280px; }
     background: #786721 url("/static/img/navigation_bg_over.png") top left repeat-x;
     text-decoration:none;
 }
+
+#content .announcement h3>a:link, #content .announcement h3>a:visited { border:0; }
+#content .announcement img { float:left; margin:3px; padding-right:5px; }
+#content .more { text-align:right;}
