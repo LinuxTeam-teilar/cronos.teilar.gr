@@ -221,9 +221,6 @@ if PRODUCTION:
     EMAIL_SUBJECT_PREFIX = '[cronos] '
 
 if DEBUG:
-    ### BROKEN ###
-    # In Debug mode, put the mails in /tmp/cronos/mail instead of
-    # sending them through SMTP
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = '/tmp/cronos/mail'
 
