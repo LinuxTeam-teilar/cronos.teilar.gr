@@ -14,7 +14,7 @@ handler500 = 'cronos.common.views.server_error'
 urlpatterns = patterns('',
     (r'^$', 'cronos.accounts.views.accounts_index'),
     (r'^about/', 'cronos.common.views.about'),
-#    (r'^announcements/', 'cronos.announcements.views.announcements'),
+    (r'^announcements/', 'cronos.announcements.views.announcements'),
     (r'^dionysos/', 'cronos.teilar.views.dionysos'),
     (r'^eclass/', 'cronos.teilar.views.eclass'),
 #    (r'^feeds/(?P<url>.*)/$', 'django.contrib.syndication.views.feed', {'feed_dict': feeds}),
