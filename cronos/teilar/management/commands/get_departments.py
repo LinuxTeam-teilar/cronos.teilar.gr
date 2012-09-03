@@ -55,13 +55,13 @@ class Command(BaseCommand):
 
     def deprecate_department_in_db(self, url, departments_from_db_q):
         '''
-        Mark departments as deprecated
+        Mark departments as inactive
         '''
         department = departments_from_db_q.get(url = url)
-        department.deprecated = True
+        department.is_active = False
         try:
             department.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε inactive', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
@@ -79,7 +79,7 @@ class Command(BaseCommand):
         '''
         departments_from_db = {}
         try:
-            departments_from_db_q = Departments.objects.filter(deprecated = False)
+            departments_from_db_q = Departments.objects.filter(is_active = True)
             for department in departments_from_db_q:
                 departments_from_db[department.url] = department.name
         except Exception as error:
@@ -99,7 +99,7 @@ class Command(BaseCommand):
             '''
             departments_from_db_set = set()
         '''
-        Get ex departments and mark them as deprecated
+        Get ex departments and mark them as inactive
         '''
         ex_departments = departments_from_db_set - departments_from_teilar_set
         for url in ex_departments:

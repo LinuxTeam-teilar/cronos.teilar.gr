@@ -84,13 +84,13 @@ class Command(BaseCommand):
 
     def deprecate_lesson_in_db(self, url, lessons_from_db_q):
         '''
-        Mark lessons as deprecated
+        Mark lessons as inactive
         '''
         lesson = lessons_from_db_q.get(url = url)
-        lesson.deprecated = True
+        lesson.is_active = False
         try:
             lesson.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε inactive', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
@@ -102,7 +102,7 @@ class Command(BaseCommand):
         2) Find new lessons and add them
         '''
         try:
-            faculties_from_db_q = EclassFaculties.objects.filter(deprecated = False)
+            faculties_from_db_q = EclassFaculties.objects.filter(is_active = True)
             lessons_from_eclass = self.get_lessons(faculties_from_db_q)
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data())
@@ -113,7 +113,7 @@ class Command(BaseCommand):
         lessons_from_db = {'url': ['name', 'teacher', 'faculty', 'ltype']}
         '''
         lessons_from_db = {}
-        lessons_from_db_q = EclassLessons.objects.filter(deprecated = False)
+        lessons_from_db_q = EclassLessons.objects.filter(is_active = True)
         for lesson in lessons_from_db_q:
             lessons_from_db[lesson.url] = [lesson.name, lesson.teacher, lesson.faculty, lesson.ltype]
         '''
@@ -128,7 +128,7 @@ class Command(BaseCommand):
             '''
             lessons_from_db_set = set()
         '''
-        Get ex lessons and mark them as deprecated
+        Get ex lessons and mark them as inactive
         '''
         ex_lessons = lessons_from_db_set - lessons_from_eclass_set
         for url in ex_lessons:

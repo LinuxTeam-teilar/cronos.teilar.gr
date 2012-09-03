@@ -19,7 +19,6 @@ class UserProfile(models.Model):
     other_announcements = models.TextField(null = True, blank = True)
     declaration = models.TextField(null = True, blank = True)
     grades = models.TextField(null = True, blank = True)
-    deprecated = models.BooleanField(default = False)
 
     def __unicode__(self):
         return self.user.username

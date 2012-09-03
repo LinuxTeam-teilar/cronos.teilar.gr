@@ -147,13 +147,13 @@ class Command(BaseCommand):
 
     def deprecate_website_in_db(self, url, websites_from_db_q):
         '''
-        Mark websites as deprecated
+        Mark websites as inactive
         '''
         website = websites_from_db_q.get(url = url)
-        website.deprecated = True
+        website.is_active = False
         try:
             website.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε inactive', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
@@ -161,7 +161,7 @@ class Command(BaseCommand):
 
     def update_websites(self):
         '''
-        1) Find websites that were removed and mark them as deprecated
+        1) Find websites that were removed and mark them as inactive
         2) Find new websites and add them
         3) In the existing websites, find changes in their attributes and
         update them accordingly
@@ -173,7 +173,7 @@ class Command(BaseCommand):
         '''
         websites_from_db = {}
         try:
-            websites_from_db_q = Websites.objects.filter(deprecated = False)
+            websites_from_db_q = Websites.objects.filter(is_active = True)
             for website in websites_from_db_q:
                 websites_from_db[website.url] = [website.name, website.rss, website.email]
         except Exception as error:
@@ -192,7 +192,7 @@ class Command(BaseCommand):
             '''
             websites_from_db_set = set()
         '''
-        Get ex websites and mark them as deprecated
+        Get ex websites and mark them as inactive
         '''
         ex_websites = websites_from_db_set - websites_from_teilar_set
         for url in ex_websites:

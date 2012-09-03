@@ -95,13 +95,13 @@ class Command(BaseCommand):
 
     def deprecate_teacher_in_db(self, url, teachers_from_db_q):
         '''
-        Mark teachers as deprecated
+        Mark teachers as inactive
         '''
         teacher = teachers_from_db_q.get(url = url)
-        teacher.deprecated = True
+        teacher.is_active = False
         try:
             teacher.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε inactive', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
@@ -109,7 +109,7 @@ class Command(BaseCommand):
 
     def update_teachers(self):
         '''
-        1) Find teachers that left the school mark them as deprecated
+        1) Find teachers that left the school mark them as inactive
         2) Find new teachers and add them
         3) In the existing teachers, find changes in their attributes and
         update them accordingly
@@ -121,8 +121,8 @@ class Command(BaseCommand):
         '''
         teachers_from_db = {}
         try:
-            teachers_from_db_q = Teachers.objects.filter(deprecated = False)
-            departments_from_db_q = Departments.objects.filter(deprecated = False)
+            teachers_from_db_q = Teachers.objects.filter(is_active = True)
+            departments_from_db_q = Departments.objects.filter(is_active = True)
             for teacher in teachers_from_db_q:
                 teachers_from_db[teacher.url] = [teacher.name, teacher.email, teacher.department]
         except Exception as error:
@@ -141,7 +141,7 @@ class Command(BaseCommand):
             '''
             teachers_from_db_set = set()
         '''
-        Get ex teachers and mark them as deprecated
+        Get ex teachers and mark them as inactive
         '''
         ex_teachers = teachers_from_db_set - teachers_from_teilar_set
         for url in ex_teachers:

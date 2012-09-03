@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 class Command(BaseCommand):
     def handle(self, *args, **options):
         all_students = {}
-        all_students_q = UserProfile.objects.filter(deprecated = False)
+        all_students_q = UserProfile.objects.filter(is_active = True)
         for student in all_students_q:
             all_students[student.dionysos_username] = decrypt_password(student.dionysos_password)
 

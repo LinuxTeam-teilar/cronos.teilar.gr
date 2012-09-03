@@ -55,13 +55,13 @@ class Command(BaseCommand):
 
     def deprecate_faculty_in_db(self, url, faculties_from_db_q):
         '''
-        Mark faculties as deprecated
+        Mark faculties as inactive
         '''
         faculty = faculties_from_db_q.get(url = url)
-        faculty.deprecated = True
+        faculty.is_active = False
         try:
             faculty.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε inactive', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
@@ -79,7 +79,7 @@ class Command(BaseCommand):
         '''
         try:
             faculties_from_db = {}
-            faculties_from_db_q = EclassFaculties.objects.filter(deprecated = False)
+            faculties_from_db_q = EclassFaculties.objects.filter(is_active = True)
             for faculty in faculties_from_db_q:
                 faculties_from_db[faculty.url] = [faculty.name, faculty.code]
         except Exception as error:
@@ -98,7 +98,7 @@ class Command(BaseCommand):
             '''
             faculties_from_db_set = set()
         '''
-        Get ex faculties and mark them as deprecated
+        Get ex faculties and mark them as inactive
         '''
         ex_faculties = faculties_from_db_set - faculties_from_eclass_set
         for url in ex_faculties:

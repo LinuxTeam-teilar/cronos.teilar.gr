@@ -38,7 +38,7 @@ class Command(BaseCommand):
         recreated RSS feeds, since the ones that teilar provides are not good
         '''
         try:
-            websites = Websites.objects.filter(deprecated = False)
+            websites = Websites.objects.filter(is_active = True)
             for website in websites:
                 authors[website.rss] = website.url
         except Exception as error:
@@ -49,7 +49,7 @@ class Command(BaseCommand):
         Add the eclass lessons in the list of RSS authors
         '''
         try:
-            eclass_lessons = EclassLessons.objects.filter(deprecated = False)
+            eclass_lessons = EclassLessons.objects.filter(is_active = True)
             for lesson in eclass_lessons:
                 authors[u'http://openclass.teilar.gr/modules/announcements/rss.php?c=%s' % lesson.url.split('/')[4]] = lesson.url
         except Exception as error:
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         Add the Departments from the DB in the list of RSS sites
         EDIT: They don't offer good RSS, I am recreating it, it is included in Websites table
         '''
-        #departments = Departments.objects.filter(deprecated = False)
+        #departments = Departments.objects.filter(is_active = True)
         #for department in departments:
         #    authors['http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.url.split('=')[1] = department.url
         return authors
