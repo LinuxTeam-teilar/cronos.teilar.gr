@@ -144,5 +144,6 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
     border: solid 1px #e92525;
 }
 
+.social-icon{ text-align:center; }
 .social-icon a:link, .social-icon a:visited { text-decoration:none; }
 .social-icon a:hover, .social-icon a:focus { border-bottom: 1px dashed #111; }
