@@ -51,7 +51,7 @@ done
 
 set -e
 if [ -e "${LOCK}" ]; then
-    echo "Warning: \"${LOCK}\" already present, not running backup." >> ${LOG}
+    echo "Warning: \"${LOCK}\" already present, not running backup."
     exit 1
 fi
 touch "${LOCK}"
