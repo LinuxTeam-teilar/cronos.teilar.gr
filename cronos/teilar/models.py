@@ -3,7 +3,7 @@ from django.db import models
 class Departments(models.Model):
     url = models.URLField(unique = True)
     name = models.CharField(max_length = 255)
-#    email = models.EmailField(null = True)
+    email = models.EmailField(null = True)
     is_active = models.BooleanField(default = True)
 
     def __unicode__(self):
