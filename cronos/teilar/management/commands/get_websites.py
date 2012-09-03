@@ -16,82 +16,82 @@ class Command(BaseCommand):
         Retrieves RSS feeds either from remote sites from local files or
         from the DB
         The entries in the dictionary are in the following structure:
-        {'rss': ['name', 'url', 'email']}
+        {'url': ['name', 'rss', 'email']}
         If we want to use the <dc:creator> tag of the RSS instead
         of the creator written in key value, then the creator in the
         key gets the suffix "_dummy"
         '''
         websites = {
-            u'http://openclass.teilar.gr/rss.php': [
+            u'http://openclass.teilar.gr': [
+                u'http://openclass.teilar.gr/rss.php',
                 u'Γενικές ανακοινώσεις openclass.teilar.gr',
-                u'http://openclass.teilar.gr',
                 None,
             ],
-            u'http://linuxteam.teilar.gr/rss.xml': [
+            u'http://linuxteam.teilar.gr': [
                 u'LinuxTeam ΤΕΙ Λάρισας',
-                u'http://linuxteam.teilar.gr',
+                u'http://linuxteam.teilar.gr/rss.xml',
                 u'linuxteam@teilar.gr',
             ],
-            u'http://noc.teilar.gr/index.php/2012-05-10-08-28-35.feed?type=atom': [
+            u'http://noc.teilar.gr': [
                 u'Κέντρο Διαχείρισης Δικτύου ΤΕΙ Λάρισας',
-                u'http://noc.teilar.gr',
+                u'http://noc.teilar.gr/index.php/2012-05-10-08-28-35.feed?type=atom',
                 u'noc@teilar.gr',
             ],
-            u'http://mke.teilar.gr/business/mathimata-ann.feed': [
+            u'http://mke.teilar.gr': [
                 u'Μονάδα Καινοτομίας και Επιχειρηματικότητας',
-                u'http://mke.teilar.gr',
+                u'http://mke.teilar.gr/business/mathimata-ann.feed',
                 u'mke@teilar.gr',
             ],
-            u'http://disabled.teilar.gr/index.php?format=feed&type=rss': [
+            u'http://disabled.teilar.gr': [
                 u'Πύλη ΑμΕΑ ΤΕΙ Λάρισας',
-                u'http://disabled.teilar.gr',
+                u'http://disabled.teilar.gr/index.php?format=feed&type=rss',
                 None,
             ],
-            u'https://www.facebook.com/feeds/page.php?format=atom10&id=153439198094399': [
+            u'http://diogenis.teilar.gr': [
                 u'Ηλεκτρονική εγγραφή εργαστηρίων',
-                u'http://diogenis.teilar.gr',
+                u'https://www.facebook.com/feeds/page.php?format=atom10&id=153439198094399',
                 u'diogenis@teilar.gr',
             ],
-            u'http://linuxteam.teilar.gr/blog/1464/feed': [
+            u'http://cronos.teilar.gr': [
                 u'Υπηρεσία ενοποίησης πληροφοριών',
-                u'http://cronos.teilar.gr',
+                u'http://linuxteam.teilar.gr/blog/1464/feed',
                 u'cronos@teilar.gr',
             ],
-            #u'http://www.pr.teilar.gr/TODO': [
+            #u'http://www.pr.teilar.gr': [
             #    u'Γραφείο Δημοσίων & Διεθνών Σχέσεων',
-            #    u'http://www.pr.teilar.gr',
+            #    u'http://www.pr.teilar.gr/TODO',
             #    u'pr@teilar.gr',
             #],
             ## Custom made RSS files ##
-            u'%s/%s' % (settings.RSS_PATH, 'general.rss'): [
+            u'http://www.teilar.gr::general': [
                 u'Γενικές Ανακοινώσεις',
-                u'http://www.teilar.gr',
+                u'%s/%s' % (settings.RSS_PATH, 'general.rss'),
                 None,
             ],
-            u'%s/%s' % (settings.RSS_PATH, 'teilar_ann_dummy.rss'): [
+            u'http://www.teilar.gr::teilar_ann': [
                 u'Ανακοινώσεις του ΤΕΙ Λάρισας',
-                u'http://www.teilar.gr',
+                u'%s/%s' % (settings.RSS_PATH, 'teilar_ann.rss'),
                 None,
             ],
-            u'%s/%s' % (settings.RSS_PATH, 'council.rss'): [
+            u'http://www.teilar.gr::council': [
                 u'Συνεδριάσεις Συμβουλίου ΤΕΙ Λάρισας',
-                u'http://www.teilar.gr',
+                u'%s/%s' % (settings.RSS_PATH, 'council.rss'),
                 None,
             ],
-            u'%s/%s' % (settings.RSS_PATH, 'committee.rss'): [
+            u'http://www.teilar.gr::committee': [
                 u'Ανακοινώσεις της Επιτροπής Εκπαίδευσης και Ερευνών του ΤΕΙ Λάρισας',
-                u'http://www.teilar.gr',
+                u'%s/%s' % (settings.RSS_PATH, 'committee.rss'),
                 None,
             ],
-            u'%s/%s' % (settings.RSS_PATH, 'departments.rss'): [
+            u'departments_dummy': [
                 u'departments_dummy',
-                u'link_dummy',
+                u'%s/%s' % (settings.RSS_PATH, 'departments.rss'),
                 None,
             ],
-            u'%s/%s' % (settings.RSS_PATH, 'teachers.rss'): [
+            u'teachers_dummy': [
                 u'teachers_dummy',
-                u'link_dummy',
-                u'email_dummy',
+                u'%s/%s' % (settings.RSS_PATH, 'teachers.rss'),
+                u'teachers_dummy',
             ],
             #u'%s/%s' % (settings.RSS_PATH, 'dionysos.rss'): [
             #    u'Γραμματεία ΤΕΙ Λάρισας',
@@ -116,46 +116,46 @@ class Command(BaseCommand):
         }
         return websites
 
-    def add_website_to_db(self, rss, attributes):
+    def add_website_to_db(self, url, attributes):
         '''
         Add the website to the DB
         '''
         name = attributes[0]
-        url = attributes[1]
+        rss = attributes[1]
         email = attributes[2]
         website = Websites(
-            rss = rss,
-            name = name,
             url = url,
+            name = name,
+            rss = rss,
             email = email,
         )
         try:
             website.save()
-            logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(rss))
+            logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(rss))
+            logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
             return
         author = Authors(content_object = website)
         try:
             author.save()
-            logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(rss))
+            logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(rss))
+            logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
         return
 
-    def deprecate_website_in_db(self, rss, websites_from_db_q):
+    def deprecate_website_in_db(self, url, websites_from_db_q):
         '''
         Mark websites as deprecated
         '''
-        website = websites_from_db_q.get(rss = rss)
+        website = websites_from_db_q.get(url = url)
         website.deprecated = True
         try:
             website.save()
-            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(rss))
+            logger_syslog.info(u'Αλλαγή κατάστασης σε deprecated', extra = log_extra_data(url))
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(rss))
+            logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
         return
 
@@ -169,19 +169,19 @@ class Command(BaseCommand):
         websites = self.get_websites()
         '''
         Get all the websites from the DB and put them in a dictionary in the structure:
-        websites_from_db = {'rss': ['name', 'url', 'email']}
+        websites_from_db = {'url': ['name', 'rss', 'email']}
         '''
         websites_from_db = {}
         try:
             websites_from_db_q = Websites.objects.filter(deprecated = False)
             for website in websites_from_db_q:
-                websites_from_db[website.rss] = [website.name, website.url, website.email]
+                websites_from_db[website.url] = [website.name, website.rss, website.email]
         except Exception as error:
            logger_syslog.error(error, extra = log_extra_data())
            logger_mail.exception(error)
            raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με τη βάση δεδομένων')
         '''
-        Get the websites' RSS URLs in set data structure, for easier comparisons
+        Get the websites' URLs in set data structure, for easier comparisons
         '''
         websites_from_teilar_set = set(websites.keys())
         try:
@@ -195,28 +195,28 @@ class Command(BaseCommand):
         Get ex websites and mark them as deprecated
         '''
         ex_websites = websites_from_db_set - websites_from_teilar_set
-        for rss in ex_websites:
-            self.deprecate_website_in_db(rss, websites_from_db_q)
+        for url in ex_websites:
+            self.deprecate_website_in_db(url, websites_from_db_q)
         '''
         Get new websites and add them to the DB
         '''
         new_websites = websites_from_teilar_set - websites_from_db_set
-        for rss in new_websites:
-           self.add_website_to_db(rss, websites[rss])
+        for url in new_websites:
+           self.add_website_to_db(url, websites[url])
         '''
         Get all the existing websites, and check if any of their attributes were updated
         '''
         existing_websites = websites_from_teilar_set & websites_from_db_set
-        for rss in existing_websites:
+        for url in existing_websites:
             i = 0
-            website = websites_from_db_q.get(rss = rss)
-            for attribute in websites[rss]:
-                if websites_from_db[rss][i] != attribute:
+            website = websites_from_db_q.get(url = url)
+            for attribute in websites[url]:
+                if websites_from_db[url][i] != attribute:
                     if i == 0:
                         attr_name = u'name'
                         website.name = attribute
                     elif i == 1:
-                        attr_name = u'url'
+                        attr_name = u'rss'
                         website.url = attribute
                     elif i == 2:
                         attr_name = u'email'
@@ -224,9 +224,9 @@ class Command(BaseCommand):
                     try:
                         website.save()
                         status = u'Επιτυχής ανανέωση του %s σε %s' % (attr_name, attribute)
-                        logger_syslog.info(status, extra = log_extra_data(rss))
+                        logger_syslog.info(status, extra = log_extra_data(url))
                     except Exception as error:
-                        logger_syslog.error(error, extra = log_extra_data(rss))
+                        logger_syslog.error(error, extra = log_extra_data(url))
                         logger_mail.exception(error)
                 i += 1
         return

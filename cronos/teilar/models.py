@@ -20,9 +20,9 @@ class Teachers(models.Model):
         return self.name
 
 class Websites(models.Model):
-    rss = models.URLField(unique = True)
+    url = models.URLField(unique = True)
     name = models.CharField(max_length = 255)
-    url = models.URLField()
+    rss = models.URLField()
     email = models.EmailField(null = True)
     deprecated = models.BooleanField(default = False)
 
