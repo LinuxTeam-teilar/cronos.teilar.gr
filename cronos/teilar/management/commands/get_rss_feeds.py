@@ -29,7 +29,7 @@ class Command(BaseCommand):
         Retrieves the authors from the DB tables:
         Departments, Teachers, EclassLessons, Websites
         It returns a dictionary with the following structure:
-        authors = {'rss': 'url' OR 'rss'}
+        authors = {'rss': 'url'}
         (depending on what of those two is unique in each table)
         '''
         authors = {}
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         try:
             websites = Websites.objects.filter(deprecated = False)
             for website in websites:
-                authors[website.rss] = website.rss
+                authors[website.rss] = website.url
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data())
             logger_mail.exception(error)
@@ -69,25 +69,26 @@ class Command(BaseCommand):
         '''
         Add the announcement to the DB
         '''
-        for model in [EclassLessons, Websites, Teachers, Departments]:
+        if announcement[6]:
             '''
-            Check for a unique_url match (which is either RSS or URL
-            depending on the table) in all of those models
+            Try to get the author of the announcement
+            If there is announcement[6] (which means that
+            there is dc:creator) then the author should be
+            retrieved from the Teachers or Departments table
             '''
-            try:
-                if model == Websites:
-                    author = model.objects.get(rss = unique_url)
-                else:
+            for model in [Teachers, Departments]:
+                try:
+                    author = model.objects.get(name = announcement[6])
+                    break
+                except:
+                    continue
+        else:
+            for model in [EclassLessons, Websites]:
+                try:
                     author = model.objects.get(url = unique_url)
-                '''
-                Success, exit the loop
-                '''
-                break
-            except:
-                '''
-                Not found, proceed to the next model
-                '''
-                continue
+                    break
+                except:
+                    continue
         '''
         Below are the necessary db relations between the above model
         and the Authors table
@@ -131,7 +132,7 @@ class Command(BaseCommand):
             logger_mail.exception(error)
         return
 
-    def get_announcement(self, entry, rss_url):
+    def get_announcement(self, entry, rss, creator_url):
         '''
         Return a list with the announcement's tags that are of interest
         '''
@@ -149,7 +150,7 @@ class Command(BaseCommand):
         except:
             enclosure = None
         unique = url
-        if rss_url.endswith(u'teachers.rss'):
+        if rss.endswith(u'teachers.rss'):
             '''
             Teachers have all the announcements in a
             single page, instead of having each one
@@ -159,7 +160,10 @@ class Command(BaseCommand):
             unique += summary
             if enclosure:
                 unique += enclosure
-        announcement = [title, url, pubdate, summary, enclosure, unique]
+        creator = None
+        if creator_url.endswith(u'_dummy'):
+            creator = entry.author
+        announcement = [title, url, pubdate, summary, enclosure, unique, creator]
         return announcement
 
     def update_announcements(self):
@@ -167,7 +171,7 @@ class Command(BaseCommand):
         Update the DB with new announcements of all the websites listed in authors.keys()
         '''
         authors = self.get_authors()
-        for rss_url, unique_url in authors.iteritems():
+        for rss_url, url in authors.iteritems():
             '''
             Parse the RSS feed
             '''
@@ -191,8 +195,8 @@ class Command(BaseCommand):
                 '''
                 Get the data of each entry and add them in DB
                 '''
-                announcement = self.get_announcement(entry, rss_url)
-                self.add_announcement_to_db(announcement, unique_url)
+                announcement = self.get_announcement(entry, rss_url, url)
+                self.add_announcement_to_db(announcement, url)
 
     def handle(self, *args, **options):
         self.update_announcements()
