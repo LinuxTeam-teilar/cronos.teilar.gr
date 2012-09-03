@@ -189,7 +189,7 @@ th { color: #786721; width: 280px; }
 }
 
 #content .entry a:hover, #content .entry a:focus {
-    border-bottom: solid 1px dashed #111;;
+    border-bottom: solid 1px dashed #111;
     color: #C7AC3C;
 }
 
