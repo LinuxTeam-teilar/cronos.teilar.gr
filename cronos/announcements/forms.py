@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
 from django import forms
 
-class AnnouncementForm(forms.Form):
-    announceid = forms.CharField(max_length = 100)
+class PostForm(forms.Form):
+    post_id = forms.HiddenInput()

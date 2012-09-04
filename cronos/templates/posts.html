@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+    {{ tab }} | 
+{% endblock %}
+
+{% block more %}
+    {% ifequal target "announcements" %}
+    <link rel="alternate" type="application/rss+xml" title="Ανακοινώσεις RSS" href="/feeds/announcements/{{user}}" />
+    {% endifequal %}
+{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="entry announcement">
+            <h3><a href="/{{ target }}/?post_id={{ post.id }}">{{ post.title }}</a></h3>
+            <img src="{% static "img/cid0.png" %}" />
+            <p><span><strong>Από:</strong> {{ post.creator }} (<a href="{{ post.creator_url }}">Ιστοσελίδα</a>{% if post.creator_email %}, <a href="mailto:{{ post.creator_email }}">email</a>{% endif %})
+            </span><br />
+            <span><strong>Ημερομηνία:</strong> {{ post.pubdate }}</span></p><br />
+            <p class="antext">{{ post.summary|safe }}</p>
+            {% if enclosure %}
+            <p class="more"><a href="{{ post.enclosure }}">Επισυναπτόμενο αρχείο</a></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <form action="/{{ target }}/" method="get">
+        {% for field in form.hidden_fields %}
+            {{ field }}
+        {% endfor %}
+    </form>
+{% endblock %}
