@@ -36,7 +36,7 @@ def announcements(request):
         Change the creator's attributes to the related ones
         '''
         announcement['creator'] = creator.name
-        announcement['creator_url'] = creator.url
+        announcement['creator_url'] = creator.url.split('::')[0]
         if creator.email:
             announcement['creator_email'] = creator.email
         announcements.append(announcement)
