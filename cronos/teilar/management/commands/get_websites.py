@@ -23,8 +23,8 @@ class Command(BaseCommand):
         '''
         websites = {
             u'http://openclass.teilar.gr': [
-                u'http://openclass.teilar.gr/rss.php',
                 u'Γενικές ανακοινώσεις openclass.teilar.gr',
+                u'http://openclass.teilar.gr/rss.php',
                 None,
             ],
             u'http://linuxteam.teilar.gr': [
