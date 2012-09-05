@@ -2,7 +2,7 @@ body { overflow-x: hidden; background: #f5f5f5; }
 
 th { color: #786721; width: 280px; }
 
-#id_teacher_announcements, #teacherann_selected , #id_other_announcements, #otherann_selected{
+#teachers_selected , #teachers_unselected, #websites_selected, #websites_unselected{
     height: 200px;
     width: 250px;
 }

@@ -1,23 +1,23 @@
 $().ready(function() {
 	$('#add1').click(function() {
-		return !$('#id_teacher_announcements option:selected').remove().appendTo('#teacherann_selected');
+		return !$('#teachers_unselected option:selected').remove().appendTo('#teachers_selected');
 	});
 	$('#remove1').click(function() {
-		return !$('#teacherann_selected option:selected').remove().appendTo('#id_teacher_announcements');
+		return !$('#teachers_unselected option:selected').remove().appendTo('#teachers_selected');
 	});
-	$('#teacherann').submit(function() {
-		$('#teacherann_selected option').each(function(i) {
+	$('#select_teachers').submit(function() {
+		$('#teachers_selected option').each(function(i) {
 			$(this).attr("selected", "selected");
 		});
 	});
 	$('#add2').click(function() {
-		return !$('#id_other_announcements option:selected').remove().appendTo('#otherann_selected');
+		return !$('#websites_unselected option:selected').remove().appendTo('#websites_selected');
 	});
 	$('#remove2').click(function() {
-		return !$('#otherann_selected option:selected').remove().appendTo('#id_other_announcements');
+		return !$('#websites_selected option:selected').remove().appendTo('#websites_unselected');
 	});
-	$('#otherann').submit(function() {
-		$('#otherann_selected option').each(function(i) {
+	$('#select_websites').submit(function() {
+		$('#websites_selected option').each(function(i) {
 			$(this).attr("selected", "selected");
 		});
 	});

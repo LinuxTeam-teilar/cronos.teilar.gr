@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}
     Ρυθμίσεις χρήστη {{user}} | 
 {% endblock %}
 
 {% block extra_js_top %}
-    <script type="text/javascript" src="{{MEDIA_URL}}js/multibox.js"></script>
+    <script type="text/javascript" src="{% static "js/multibox.js" %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -38,8 +39,8 @@
                 </th>
             </tr>
             <tr>
-               <td>
-                    <form action="." method="POST" align="center">
+                <td>
+                    <form action="." method="POST" align="center">{% csrf_token %}
                         {% for field in eclass_credentials_form %}
                             {{ field }}<br />
                         {% endfor %}
@@ -111,77 +112,49 @@
         </table>
     </div>
 
-    <div class="entry" id="theacher">
+    <div class="entry" id="teachers">
         <h3>Ανακοινώσεις Καθηγητών</h3>
-        <div>
-            <form action="." method="POST" id="teacherann">
-                <select multiple="multiple" name="teacher_announcements" id="id_teacher_announcements">
-                    {% for i in teacher_announcements_all %}
-                        {% for j in i %}
-                            {% if forloop.counter0 = 0 %}
-                                <option value="{{j|safe}}">
-                            {% else %}
-                                {{j|safe}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                </select>
-                <select multiple="multiple" name="teacherann_selected" id="teacherann_selected">
-                    {% for i in teacher_announcements_selected %}
-                        {% for j in i %}
-                            {% if forloop.counter0 = 0 %}
-                                <option value="{{j|safe}}">
-                            {% else %}
-                                {{j|safe}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                </select>
-                <div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
-                <div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
-                <br /><br /><br />
-                <input class="button" type="submit" value="Ανανέωση" />
-            </form>
-            <form action="." method="POST">
-                <input class="button" type="submit" value="Διαγραφή Όλων" />
-            </form>
-        </div>
-    </div>
-
-    <div class="entry" id="otherann">
-        <h3>Άλλες Ανακοινώσεις</h3>
-        <div>
-            <form action="." method="POST" id="otherann">
-            <select multiple="multiple" name="other_announcements" id="id_other_announcements">
-                {% for i in other_announcements_all %}
-                    {% for j in i %}
-                        {% if forloop.counter0 = 0 %}
-                            <option value="{{j|safe}}">
-                        {% else %}
-                            {{j|safe}}</option>
-                        {% endif %}
-                    {% endfor %}
+        <form action="." method="POST" id="select_teachers">{% csrf_token %}
+            <select multiple="multiple" name="teachers_unselected" id="teachers_unselected">
+                {% for teacher in teachers_unselected %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
                 {% endfor %}
             </select>
-                <select multiple="multiple" name="otherann_selected" id="otherann_selected">
-                    {% for i in other_announcements_selected %}
-                        {% for j in i %}
-                            {% if forloop.counter0 = 0 %}
-                                <option value="{{j|safe}}">
-                            {% else %}
-                                {{j|safe}}</option>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                </select>
-                <div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
-                <div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
-                <br /><br /><br />
-                <input class="button" type="submit" value="Ανανέωση" name="update" />
-            </form>
-            <form action="." method="POST">
-                <input class="button" type="submit" value="Διαγραφή Όλων" name="delete2" />
-            </form>
-        </div>
+            <select multiple="multiple" name="teachers_selected" id="teachers_selected">
+                {% for teacher in teachers_selected %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
+            <div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
+            <br /><br /><br />
+            <input class="button" type="submit" value="Ανανέωση" />
+        </form>
+        <form action="." method="POST">
+            <input class="button" type="submit" value="Διαγραφή Όλων" />
+        </form>
+    </div>
+
+    <div class="entry" id="websites">
+        <h3>Άλλες Ανακοινώσεις</h3>
+        <form action="." method="POST" id="select_websites">
+            <select multiple="multiple" name="websites_unselected" id="websites_unselected">
+                {% for website in websites_unselected %}
+                    <option value="{{ website.id }}">{{ website.name }}</option>
+                {% endfor %}
+            </select>
+            <select multiple="multiple" name="websites_selected" id="websites_selected">
+                {% for website in websites_selected %}
+                    <option value="{{ website.id }}">{{ website.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
+            <div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
+            <br /><br /><br />
+            <input class="button" type="submit" value="Ανανέωση" name="update" />
+        </form>
+        <form action="." method="POST">
+            <input class="button" type="submit" value="Διαγραφή Όλων" name="delete2" />
+        </form>
     </div>
 {% endblock %}
