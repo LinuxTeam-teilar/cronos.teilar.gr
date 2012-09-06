@@ -29,6 +29,16 @@ class Websites(models.Model):
     def __unicode__(self):
         return self.name
 
+class Blogs(models.Model):
+    url = models.URLField(unique = True)
+    name = models.CharField(max_length = 255)
+    rss = models.URLField()
+    email = models.EmailField(null = True)
+    is_active = models.BooleanField(default = True)
+
+    def __unicode__(self):
+        return self.name
+
 class EclassFaculties(models.Model):
     url = models.URLField(unique = True)
     name = models.CharField(max_length = 255)
