@@ -3,7 +3,7 @@ $().ready(function() {
 		return !$('#teachers_unselected option:selected').remove().appendTo('#teachers_selected');
 	});
 	$('#remove1').click(function() {
-		return !$('#teachers_unselected option:selected').remove().appendTo('#teachers_selected');
+		return !$('#teachers_selected option:selected').remove().appendTo('#teachers_unselected');
 	});
 	$('#select_teachers').submit(function() {
 		$('#teachers_selected option').each(function(i) {
