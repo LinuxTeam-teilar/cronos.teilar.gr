@@ -1,4 +1,4 @@
-from cronos.teilar.models import Departments, Teachers, EclassLessons, Websites
+from cronos.teilar.models import Departments, Teachers, EclassLessons, Websites, Blogs
 from django.contrib.auth.models import User
 from django.db import models
 
