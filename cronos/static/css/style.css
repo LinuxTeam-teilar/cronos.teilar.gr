@@ -211,7 +211,7 @@ th { color: #786721; width: 280px; }
     background: url("/static/img/rss.png") top left no-repeat;
 }
 #content .rss-promo a:hover, #content .rss-promo a:focus { border: 0; color: #B38600; }
-#content .rss-promo p { color: #786721; }
+#content .rss-promo p { text-align:center;color: #786721; }
 
 .sidebar_body {
     display:none;
