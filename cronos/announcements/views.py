@@ -12,6 +12,40 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+def get_creator(announcement, creator):
+    '''
+    Add creator's name, URL, mail and avatar in the announcement dict
+    '''
+    announcement.creator_url = creator.url.split('::')[0]
+    if creator.email:
+        announcement.creator_email = creator.email
+    '''
+    Get the avatar based on the url
+    '''
+    announcement.avatar = u'img/avatar_%s.png' % creator.url.split('/')[2]
+    try:
+        url = creator.url.split('/')[3]
+        if url == u'tmimata':
+            announcement.avatar = u'img/avatar_department.png'
+        elif url.split('?')[0] == u'person.php':
+            if url.split('=') == u'323':
+                announcement.avatar = u'img/avatar_calendar.png'
+            elif url.split('=') == u'324':
+                announcement.avatar = u'img/avatar_news.png'
+            else:
+                announcement.avatar = u'img/avatar_teacher.png'
+    except:
+        pass
+    try:
+        url = creator.url.split('::')[1]
+        if url == u'teilar_ann' or url == u'general':
+            announcement.avatar = u'img/avatar_www.teilar.gr.png'
+        else:
+            announcement.avatar = u'img/avatar_%s.png' % url
+    except:
+        pass
+    return announcement
+
 @login_required
 def announcements(request):
     '''
@@ -27,18 +61,9 @@ def announcements(request):
         post_id = request.GET.get('post_id')
         announcement = Announcements.objects.get(pk=post_id)
         '''
-        Find the creator
+        Add creator's URL, mail and avatar in the announcement
         '''
-        model_name = str(announcement.creator.content_type.name)
-        creator = eval(model_name).objects.get(pk=announcement.creator.object_id)
-        announcement = announcement.__dict__
-        '''
-        Change the creator's attributes to the related ones
-        '''
-        announcement['creator'] = creator.name
-        announcement['creator_url'] = creator.url.split('::')[0]
-        if creator.email:
-            announcement['creator_email'] = creator.email
+        announcement = get_creator(announcement, announcement.creator.content_object)
         announcements.append(announcement)
     else:
         form = PostForm()
@@ -50,9 +75,10 @@ def announcements(request):
         one of their contents.
         '''
         following_meta_authors = [
-            request.user.get_profile().eclass_lessons,
-            request.user.get_profile().teacher_announcements,
-            request.user.get_profile().other_announcements,
+            request.user.get_profile().following_eclass_lessons,
+            request.user.get_profile().following_teachers,
+            request.user.get_profile().following_websites,
+            request.user.get_profile().following_blogs,
         ]
         for list_of_authors in following_meta_authors:
             for author in list_of_authors.all():
@@ -61,25 +87,28 @@ def announcements(request):
         Add the school in the following authors as well
         '''
         following_authors.append(request.user.get_profile().school)
+        '''
+        Find the creator and put them all in a list, so we can retrieve
+        all of their announcements from a query
+        '''
+        creators = []
         for author in following_authors:
-            '''
-            Find the creator
-            '''
             author_type = ContentType.objects.get_for_model(author)
             creator = Authors.objects.get(content_type__pk = author_type.id, object_id = author.id)
-            for announcement in Announcements.objects.filter(creator = creator).order_by('-pubdate')[:100]:
-                announcement = announcement.__dict__
-                '''
-                Change the creator's attributes to the related values
-                '''
-                announcement['creator'] = author.name
-                announcement['creator_url'] = author.url.split('::')[0]
-                if author.email:
-                    announcement['creator_email'] = author.email
-                '''
-                Add the announcement in the list of the wanted announcements
-                '''
-                announcements.append(announcement)
+            creators.append(creator)
+        '''
+        Get all the announcements
+        '''
+        announcements_q = Announcements.objects.filter(creator__in = creators).order_by('-pubdate')
+        for announcement in announcements_q:
+            '''
+            Add creator's URL, mail and avatar in the announcement dict
+            '''
+            announcement = get_creator(announcement, announcement.creator.content_object)
+            '''
+            Add the announcement in the list of the wanted announcements
+            '''
+            announcements.append(announcement)
     return render_to_response('posts.html', {
             'posts': announcements,
             'form': form,
