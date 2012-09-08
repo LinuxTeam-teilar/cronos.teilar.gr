@@ -51,7 +51,7 @@ done
 
 set -e
 if [ -e "${LOCK}" ]; then
-    echo "Warning: \"${LOCK}\" already present, not running backup."
+    echo "Warning: \"${LOCK}\" already present, skipping update."
     exit 1
 fi
 touch "${LOCK}"
