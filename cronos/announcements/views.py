@@ -28,9 +28,9 @@ def get_creator(announcement, creator):
         if url == u'tmimata':
             announcement.avatar = u'img/avatar_department.png'
         elif url.split('?')[0] == u'person.php':
-            if url.split('=') == u'323':
+            if url.split('=')[1] == u'323':
                 announcement.avatar = u'img/avatar_calendar.png'
-            elif url.split('=') == u'324':
+            elif url.split('=')[1] == u'324':
                 announcement.avatar = u'img/avatar_news.png'
             else:
                 announcement.avatar = u'img/avatar_teacher.png'
