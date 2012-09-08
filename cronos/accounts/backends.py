@@ -92,6 +92,18 @@ class DionysosTeilarAuthentication(object):
                     credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
                     credentials['declaration'] = get_dionysos_declaration(username, password, request)
                     #credentials['grades'] = get_dionysos_grades(username, password, request)
+                except CronosError:
+                    raise
+                try:
+                    '''
+                    Relate the webscraped school name with the one stored in the DB
+                    '''
+                    credentials['school'] = Departments.objects.get(name = credentials['school'])
+                except Exception as error:
+                    logger_syslog.error(error, extra = log_extra_data(username, request))
+                    logger_mail.exception(error)
+                    raise CronosError(u'Αδυναμία ανάκτησης της σχολής')
+                try:
                     user = self.add_student_to_db(credentials, request)
                 except CronosError:
                     raise
@@ -128,7 +140,7 @@ class DionysosTeilarAuthentication(object):
                 dionysos_password = encrypt_password(credentials['password']),
                 registration_number = credentials['registration_number'],
                 semester = credentials['semester'],
-                school = Departments.objects.get(name = credentials['school']),
+                school = credentials['school'],
                 introduction_year = credentials['introduction_year'],
                 declaration = credentials['declaration'],
                 #grades = credentials['grades'],

@@ -43,7 +43,7 @@ class EmptyDBLoginTest(TestCase):
         causes the expected error message to show up
         '''
         response = self.client.post('/login/', first_student)
-        self.assertEqual(response.context['msg'], u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
+        self.assertEqual(response.context['msg'], u'Αδυναμία ανάκτησης της σχολής')
         self.assertEqual(response.status_code, 200)
 
 class NewUserLoginTest(TestCase):
