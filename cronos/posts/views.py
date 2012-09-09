@@ -129,8 +129,11 @@ def posts(request, id, title):
         if title in [u'Ανακοινώσεις', u'Φοιτητές', u'Τμήμα', u'Καθηγητής']:
             return HttpResponseRedirect('/login/?next=%s' % request.path)
     posts = get_posts(request, id, title)
-    if posts[0] == u'Login Required':
-        return HttpResponseRedirect('/login/?next=%s' % request.path)
+    try:
+        if posts[0] == u'Login Required':
+            return HttpResponseRedirect('/login/?next=%s' % request.path)
+    except:
+        pass
     return render_to_response('posts.html', {
             'posts': posts,
             'title': title,
