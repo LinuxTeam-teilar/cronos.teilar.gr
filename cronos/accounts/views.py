@@ -166,42 +166,48 @@ def settings(request):
                     msg = 'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
                 else:
                     raise CronosError('Τα στοιχεία δεν επαληθεύτηκαν από το myweb.teilar.gr')
-        elif request.POST.get('teachers_selected'):
-            '''
-            Get the list of selected teachers
-            '''
-            selected_teachers = dict(request.POST)['teachers_selected']
-            selected_teachers = teachers_all_q.filter(id__in = selected_teachers)
-            '''
-            Find the teachers for addition to the following_teachers field
-            '''
-            teachers_for_addition = selected_teachers.exclude(id__in = teachers_following)
-            for teacher in teachers_for_addition:
-                request.user.get_profile().following_teachers.add(teacher)
-            teachers_for_removal = teachers_following.exclude(id__in = selected_teachers)
-            '''
-            Find the teachers for removal from the following_teachers field
-            '''
-            for teacher in teachers_for_removal:
-                request.user.get_profile().following_teachers.remove(teacher)
-        elif request.POST.get('websites_selected'):
-            '''
-            Get the list of selected websites
-            '''
-            selected_websites = dict(request.POST)['websites_selected']
-            selected_websites = websites_all_q.filter(id__in = selected_websites)
-            '''
-            Find the websites for addition to the following_websites field
-            '''
-            websites_for_addition = selected_websites.exclude(id__in = websites_following)
-            for website in websites_for_addition:
-                request.user.get_profile().following_websites.add(website)
-            '''
-            Find the websites for removal from the following_websites field
-            '''
-            websites_for_removal = websites_following.exclude(id__in = selected_websites)
-            for website in websites_for_removal:
-                request.user.get_profile().following_websites.remove(website)
+        elif request.POST.get('teachers'):
+            if request.POST.get('teachers_selected'):
+                '''
+                Get the list of selected teachers
+                '''
+                selected_teachers = dict(request.POST)['teachers_selected']
+                selected_teachers = teachers_all_q.filter(id__in = selected_teachers)
+                '''
+                Find the teachers for addition to the following_teachers field
+                '''
+                teachers_for_addition = selected_teachers.exclude(id__in = teachers_following)
+                for teacher in teachers_for_addition:
+                    request.user.get_profile().following_teachers.add(teacher)
+                teachers_for_removal = teachers_following.exclude(id__in = selected_teachers)
+                '''
+                Find the teachers for removal from the following_teachers field
+                '''
+                for teacher in teachers_for_removal:
+                    request.user.get_profile().following_teachers.remove(teacher)
+            else:
+                request.user.get_profile().following_teachers.clear()
+        elif request.POST.get('websites'):
+            if request.POST.get('websites_selected'):
+                '''
+                Get the list of selected websites
+                '''
+                selected_websites = dict(request.POST)['websites_selected']
+                selected_websites = websites_all_q.filter(id__in = selected_websites)
+                '''
+                Find the websites for addition to the following_websites field
+                '''
+                websites_for_addition = selected_websites.exclude(id__in = websites_following)
+                for website in websites_for_addition:
+                    request.user.get_profile().following_websites.add(website)
+                '''
+                Find the websites for removal from the following_websites field
+                '''
+                websites_for_removal = websites_following.exclude(id__in = selected_websites)
+                for website in websites_for_removal:
+                    request.user.get_profile().following_websites.remove(website)
+            else:
+                request.user.get_profile().following_websites.clear()
     return render_to_response('settings.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
