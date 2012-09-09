@@ -87,9 +87,9 @@ def get_posts(request, id, title):
     elif title == u'Blog':
         following_authors.append(websites.objects.get(url=u'http://cronos.teilar.gr'))
     elif title == u'Τμήμα':
-        following_authors.append(departments.objects.get(url__endswith = id))
+        following_authors.append(departments.objects.get(url__endswith = '=' + id))
     elif title == u'Καθηγητής':
-        following_authors.append(teachers.objects.get(url__endswith = id))
+        following_authors.append(teachers.objects.get(url__endswith = '=' + id))
     '''
     Get authors from the ManyToMany fields
     '''
