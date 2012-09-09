@@ -13,11 +13,9 @@ def teachers(request):
     '''
     The webpage with all the teachers and their emails
     '''
-    teachers_list = []
-    for item in Teachers.objects.filter(is_active = True).order_by('name'):
-        teachers_list.append([item.name, item.email, item.department])
+    teachers = Teachers.objects.filter(is_active = True).order_by('name')
     return render_to_response('teachers.html', {
-            'teachers': teachers_list,
+            'teachers': teachers,
         }, context_instance = RequestContext(request))
 
 def library(request):
