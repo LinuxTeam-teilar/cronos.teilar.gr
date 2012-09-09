@@ -58,6 +58,7 @@ def accounts_index(request):
     The frontpage for logged in users. Displays some personal info only.
     '''
     return render_to_response('index.html', {
+        'dep_id': request.user.get_profile().school.url.split('=')[1]
         }, context_instance = RequestContext(request))
 
 

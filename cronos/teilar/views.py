@@ -14,6 +14,8 @@ def teachers(request):
     The webpage with all the teachers and their emails
     '''
     teachers = Teachers.objects.filter(is_active = True).order_by('name')
+    for teacher in teachers:
+        teacher.url = teacher.url.split('=')[1]
     return render_to_response('teachers.html', {
             'teachers': teachers,
         }, context_instance = RequestContext(request))

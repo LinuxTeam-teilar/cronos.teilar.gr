@@ -10,7 +10,7 @@
         <ul>
         {% for teacher in teachers %}
             <li>
-                <b>{{ teacher.name }}</b><br />
+                <b>{{ teacher.name }}</b> (<a href="/teachers/{{ teacher.url }}">Τελευταίες ανακοινώσεις</a>)<br />
                 {% if teacher.email %}
                     &nbsp;&nbsp;&nbsp;&nbsp;<i>Email:</i> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a><br />
                 {% endif %}
