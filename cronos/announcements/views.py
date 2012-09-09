@@ -6,9 +6,9 @@ from cronos.teilar.models import Departments as departments
 from cronos.teilar.models import Teachers as teachers
 from cronos.teilar.models import Websites as websites
 from cronos.teilar.models import EclassLessons as eclasslessons
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -47,6 +47,7 @@ def get_creator(post, creator):
     return post
 
 def get_posts(request, id, title):
+    login_required = True
     '''
     Prints posts
     '''
@@ -64,6 +65,8 @@ def get_posts(request, id, title):
         Add creator's URL, mail and avatar in the post
         '''
         post = get_creator(post, post.creator.content_object)
+        if creator.url == u'http://cronos.teilar.gr':
+            login_required = False
         return [post]
     elif title == u'Ανακοινώσεις':
         '''
@@ -86,6 +89,7 @@ def get_posts(request, id, title):
         following_meta_authors.append(request.user.get_profile().students)
     elif title == u'Blog':
         following_authors.append(websites.objects.get(url=u'http://cronos.teilar.gr'))
+        login_required = False
     elif title == u'Τμήμα':
         following_authors.append(departments.objects.get(url__endswith = '=' + id))
     elif title == u'Καθηγητής':
@@ -117,11 +121,19 @@ def get_posts(request, id, title):
         Add the post in the list of the wanted posts
         '''
         posts.append(post)
+    posts.append(login_required)
     return posts
 
-@login_required
 def posts(request, id, title):
-    posts = get_posts(request, id, title)
+    login_required = True
+    try:
+        posts = get_posts(request, id, title)
+        login_required = posts.pop()
+    except:
+        pass
+    if not request.user.is_authenticated():
+        if login_required:
+            return HttpResponseRedirect('/login/?next=%s' % request.path)
     return render_to_response('posts.html', {
             'posts': posts,
             'title': title,
