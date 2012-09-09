@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
-from cronos.announcements.models import Authors
+from cronos.posts.models import Authors
 from cronos.teilar.models import Websites
 from django.conf import settings
 from django.core.management.base import BaseCommand

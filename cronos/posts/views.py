@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.announcements.models import Authors, Announcements
-from cronos.announcements.forms import PostForm
+from cronos.posts.models import Authors, Posts
 from cronos.teilar.models import Departments as departments
 from cronos.teilar.models import Teachers as teachers
 from cronos.teilar.models import Websites as websites
@@ -17,8 +16,11 @@ def get_creator(post, creator):
     Add creator's name, URL, mail and avatar in the post dict
     '''
     post.creator_url = creator.url.split('::')[0]
-    if creator.email:
-        post.creator_email = creator.email
+    try:
+        if creator.email:
+            post.creator_email = creator.email
+    except:
+        pass
     '''
     Get the avatar based on the url
     '''
@@ -47,7 +49,6 @@ def get_creator(post, creator):
     return post
 
 def get_posts(request, id, title):
-    login_required = True
     '''
     Prints posts
     '''
@@ -60,13 +61,14 @@ def get_posts(request, id, title):
         If the post ID is passed in the URL, only
         this post will be shown
         '''
-        post = Announcements.objects.get(pk=id)
+        post = Posts.objects.get(pk=id)
         '''
         Add creator's URL, mail and avatar in the post
         '''
         post = get_creator(post, post.creator.content_object)
-        if creator.url == u'http://cronos.teilar.gr':
-            login_required = False
+        if not request.user.is_authenticated():
+            if post.creator_url != u'http://cronos.teilar.gr':
+                return [u'Login Required']
         return [post]
     elif title == u'Ανακοινώσεις':
         '''
@@ -89,7 +91,6 @@ def get_posts(request, id, title):
         following_meta_authors.append(request.user.get_profile().students)
     elif title == u'Blog':
         following_authors.append(websites.objects.get(url=u'http://cronos.teilar.gr'))
-        login_required = False
     elif title == u'Τμήμα':
         following_authors.append(departments.objects.get(url__endswith = '=' + id))
     elif title == u'Καθηγητής':
@@ -111,7 +112,7 @@ def get_posts(request, id, title):
     '''
     Get all the posts
     '''
-    posts_q = Announcements.objects.filter(creator__in = creators).order_by('-pubdate')
+    posts_q = Posts.objects.filter(creator__in = creators).order_by('-pubdate')
     for post in posts_q:
         '''
         Add creator's URL, mail and avatar in the post
@@ -121,19 +122,15 @@ def get_posts(request, id, title):
         Add the post in the list of the wanted posts
         '''
         posts.append(post)
-    posts.append(login_required)
     return posts
 
 def posts(request, id, title):
-    login_required = True
-    try:
-        posts = get_posts(request, id, title)
-        login_required = posts.pop()
-    except:
-        pass
     if not request.user.is_authenticated():
-        if login_required:
+        if title in [u'Ανακοινώσεις', u'Φοιτητές', u'Τμήμα', u'Καθηγητής']:
             return HttpResponseRedirect('/login/?next=%s' % request.path)
+    posts = get_posts(request, id, title)
+    if posts[0] == u'Login Required':
+        return HttpResponseRedirect('/login/?next=%s' % request.path)
     return render_to_response('posts.html', {
             'posts': posts,
             'title': title,

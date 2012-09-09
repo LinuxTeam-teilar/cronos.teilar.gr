@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
-from cronos.announcements.models import Authors, Announcements
+from cronos.posts.models import Authors, Posts
 from cronos.teilar.models import Departments, Teachers, Websites, EclassLessons
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -65,20 +65,20 @@ class Command(BaseCommand):
         #    authors['http://teilar.gr/tmimata/rss_tmima_news_xml.php?tid=%i' % department.url.split('=')[1] = department.url
         return authors
 
-    def add_announcement_to_db(self, announcement, unique_url):
+    def add_post_to_db(self, post, unique_url):
         '''
-        Add the announcement to the DB
+        Add the post to the DB
         '''
-        if announcement[6]:
+        if post[6]:
             '''
-            Try to get the author of the announcement
-            If there is announcement[6] (which means that
+            Try to get the author of the post
+            If there is post[6] (which means that
             there is dc:creator) then the author should be
             retrieved from the Teachers or Departments table
             '''
             for model in [Teachers, Departments]:
                 try:
-                    author = model.objects.get(name = announcement[6])
+                    author = model.objects.get(name = post[6])
                     break
                 except:
                     continue
@@ -95,19 +95,19 @@ class Command(BaseCommand):
         '''
         author_type = ContentType.objects.get_for_model(author)
         creator = Authors.objects.get(content_type__pk = author_type.id, object_id = author.id)
-        new_announcement = Announcements(
-                title = announcement[0],
-                url = announcement[1],
-                pubdate = announcement[2],
-                summary = announcement[3],
+        new_post = Posts(
+                title = post[0],
+                url = post[1],
+                pubdate = post[2],
+                summary = post[3],
                 creator = creator,
-                enclosure = announcement[4],
-                unique = announcement[5],
+                enclosure = post[4],
+                unique = post[5],
         )
         try:
             status = u'Νέα ανακοίνωση'
-            new_announcement.save()
-            logger_syslog.info(status, extra = log_extra_data(announcement[1]))
+            new_post.save()
+            logger_syslog.info(status, extra = log_extra_data(post[1]))
         except IntegrityError as error:
             if tuple(error)[0] == 1062 and tuple(error)[1].endswith("'unique'"):
                 '''
@@ -115,11 +115,11 @@ class Command(BaseCommand):
                 '''
                 pass
             else:
-                logger_syslog.error(error, extra = log_extra_data(announcement[1]))
+                logger_syslog.error(error, extra = log_extra_data(post[1]))
                 logger_mail.exception(error)
         except MySQLdb.Warning as warning:
-            logger_syslog.info(status, extra = log_extra_data(announcement[1]))
-            logger_syslog.warning(warning, extra = log_extra_data(announcement[1]))
+            logger_syslog.info(status, extra = log_extra_data(post[1]))
+            logger_syslog.warning(warning, extra = log_extra_data(post[1]))
             if str(warning).startswith("Data truncated for column 'unique' at row"):
                 '''
                 If the warning is about truncated unique column, ignore it
@@ -128,13 +128,13 @@ class Command(BaseCommand):
             else:
                 logger_mail.exception(warning)
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(announcement[1]))
+            logger_syslog.error(error, extra = log_extra_data(post[1]))
             logger_mail.exception(error)
         return
 
-    def get_announcement(self, entry, rss, creator_url):
+    def get_post(self, entry, rss, creator_url):
         '''
-        Return a list with the announcement's tags that are of interest
+        Return a list with the post's tags that are of interest
         '''
         title = entry.title
         url = entry.link
@@ -152,7 +152,7 @@ class Command(BaseCommand):
         unique = url
         if rss.endswith(u'teachers.rss'):
             '''
-            Teachers have all the announcements in a
+            Teachers have all the posts in a
             single page, instead of having each one
             in its own page, thus the unique field
             has to be combined with something else
@@ -163,12 +163,12 @@ class Command(BaseCommand):
         creator = None
         if creator_url.endswith(u'_dummy'):
             creator = entry.author
-        announcement = [title, url, pubdate, summary, enclosure, unique, creator]
-        return announcement
+        post = [title, url, pubdate, summary, enclosure, unique, creator]
+        return post
 
-    def update_announcements(self):
+    def update_posts(self):
         '''
-        Update the DB with new announcements of all the websites listed in authors.keys()
+        Update the DB with new posts of all the websites listed in authors.keys()
         '''
         authors = self.get_authors()
         for rss_url, url in authors.iteritems():
@@ -185,7 +185,7 @@ class Command(BaseCommand):
                 logger_mail.exception(error)
                 continue
             '''
-            Grab the latest max 10 announcements
+            Grab the latest max 10 posts
             '''
             if len(rss.entries) > 10:
                 entries = rss.entries[:10][::-1]
@@ -195,8 +195,8 @@ class Command(BaseCommand):
                 '''
                 Get the data of each entry and add them in DB
                 '''
-                announcement = self.get_announcement(entry, rss_url, url)
-                self.add_announcement_to_db(announcement, url)
+                post = self.get_post(entry, rss_url, url)
+                self.add_post_to_db(post, url)
 
     def handle(self, *args, **options):
-        self.update_announcements()
+        self.update_posts()

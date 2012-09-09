@@ -12,7 +12,7 @@ class Authors(models.Model):
     def __unicode__(self):
         return self.content_object.name
 
-class Announcements(models.Model):
+class Posts(models.Model):
     title = models.CharField(max_length = 500)
     pubdate = models.DateTimeField()
     creator = models.ForeignKey(Authors)
