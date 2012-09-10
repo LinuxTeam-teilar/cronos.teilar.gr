@@ -115,7 +115,7 @@ class Command(BaseCommand):
                     pubdate = temp_td_oratext[0].contents[0].split('/')
                     pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
                     title = temp_td_oratext[1].contents[0]
-                    description = soup.find('td', 'BlackText11').contents[0]
+                    description = unicode(soup.find('td', 'BlackText11'))
                     try:
                         enclosure_link = soup.find('a', 'BlackText11Bold')['href']
                         mimetypes.init()
