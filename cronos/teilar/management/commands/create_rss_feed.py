@@ -188,7 +188,7 @@ class Command(BaseCommand):
                     pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
                     description = temp_td_blacktext11[1]
                     try:
-                        enclosure_link = announcement.find('a', 'OraText')['href']
+                        enclosure_link = announcement.find('a', 'BlackText11Bold')['href']
                         mimetypes = init()
                         enclosure_mimetype = mimetypes.type_map[enclosure_link.split('.')[-1]]
                         enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
