@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from cronos import eclass_auth_login
 from cronos.common.log import CronosError, log_extra_data
+from cronos.common.encryption import encrypt_password
 from cronos.accounts.forms import *
+from cronos.accounts.models import UserProfile
 from cronos.teilar.models import Teachers, Websites
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -112,7 +116,7 @@ def settings(request):
                 but belong to another student's account
                 '''
                 try:
-                    user = UserProfile.objects.get(eclass_username = request.POST.get('eclass_username'))
+                    user = User.objects.get(userprofile__eclass_username = request.POST.get('eclass_username'))
                     if user.username != request.user.username:
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
@@ -120,21 +124,24 @@ def settings(request):
                 '''
                 Check if the credentials are correct
                 '''
-                output = eclass_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-                if output:
-                    '''
-                    Credentials are correct, update them along with the
-                    eclass lessons list
-                    '''
-                    eclass_lessons = get_eclass_lessons(output)
-                    user = UserProfile.objects.get(username = request.user.username)
-                    user.eclass_username = request.POST.get('eclass_username')
-                    user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
-                    user.eclass_lessons = ','.join(eclass_lessons)
-                    user.save()
-                    msg = 'Η ανανέωση των στοιχείων e-class.teilar.gr ήταν επιτυχής'
-                else:
-                    raise CronosError('Τα στοιχεία δεν επαληθεύτηκαν από το e-class.teilar.gr')
+                try:
+                    output = eclass_auth_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
+                    if output:
+                        '''
+                        Credentials are correct, update them along with the
+                        eclass lessons list
+                        '''
+    #                    eclass_lessons = get_eclass_lessons(output)
+                        user = UserProfile.objects.get(pk=request.user.id)
+                        user.eclass_username = request.POST.get('eclass_username')
+                        user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
+                        user.save()
+    #                    user.eclass_lessons = ','.join(eclass_lessons)
+                        msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+                    else:
+                        msg = u'Λάθος στοιχεία openclass'
+                except CronosError as error:
+                    msg = error.value
         elif request.POST.get('webmail_username'):
             '''
             Check if the myweb.teilar.gr credentials already exist in the DB,
@@ -187,6 +194,7 @@ def settings(request):
                     request.user.get_profile().following_teachers.remove(teacher)
             else:
                 request.user.get_profile().following_teachers.clear()
+            msg = u'Οι αλλαγές έγιναν επιτυχώς'
         elif request.POST.get('websites'):
             if request.POST.get('websites_selected'):
                 '''
@@ -208,6 +216,7 @@ def settings(request):
                     request.user.get_profile().following_websites.remove(website)
             else:
                 request.user.get_profile().following_websites.clear()
+            msg = u'Οι αλλαγές έγιναν επιτυχώς'
     return render_to_response('settings.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
