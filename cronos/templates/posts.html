@@ -6,9 +6,13 @@
 {% endblock %}
 
 {% block more %}
-    {% ifequal title "Ανακοινώσεις" %}
-    <link rel="alternate" type="application/rss+xml" title="Ανακοινώσεις RSS" href="/feeds/announcements/{{user}}" />
-    {% endifequal %}
+    <link rel="alternate" type="application/rss+xml" title="{{ title }} RSS"
+    {% if title == "Ανακοινώσεις" %}
+        href="/announcements/{{ user }}/feed"
+    {% elif title == "Blog" %}
+        href="blog/feed"
+    {% endif %}
+    />
 {% endblock %}
 
 {% block content %}
