@@ -16,13 +16,13 @@ class Command(BaseCommand):
         '''
         Retrieves the lessons from eclass.teilar.gr
         The output is dictionary with the following structure:
-        lessons_from_eclass = {'url': ['name', 'teacher', 'faculty', 'ltype'] }
+        lessons_from_eclass = {'url': ['name', 'teacher', 'faculty', 'ltype']}
         '''
         lessons_from_eclass = {}
         for faculty in faculties_from_db_q:
             output = teilar_anon_login(faculty.url)
             soup = BeautifulSoup(output)
-            for i in range(2):
+            for i in range(3):
                 '''
                 EclassLessons are grouped in three types:
                 Undergraduate, Graduate, Other
@@ -35,7 +35,7 @@ class Command(BaseCommand):
                     continue
                 all_lessons = ltype.find_all('tr', 'even') + ltype.find_all('tr', 'odd')
                 for lesson in all_lessons:
-                    url = lesson.small.contents[0].replace('(', '').replace(')', '')
+                    url = lesson.small.contents[0][1:-1]
                     url = u'http://openclass.teilar.gr/courses/%s/' % url
                     try:
                         name = lesson.a.contents[0].strip()
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                     elif i == 1:
                         ltype = u'Μεταπτυχιακό'
                     elif i == 2:
-                        ltype == u'Άλλο'
+                        ltype = u'Άλλο'
                     lessons_from_eclass[url] = [unicode(name), unicode(teacher), faculty.name, ltype]
         return lessons_from_eclass
 
