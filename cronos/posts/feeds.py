@@ -1,28 +1,65 @@
 # -*- coding: utf-8 -*-
 
-from cronos.posts.models import Announcements
-from cronos.accounts.models import *
+from cronos.posts.views import get_posts
 from django.contrib.auth.models import User
 from django.contrib.syndication.views import Feed
+from django.shortcuts import get_object_or_404
+import mimetypes
 
-class AnnouncementsFeed(Feed):
-    title = 'Ανακοινώσεις ΤΕΙ Λάρισας'
+class PostsFeed(Feed):
     link = 'http://cronos.teilar.gr'
-    description = 'Ανακοινώσεις διαφόρων ιστοσελίδων του ΤΕΙ Λάρισας. Παρέχονται από το http://cronos.teilar.gr'
 
-    def get_object(self, bits):
-        return User.objects.get(username = bits[0])
+    def get_object(self, request, username, page):
+        if page == u'announcements':
+            user = get_object_or_404(User, username=username)
+        else:
+            user = None
+        return [user, page]
+
+    def title(self, obj):
+        page = obj[1]
+        if page == u'announcements':
+            return 'Ανακοινώσεις TEI Λάρισας από το cronos.teilar.gr'
+        elif page == u'blog':
+            return 'Blog cronos.teilar.gr'
+
+    def description(self, obj):
+        page = obj[1]
+        if page == u'announcements':
+            return 'Ανακοινώσεις επιλεγμένων ιστοσελίδων του ΤΕΙ Λάρισας. Παρέχονται από το http://cronos.teilar.gr'
+        elif page == u'blog':
+            return 'Blog posts του http://cronos.teilar.gr'
 
     def items(self, obj):
-        all_announcements = []
-        all_announcements_ids = [obj.get_profile().school]
-        try:
-            all_announcements_ids += obj.get_profile().eclass_lessons.split(',')
-            all_announcements_ids += obj.get_profile().other_announcements.split(',')
-            all_announcements_ids += obj.get_profile().teacher_announcements.split(',')
-        except:
-            pass
-        return Announcements.objects.filter(urlid__urlid__in = all_announcements_ids).order_by('-date_fetched')[:30]
+        user = obj[0]
+        page = obj[1]
+        posts = get_posts(user, None, page)
+        title = posts.pop()
+        return posts
+
+    def item_title(self, item):
+        return item.title
+
+    def item_link(self, item):
+        return u'http://cronos.teilar.gr/posts/' + str(item.id)
 
     def item_author_name(self, item):
-        return item.author()
+        return item.creator
+
+    def item_author_link(self, item):
+        return item.creator_url
+
+    def item_author_email(self, item):
+        return item.creator.content_object.email
+
+    def item_pubdate(self, item):
+        return item.pubdate
+
+    def item_description(self, item):
+        return item.summary
+
+    def item_enclosure(self, item):
+        return enclosure
+
+    def item_enclosure_mime_type(self, item):
+        return mimetypes.type_map[enclosure_link.split('.')[-1]]
