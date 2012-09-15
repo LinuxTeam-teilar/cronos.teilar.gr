@@ -3,7 +3,6 @@
 from cronos.common.log import CronosError, log_extra_data
 from bs4 import BeautifulSoup
 import logging
-import pycurl
 import requests
 
 logger_syslog = logging.getLogger('cronos')
@@ -102,60 +101,32 @@ def dionysos_auth_login(username, password, url = None, request = None):
         response.encoding = 'windows-1253'
     return response.text
 
-def eclass_login(username, password):
-    b = StringIO.StringIO()
-    conn = pycurl.Curl()
-    login_form_seq = [
-        ('uname', username),
-        ('pass', password),
-        ('submit', 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82')
-    ]
-    login_form_data = urllib.urlencode(login_form_seq)
-    conn.setopt(pycurl.FOLLOWLOCATION, 1)
-    conn.setopt(pycurl.POSTFIELDS, login_form_data)
-    conn.setopt(pycurl.URL, 'http://e-class.teilar.gr/index.php')
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
-    conn.perform()
-    soup = BeautifulSoup(unicode(b.getvalue(), 'utf-8', 'ignore'))
+def eclass_auth_login(username, password, request = None):
+    '''
+    Authentication to eclass
+    '''
+    eclass_session = requests.session()
+    login_data = {
+        'uname': username,
+        'pass': password,
+        'submit': 'E%95%CE%AF%CF%83%CE%BF%CE%B4%CE%BF%CF%82',
+    }
+    '''
+    Check if eclass is up
+    '''
+    response = eclass_session.post('http://openclass.teilar.gr', login_data)
     try:
-        if soup.find('div', 'user').contents[0] == '&nbsp;':
-            return 1
-        else:
-            raise
-    except:
-        return unicode(b.getvalue(), 'utf-8', 'ignore')
-
-def webmail_auth_login(url, username, password):
-    b = StringIO.StringIO()
-    conn = pycurl.Curl()
-    fd, cookie_path = tempfile.mkstemp(prefix='webmail_', dir='/tmp')
-    login_form_seq = [
-        ('login_username', username),
-        ('secretkey', password),
-        ('js_autodetect_results', '1'),
-        ('just_logged_in', '1')
-    ]
-    login_form_data = urllib.urlencode(login_form_seq)
-    conn.setopt(pycurl.FOLLOWLOCATION, 0)
-    conn.setopt(pycurl.COOKIEFILE, cookie_path)
-    conn.setopt(pycurl.COOKIEJAR, cookie_path)
-    conn.setopt(pycurl.URL, 'http://myweb.teilar.gr')
-    conn.setopt(pycurl.POST, 0)
-    conn.perform()
-    conn.setopt(pycurl.URL, 'http://myweb.teilar.gr/src/redirect.php')
-    conn.setopt(pycurl.POST, 1)
-    conn.setopt(pycurl.POSTFIELDS, login_form_data)
-    conn.setopt(pycurl.WRITEFUNCTION, b.write)
-    conn.perform()
-    soup = BeautifulSoup(b.getvalue().decode('iso-8859-7'))
+        response = eclass_session.post('http://openclass.teilar.gr', login_data)
+    except Exception as error:
+        logger_syslog.warning(error, extra = log_extra_data(username, request))
+        raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το openclass.teilar.gr')
+    '''
+    Check if the login is successful
+    '''
     try:
-        if soup.title.contents[0].split('-')[2].strip() == 'Άγνωστος χρήστης η εσφαλμένος κωδικός.':
-            return 1
+        soup = BeautifulSoup(response.text).find_all('p', 'alert1')[0]
+        if soup.contents[0] == u'Λάθος στοιχεία.':
+            return
     except:
-        if url == 0:
-            return (b.getvalue()).decode('iso-8859-7')
-        conn.setopt(pycurl.URL, url)
-        conn.perform()
-        os.close(fd)
-        os.remove(cookie_path)
-        return (b.getvalue()).decode('iso-8859-7')
+        pass
+    return response.text
