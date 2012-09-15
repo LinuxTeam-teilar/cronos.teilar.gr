@@ -48,7 +48,7 @@ def get_creator(post, creator):
         pass
     return post
 
-def get_posts(request, id, title):
+def get_posts(user, id, page):
     '''
     Prints posts
     '''
@@ -56,7 +56,8 @@ def get_posts(request, id, title):
     following_authors = []
     following_meta_authors = []
     creators = []
-    if title == u'Άρθρο':
+    title = []
+    if page == u'post':
         '''
         If the post ID is passed in the URL, only
         this post will be shown
@@ -66,11 +67,12 @@ def get_posts(request, id, title):
         Add creator's URL, mail and avatar in the post
         '''
         post = get_creator(post, post.creator.content_object)
-        if not request.user.is_authenticated():
+        if not user.is_authenticated():
             if post.creator_url != u'http://cronos.teilar.gr':
                 return [u'Login Required']
-        return [post]
-    elif title == u'Ανακοινώσεις':
+        title = u'Άρθρο'
+        return [post, title]
+    elif page == u'announcements':
         '''
         The following list has ManyToMany fields from UserProfile. In order
         to get each one of the authors that are included there, we need to
@@ -78,23 +80,30 @@ def get_posts(request, id, title):
         one of their contents.
         '''
         following_meta_authors = [
-            request.user.get_profile().following_eclass_lessons,
-            request.user.get_profile().following_teachers,
-            request.user.get_profile().following_websites,
-            request.user.get_profile().following_blogs,
+            user.get_profile().following_eclass_lessons,
+            user.get_profile().following_teachers,
+            user.get_profile().following_websites,
+            user.get_profile().following_blogs,
         ]
         '''
         Add the school in the following authors as well
         '''
-        following_authors.append(request.user.get_profile().school)
-    elif title == u'Φοιτητές':
-        following_meta_authors.append(request.user.get_profile().students)
-    elif title == u'Blog':
+        following_authors.append(user.get_profile().school)
+        title = u'Ανακοινώσεις'
+    elif page == u'students':
+        following_meta_authors.append(user.get_profile().students)
+        title = u'Blogs Φοιτητών'
+    elif page == u'blog':
         following_authors.append(websites.objects.get(url=u'http://cronos.teilar.gr'))
-    elif title == u'Τμήμα':
-        following_authors.append(departments.objects.get(url__endswith = '=' + id))
-    elif title == u'Καθηγητής':
-        following_authors.append(teachers.objects.get(url__endswith = '=' + id))
+        title = u'Blog'
+    elif page == u'department':
+        department = departments.objects.get(url__endswith = '=' + id)
+        following_authors.append(department)
+        title = u'Ανακοινώσεις: %s' % department.name
+    elif page == u'teacher':
+        teacher = teachers.objects.get(url__endswith = '=' + id)
+        following_authors.append(teacher)
+        title = u'Ανακοινώσεις: %s' % teacher.name
     '''
     Get authors from the ManyToMany fields
     '''
@@ -122,13 +131,15 @@ def get_posts(request, id, title):
         Add the post in the list of the wanted posts
         '''
         posts.append(post)
+    posts.append(title)
     return posts
 
-def posts(request, id, title):
+def posts(request, id, page):
     if not request.user.is_authenticated():
-        if title in [u'Ανακοινώσεις', u'Φοιτητές', u'Τμήμα', u'Καθηγητής']:
+        if page != u'blog':
             return HttpResponseRedirect('/login/?next=%s' % request.path)
-    posts = get_posts(request, id, title)
+    posts = get_posts(request.user, id, page)
+    title = posts.pop()
     try:
         if posts[0] == u'Login Required':
             return HttpResponseRedirect('/login/?next=%s' % request.path)
