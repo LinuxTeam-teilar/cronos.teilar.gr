@@ -6,13 +6,11 @@
 {% endblock %}
 
 {% block more %}
-    <link rel="alternate" type="application/rss+xml" title="{{ title }} RSS"
     {% if title == "Ανακοινώσεις" %}
-        href="/announcements/{{ user }}/feed"
+        <link rel="alternate" type="application/rss+xml" title="{{ title }} RSS" href="/announcements/{{ user }}/feed" />
     {% elif title == "Blog" %}
-        href="blog/feed"
+        <link rel="alternate" type="application/rss+xml" title="{{ title }} RSS" href="/blog/feed" />
     {% endif %}
-    />
 {% endblock %}
 
 {% block extra_js_top %}
