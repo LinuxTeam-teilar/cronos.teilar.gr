@@ -50,7 +50,10 @@ class PostsFeed(Feed):
         return item.creator_url
 
     def item_author_email(self, item):
-        return item.creator.content_object.email
+        try:
+            return item.creator.content_object.email
+        except:
+            pass
 
     def item_pubdate(self, item):
         return item.pubdate
