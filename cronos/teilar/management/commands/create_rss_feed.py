@@ -119,7 +119,7 @@ class Command(BaseCommand):
                     try:
                         enclosure_link = soup.find('a', 'BlackText11Bold')['href']
                         mimetypes.init()
-                        enclosure_mimetype = mimetypes.type_map[enclosure_link.split('.')[-1]]
+                        enclosure_mimetype = mimetypes.types_map['.' + enclosure_link.split('.')[-1]]
                         enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
                     except:
                         enclosure = None
@@ -189,8 +189,8 @@ class Command(BaseCommand):
                     description = temp_td_blacktext11[1]
                     try:
                         enclosure_link = announcement.find('a', 'BlackText11Bold')['href']
-                        mimetypes = init()
-                        enclosure_mimetype = mimetypes.type_map[enclosure_link.split('.')[-1]]
+                        mimetypes.init()
+                        enclosure_mimetype = mimetypes.types_map['.' + enclosure_link.split('.')[-1]]
                         enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
                     except Exception as error:
                         enclosure = None
