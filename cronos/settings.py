@@ -2,6 +2,7 @@
 
 # Django settings for Cronos project.
 
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
 import os
 
 # Full path of the project dir
@@ -103,6 +104,10 @@ TEMPLATE_DIRS = (
     PROJECT_ROOT + '/cronos/templates/'
 )
 
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
+)
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,6 +118,7 @@ INSTALLED_APPS = (
     'cronos.accounts',
     'cronos.posts',
     'cronos.teilar',
+    'endless_pagination',
     'tests',
 )
 

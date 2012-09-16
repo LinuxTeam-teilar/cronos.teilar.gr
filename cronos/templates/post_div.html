@@ -1,0 +1,18 @@
+{% load endless %}
+{% load staticfiles %}
+
+{% paginate posts %}
+{% for post in posts %}
+    <div class="entry announcement">
+        <h3><a href="/posts/{{ post.id }}">{{ post.title }}</a></h3>
+        <img src="{% static post.avatar %}" />
+        <p><span><strong>Από:</strong> {{ post.creator }} (<a href="{{ post.creator_url }}">Ιστοσελίδα</a>{% if post.creator_email %}, <a href="mailto:{{ post.creator_email }}">email</a>{% endif %})
+        </span><br />
+        <span><strong>Ημερομηνία:</strong> {{ post.pubdate }}</span></p><br />
+        <p class="antext">{{ post.summary|safe }}</p>
+        {% if post.enclosure %}
+        <p class="more"><a href="{{ post.enclosure }}">Επισυναπτόμενο αρχείο</a></p>
+        {% endif %}
+    </div>
+{% endfor %}
+{% show_more %}

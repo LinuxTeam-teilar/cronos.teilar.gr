@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from endless_pagination.decorators import page_template
 
 def get_creator(post, creator):
     '''
@@ -134,7 +135,8 @@ def get_posts(user, id, page):
     posts.append(title)
     return posts
 
-def posts(request, id, page):
+@page_template("post_div.html")
+def posts(request, id, page, template = "posts.html", extra_context = None):
     if not request.user.is_authenticated():
         if page != u'blog':
             return HttpResponseRedirect('/login/?next=%s' % request.path)
@@ -145,7 +147,7 @@ def posts(request, id, page):
             return HttpResponseRedirect('/login/?next=%s' % request.path)
     except:
         pass
-    return render_to_response('posts.html', {
-            'posts': posts,
-            'title': title,
-        }, context_instance = RequestContext(request))
+    context = {'posts': posts, 'title': title}
+    if extra_context:
+        context.update(extra_context)
+    return render_to_response(template, context, context_instance = RequestContext(request))
