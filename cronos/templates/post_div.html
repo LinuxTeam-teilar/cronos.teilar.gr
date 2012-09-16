@@ -8,29 +8,29 @@
             <h3><a href="/posts/{{ post.id }}">{{ post.title }}</a></h3>
             <div class="post_header">
                 {% if post.title|length > 55 %}
-                    <div style="padding-top:45px;">
+                <div style="padding-top:45px;">
                 {% else %}
-                    <div style="padding-top:20px;">
+                <div style="padding-top:20px;">
                 {% endif %}
-                <img src="{% static post.avatar %}" />
-                <p>
-                <strong>Από:</strong> {{ post.creator }} (<a href="{{ post.creator_url }}">Ιστοσελίδα</a>{% if post.creator_email %}, <a href="mailto:{{ post.creator_email }}">email</a>{% endif %})
-                <br />
-                <strong>Ημερομηνία:</strong> {{ post.pubdate }}
-                <br />
-                </p>
+                    <img src="{% static post.avatar %}" />
+                    <p>
+                    <strong>Από:</strong> {{ post.creator }} (<a href="{{ post.creator_url }}">Ιστοσελίδα</a>{% if post.creator_email %}, <a href="mailto:{{ post.creator_email }}">email</a>{% endif %})
+                    <br />
+                    <strong>Ημερομηνία:</strong> {{ post.pubdate }}
+                    <br />
+                    </p>
                 </div>
-             </div>
-             <p>
-             <br />
-             <div class="post_content">
-                  {{ post.summary|safe }}
-                  {% if post.enclosure %}
-                     <div class="more"><a href="{{ post.enclosure }}">Επισυναπτόμενο αρχείο</a></div>
-                  {% endif %}
-              </div>
-              </p>
-         </div>
+            </div>
+            <p>
+            <br />
+            <div class="post_content">
+                {{ post.summary|safe }}
+                {% if post.enclosure %}
+                    <div class="more"><a href="{{ post.enclosure }}">Επισυναπτόμενο αρχείο</a></div>
+                {% endif %}
+            </div>
+            </p>
+        </div>
     </div>
 {% endfor %}
 {% show_more %}
