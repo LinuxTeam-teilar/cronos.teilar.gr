@@ -1,56 +1,30 @@
 {% extends "base.html" %}
 
 {% block title %}
-Eclass | 
+    Eclass | 
 {% endblock %}
+
 {% block content %}
-    {% for item in headers %}
-        <div class="entry">
-        <h3>{{item|safe}}</h3>
-        <ul>
-        {%ifequal forloop.counter0 0 %}
-            {% if eclass_lessons %}
-                {% for i in eclass_lessons %}
-                <li>
-                    {% for j in i %}
-                        {{j|safe}}{% cycle ':' '' %}
-                    {% endfor %}
-                </li>
-                {% endfor %}
-            {% else %}
-                <li>Δεν υπάρχουν μαθήματα προς εμφάνιση.</li>
-            {% endif %}
-        {% endifequal %}
-        {% ifequal forloop.counter0 1 %}
-            {% if deadlines %}
-                {% for i in deadlines %}
-                <li>
-                    {% for j in i %}
-                        {% cycle '<b>' '</b><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Τίτλος:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Προθεσμία Υποβολής:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Κατάσταση:</i> ' %}{{j|safe}}
-                    {% endfor %}
-                </li>
-                {% endfor %}
-            {% else %}
-                <li>Δεν υπάρχουν εργασίες προς παράδοση.</li>
-            {% endif %}
-        {% endifequal %}
-        {% ifequal forloop.counter0 2 %}
-            {% if documents %}
-                {% for i in documents %}
-                <li>
-                    {% for j in i %}
-                        {% cycle '<b>' '</b><br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Όνομα Αρχείου:</i> ' '<br />&nbsp;&nbsp;&nbsp;&nbsp;<i>Ημερομηνία:</i> ' %}{{j|safe}}
-                    {% endfor %}
-                </li>
-                {% endfor %}
-            {% else %}
-                <li>Δεν υπάρχουν έγγραφα προς εμφάνιση.</li>
-            {% endif %}
-        {% endifequal %}
-        </ul>
-        </div>
-    {% endfor %}
     <div id="notifications">
-        <p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από την ιστοσελίδα του <a href="http://e-class.teilar.gr">e-class</a>, επισκευτείτε τις <a href="/settings/#teilar">ρυθμίσεις</a> για να την ανανεώσετε και στην παρούσα</p>
+        <p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από την ιστοσελίδα του <a href="http://openclass.teilar.gr">openclass</a>, επισκευτείτε τις <a href="/settings/#teilar">ρυθμίσεις</a> για να την ανανεώσετε και στην παρούσα</p>
+    </div>
+
+    <div class="entry">
+        <h3>Τα Μαθήματά μου</h3>
+        {% if eclass_lessons %}
+            <ul>
+            {% for lesson in eclass_lessons %}
+                <li><strong><a href="{{ lesson.url }}">{{ lesson.name }}</a></strong>
+                <ul>
+                    <li>Καθηγητής: {{ lesson.teacher }}</li>
+                    <li>Σχολή: {{ lesson.faculty }}</li>
+                    <li>Τύπος: {{ lesson.ltype }}</li>
+                </ul>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            Δεν υπάρχουν μαθήματα προς εμφάνιση.
+        {% endif %}
     </div>
 {% endblock %}
