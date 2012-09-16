@@ -58,8 +58,18 @@ class PostsFeed(Feed):
     def item_description(self, item):
         return item.summary
 
-    def item_enclosure(self, item):
-        return enclosure
+    def item_enclosure_url(self, item):
+        return item.enclosure
 
     def item_enclosure_mime_type(self, item):
-        return mimetypes.type_map[enclosure_link.split('.')[-1]]
+        try:
+            mimetypes.init()
+            extension = '.' + item.enclosure.split('.')[-1]
+            enclosure_mimetype = mimetypes.types_map[extension]
+            print enclosure_mimetype
+        except:
+            enclosure_mimetype = None
+        return enclosure_mimetype
+
+    def item_enclosure_length(self):
+        return
