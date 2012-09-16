@@ -24,16 +24,9 @@
         στοιχεία στην κατάλληλη φόρμα</p>
         <table>
             <tr>
-                <th><i><a href="http://e-class.teilar.gr">e-class.teilar.gr</a>: </i>
+                <th><a href="http://e-class.teilar.gr">e-class.teilar.gr</a>: 
                     {% if user.get_profile.eclass_username %}
                         {{ user.get_profile.eclass_username }}
-                    {% else %}
-                        ----
-                    {% endif %}
-                </th>
-                <th><i><a href="http://myweb.teilar.gr">myweb.teilar.gr</a>: </i>
-                    {% if user.get_profile.webmail_username %}
-                        {{ user.get_profile.webmail_username }}
                     {% else %}
                         ----
                     {% endif %}
@@ -47,20 +40,6 @@
                         {% endfor %}
                         <input class="button" type="submit" value=
                         {% if user.get_profile.eclass_username %}
-                            "Ανανέωση"
-                        {% else %}
-                            "Προσθήκη"
-                        {% endif %}
-                        />
-                    </form>
-                </td>
-                <td>
-                    <form action="." method="POST" align="center">
-                        {% for field in webmail_form %}
-                            {{ field }}<br />
-                        {% endfor %}
-                        <input class="button" type="submit" value=
-                        {% if user.get_profile.webmail_username %}
                             "Ανανέωση"
                         {% else %}
                             "Προσθήκη"

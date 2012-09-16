@@ -144,37 +144,6 @@ def settings(request):
                         msg = u'Λάθος στοιχεία openclass'
                 except CronosError as error:
                     msg = error.value
-        elif request.POST.get('webmail_username'):
-            '''
-            Check if the myweb.teilar.gr credentials already exist in the DB,
-            but belong to another student's account
-            '''
-            try:
-                user = UserProfile.objects.get(user__webmail_username = request.POST.get('webmail_username'))
-                if user.username != request.user.username:
-                    raise CronosError('Τα στοιχεία myweb.teilar.gr υπάρχουν ήδη σε κάποιον άλλο λογαριασμό')
-            except User.DoesNotExist:
-                pass
-            '''
-            Update myweb.teilar.gr credentials
-            '''
-            webmail_form = WebmailForm(request.POST)
-            if webmail_form.is_valid():
-                '''
-                Check if the credentials are correct
-                '''
-                output = webmail_auth_login(0, request.POST.get('webmail_username'), request.POST.get('webmail_password'))
-                if output:
-                    '''
-                    Credentials are correct, update them
-                    '''
-                    user = UserProfile.objects.get(user__username == request.user.username)
-                    user.webmail_username = request.POST.get('webmail_username')
-                    user.webmail_password = request.POST.get('webmail_password')
-                    user.save()
-                    msg = 'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
-                else:
-                    raise CronosError('Τα στοιχεία δεν επαληθεύτηκαν από το myweb.teilar.gr')
         elif request.POST.get('teachers'):
             if request.POST.get('teachers_selected'):
                 '''
