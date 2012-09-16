@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from endless_pagination.decorators import page_template
+import mimetypes
 
 def get_creator(post, creator):
     '''
@@ -47,6 +48,24 @@ def get_creator(post, creator):
             post.avatar = u'img/avatar_%s.png' % url
     except:
         pass
+    return post
+
+def get_enclosure(post):
+    try:
+        '''
+        Fix enclosure's URL from relative to absolute
+        '''
+        if not post.enclosure.startswith('http://'):
+            url = post.url.split('/')[2]
+            post.enclosure = 'http://%s/%s' % (url, post.enclosure)
+        '''
+        Map the enclosure's extension to a known mimetype
+        '''
+        mimetypes.init()
+        extension = '.' + post.enclosure.split('.')[-1]
+        post.enclosure_mimetype = mimetypes.types_map[extension]
+    except AttributeError:
+        post.enclosure = None
     return post
 
 def get_posts(user, id, page):
@@ -128,6 +147,10 @@ def get_posts(user, id, page):
         Add creator's URL, mail and avatar in the post
         '''
         post = get_creator(post, post.creator.content_object)
+        '''
+        Get enclosure URL and mimetype
+        '''
+        post = get_enclosure(post)
         '''
         Add the post in the list of the wanted posts
         '''
