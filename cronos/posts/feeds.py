@@ -66,7 +66,6 @@ class PostsFeed(Feed):
             mimetypes.init()
             extension = '.' + item.enclosure.split('.')[-1]
             enclosure_mimetype = mimetypes.types_map[extension]
-            print enclosure_mimetype
         except:
             enclosure_mimetype = None
         return enclosure_mimetype
