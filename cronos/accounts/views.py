@@ -4,6 +4,7 @@ from cronos import eclass_auth_login
 from cronos.common.log import CronosError, log_extra_data
 from cronos.common.encryption import encrypt_password
 from cronos.accounts.forms import *
+from cronos.accounts.get_student import get_eclass_lessons
 from cronos.accounts.models import UserProfile
 from cronos.teilar.models import Teachers, Websites
 from django.contrib.auth import login, authenticate, logout
@@ -129,14 +130,15 @@ def settings(request):
                     if output:
                         '''
                         Credentials are correct, update them along with the
-                        eclass lessons list
+                        eclass lessons
                         '''
-    #                    eclass_lessons = get_eclass_lessons(output)
                         user = UserProfile.objects.get(pk=request.user.id)
                         user.eclass_username = request.POST.get('eclass_username')
                         user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
                         user.save()
-    #                    user.eclass_lessons = ','.join(eclass_lessons)
+                        eclass_lessons = get_eclass_lessons(output)
+                        for lesson in eclass_lessons:
+                            request.user.get_profile().following_eclass_lessons.add(lesson)
                         msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
                     else:
                         msg = u'Λάθος στοιχεία openclass'

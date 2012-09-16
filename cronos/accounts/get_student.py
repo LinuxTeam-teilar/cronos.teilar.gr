@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.log import CronosError, log_extra_data
+from cronos.teilar.models import EclassLessons
 from cronos import dionysos_auth_login
 from bs4 import BeautifulSoup
 import logging
@@ -233,17 +234,25 @@ def get_dionysos_grades(username = None, password = None):
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Bαθμολογίας')
 
-def get_eclass_lessons(output = None, request = None, form = None):
+def get_eclass_lessons(output = None, request = None):
+    '''
+    Get eclass lessons
+    '''
     try:
-        soup = BeautifulSoup(output).find('table', 'FormData')
-        eclass_lessons = ''
-        i = 0
-        for item in soup.findAll('a'):
-            if (i % 2 == 0):
-                eclass_lessons += '%s,' % (str(item.contents[0].split('-')[0]).strip())
-            i += 1
-        return eclass_lessons[:-1]
+        soup = BeautifulSoup(output).find('table', 'tbl_lesson').find_all('span', 'smaller')
+        eclass_lessons = []
+        for item in soup:
+            '''
+            Parse each lesson
+            '''
+            lesson = item.contents[0][1:-1]
+            '''
+            Get the lesson object from the DB
+            '''
+            lesson = EclassLessons.objects.get(url = u'http://openclass.teilar.gr/courses/%s/' % lesson)
+            eclass_lessons.append(lesson)
+        return eclass_lessons
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(request, form))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης μαθημάτων e-class')
