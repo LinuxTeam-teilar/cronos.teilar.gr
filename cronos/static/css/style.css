@@ -243,6 +243,8 @@ th { color: #786721; width: 280px; }
     text-decoration:none;
 }
 
-#content .announcement h3>a:link, #content .announcement h3>a:visited { border:0; }
-#content .announcement img { float:left; margin:3px; padding-right:5px; }
+#content .post_content h3 {position:relative !important; padding-bottom:27px;}
+#content .post_content { display: block; width: 95%; margin-left: auto; margin-right: auto; }
+#content .post h3>a:link, #content .post_header h3>a:visited { border:0; }
+#content .post_header img { float:left; margin:3px; padding-right:5px; }
 #content .more { text-align:right;}
