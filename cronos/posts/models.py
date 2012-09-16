@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib.auth.models import User
 
 class Authors(models.Model):
     content_type = models.ForeignKey(ContentType)
@@ -23,3 +24,8 @@ class Posts(models.Model):
 
     def __unicode__(self):
         return self.title
+
+class Comments(models.Model):
+    author = models.OneToOneField(User)
+    post = models.ForeignKey(Posts)
+    summary = models.TextField(null = True)
