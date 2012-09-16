@@ -5,7 +5,7 @@
 
 # The listed admins will receive mail notifications
 ADMINS = (
-    ('Cronos development team', 'user@localhost'),
+    ('admin', 'admin@localhost'),
 )
 
 # DEBUG Options: Select "True" for development use, "False" for production use

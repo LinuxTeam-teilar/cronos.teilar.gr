@@ -1,0 +1,42 @@
+[
+  {
+    "pk": 1,
+    "model": "auth.user",
+    "fields": {
+      "username": "admin",
+      "first_name": "\u0394\u0399\u0391\u03a7\u0395\u0399\u03a1\u0399\u03a3\u03a4\u0397\u03a3",
+      "last_name": "\u0394\u0399\u0391\u03a7\u0395\u0399\u03a1\u0399\u03a3\u03a4\u0397\u03a3",
+      "is_active": true,
+      "is_superuser": true,
+      "is_staff": true,
+      "last_login": "2005-11-10T23:04:45Z",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$10000$OxHQrvkZhCnB$+yFH/w77lfhjg1Fzwxd0SSsDTS+4vW+tUqOgVdU0mmY=",
+      "email": "",
+      "date_joined": "2005-11-10T23:04:45Z"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "accounts.userprofile",
+    "fields": {
+      "following_websites": [],
+      "dionysos_password": "",
+      "school": 6,
+      "following_teachers": [],
+      "eclass_username": null,
+      "introduction_year": "2004\u03a7",
+      "semester": "8",
+      "following_eclass_lessons": [],
+      "webmail_password": null,
+      "eclass_password": null,
+      "grades": null,
+      "webmail_username": null,
+      "declaration": null,
+      "following_blogs": [],
+      "dionysos_username": "admin",
+      "registration_number": "\u03a409999"
+    }
+  }
+]
