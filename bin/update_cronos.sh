@@ -36,11 +36,12 @@ CRONOS_PATH=
 COLLECTSTATIC=
 GITPULL=
 DB=
-while getopts p:cudhv arg; do
+while getopts p:curdhv arg; do
     case ${arg} in
         p) CRONOS_PATH=${OPTARG} ;;
         c) COLLECTSTATIC=1 ;;
         u) GITPULL=1 ;;
+        r) RSS=1 ;;
         d) DB=1 ;;
         v) VERBOSE=1 ;;
         h) help ;;
@@ -93,11 +94,13 @@ if [[ -n ${COLLECTSTATIC} ]]; then
     python manage.py collectstatic --noinput > /dev/null
 fi
 
-if [[ -n ${DB} ]]; then
-    [[ -n ${VERBOSE} ]] && echo "Generate the custom RSS files"
+if [[ -n ${RSS} ]]; then
+    [[ -n ${VERBOSE} ]] && echo "Generating the custom RSS files"
     python manage.py create_rss_feed
+fi
 
-    [[ -n ${VERBOSE} ]] && echo "Populate the DB"
+if [[ -n ${DB} ]]; then
+    [[ -n ${VERBOSE} ]] && echo "Populating the DB"
     for script in ${SCRIPTS[@]}; do
         [[ -n ${VERBOSE} ]] && echo "Run manage.py get_${script}"
         python manage.py get_${script}
