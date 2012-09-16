@@ -68,6 +68,29 @@ class Command(BaseCommand):
             logger_mail.exception(error)
         return
 
+    def get_enclosure(self, soup):
+        '''
+        Create enclosure object
+        '''
+        try:
+            enclosure_url = soup.find('a', 'BlackText11Bold')['href']
+            '''
+             Fix enclosure's URL from relative to absolute
+            '''
+            if not enclosure_url.startswith('http://'):
+                url = post.url.split('/')[2]
+                enclosure = 'http://www.teilar.gr/%s' % enclosure_url
+            '''
+            Map the enclosure's extension to a known mimetype
+            '''
+            mimetypes.init()
+            extension = '.' + enclosure_url.split('.')[-1]
+            enclosure_mimetype = mimetypes.types_map[extension]
+            enclosure = feedgenerator.Enclosure(enclosure_url, 'Unknown', enclosure_mimetype)
+        except:
+            enclosure = None
+        return enclosure
+
     def get_teilar(self):
         '''
         Grab announcements from the following websites and
@@ -116,13 +139,7 @@ class Command(BaseCommand):
                     pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
                     title = temp_td_oratext[1].contents[0]
                     description = unicode(soup.find('td', 'BlackText11'))
-                    try:
-                        enclosure_link = soup.find('a', 'BlackText11Bold')['href']
-                        mimetypes.init()
-                        enclosure_mimetype = mimetypes.types_map['.' + enclosure_link.split('.')[-1]]
-                        enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
-                    except:
-                        enclosure = None
+                    enclosure = self.get_enclosure(soup)
                 except Exception as error:
                     logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_url))
                     logger_mail.exception(error)
@@ -187,13 +204,7 @@ class Command(BaseCommand):
                     pubdate = announcement.find('td', 'OraText').contents[0].split('/')
                     pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
                     description = temp_td_blacktext11[1]
-                    try:
-                        enclosure_link = announcement.find('a', 'BlackText11Bold')['href']
-                        mimetypes.init()
-                        enclosure_mimetype = mimetypes.types_map['.' + enclosure_link.split('.')[-1]]
-                        enclosure = feedgenerator.Enclosure(enclosure_link, 'Unknown', enclosure_mimetype)
-                    except Exception as error:
-                        enclosure = None
+                    enclosure = self.get_enclosure(soup)
                 except Exception as error:
                     logger_syslog.error(error, extra = log_extra_data(author_name))
                     logger_mail.exception(error)
