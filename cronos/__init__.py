@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from cronos.common.log import CronosError, log_extra_data
+from cronos.common.exceptions import CronosError
+from cronos.common.log import log_extra_data
 from bs4 import BeautifulSoup
 import logging
 import requests

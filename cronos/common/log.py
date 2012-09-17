@@ -2,15 +2,6 @@
 
 from django.conf import settings
 
-class CronosError(Exception):
-    '''
-    Custom Exception class
-    '''
-    def __init__(self, value):
-        self.value = value
-    def __unicode__(self):
-        return repr(self.value)
-
 def log_extra_data(id_name = None, request = None):
     '''
     Extra data needed by the custom formatter

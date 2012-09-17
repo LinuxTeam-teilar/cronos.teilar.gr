@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from cronos import eclass_auth_login
-from cronos.common.log import CronosError, log_extra_data
+from cronos.common.exceptions import CronosError
+from cronos.common.log import log_extra_data
 from cronos.common.encryption import encrypt_password
 from cronos.accounts.forms import *
 from cronos.accounts.get_student import get_eclass_lessons

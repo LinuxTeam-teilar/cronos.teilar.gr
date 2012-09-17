@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from cronos.common.log import CronosError, log_extra_data
+from cronos.common.exceptions import CronosError
+from cronos.common.log import log_extra_data
 from cronos.posts.models import Authors
 from cronos.teilar.models import Departments
 from cronos import teilar_anon_login
