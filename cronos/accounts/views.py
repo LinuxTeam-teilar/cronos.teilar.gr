@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos import eclass_auth_login
-from cronos.common.exceptions import CronosError
+from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.encryption import encrypt_password
 from cronos.accounts.forms import *
@@ -39,14 +39,12 @@ def accounts_login(request):
             it was successful. If it retrieves None then it failed to login
             '''
             user = authenticate(username = username, password = password, request = request)
-            if not user:
-                raise CronosError(u'Λάθος στοιχεία')
             if user.is_active:
                 login(request, user)
                 if not form.cleaned_data['remember']:
                     request.session.set_expiry(0)
                 return HttpResponseRedirect('/')
-        except CronosError as error:
+        except (CronosError, LoginError) as error:
             msg = error.value
     else:
         if request.user.is_authenticated():
@@ -128,22 +126,19 @@ def settings(request):
                 '''
                 try:
                     output = eclass_auth_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-                    if output:
-                        '''
-                        Credentials are correct, update them along with the
-                        eclass lessons
-                        '''
-                        user = UserProfile.objects.get(pk=request.user.id)
-                        user.eclass_username = request.POST.get('eclass_username')
-                        user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
-                        user.save()
-                        eclass_lessons = get_eclass_lessons(output)
-                        for lesson in eclass_lessons:
-                            request.user.get_profile().following_eclass_lessons.add(lesson)
-                        msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
-                    else:
-                        msg = u'Λάθος στοιχεία openclass'
-                except CronosError as error:
+                    '''
+                    Credentials are correct, update them along with the
+                    eclass lessons
+                    '''
+                    user = UserProfile.objects.get(pk=request.user.id)
+                    user.eclass_username = request.POST.get('eclass_username')
+                    user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
+                    user.save()
+                    eclass_lessons = get_eclass_lessons(output)
+                    for lesson in eclass_lessons:
+                        request.user.get_profile().following_eclass_lessons.add(lesson)
+                    msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+                except (CronosError, LoginError) as error:
                     msg = error.value
         elif request.POST.get('teachers'):
             if request.POST.get('teachers_selected'):

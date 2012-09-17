@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cronos.common.encryption import encrypt_password, decrypt_password
-from cronos.common.exceptions import CronosError
+from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.get_admins import get_admins_usernames, get_admins_mails
 from cronos.accounts.models import UserProfile
@@ -45,7 +45,7 @@ class DionysosTeilarAuthentication(object):
             '''
             user = User.objects.get(username = username)
             '''
-            quickly login if the user is one of the listed ADMINS
+            skip dionysos authentication if the user is one of the listed ADMINS
             '''
             if user.username in get_admins_usernames():
                 if user.check_password(password):
@@ -55,15 +55,19 @@ class DionysosTeilarAuthentication(object):
             credentials in dionysos.teilar.gr
             '''
             try:
-                if not dionysos_auth_login(username, password):
-                    return
+                dionysos_auth_login(username, password)
+            except LoginError:
+                '''
+                Authentication failed
+                '''
+                raise
             except CronosError:
                 '''
                 Connection issue with dionysos.teilar.gr. Try to authenticate
                 with the password stored in the DB instead
                 '''
                 if password != decrypt_password(user.get_profile().dionysos_password):
-                    return
+                    raise LoginError
         except User.DoesNotExist:
             '''
             If the user is not in the DB, try to log in with his
@@ -71,9 +75,6 @@ class DionysosTeilarAuthentication(object):
             '''
             try:
                 output = dionysos_auth_login(username, password, request = request)
-            except CronosError:
-                raise
-            if output:
                 '''
                 The credentials worked, try to create a user based on those credentials
                 '''
@@ -84,17 +85,14 @@ class DionysosTeilarAuthentication(object):
                     logger_syslog.error(error, extra = log_extra_data(username, request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης στοιχείων χρήστη')
-                try:
-                    credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
-                    credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
-                    credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
-                    credentials['semester'] = get_dionysos_semester(front_page, username, request)
-                    credentials['school'] = get_dionysos_school(front_page, username, request)
-                    credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
-                    credentials['declaration'] = get_dionysos_declaration(username, password, request)
-                    #credentials['grades'] = get_dionysos_grades(username, password, request)
-                except CronosError:
-                    raise
+                credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
+                credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
+                credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
+                credentials['semester'] = get_dionysos_semester(front_page, username, request)
+                credentials['school'] = get_dionysos_school(front_page, username, request)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
+                credentials['declaration'] = get_dionysos_declaration(username, password, request)
+                #credentials['grades'] = get_dionysos_grades(username, password, request)
                 try:
                     '''
                     Relate the webscraped school name with the one stored in the DB
@@ -104,12 +102,9 @@ class DionysosTeilarAuthentication(object):
                     logger_syslog.error(error, extra = log_extra_data(username, request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης της σχολής')
-                try:
-                    user = self.add_student_to_db(credentials, request)
-                except CronosError:
-                    raise
-            else:
-                return
+                user = self.add_student_to_db(credentials, request)
+            except (CronosError, LoginError):
+                raise
         return user
 
     def add_student_to_db(self, credentials, request):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from cronos.common.exceptions import CronosError
+from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from bs4 import BeautifulSoup
 import logging
@@ -91,7 +91,7 @@ def dionysos_auth_login(username, password, url = None, request = None):
                 The resulting HTML output still contains the login form, which means
                 that the authentication failed.
                 '''
-                return
+                raise LoginError
         except (NameError, AttributeError):
             pass
     else:
@@ -127,7 +127,7 @@ def eclass_auth_login(username, password, request = None):
     try:
         soup = BeautifulSoup(response.text).find_all('p', 'alert1')[0]
         if soup.contents[0] == u'Λάθος στοιχεία.':
-            return
-    except:
+            raise LoginError
+    except AttributeError:
         pass
     return response.text
