@@ -105,41 +105,45 @@ def settings(request):
     Process one of the form submissions
     '''
     if request.method == 'POST':
-        if request.POST.get('eclass_username'):
+        if request.POST.get('eclass_password'):
             '''
             Update eclass credentials
             '''
             eclass_credentials_form = EclassCredentialsForm(request.POST)
-            if eclass_credentials_form.is_valid():
+            if not request.user.get_profile().eclass_username:
                 '''
                 Check if the e-class.teilar.gr credentials already exist in the DB,
                 but belong to another student's account
                 '''
+                eclass_username = request.POST.get('eclass_username')
                 try:
-                    user = User.objects.get(userprofile__eclass_username = request.POST.get('eclass_username'))
+                    user = User.objects.get(userprofile__eclass_username = eclass_username)
                     if user.username != request.user.username:
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
                     pass
+            else:
+                eclass_username = request.user.get_profile().eclass_username
+            eclass_password = request.POST.get('eclass_password')
+            try:
                 '''
                 Check if the credentials are correct
                 '''
-                try:
-                    output = eclass_auth_login(request.POST.get('eclass_username'), request.POST.get('eclass_password'))
-                    '''
-                    Credentials are correct, update them along with the
-                    eclass lessons
-                    '''
-                    user = UserProfile.objects.get(pk=request.user.id)
-                    user.eclass_username = request.POST.get('eclass_username')
-                    user.eclass_password = encrypt_password(request.POST.get('eclass_password'))
-                    user.save()
-                    eclass_lessons = get_eclass_lessons(output)
-                    for lesson in eclass_lessons:
-                        request.user.get_profile().following_eclass_lessons.add(lesson)
-                    msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
-                except (CronosError, LoginError) as error:
-                    msg = error.value
+                output = eclass_auth_login(eclass_username, eclass_password)
+                '''
+                Credentials are correct, update them along with the
+                eclass lessons
+                '''
+                user = UserProfile.objects.get(pk=request.user.id)
+                user.eclass_username = eclass_username
+                user.eclass_password = encrypt_password(eclass_password)
+                user.save()
+                eclass_lessons = get_eclass_lessons(output)
+                for lesson in eclass_lessons:
+                    request.user.get_profile().following_eclass_lessons.add(lesson)
+                msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+            except (CronosError, LoginError) as error:
+                msg = error.value
         elif request.POST.get('teachers'):
             if request.POST.get('teachers_selected'):
                 '''

@@ -22,33 +22,24 @@
         κάποια από τις ακόλουθες υπηρεσίες του ΤΕΙ Λάρισας, ή εαν θέλετε να
         προσθέσετε κάποια από αυτές στο λογαριασμό σας στο Cronos, συμπληρώστε τα νέα
         στοιχεία στην κατάλληλη φόρμα</p>
-        <table>
-            <tr>
-                <th><a href="http://e-class.teilar.gr">e-class.teilar.gr</a>: 
-                    {% if user.get_profile.eclass_username %}
-                        {{ user.get_profile.eclass_username }}
-                    {% else %}
-                        ----
-                    {% endif %}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    <form action="." method="POST" align="center">{% csrf_token %}
-                        {% for field in eclass_credentials_form %}
-                            {{ field }}<br />
-                        {% endfor %}
-                        <input class="button" type="submit" value=
-                        {% if user.get_profile.eclass_username %}
-                            "Ανανέωση"
-                        {% else %}
-                            "Προσθήκη"
-                        {% endif %}
-                        />
-                    </form>
-                </td>
-            </tr>
-        </table>
+        <p><a href="http://e-class.teilar.gr">e-class.teilar.gr</a><br />
+            <form action="." method="POST">{% csrf_token %}
+                {% if user.get_profile.eclass_username %}
+                    {{ user.get_profile.eclass_username }}
+                {% else %}
+                    {{ eclass_credentials_form.eclass_username }}
+                {% endif %}
+                <br />
+                {{ eclass_credentials_form.eclass_password }}<br />
+                <input class="button" type="submit" value=
+                {% if user.get_profile.eclass_username %}
+                    "Ανανέωση"
+                {% else %}
+                    "Προσθήκη"
+                {% endif %}
+                />
+            </form>
+        </p>
     </div>
 
     <div class="entry" id="other">
