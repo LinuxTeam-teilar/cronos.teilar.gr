@@ -115,12 +115,16 @@ def eclass_auth_login(username, password, request = None):
     '''
     Check if eclass is up
     '''
-    response = eclass_session.post('http://openclass.teilar.gr', login_data)
     try:
         response = eclass_session.post('http://openclass.teilar.gr', login_data)
     except Exception as error:
         logger_syslog.warning(error, extra = log_extra_data(request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το openclass.teilar.gr')
+    '''
+    We perform a second login because the first one always fails for unknown reason,
+    probably because the first attempt stores the cookie and the second uses it
+    '''
+    response = eclass_session.post('http://openclass.teilar.gr', login_data)
     '''
     Check if the login is successful
     '''
