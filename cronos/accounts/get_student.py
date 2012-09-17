@@ -10,67 +10,97 @@ import logging
 logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
-def get_dionysos_last_name(front_page = None, username = None, request = None):
+def get_dionysos_last_name(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's last name from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        return unicode(front_page[5].find_all('td')[1].contents[0])
+        return unicode(output[5].find_all('td')[1].contents[0])
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Επωνύμου')
 
-def get_dionysos_first_name(front_page = None, username = None, request = None):
+def get_dionysos_first_name(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's first name from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        return unicode(front_page[6].find_all('td')[1].contents[0])
+        return unicode(output[6].find_all('td')[1].contents[0])
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Ονόματος')
 
-def get_dionysos_registration_number(front_page = None, username = None, request = None):
+def get_dionysos_registration_number(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's registration number from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        return unicode(front_page[7].find_all('td')[1].contents[0])
+        return unicode(output[7].find_all('td')[1].contents[0])
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Αριθμού Μητρώου')
 
-def get_dionysos_school(front_page = None, username = None, request = None):
+def get_dionysos_school(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's school from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        return unicode(front_page[8].findAll('td')[1].contents[0]).strip()
+        return unicode(output[8].find_all('td')[1].contents[0]).strip()
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Σχολής')
 
-def get_dionysos_semester(front_page = None, username = None, request = None):
+def get_dionysos_semester(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's semester from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        return unicode(front_page[9].findAll('td')[1].contents[0])
+        return unicode(output[9].findAll('td')[1].contents[0])
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Εξαμήνου')
 
-def get_dionysos_introduction_year(output = None, username = None, request = None):
+def get_dionysos_introduction_year(output = None, request = None, username = None, password = None):
     '''
     Retrieves student's introduction year from dionysos.teilar.gr
     '''
+    if not output:
+        try:
+            output = dionysos_auth_login(username, password, request, get_output = True)
+        except (CronosError, LoginError):
+            raise
     try:
-        soup = BeautifulSoup(output).findAll('table')[15]
+        soup = BeautifulSoup(output).find_all('table')[15]
         '''
         Introduction is in the following form:
         2004 - 2005 X or 2004 - 2005 E
@@ -79,11 +109,11 @@ def get_dionysos_introduction_year(output = None, username = None, request = Non
         if season is 'X', then year is first_year (2004X)
         if season is 'E', then year is second_year (2005E)
         '''
-        season = unicode(soup.findAll('span','tablecell')[1].contents[0])[0]
+        season = unicode(soup.find_all('span','tablecell')[1].contents[0])[0]
         if season == u'Ε':
-            year = unicode(soup.findAll('span','tablecell')[0].contents[0].split('-')[1])
+            year = unicode(soup.find_all('span','tablecell')[0].contents[0].split('-')[1])
         else:
-            year = unicode(soup.findAll('span','tablecell')[0].contents[0].split('-')[0])
+            year = unicode(soup.find_all('span','tablecell')[0].contents[0].split('-')[0])
         return year + season
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
@@ -111,7 +141,7 @@ def get_dionysos_declaration(username = None, password = None, request = None):
     '''
     try:
         url = 'https://dionysos.teilar.gr/unistudent/stud_vClasses.asp?studPg=1&mnuid=diloseis;showDil&'
-        output = dionysos_auth_login(username, password, url, request)
+        output = dionysos_auth_login(username, password, request, url)
         soup = BeautifulSoup(output).find_all('table')[13].find_all('table')[0]
 
         '''
@@ -135,6 +165,8 @@ def get_dionysos_declaration(username = None, password = None, request = None):
                 declaration[i] = unicode(declaration[i].contents[0]).strip()
             i += 1
         return ':'.join(declaration).replace('&amp;', '&')
+    except (CronosError, LoginError):
+        raise
     except Exception as error:
         logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)

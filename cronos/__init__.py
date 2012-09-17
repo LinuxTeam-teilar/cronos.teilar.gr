@@ -31,7 +31,7 @@ def teilar_anon_login(url = None, request = None):
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
     return response.text
 
-def dionysos_auth_login(username, password, url = None, request = None):
+def dionysos_auth_login(username, password, request = None, url = None, get_temp_tr = False):
     '''
     Try to connect to dionysos.teilar.gr and get the resulting HTML output.
     If URL is None, then an authentication attempt is also performed. In order
@@ -94,13 +94,22 @@ def dionysos_auth_login(username, password, url = None, request = None):
                 raise LoginError
         except (NameError, AttributeError):
             pass
+        output = response.text
+        if get_temp_tr:
+            '''
+            To fasten the parsing, we send a python list with two elements:
+            1) the full HTML output and 2) a list of all the <tr> tags from the
+            HTML output
+            '''
+            output = [output, soup.find_all('table')[14].find_all('tr')]
     else:
         '''
         Connect to the requested URL and return the HTML output
         '''
         response = dionysos_session.get(url)
         response.encoding = 'windows-1253'
-    return response.text
+        output = response.text
+    return output
 
 def eclass_auth_login(username, password, request = None):
     '''

@@ -74,23 +74,18 @@ class DionysosTeilarAuthentication(object):
             dionysos.teilar.gr account
             '''
             try:
-                output = dionysos_auth_login(username, password, request = request)
+                output, temp_tr = dionysos_auth_login(username, password, request, get_temp_tr = True)
+
                 '''
                 The credentials worked, try to create a user based on those credentials
                 '''
                 credentials = {'username': username, 'password': password}
-                try:
-                    front_page = BeautifulSoup(output).find_all('table')[14].find_all('tr')
-                except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(request))
-                    logger_mail.exception(error)
-                    raise CronosError(u'Αδυναμία ανάκτησης στοιχείων χρήστη')
-                credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
-                credentials['first_name'] = get_dionysos_first_name(front_page, username, request)
-                credentials['registration_number'] = get_dionysos_registration_number(front_page, username, request)
-                credentials['semester'] = get_dionysos_semester(front_page, username, request)
-                credentials['school'] = get_dionysos_school(front_page, username, request)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, username, request)
+                credentials['last_name'] = get_dionysos_last_name(temp_tr, request)
+                credentials['first_name'] = get_dionysos_first_name(temp_tr, request)
+                credentials['registration_number'] = get_dionysos_registration_number(temp_tr, request)
+                credentials['semester'] = get_dionysos_semester(temp_tr, request)
+                credentials['school'] = get_dionysos_school(temp_tr, request)
+                credentials['introduction_year'] = get_dionysos_introduction_year(output, request)
                 credentials['declaration'] = get_dionysos_declaration(username, password, request)
                 #credentials['grades'] = get_dionysos_grades(username, password, request)
                 try:
