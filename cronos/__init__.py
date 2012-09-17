@@ -14,7 +14,7 @@ def get_package_version():
 
 __version__ = get_package_version()
 
-def teilar_anon_login(url = None):
+def teilar_anon_login(url = None, request = None):
     '''
     Try to connect to *.teilar.gr and get the resulting HTML output.
     '''
@@ -25,7 +25,7 @@ def teilar_anon_login(url = None):
         '''
         *.teilar.gr is down
         '''
-        logger_syslog.error(error, extra = log_extra_data())
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         site = url.split('/')[2]
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το %s' % site)
