@@ -82,7 +82,7 @@ class DionysosTeilarAuthentication(object):
                 try:
                     front_page = BeautifulSoup(output).find_all('table')[14].find_all('tr')
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(username, request))
+                    logger_syslog.error(error, extra = log_extra_data(request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης στοιχείων χρήστη')
                 credentials['last_name'] = get_dionysos_last_name(front_page, username, request)
@@ -99,7 +99,7 @@ class DionysosTeilarAuthentication(object):
                     '''
                     credentials['school'] = Departments.objects.get(name = credentials['school'])
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data(username, request))
+                    logger_syslog.error(error, extra = log_extra_data(request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης της σχολής')
                 user = self.add_student_to_db(credentials, request)
@@ -123,7 +123,7 @@ class DionysosTeilarAuthentication(object):
         try:
             user.save()
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(credentials['username'], request))
+            logger_syslog.error(error, extra = log_extra_data(request))
             logger_mail.exception(error)
             raise CronosError(u'Σφάλμα αποθήκευσης βασικών στοιχείων χρήστη')
         '''
@@ -143,7 +143,7 @@ class DionysosTeilarAuthentication(object):
             )
             user_profile.save()
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(credentials['username'], request))
+            logger_syslog.error(error, extra = log_extra_data(request))
             logger_mail.exception(error)
             raise CronosError(u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
         '''
@@ -154,12 +154,12 @@ class DionysosTeilarAuthentication(object):
         message = u'Name: %s %s\nDepartment: %s\nSemester: %s' % (
             user.first_name, user.last_name, user_profile.school, user_profile.semester
         )
-        logger_syslog.info(title, extra = log_extra_data(user.username, request))
+        logger_syslog.info(title, extra = log_extra_data(request))
         try:
             send_mail(settings.EMAIL_SUBJECT_PREFIX + title, message,
                 settings.SERVER_EMAIL, get_admins_mails())
         except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(user.username, request))
+            logger_syslog.error(error, extra = log_extra_data(request))
             logger_mail.exception(error)
         '''
         Return the new user object

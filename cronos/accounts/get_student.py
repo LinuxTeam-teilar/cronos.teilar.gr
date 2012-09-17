@@ -17,7 +17,7 @@ def get_dionysos_last_name(front_page = None, username = None, request = None):
     try:
         return unicode(front_page[5].find_all('td')[1].contents[0])
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Επωνύμου')
 
@@ -28,7 +28,7 @@ def get_dionysos_first_name(front_page = None, username = None, request = None):
     try:
         return unicode(front_page[6].find_all('td')[1].contents[0])
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Ονόματος')
 
@@ -39,7 +39,7 @@ def get_dionysos_registration_number(front_page = None, username = None, request
     try:
         return unicode(front_page[7].find_all('td')[1].contents[0])
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Αριθμού Μητρώου')
 
@@ -50,7 +50,7 @@ def get_dionysos_school(front_page = None, username = None, request = None):
     try:
         return unicode(front_page[8].findAll('td')[1].contents[0]).strip()
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Σχολής')
 
@@ -61,7 +61,7 @@ def get_dionysos_semester(front_page = None, username = None, request = None):
     try:
         return unicode(front_page[9].findAll('td')[1].contents[0])
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Εξαμήνου')
 
@@ -86,7 +86,7 @@ def get_dionysos_introduction_year(output = None, username = None, request = Non
             year = unicode(soup.findAll('span','tablecell')[0].contents[0].split('-')[0])
         return year + season
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Έτους Εισαγωγής')
 
@@ -136,7 +136,7 @@ def get_dionysos_declaration(username = None, password = None, request = None):
             i += 1
         return ':'.join(declaration).replace('&amp;', '&')
     except Exception as error:
-        logger_syslog.error(error, extra = log_extra_data(username, request))
+        logger_syslog.error(error, extra = log_extra_data(request))
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Δήλωσης')
 

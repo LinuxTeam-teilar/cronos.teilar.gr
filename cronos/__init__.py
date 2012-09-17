@@ -59,7 +59,7 @@ def dionysos_auth_login(username, password, url = None, request = None):
         response = dionysos_session.post('https://dionysos.teilar.gr/unistudent/', {'username': 'test'})
         response.encoding = 'windows-1253'
     except Exception as error:
-        logger_syslog.warning(error, extra = log_extra_data(username, request))
+        logger_syslog.warning(error, extra = log_extra_data(request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     soup = BeautifulSoup(response.text)
     try:
@@ -71,7 +71,7 @@ def dionysos_auth_login(username, password, url = None, request = None):
         if temp_td_whiteheader != u'Είσοδος Φοιτητή':
             raise
     except Exception as error:
-        logger_syslog.warning(error, extra = log_extra_data(username, request))
+        logger_syslog.warning(error, extra = log_extra_data(request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
     '''
     If everything was fine so far, then dionysos.teilar.gr is up and running.
@@ -119,7 +119,7 @@ def eclass_auth_login(username, password, request = None):
     try:
         response = eclass_session.post('http://openclass.teilar.gr', login_data)
     except Exception as error:
-        logger_syslog.warning(error, extra = log_extra_data(username, request))
+        logger_syslog.warning(error, extra = log_extra_data(request))
         raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το openclass.teilar.gr')
     '''
     Check if the login is successful
