@@ -43,39 +43,39 @@
     </div>
 
     <div class="entry" id="other">
-        <h3>Άλλα Στοιχεία</h3>
+        <h3>Ανανέωση Στοιχείων</h3>
         <table>
             <tr>
                 <th><a href="/dionysos/#declaration">Δήλωση Μαθημάτων</a></th>
                 <th><a href="/dionysos/#grades">Βαθμολογία</a></th>
                 {% if user.get_profile.eclass_username %}
-                    <th><a href="/eclass">Μαθήματα E-class</a></th>
+                    <th><a href="/eclass">Μαθήματα e-class</a></th>
                 {% endif %}
             </tr>
             <tr>
                 <td>
-                    <form action="." method="POST" align="center">
+                    <form action="." method="POST" align="center">{% csrf_token %}
                         {% for field in declaration_form %}
                             {{ field }}
                         {% endfor %}
-                        <input class="button" type="submit" value="Ανανέωση" />
+                        <input class="button" type="submit" name="declaration" value="Ανανέωση" />
                     </form>
                 </td>
                 <td>
-                    <form action="." method="POST" align="center">
+                    <form action="." method="POST" align="center">{% csrf_token %}
                         {% for field in grades_form %}
                             {{ field }}
                         {% endfor %}
-                        <input class="button" type="submit" value="Ανανέωση" />
+                        <input class="button" type="submit" name="grades" value="Ανανέωση" />
                     </form>
                 </td>
                 <td>
                     {% if user.get_profile.eclass_username %}
-                    <form action="." method="POST" align="center">
+                    <form action="." method="POST" align="center">{% csrf_token %}
                         {% for field in eclass_lessons_form %}
                             {{ field }}
                         {% endfor %}
-                        <input class="button" type="submit" value="Ανανέωση" />
+                        <input class="button" type="submit" name="eclass_lessons" value="Ανανέωση" />
                     </form>
                     {% endif %}
                 </td>
