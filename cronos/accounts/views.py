@@ -3,9 +3,9 @@
 from cronos import eclass_auth_login
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
-from cronos.common.encryption import encrypt_password
+from cronos.common.encryption import encrypt_password, decrypt_password
 from cronos.accounts.forms import *
-from cronos.accounts.get_student import get_eclass_lessons
+from cronos.accounts.get_student import get_dionysos_declaration, get_dionysos_grades, get_eclass_lessons
 from cronos.accounts.models import UserProfile
 from cronos.teilar.models import Teachers, Websites
 from django.contrib.auth import login, authenticate, logout
@@ -109,39 +109,79 @@ def settings(request):
             '''
             Update eclass credentials
             '''
-            eclass_credentials_form = EclassCredentialsForm(request.POST)
-            if not request.user.get_profile().eclass_username:
-                '''
-                Check if the e-class.teilar.gr credentials already exist in the DB,
-                but belong to another student's account
-                '''
-                eclass_username = request.POST.get('eclass_username')
+            try:
+                eclass_credentials_form = EclassCredentialsForm(request.POST)
+                eclass_password = request.POST.get('eclass_password')
+                if request.user.get_profile().eclass_username:
+                    eclass_username = request.user.get_profile().eclass_username
+                else:
+                    if not eclass_credentials_form.is_valid():
+                        raise CronosError('')
+                    eclass_username = request.POST.get('eclass_username')
                 try:
+                    '''
+                    Check if the e-class.teilar.gr credentials already exist in the DB,
+                    but belong to another student's account
+                    '''
                     user = User.objects.get(userprofile__eclass_username = eclass_username)
                     if user.username != request.user.username:
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
-                    pass
-            else:
-                eclass_username = request.user.get_profile().eclass_username
-            eclass_password = request.POST.get('eclass_password')
-            try:
-                '''
-                Check if the credentials are correct
-                '''
-                output = eclass_auth_login(eclass_username, eclass_password)
-                '''
-                Credentials are correct, update them along with the
-                eclass lessons
-                '''
-                user = UserProfile.objects.get(pk=request.user.id)
+                    user = None
+                if not user:
+                    user = UserProfile.objects.get(pk=request.user.id)
                 user.eclass_username = eclass_username
                 user.eclass_password = encrypt_password(eclass_password)
+                '''
+                Login and get the eclass lessons
+                '''
+                eclass_lessons = get_eclass_lessons(request, eclass_username, eclass_password)
+                '''
+                Login and retrieval of lessons were successful, save both in DB
+                '''
                 user.save()
-                eclass_lessons = get_eclass_lessons(output)
                 for lesson in eclass_lessons:
                     request.user.get_profile().following_eclass_lessons.add(lesson)
                 msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+            except (CronosError, LoginError) as error:
+                msg = error.value
+        elif request.POST.get('declaration'):
+            '''
+            Update the declaration
+            '''
+            try:
+                declaration = get_dionysos_declaration(
+                    request.user.get_profile().dionysos_username,
+                    decrypt_password(request.user.get_profile().dionysos_password),
+                    request,
+                )
+                msg = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
+            except (CronosError, LoginError) as error:
+                msg = error.value
+        elif request.POST.get('grades'):
+            '''
+            Update the grades
+            '''
+            try:
+                grades = get_dionysos_grades(
+                    request.user.get_profile().dionysos_username,
+                    decrypt_password(request.user.get_profile().dionysos_password),
+                    request,
+                )
+                msg = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
+            except (CronosError, LoginError) as error:
+                msg = error.value
+        elif request.POST.get('eclass_lessons'):
+            '''
+            Update the eclass lessons
+            '''
+            try:
+                eclass_lessons = get_eclass_lessons(
+                    request,
+                    request.user.get_profile().eclass_username,
+                    decrypt_password(request.user.get_profile().eclass_password),
+                )
+                msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
         elif request.POST.get('teachers'):

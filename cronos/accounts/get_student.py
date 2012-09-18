@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from cronos.common.exceptions import CronosError
+from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.teilar.models import EclassLessons
-from cronos import dionysos_auth_login
+from cronos import dionysos_auth_login, eclass_auth_login
 from bs4 import BeautifulSoup
 import logging
 
@@ -267,10 +267,15 @@ def get_dionysos_grades(username = None, password = None):
         logger_mail.exception(error)
         raise CronosError(u'Αδυναμία ανάκτησης Bαθμολογίας')
 
-def get_eclass_lessons(output = None, request = None):
+def get_eclass_lessons(request = None, username = None, password = None, output = None):
     '''
     Get eclass lessons
     '''
+    if not output:
+        try:
+            output = eclass_auth_login(username, password, request)
+        except (CronosError, LoginError):
+            raise
     try:
         soup = BeautifulSoup(output).find('table', 'tbl_lesson').find_all('span', 'smaller')
         eclass_lessons = []
