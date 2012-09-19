@@ -9,7 +9,7 @@
         <h3>Λίστα Καθηγητών</h3>
         <ul>
         {% for teacher in teachers %}
-            <li><strong><a href="{{ teacher.url }}">{{ teacher.name }}</a></strong> (<a href="/teachers/{{ teacher.urlid }}">Τελευταίες ανακοινώσεις</a>)
+            <li><strong><a href="{{ teacher.url }}">{{ teacher.name }}</a></strong>{% if request.user.is_authenticated %} (<a href="/teachers/{{ teacher.urlid }}">Τελευταίες ανακοινώσεις</a>){% endif %}
             <ul>
             {% if teacher.email %}
                 <li><i>Email:</i> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
