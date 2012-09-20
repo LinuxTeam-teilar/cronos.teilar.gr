@@ -14,6 +14,8 @@ def log_extra_data(additional = None):
         'client_ip': '',
         'id_name': '',
     }
+    if additional == None:
+        return
     if type(additional) == str or type(additional) == unicode:
         log_extra_data['id_name'] = additional
     else:
