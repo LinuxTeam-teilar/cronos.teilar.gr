@@ -9,7 +9,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         all_students = {}
         admins = get_admins_usernames()
-        all_students_q = User.objects.filter(is_active = True).exclude(username_in = admins)
+        all_students_q = User.objects.filter(is_active = True).exclude(username__in = admins)
         for student in all_students_q:
             all_students[student.get_profile().dionysos_username] = decrypt_password(student.get_profile().dionysos_password)
 
