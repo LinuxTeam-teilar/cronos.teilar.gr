@@ -1,0 +1,7 @@
+beautifulsoup>=3.2.1
+Django>=1.4.1
+django-setuptest>=0.1.2
+django-endless-pagination>=1.1 
+feedparser>=5.1.2
+requests>=0.13.6
+pycrypto>=2.6
