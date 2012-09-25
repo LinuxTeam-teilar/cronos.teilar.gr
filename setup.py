@@ -1,32 +1,33 @@
-#!/usr/bin/env python
-
 from setuptools import setup, find_packages
 from setuptest import test
 import os, sys
+import cronos
 
-if sys.argv[1] == 'install':
-    '''
-    Rename local_settings.py in order to
-    be excluded from setup.py install command
-    '''
-    ORIG_NAME = 'cronos/local_settings.py'
-    TEMP_NAME = 'cronos/local_settings.py1'
-    try:
-        os.rename(ORIG_NAME, TEMP_NAME)
-    except:
-        pass
+try:
+    if sys.argv[1] == 'install':
+        '''
+        Rename local_settings.py in order to
+        be excluded from setup.py install command
+        '''
+        ORIG_NAME = 'cronos/local_settings.py'
+        TEMP_NAME = 'cronos/local_settings.py1'
+        try:
+            os.rename(ORIG_NAME, TEMP_NAME)
+        except:
+            pass
+except IndexError:
+    pass
 
 setup(
-    name='cronos',
-    version='0.3-dev',
-    description='Django application that collects announcements and other \
-personal data for students of TEI of Larissa',
-    author='cronos development team',
+    name=NAME,
+    version=cronos.__version__,
+    license='AGPLv3',
+    author='Cronos Development Team',
     author_email='cronos@teilar.gr',
     url='http://cronos.teilar.gr',
-    license='AGPLv3',
+    description='Django application that collects announcements and personal data for students of TEI of Larissa',
+    keywords='rss, announcements, university, django, teilar',
     packages=find_packages(),
-    include_package_data=True,
     data_files=[
         ('', ['LICENSE', 'manage.py']),
         ('bin', [
@@ -43,6 +44,32 @@ personal data for students of TEI of Larissa',
         ]),
     ],
     cmdclass={'test': test},
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Intended Audience :: Students',
+        'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
+        'Natural Language :: Greek',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Framework :: Django',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Software Development',
+    ],
+    install_requires=[
+        'beautifulsoup>=3.2.1',
+        'Django>=1.4.1',
+        'django-endless-pagination>=1.1',
+        'feedparser>=5.1.2',
+        'mysql-python>=1.2.3',
+        'pycrypto>=2.6',
+        'requests>=0.13.6',
+        'setuptools>=0.6.21',
+    ],
+    tests_require=[
+        'django-setuptest>=0.1.2',
+    ],
+    include_package_data=True,
 )
 
 if sys.argv[1] == 'install':
