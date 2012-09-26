@@ -108,15 +108,13 @@ class Command(BaseCommand):
             6: 'committee.rss',
             'tmimatanews.php': 'departments.rss',
         }
-        for cid, rss_name in rss_filenames.iteritems():
+        for i in range(17):
+            page_no = i+1
             custom_rss = self.initialize_rss_file()
-            if type(cid) == int:
-                output = teilar_anon_login('http://www.teilar.gr/news.php?cid=%s' % cid)
-            else:
-                output = teilar_anon_login('http://www.teilar.gr/%s' % cid)
+            output = teilar_anon_login('http://www.teilar.gr/tmimatanews.php?cid=&page%s' % page_no)
             soup = BeautifulSoup(output)
             try:
-                announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')[:10]
+                announcements_all = soup.find_all('table')[17].find_all('a', 'BlackText11')
             except Exception as error:
                 logger_syslog.error(error, extra = log_extra_data())
                 logger_mail.exception(error)
@@ -125,15 +123,11 @@ class Command(BaseCommand):
                 Get inside the announcement to get the rest of the info
                 '''
                 ann_url = 'news_detail.php?nid=' + item['href'].split('nid=')[1]
-                if type(cid) != int:
-                    ann_url = 'tmimata/' + ann_url
+                ann_url = 'tmimata/' + ann_url
                 output = teilar_anon_login('http://www.teilar.gr/%s' % ann_url)
                 soup = BeautifulSoup(output)
                 try:
-                    if type(cid) != int:
-                        creator = soup.find('span', 'OraTextBold').contents[0].split(' >')[0].replace(u'Τεχν.', u'Τεχνολογίας')
-                    else:
-                        creator = None
+                    creator = soup.find('span', 'OraTextBold').contents[0].split(' >')[0].replace(u'Τεχν.', u'Τεχνολογίας')
                     temp_td_oratext = soup.find_all('td', 'OraText')
                     pubdate = temp_td_oratext[0].contents[0].split('/')
                     pubdate = date(int(pubdate[2]), int(pubdate[1]), int(pubdate[0]))
@@ -141,10 +135,10 @@ class Command(BaseCommand):
                     description = unicode(soup.find('td', 'BlackText11'))
                     enclosure = self.get_enclosure(soup)
                 except Exception as error:
-                    logger_syslog.error(error, extra = log_extra_data('http://teilar.gr' + ann_url))
+                    logger_syslog.error(error, extra = log_extra_data('http://teilar.gr/' + ann_url))
                     logger_mail.exception(error)
                 self.add_rss_item(custom_rss, title, 'http://teilar.gr/' + ann_url, pubdate, description, creator, enclosure)
-            self.write_rss_file(custom_rss, rss_name)
+        self.write_rss_file(custom_rss, 'departments.rss')
         return
 
     def get_teachers(self):
@@ -214,4 +208,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.get_teilar()
-        self.get_teachers()
+        #self.get_teachers()
