@@ -79,8 +79,7 @@ class Command(BaseCommand):
              Fix enclosure's URL from relative to absolute
             '''
             if not enclosure_url.startswith('http://'):
-                url = post.url.split('/')[2]
-                enclosure = 'http://www.teilar.gr/%s' % enclosure_url
+                enclosure_url = 'http://www.teilar.gr/%s' % enclosure_url
             '''
             Map the enclosure's extension to a known mimetype
             '''
