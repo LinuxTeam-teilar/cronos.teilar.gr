@@ -6,6 +6,7 @@ from cronos.posts.models import Authors, Posts
 from cronos.teilar.models import Departments, Teachers, Websites, EclassLessons
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import MultipleObjectsReturned
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 from django.utils import timezone
@@ -77,12 +78,17 @@ class Command(BaseCommand):
             there is dc:creator) then the author should be
             retrieved from the Teachers or Departments table
             '''
-            for model in [Teachers, Departments]:
-                try:
-                    author = model.objects.get(name = post[6])
-                    break
-                except:
-                    continue
+            if post[1].split('/')[3].startswith('person'):
+                '''
+                Since there are teachers with the same name,
+                we need to get the author from the URL
+                '''
+                print post[6]
+                print post[1]
+                post[1] = post[1].replace('teilar', 'www.teilar').replace('_announce', '')
+                author = Teachers.objects.get(url = post[1])
+            else:
+                author = Departments.objects.get(name = post[6])
         else:
             for model in [EclassLessons, Websites]:
                 try:
