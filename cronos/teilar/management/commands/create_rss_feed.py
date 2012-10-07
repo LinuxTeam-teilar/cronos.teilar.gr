@@ -108,9 +108,9 @@ class Command(BaseCommand):
             6: 'committee.rss',
             'tmimatanews.php': 'departments.rss',
         }
+        custom_rss = self.initialize_rss_file()
         for i in range(17):
             page_no = i+1
-            custom_rss = self.initialize_rss_file()
             output = teilar_anon_login('http://www.teilar.gr/tmimatanews.php?cid=&page%s' % page_no)
             soup = BeautifulSoup(output)
             try:
