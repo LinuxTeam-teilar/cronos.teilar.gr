@@ -189,13 +189,7 @@ class Command(BaseCommand):
                 logger_syslog.error(error, extra = log_extra_data(rss_url))
                 logger_mail.exception(error)
                 continue
-            '''
-            Grab the latest max 10 posts
-            '''
-            if len(rss.entries) > 10:
-                entries = rss.entries[:10][::-1]
-            else:
-                entries = rss.entries[::-1]
+            entries = rss.entries[::-1]
             for entry in entries:
                 '''
                 Get the data of each entry and add them in DB
