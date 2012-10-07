@@ -83,8 +83,6 @@ class Command(BaseCommand):
                 Since there are teachers with the same name,
                 we need to get the author from the URL
                 '''
-                print post[6]
-                print post[1]
                 post[1] = post[1].replace('teilar', 'www.teilar').replace('_announce', '')
                 author = Teachers.objects.get(url = post[1])
             else:
