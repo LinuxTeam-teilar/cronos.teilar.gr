@@ -76,7 +76,7 @@ def get_posts(user, id, page):
     following_authors = []
     following_meta_authors = []
     creators = []
-    title = []
+    title = ''
     if page == u'post':
         '''
         If the post ID is passed in the URL, only
@@ -90,7 +90,7 @@ def get_posts(user, id, page):
         if not user.is_authenticated():
             if post.creator_url != u'http://cronos.teilar.gr':
                 return [u'Login Required']
-        title = u'Άρθρο'
+        title = post.title
         return [post, title]
     elif page == u'announcements':
         '''
