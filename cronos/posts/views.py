@@ -141,7 +141,7 @@ def get_posts(user, id, page):
     '''
     Get all the posts
     '''
-    posts_q = Posts.objects.filter(creator__in = creators).order_by('-pubdate')
+    posts_q = Posts.objects.select_related('creator__content_object').filter(creator__in = creators).order_by('-pubdate')
     for post in posts_q:
         '''
         Add creator's URL, mail and avatar in the post
