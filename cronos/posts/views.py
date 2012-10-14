@@ -167,7 +167,7 @@ def posts(request, id, page, template = "posts.html", extra_context = None):
     cronos blog posts
     '''
     if not request.user.is_authenticated():
-        if page != u'blog' or page != u'post':
+        if page not in [u'blog', u'post']:
             '''
             Not a cronos blog post or cronos blog tab
             '''
