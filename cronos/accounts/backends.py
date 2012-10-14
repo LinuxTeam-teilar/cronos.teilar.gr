@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from cronos import Cronos
 from cronos.common.encryption import encrypt_password, decrypt_password
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.get_admins import get_admins_usernames, get_admins_mails
 from cronos.accounts.models import UserProfile
-from cronos.accounts.get_student import *
 from cronos.teilar.models import Departments
 from bs4 import BeautifulSoup
 from django.conf import settings
@@ -40,6 +40,7 @@ class DionysosTeilarAuthentication(object):
         dionysos.teilar.gr
         '''
         try:
+            student = Cronos(username, password)
             '''
             Try to pull the user from the Django DB
             '''
@@ -55,7 +56,7 @@ class DionysosTeilarAuthentication(object):
             credentials in dionysos.teilar.gr
             '''
             try:
-                dionysos_auth_login(username, password)
+                student.dionysos_auth_login(request)
             except LoginError:
                 '''
                 Authentication failed
@@ -74,44 +75,35 @@ class DionysosTeilarAuthentication(object):
             dionysos.teilar.gr account
             '''
             try:
-                output, temp_tr = dionysos_auth_login(username, password, request, get_temp_tr = True)
-
+                student.dionysos_auth_login(request, personal_data = True, declaration = True, grades = True)
                 '''
                 The credentials worked, try to create a user based on those credentials
                 '''
-                credentials = {'username': username, 'password': password}
-                credentials['last_name'] = get_dionysos_last_name(temp_tr, request)
-                credentials['first_name'] = get_dionysos_first_name(temp_tr, request)
-                credentials['registration_number'] = get_dionysos_registration_number(temp_tr, request)
-                credentials['semester'] = get_dionysos_semester(temp_tr, request)
-                credentials['school'] = get_dionysos_school(temp_tr, request)
-                credentials['introduction_year'] = get_dionysos_introduction_year(output, request)
-                credentials['declaration'] = get_dionysos_declaration(username, password, request)
-                #credentials['grades'] = get_dionysos_grades(username, password, request)
+                student.get_dionysos_account(request)
                 try:
                     '''
                     Relate the webscraped school name with the one stored in the DB
                     '''
-                    credentials['school'] = Departments.objects.get(name = credentials['school'])
+                    student.dionysos_school = Departments.objects.get(name = student.dionysos_school)
                 except Exception as error:
                     logger_syslog.error(error, extra = log_extra_data(request))
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης της σχολής')
-                user = self.add_student_to_db(credentials, request)
+                user = self.add_student_to_db(request, student)
             except (CronosError, LoginError):
                 raise
         return user
 
-    def add_student_to_db(self, credentials, request):
+    def add_student_to_db(self, request, student):
         '''
         Adds a new user in the Database, along with the collected credentials from
         dionysos.teilar.gr
         '''
         user = User(
-            username = credentials['username'],
-            first_name = credentials['first_name'],
-            last_name = credentials['last_name'],
-            email = credentials['username'] + '@emptymail.com'
+            username = student.dionysos_username,
+            first_name = student.dionysos_first_name,
+            last_name = student.dionysos_last_name,
+            email = student.dionysos_username + '@emptymail.com'
         )
         user.is_staff = False
         user.is_superuser = False
@@ -127,14 +119,14 @@ class DionysosTeilarAuthentication(object):
         try:
             user_profile = UserProfile(
                 user = user,
-                dionysos_username = credentials['username'],
-                dionysos_password = encrypt_password(credentials['password']),
-                registration_number = credentials['registration_number'],
-                semester = credentials['semester'],
-                school = credentials['school'],
-                introduction_year = credentials['introduction_year'],
-                declaration = credentials['declaration'],
-                #grades = credentials['grades'],
+                dionysos_username = student.dionysos_username,
+                dionysos_password = encrypt_password(student.dionysos_password),
+                registration_number = student.registration_number,
+                semester = student.semester,
+                school = student.school,
+                introduction_year = student.introduction_year,
+                declaration = student.declaration,
+                grades = student.grades,
             )
             user_profile.save()
         except Exception as error:
@@ -143,7 +135,7 @@ class DionysosTeilarAuthentication(object):
             raise CronosError(u'Σφάλμα αποθήκευσης πρόσθετων στοιχείων χρήστη')
         '''
         Everything went fine
-        Notify admins about the new registration
+        Log the new user and notify admins about the new registration
         '''
         title = u'New user No.%s: %s' % (user.id, user.username)
         message = u'Name: %s %s\nDepartment: %s\nSemester: %s' % (
