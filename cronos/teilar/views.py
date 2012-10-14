@@ -129,7 +129,7 @@ def dionysos(request):
 
 @login_required
 def eclass(request):
-    eclass_lessons = EclassLessons.objects.all().order_by('faculty', '-ltype', 'name')
+    eclass_lessons = EclassLessons.objects.filter(id__in = request.user.get_profile().following_eclass_lessons.all()).order_by('faculty', '-ltype', 'name')
     return render_to_response('eclass.html', {
             'eclass_lessons': eclass_lessons,
         }, context_instance = RequestContext(request))
