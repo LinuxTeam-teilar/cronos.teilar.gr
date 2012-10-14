@@ -160,16 +160,25 @@ def get_posts(user, id, page):
 
 @page_template("post_div.html")
 def posts(request, id, page, template = "posts.html", extra_context = None):
+    '''
+    Print a tab with posts, or a single post
+    If the user is not authenticated, then he is
+    permitted to view only cronos blog and separate
+    cronos blog posts
+    '''
     if not request.user.is_authenticated():
-        if page != u'blog':
+        if page != u'blog' or page != u'post':
+            '''
+            Not a cronos blog post or cronos blog tab
+            '''
             return HttpResponseRedirect('/login/?next=%s' % request.path)
     posts = get_posts(request.user, id, page)
     title = posts.pop()
-    try:
-        if posts[0] == u'Login Required':
-            return HttpResponseRedirect('/login/?next=%s' % request.path)
-    except:
-        pass
+    if title == u'Login Required':
+        '''
+        Not a cronos blog post
+        '''
+        return HttpResponseRedirect('/login/?next=%s' % request.path)
     context = {'posts': posts, 'title': title}
     if extra_context:
         context.update(extra_context)
