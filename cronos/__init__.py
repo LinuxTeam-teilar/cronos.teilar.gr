@@ -27,13 +27,6 @@ class Cronos(object):
         self.eclass_password = eclass_password
         self.eclass_output = None
 
-    def cmd_error(self, message = None):
-        '''
-        Show error messages when the class is run through command line
-        as API.
-        '''
-        sys.stdout.write( '%s\n' % message)
-
     def dionysos_auth_login(self, request = None, personal_data = False, declaration = False, grades = False):
         '''
         Authentication to dionysos.teilar.gr
@@ -262,6 +255,9 @@ class Cronos(object):
             declaration['totals'].append(item.contents[0])
         self.dionysos_declaration = declaration
 
+    def get_dionysos_grades(self, request = None):
+        self.dionysos_grades = None
+
     def get_dionysos_account(self, request = None):
         '''
         Return the full dionysos profile
@@ -275,8 +271,12 @@ class Cronos(object):
             self.get_dionysos_semester(request)
             self.get_dionysos_introduction_year(request)
             self.get_dionysos_declaration(request)
+            self.get_dionysos_grades(request)
         except (CronosError, LoginError) as error:
-            self.cmd_error(error)
+            if request:
+                raise
+            else:
+                sys.stdout.write( '%s\n' % error)
 
     def eclass_auth_login(self, request = None):
         '''
@@ -342,8 +342,8 @@ class Cronos(object):
         # TODO: Return it in JSON format
         try:
             self.get_eclass_lessons(request)
-        except (LoginError, CronosError) as error:
-            self.cmd_error(error)
+        except (CronosError, LoginError) as error:
+            sys.stdout.write( '%s\n' % error)
 
 def teilar_anon_login(url = None, request = None):
     '''

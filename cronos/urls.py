@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from cronos.accounts.resources import UserResource
 from cronos.posts.feeds import PostsFeed
 from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from tastypie.api import Api
 
 handler500 = 'cronos.common.views.server_error'
 
@@ -11,6 +13,7 @@ urlpatterns = patterns('',
     (r'^$', 'cronos.accounts.views.accounts_index'),
     (r'^about/', 'cronos.common.views.about'),
     (r'^announcements/$', 'cronos.posts.views.posts', {'page': u'announcements', 'id': None}),
+    (r'^api/', include(UserResource().urls)),
     (r'^blog/$', 'cronos.posts.views.posts', {'page': u'blog', 'id': None}),
     (r'^blog/feed/$', PostsFeed(), {'page': u'blog', 'username': None}),
     (r'^departments/(\d+)/$', 'cronos.posts.views.posts', {'page': u'department'}),

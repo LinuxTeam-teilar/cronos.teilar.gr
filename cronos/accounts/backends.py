@@ -11,6 +11,10 @@ from bs4 import BeautifulSoup
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+import logging
+
+logger_syslog = logging.getLogger('cronos')
+logger_mail = logging.getLogger('mail_cronos')
 
 class DionysosTeilarAuthentication(object):
     '''
@@ -22,7 +26,7 @@ class DionysosTeilarAuthentication(object):
         Try to authenticate the user. If there isn't such user
         in the Django DB, try to find the user in dionysos.teilar.gr
         '''
-        return self.get_or_create_user(username, password, request)
+        return self.get_or_create_user(request, username, password)
 
     def get_user(self, user_id):
         '''
@@ -33,7 +37,7 @@ class DionysosTeilarAuthentication(object):
         except User.DoesNotExist:
             return
 
-    def get_or_create_user(self, username = None, password = None, request = None):
+    def get_or_create_user(self, request = None, username = None, password = None):
         '''
         Retrieves the user from the Django DB. If the user is not
         found in the DB, then it tries to retrieve him from
@@ -51,6 +55,8 @@ class DionysosTeilarAuthentication(object):
             if user.username in get_admins_usernames():
                 if user.check_password(password):
                     return user
+                else:
+                    return
             '''
             If the user is found in the DB, try to login with those
             credentials in dionysos.teilar.gr
@@ -61,14 +67,14 @@ class DionysosTeilarAuthentication(object):
                 '''
                 Authentication failed
                 '''
-                raise
+                return
             except CronosError:
                 '''
                 Connection issue with dionysos.teilar.gr. Try to authenticate
                 with the password stored in the DB instead
                 '''
                 if password != decrypt_password(user.get_profile().dionysos_password):
-                    raise LoginError
+                    return
         except User.DoesNotExist:
             '''
             If the user is not in the DB, try to log in with his
@@ -90,8 +96,13 @@ class DionysosTeilarAuthentication(object):
                     logger_mail.exception(error)
                     raise CronosError(u'Αδυναμία ανάκτησης της σχολής')
                 user = self.add_student_to_db(request, student)
-            except (CronosError, LoginError):
+            except CronosError:
                 raise
+            except LoginError:
+                '''
+                Authentication failed
+                '''
+                return
         return user
 
     def add_student_to_db(self, request, student):
@@ -101,9 +112,9 @@ class DionysosTeilarAuthentication(object):
         '''
         user = User(
             username = student.dionysos_username,
-            first_name = student.dionysos_first_name,
-            last_name = student.dionysos_last_name,
-            email = student.dionysos_username + '@emptymail.com'
+            first_name = unicode(student.dionysos_first_name),
+            last_name = unicode(student.dionysos_last_name),
+            email = unicode(student.dionysos_username) + u'@emptymail.com'
         )
         user.is_staff = False
         user.is_superuser = False
@@ -121,12 +132,12 @@ class DionysosTeilarAuthentication(object):
                 user = user,
                 dionysos_username = student.dionysos_username,
                 dionysos_password = encrypt_password(student.dionysos_password),
-                registration_number = student.registration_number,
-                semester = student.semester,
-                school = student.school,
-                introduction_year = student.introduction_year,
-                declaration = student.declaration,
-                grades = student.grades,
+                registration_number = unicode(student.dionysos_registration_number),
+                semester = unicode(student.dionysos_semester),
+                school = student.dionysos_school,
+                introduction_year = unicode(student.dionysos_introduction_year),
+                declaration = student.dionysos_declaration,
+                grades = student.dionysos_grades,
             )
             user_profile.save()
         except Exception as error:

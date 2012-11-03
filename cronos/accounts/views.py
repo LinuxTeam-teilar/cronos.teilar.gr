@@ -37,6 +37,8 @@ def accounts_login(request):
             it was successful. If it retrieves None then it failed to login
             '''
             user = authenticate(username = username, password = password, request = request)
+            if not user:
+                raise LoginError
             if user.is_active:
                 login(request, user)
                 if not form.cleaned_data['remember']:
