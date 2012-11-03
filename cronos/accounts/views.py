@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from cronos import eclass_auth_login
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.encryption import encrypt_password, decrypt_password
 from cronos.accounts.forms import *
-from cronos.accounts.get_student import get_dionysos_declaration, get_dionysos_grades, get_eclass_lessons
 from cronos.accounts.models import UserProfile
 from cronos.teilar.models import Teachers, Websites
 from django.contrib.auth import login, authenticate, logout
@@ -39,6 +37,8 @@ def accounts_login(request):
             it was successful. If it retrieves None then it failed to login
             '''
             user = authenticate(username = username, password = password, request = request)
+            if not user:
+                raise LoginError
             if user.is_active:
                 login(request, user)
                 if not form.cleaned_data['remember']:
