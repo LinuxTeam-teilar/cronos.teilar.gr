@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'cronos.posts',
     'cronos.teilar',
     'endless_pagination',
+    'tastypie',
     'tests',
 )
 
