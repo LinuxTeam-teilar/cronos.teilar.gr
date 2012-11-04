@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from tastypie.models import ApiKey
 import logging
 
 logger = logging.getLogger('cronos')
@@ -101,6 +102,15 @@ def settings(request):
     Get the not following websites that will be put in the left selectbox
     '''
     websites_unfollowing = websites_all_q.exclude(id__in = request.user.get_profile().following_websites.all())
+    '''
+    Get the API key
+    '''
+    try:
+        api_key = ApiKey.objects.get(user = request.user)
+        api_key_hash = api_key.key
+    except ApiKey.DoesNotExist:
+        api_key = None
+        api_key_hash = None
     '''
     Process one of the form submissions
     '''
@@ -228,6 +238,13 @@ def settings(request):
             else:
                 request.user.get_profile().following_websites.clear()
             msg = u'Οι αλλαγές έγιναν επιτυχώς'
+        elif request.POST.get('api_key'):
+            if api_key:
+                api_key.key = api_key.generate_key()
+                api_key.save()
+            else:
+                api_key = ApiKey.objects.create(user=request.user)
+            api_key_hash = api_key.key
     return render_to_response('settings.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
@@ -237,4 +254,5 @@ def settings(request):
         'teachers_following': teachers_following,
         'websites_unfollowing': websites_unfollowing,
         'websites_following': websites_following,
+        'api_key': api_key_hash,
         }, context_instance = RequestContext(request))
