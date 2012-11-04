@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Ρυθμίσεις χρήστη {{user}} | 
+{% endblock %}
+
+{% block extra_js_top %}
+    <script type="text/javascript" src="{% static "js/multibox.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+    {% if msg %}
+        <div id="notifications">
+            <p>{{ msg }}</p>
+        </div>
+    {% endif %}
+
+    <div class="entry" id="teachers" align="center">
+        <h3>Επιλογή Ανακοινώσεων</h3>
+        <form action="." method="POST" id="announcements">{% csrf_token %}
+            <select multiple="multiple" name="teachers_unselected" id="teachers_unselected">
+                {% for teacher in teachers_unfollowing %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+            <select multiple="multiple" name="teachers_selected" id="teachers_selected">
+                {% for teacher in teachers_following %}
+                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
+            <div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
+            <br /><br /><br />
+            <select multiple="multiple" name="websites_unselected" id="websites_unselected">
+                {% for website in websites_unfollowing %}
+                    <option value="{{ website.id }}">{{ website.name }}</option>
+                {% endfor %}
+            </select>
+            <select multiple="multiple" name="websites_selected" id="websites_selected">
+                {% for website in websites_following %}
+                    <option value="{{ website.id }}">{{ website.name }}</option>
+                {% endfor %}
+            </select>
+            <div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
+            <div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
+            <br /><br /><br />
+            <input class="button" type="submit" name="announcements" value="Ανανέωση" />
+        </form>
+    </div>
+{% endblock %}
