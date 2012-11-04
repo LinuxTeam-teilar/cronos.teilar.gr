@@ -2,7 +2,7 @@
 
 from cronos.common.exceptions import CronosError
 from cronos.common.log import log_extra_data
-from cronos import teilar_anon_login
+from cronos.teilar import teilar_anon_login
 from bs4 import BeautifulSoup
 from datetime import date
 from django.conf import settings
