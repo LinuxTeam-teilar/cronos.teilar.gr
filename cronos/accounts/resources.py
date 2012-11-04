@@ -20,7 +20,7 @@ class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.filter(is_active = True)
         resource_name = 'user'
-        excludes = ['date_joined', 'id', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'password']
+        excludes = ['email', 'date_joined', 'id', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'password']
         allowed_methods = ['get', 'post']
         include_resource_uri = False
         include_absolute_uri = False
