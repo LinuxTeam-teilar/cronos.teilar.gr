@@ -121,7 +121,6 @@ def refrigerators(request):
                 bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[0]
                 sint_bathmou_psiksis8 = float(bathmos_psiksis8.split('-')[0])
                 eidiki_thermotita_pr8 = float(bathmos_psiksis8.split('-')[1])
-                print 'here'
                 result8 = (maza8 * eidiki_thermotita_pr8 * dt8) / (ores_psiksis8 * 3600 * sint_bathmou_psiksis8)
             else:
                 sint_kataps = 'Κατάψυξη'

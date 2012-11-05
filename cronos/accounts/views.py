@@ -70,7 +70,7 @@ def accounts_index(request):
 @login_required
 def settings_accounts(request):
     '''
-    The user's settings webpage
+    The user's accounts settings webpage
     '''
     msg = None
     eclass_credentials_form = EclassCredentialsForm()
@@ -220,9 +220,8 @@ def settings_accounts(request):
 
 @login_required
 def settings_announcements(request):
-    print request.POST.get('teachers_selected')
     '''
-    The user's settings webpage
+    The user's announcements settings webpage
     '''
     msg = None
     '''
