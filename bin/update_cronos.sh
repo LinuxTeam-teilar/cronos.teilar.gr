@@ -12,6 +12,7 @@ help() {
     echo " -p <path> Path of the cronos instance"
     echo " -u        Update the repository"
     echo " -c        Collect the static files"
+    echo " -r        Create the custom RSS feeds"
     echo " -d        Populate the database"
     echo
     exit
