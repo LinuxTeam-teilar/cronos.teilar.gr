@@ -1,5 +1,5 @@
 #!/bin/bash
-# Cronos cronjob
+# Cronos update script, it also can be run as cronjob
 
 help() {
     echo
