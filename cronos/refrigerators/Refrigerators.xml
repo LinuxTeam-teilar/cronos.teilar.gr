@@ -1,0 +1,70 @@
+<xml>
+	<form name = "FormA"> 
+		<var name = "sint_thermop" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
+		</var>
+		<var name = "epif_pleuras" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
+		</var>
+		<var name = 'dt' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
+		</var>
+	</form>
+	<form name = "FormB">
+		<var name = "thermokrasia_apothikeusis7" type = "choice">
+			<attributes choices = "THERMOKRASIA_APOTHIKEYSIS7" label = "Θερμοκρασία αποθήκευσης" help_text = "C"/>
+		</var>
+		<var name = "thermokrasia_aera_eisodou7" type = "choice">
+			<attributes choices = "THERMOKRASIA_AERA_EISODOY7" label = "Θερμοκρασία - Σχετική υγρασία αέρα εισροής" help_text = "C" />
+		</var>
+		<var name = 'ogkos_thalamou7' type = 'choice'>
+			<attributes choices = "OGKOS_THALAMOY7" label = "Όγκος Θαλάμου" help_text = "m^3"/>
+		</var>
+		<var name = 'thermokrasia_thalamou7' type = "choice">
+			<attributes choices = "THERMOKRASIA_THALAMOY7" label = "Θερμοκρασία Θαλάμου" help_text = "None"/>
+		</var>
+	</form>
+	<form name = "FormC">
+		<var name = 'sint_kataps'  type = "choice">
+			<attributes choices = "SINT_KATAPS" label = "Επιλογή αποθήκευσης:" help_text = "None"/>
+		</var>
+		<var name = 'bathmos_psiksis8' type = "choice">
+			<attributes choices = "PROIONTA8" label = "Προϊόν:" help_text = "None"/>
+		</var>
+		<var name = 'dt8' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας συντήρησης:" help_text = "Κ"/>
+		</var>
+		<var name = 'dt_mt8' type = "float">
+			<attributes label = "Διαφορά θερμοκρασίας κατάψυξης:" help_text = "K" required = "False"/>
+		</var>
+		<var name = 'ores_psiksis8' type = "float">
+			<attributes label = "Ώρες ψύξης:" help_text = "Ώρες"/>
+		</var>
+		<var name = 'maza8' type = "float">
+			<attributes label = "Μάζα:" help_text = "Kg"/>
+		</var>
+	</form>
+	<form name = "FormD">
+		<var name = 'maza9' type = "float">
+			<attributes label = "Μάζα:" help_text = "Kg"/>
+		</var>
+		<var name = 'timi_anapnois9' type = "float">
+			<attributes label = "Τιμή αναπνοής:" help_text = "KW/Kg"/>
+		</var>
+	</form>
+	<form name = "FormE">
+		<var name = 'diafora_fortia10' type = "float">
+			<attributes label = "Διάφορα φορτία:" help_text = "KWatt"/>
+		</var>
+	</form>
+	<form name = "FormF">
+		<var name = 'sintelestis_asfaleias11' type = "float">
+			<attributes label = "Συντελεστής ασφαλείας:" help_text = "None"/> 
+		</var>
+	</form>
+	<form name = "FormG">
+		<var name = 'sintelestis_diakop_leit12' type = "float">
+			<attributes label = "Συντελεστής διακοπτόμενης λειτουργίας:" help_text = "Ώρες"/>
+		</var>
+	</form>
+</xml>

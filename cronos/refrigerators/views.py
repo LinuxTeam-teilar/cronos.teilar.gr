@@ -8,216 +8,165 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 def refrigerators(request):
-    sint_thermop1 = None
-    epif_pleuras1 = None
-    dt1 = None
-    result1 = None
-    sint_thermop2 = None
-    epif_pleuras2 = None
-    dt2 = None
-    result2 = None
-    sint_thermop3 = None
-    epif_pleuras3 = None
-    dt3 = None
-    result3 = None
-    sint_thermop4 = None
-    epif_pleuras4 = None
-    dt4 = None
-    result4 = None
-    sint_thermop5 = None
-    epif_pleuras5 = None
-    dt5 = None
-    result5 = None
-    sint_thermop6 = None
-    epif_pleuras6 = None
-    dt6 = None
-    result6 = None
-    thermokrasia_aera_eisodou7 = None
-    thermokrasia_apothikeusis7 = None
-    ogkos_thalamou7 = None
-    thermokrasia_thalamou7 = None
-    enthalpia_aera_eisrois7 = None
-    ogkos_aera_eisrois7 = None
-    result7 = None
-    bathmos_psiksis8 = None
-    sint_bathmou_psiksis8 = None
-    eidiki_thermotita_pr8 = None
-    eidiki_thermotita_mt8 = None
-    dt8 = None
-    dt_mt8 = None
-    ores_psiksis8 = None
-    maza8 = None
-    sint_kataps = None
-    lanthanousa_therm_ster8 = None
-    result8 = None
-    maza9 = None
-    timi_anapnois9 = None
-    result9 = None
-    diafora_fortia10 = None
-    result10 = None
-    sintelestis_asfaleias11 = None
-    result11 = None
-    sintelestis_diakop_leit12 = None
-    result12 = None
-    total_result = None
+    sint_thermop = {'form1' : 0, 'form2' : 0, 'form3' : 0, 'form4' : 0, 'form5' : 0, 'form6' : 0, 'form7' : 0, 'form8' : 0}
+    epif_pleuras = {'form1' : 0, 'form2' : 0, 'form3' : 0, 'form4' : 0, 'form5' : 0, 'form6' : 0, 'form7' : 0, 'form8' : 0}
+    forms = {'form1' : 0, 'form2' : 0, 'form3' : 0, 'form4' : 0, 'form5' : 0, 'form6' : 0, 'form7' : 0, 'form8' : 0, 'form9' : 0, 'form10' : 0, 'form11' : 0, 'form12' : 0}
+    results = {'form1' : 0, 'form2' : 0, 'form3' : 0, 'form4' : 0, 'form5' : 0, 'form6' : 0, 'form7' : 0, 'form8' : 0, 'form9' : 0, 'form10' : 0, 'form11' : 0, 'form12' : 0, 'total_result' : 0}
+    tempdeltas = {'form1' : 0, 'form2' : 0, 'form3' : 0, 'form4' : 0, 'form5' : 0, 'form6' : 0, 'form8' : 0, 'form8_mt' : 0}
+
+    temp_result = 0
+
+    thermokrasia_aera_eisodou7 = 0
+    thermokrasia_apothikeusis7 = 0
+    ogkos_thalamou7 = 0
+    thermokrasia_thalamou7 = 0
+    enthalpia_aera_eisrois7 = 0
+    ogkos_aera_eisrois7 = 0
+    bathmos_psiksis8 = 0
+    sint_bathmou_psiksis8 = 0
+    eidiki_thermotita_pr8 = 0
+    eidiki_thermotita_mt8 = 0
+    ores_psiksis8 = 0
+    maza8 = 0
+    sint_kataps = 0
+    lanthanousa_therm_ster8 = 0
+    maza9 = 0
+    timi_anapnois9 = 0
+    diafora_fortia10 = 0
+    sintelestis_asfaleias11 = 0
+    sintelestis_diakop_leit12 = 0
+
     if request.method == 'POST':
-        form1 = Psigeia1Form(request.POST)
-        form2 = Psigeia2Form(request.POST)
-        form3 = Psigeia3Form(request.POST)
-        form4 = Psigeia4Form(request.POST)
-        form5 = Psigeia5Form(request.POST)
-        form6 = Psigeia6Form(request.POST)
-        form7 = Psigeia7Form(request.POST)
-        form8 = Psigeia8Form(request.POST)
-        form9 = Psigeia9Form(request.POST)
-        form10 = Psigeia10Form(request.POST)
-        form11 = Psigeia11Form(request.POST)
-        form12 = Psigeia12Form(request.POST)
-        if form1.is_valid():
-            sint_thermop1 = float(request.POST.get('sint_thermop1'))
-            epif_pleuras1 = float(request.POST.get('epif_pleuras1'))
-            dt1 = float(request.POST.get('dt1'))
-            result1 = sint_thermop1 * epif_pleuras1 * dt1
-        if form2.is_valid():
-            sint_thermop2 = float(request.POST.get('sint_thermop2'))
-            epif_pleuras2 = float(request.POST.get('epif_pleuras2'))
-            dt2 = float(request.POST.get('dt2'))
-            result2 = sint_thermop2 * epif_pleuras2 * dt2
-        if form3.is_valid():
-            sint_thermop3 = float(request.POST.get('sint_thermop3'))
-            epif_pleuras3 = float(request.POST.get('epif_pleuras3'))
-            dt3 = float(request.POST.get('dt3'))
-            result3 = sint_thermop3 * epif_pleuras3 * dt3
-        if form4.is_valid():
-            sint_thermop4 = float(request.POST.get('sint_thermop4'))
-            epif_pleuras4 = float(request.POST.get('epif_pleuras4'))
-            dt4 = float(request.POST.get('dt4'))
-            result4 = sint_thermop4 * epif_pleuras4 * dt4
-        if form5.is_valid():
-            sint_thermop5 = float(request.POST.get('sint_thermop5'))
-            epif_pleuras5 = float(request.POST.get('epif_pleuras5'))
-            dt5 = float(request.POST.get('dt5'))
-            result5 = sint_thermop5 * epif_pleuras5 * dt5
-        if form6.is_valid():
-            sint_thermop6 = float(request.POST.get('sint_thermop6'))
-            epif_pleuras6 = float(request.POST.get('epif_pleuras6'))
-            dt6 = float(request.POST.get('dt6'))
-            result6 = sint_thermop6 * epif_pleuras6 * dt6
-        if form7.is_valid():
-            thermokrasia_aera_eisodou7 = int(request.POST.get('thermokrasia_aera_eisodou7'))
-            thermokrasia_apothikeusis7 = int(request.POST.get('thermokrasia_apothikeusis7'))
-            ogkos_thalamou7 = int(request.POST.get('ogkos_thalamou7'))
-            thermokrasia_thalamou7 = int(request.POST.get('thermokrasia_thalamou7'))
-            enthalpia_aera_eisrois7 = ENTHALPIA_AERA_EISROIS7[thermokrasia_apothikeusis7][thermokrasia_aera_eisodou7]
-            ogkos_aera_eisrois7 = OGKOS_AERA_EISROIS7[ogkos_thalamou7][thermokrasia_thalamou7]
-            result7 = ogkos_aera_eisrois7 * enthalpia_aera_eisrois7
-        if form8.is_valid():
-            ores_psiksis8 = float(request.POST.get('ores_psiksis8'))
-            maza8 = float(request.POST.get('maza8'))
-            dt8 = float(request.POST.get('dt8'))
-            sint_kataps = int(request.POST.get('sint_kataps'))
-            if sint_kataps == 0:
-                sint_kataps = 'Συντήρηση'
-                bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[0]
-                sint_bathmou_psiksis8 = float(bathmos_psiksis8.split('-')[0])
-                eidiki_thermotita_pr8 = float(bathmos_psiksis8.split('-')[1])
-                print 'here'
-                result8 = (maza8 * eidiki_thermotita_pr8 * dt8) / (ores_psiksis8 * 3600 * sint_bathmou_psiksis8)
-            else:
-                sint_kataps = 'Κατάψυξη'
-                bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[1]
-                eidiki_thermotita_pr8 = float(bathmos_psiksis8.split('-')[0])
-                eidiki_thermotita_mt8 = float(bathmos_psiksis8.split('-')[1])
-                lanthanousa_therm_ster8 = float(bathmos_psiksis8.split('-')[2])
-                dt_mt8 = float(request.POST.get('dt_mt8'))
-                result8 = ((maza8 * eidiki_thermotita_pr8 * dt8) + (maza8 * lanthanousa_therm_ster8) + (maza8 * eidiki_thermotita_mt8 * dt_mt8)) / (ores_psiksis8 * 3600)
-        if form9.is_valid():
-            maza9 = float(request.POST.get('maza9'))
-            timi_anapnois9 = float(request.POST.get('timi_anapnois9'))
-            result9 = maza9 * timi_anapnois9
-        if form10.is_valid():
-            diafora_fortia10 = float(request.POST.get('diafora_fortia10'))
-            result10 = diafora_fortia10
-        total_result = result1 + result2 +result3 + result4 + result5 + result6 + result7 + result8 + result9 + result10
-        if form11.is_valid():
+        for i in range(1, 7, 1):
+            text = '' + 'form' + str(i)
+            forms[text] = Classes[0](request.POST)
+        forms['form7'] = Classes[1](request.POST)
+        forms['form8'] = Classes[2](request.POST)
+        forms['form9'] = Classes[3](request.POST)
+        forms['form10'] = Classes[4](request.POST)
+        forms['form11'] = Classes[5](request.POST)
+        forms['form12'] = Classes[6](request.POST)
+        for i in 'form1', 'form2', 'form3', 'form4', 'form5', 'form6', 'form7', 'form8', 'form9', 'form10':
+            if forms[i].is_valid():
+                if str(type(forms[i])).find('FormA') > 0:
+                    sint_thermop[i] = float(request.POST.get('sint_thermop'))
+                    epif_pleuras[i] = float(request.POST.get('epif_pleuras'))
+                    tempdeltas[i] = float(request.POST.get('dt'))
+                    results[i] = sint_thermop[i] * epif_pleuras[i] * tempdeltas[i]
+                if str(type(forms[i])).find('FormB') > 0:
+                    thermokrasia_aera_eisodou7 = int(request.POST.get('thermokrasia_aera_eisodou7')) 
+                    thermokrasia_apothikeusis7 = int(request.POST.get('thermokrasia_apothikeusis7')) 
+                    ogkos_thalamou7 = int(request.POST.get('ogkos_thalamou7')) 
+                    thermokrasia_thalamou7 = int(request.POST.get('thermokrasia_thalamou7'))
+                    enthalpia_aera_eisrois7 = ENTHALPIA_AERA_EISROIS7[thermokrasia_apothikeusis7][thermokrasia_aera_eisodou7]
+                    ogkos_aera_eisrois7 = OGKOS_AERA_EISROIS7[ogkos_thalamou7][thermokrasia_thalamou7]
+                    results[i] = ogkos_aera_eisrois7 * enthalpia_aera_eisrois7
+                if str(type(forms[i])).find('FormC') > 0:
+                    ores_psiksis8 = float(request.POST.get('ores_psiksis8'))
+                    maza8 = float(request.POST.get('maza8'))
+                    tempdeltas[i] = float(request.POST.get('dt8'))
+                    sint_kataps = int(request.POST.get('sint_kataps'))
+                    if sint_kataps == 0:
+                        sint_kataps = 'Συντήρηση'
+                        bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[0]
+                        sint_bathmou_psiksis8 = float(bathmos_psiksis8.split('-')[0])
+                        eidiki_thermotita_pr8 = float(bathmos_psiksis8.split('-')[1])
+                        print 'here'
+                        results[i] = (maza8 * eidiki_thermotita_pr8 * tempdeltas[i]) / (ores_psiksis8 * 3600 * sint_bathmou_psiksis8)
+                    else:
+                        sint_kataps = 'Κατάψυξη'
+                        bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[1]
+                        eidiki_thermotita_pr8 = float(bathmos_psiksis8.split('-')[0])
+                        eidiki_thermotita_mt8 = float(bathmos_psiksis8.split('-')[1])
+                        lanthanousa_therm_ster8 = float(bathmos_psiksis8.split('-')[2])
+                        tempdeltas['form8_mt'] = float(request.POST.get('dt_mt8'))
+                        results[i] = ((maza8 * eidiki_thermotita_pr8 * tempdeltas[i]) + (maza8 * lanthanousa_therm_ster8) + (maza8 * eidiki_thermotita_mt8 * tempdeltas['form8_mt'])) / (ores_psiksis8 * 3600)
+                if str(type(forms[i])).find('FormD') > 0:
+                    maza9 = float(request.POST.get('maza9'))
+                    timi_anapnois9 = float(request.POST.get('timi_anapnois9'))
+                    results[i] = maza9 * timi_anapnois9
+                if str(type(forms[i])).find('FormE') > 0:
+                    diafora_fortia10 = float(request.POST.get('diafora_fortia10'))
+                    results[i] = diafora_fortia10
+        if forms['form11'].is_valid():
             sintelestis_asfaleias11 = float(request.POST.get('sintelestis_asfaleias11'))
-            result11 = total_result * sintelestis_asfaleias11
-        if form12.is_valid():
+            for k in range(1, 11, 1):
+                text = '' + 'form' + str(k)
+                temp_result = temp_result + results[text]
+            results['form11'] = temp_result * sintelestis_asfaleias11
+        if forms['form12'].is_valid():
             sintelestis_diakop_leit12 = float(request.POST.get('sintelestis_diakop_leit12'))
-            result12 = 24 * result11 / sintelestis_diakop_leit12
-        total_result = total_result + result11 + result12
+            results['form12'] = 24 * results['form11'] / sintelestis_diakop_leit12
+        results['total_result'] = temp_result + results['form11'] + results['form12']
     else:
-        form1 = Psigeia1Form(request.POST)
-        form2 = Psigeia2Form(request.POST)
-        form3 = Psigeia3Form(request.POST)
-        form4 = Psigeia4Form(request.POST)
-        form5 = Psigeia5Form(request.POST)
-        form6 = Psigeia6Form(request.POST)
-        form7 = Psigeia7Form(request.POST)
-        form8 = Psigeia8Form(request.POST)
-        form9 = Psigeia9Form(request.POST)
-        form10 = Psigeia10Form(request.POST)
-        form11 = Psigeia11Form(request.POST)
-        form12 = Psigeia12Form(request.POST)
+        for i in range(1, 7, 1):
+            text = '' + 'form' + str(i)
+            forms[text] = Classes[0](request.POST)
+        forms['form7'] = Classes[1](request.POST)
+        forms['form8'] = Classes[2](request.POST)
+        forms['form9'] = Classes[3](request.POST)
+        forms['form10'] = Classes[4](request.POST)
+        forms['form11'] = Classes[5](request.POST)
+        forms['form12'] = Classes[6](request.POST)
     return render_to_response('refrigerators.html', {
-        'form1': form1,
-        'sint_thermop1': sint_thermop1,
-        'epif_pleuras1': epif_pleuras1,
-        'dt1': dt1,
-        'result1': result1,
-        'form2': form2,
-        'sint_thermop2': sint_thermop2,
-        'epif_pleuras2': epif_pleuras2,
-        'dt2': dt2,
-        'result2': result2,
-        'form3': form3,
-        'sint_thermop3': sint_thermop3,
-        'epif_pleuras3': epif_pleuras3,
-        'dt3': dt3,
-        'result3': result3,
-        'form4': form4,
-        'sint_thermop4': sint_thermop4,
-        'epif_pleuras4': epif_pleuras4,
-        'dt4': dt4,
-        'result4': result4,
-        'form5': form5,
-        'sint_thermop5': sint_thermop5,
-        'epif_pleuras5': epif_pleuras5,
-        'dt5': dt5,
-        'result5': result5,
-        'form6': form6,
-        'sint_thermop6': sint_thermop6,
-        'epif_pleuras6': epif_pleuras6,
-        'dt6': dt6,
-        'result6': result6,
-        'form7': form7,
-        'enthalpia_aera_eisrois7': enthalpia_aera_eisrois7,
-        'ogkos_aera_eisrois7': ogkos_aera_eisrois7,
-        'result7': result7,
-        'form8': form8,
-        'bathmos_psiksis8': bathmos_psiksis8,
-        'sint_bathmou_psiksis8': sint_bathmou_psiksis8,
-        'eidiki_thermotita_pr8': eidiki_thermotita_pr8,
-        'eidiki_thermotita_mt8': eidiki_thermotita_mt8,
-        'dt8': dt8,
-        'dt_mt8': dt_mt8,
-        'ores_psiksis8': ores_psiksis8,
-        'maza8': maza8,
-        'sint_kataps': sint_kataps,
-        'lanthanousa_therm_ster8': lanthanousa_therm_ster8,
-        'result8': result8,
-        'form9': form9,
-        'maza9': maza9,
-        'timi_anapnois9': timi_anapnois9,
-        'result9': result9,
-        'form10': form10,
-        'diafora_fortia10': diafora_fortia10,
-        'result10': result10,
-        'form11': form11,
-        'sintelestis_asfaleias11': sintelestis_asfaleias11,
-        'result11': result11,
-        'form12': form12,
-        'sintelestis_diakop_leit12': sintelestis_diakop_leit12,
-        'result12': result12,
-        'total_result': total_result,
+        'form1' : forms['form1'],
+        'form2' : forms['form2'],
+        'form3' : forms['form3'],
+        'form4' : forms['form4'],
+        'form5' : forms['form5'],
+        'form6' : forms['form6'],
+        'form7' : forms['form7'],
+        'form8' : forms['form8'],
+        'form9' : forms['form9'],
+        'form10' : forms['form10'],
+        'form11' : forms['form11'],
+        'form12' : forms['form12'],
+        'sint_thermop1' : sint_thermop['form1'],
+        'sint_thermop2' : sint_thermop['form2'],
+        'sint_thermop3' : sint_thermop['form3'],
+        'sint_thermop4' : sint_thermop['form4'],
+        'sint_thermop5' : sint_thermop['form5'],
+        'sint_thermop6' : sint_thermop['form6'],
+        'epif_pleuras1' : epif_pleuras['form1'],
+        'epif_pleuras2' : epif_pleuras['form2'],
+        'epif_pleuras3' : epif_pleuras['form3'],
+        'epif_pleuras4' : epif_pleuras['form4'],
+        'epif_pleuras5' : epif_pleuras['form5'],
+        'epif_pleuras6' : epif_pleuras['form6'],
+        'dt1' : tempdeltas['form1'],
+        'dt2' : tempdeltas['form2'],
+        'dt3' : tempdeltas['form3'],
+        'dt4' : tempdeltas['form4'],
+        'dt5' : tempdeltas['form5'],
+        'dt6' : tempdeltas['form6'],
+        'dt8' : tempdeltas['form8'],
+        'dt_mt8' : tempdeltas['form8_mt'],
+        'result1' : results['form1'],
+        'result2' : results['form2'],
+        'result3' : results['form3'],
+        'result4' : results['form4'],
+        'result5' : results['form5'],
+        'result6' : results['form6'],
+        'result7' : results['form7'],
+        'result8' : results['form8'],
+        'result9' : results['form9'],
+        'result10' : results['form10'],
+        'result11' : results['form11'],
+        'result12' : results['form12'],
+        'total_result' : results['total_result'],
+        'enthalpia_aera_eisrois7' : enthalpia_aera_eisrois7,
+        'ogkos_aera_eisrois7' : ogkos_aera_eisrois7,
+        'bathmos_psiksis8' : bathmos_psiksis8,
+        'sint_bathmou_psiksis8' : sint_bathmou_psiksis8,
+        'eidiki_thermotita_pr8' : eidiki_thermotita_pr8,
+        'eidiki_thermotita_mt8' : eidiki_thermotita_mt8,
+        'ores_psiksis8' : ores_psiksis8,
+        'maza8' : maza8,
+        'sint_kataps' : sint_kataps,
+        'lanthanousa_therm_ster8' : lanthanousa_therm_ster8,
+        'maza9' : maza9,
+        'timi_anapnois9' : timi_anapnois9,
+        'diafora_fortia10' : diafora_fortia10,
+        'sintelestis_asfaleias11' : sintelestis_asfaleias11,
+        'sintelestis_diakop_leit12' : sintelestis_diakop_leit12,
         }, context_instance = RequestContext(request))
