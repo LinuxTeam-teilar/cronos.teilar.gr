@@ -31,10 +31,10 @@
 		<var name = 'bathmos_psiksis8' type = "choice">
 			<attributes choices = "PROIONTA8" label = "Προϊόν:" help_text = "None"/>
 		</var>
-		<var name = 'dt8' type = "float">
+		<var name = 'dt' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας συντήρησης:" help_text = "Κ"/>
 		</var>
-		<var name = 'dt_mt8' type = "float">
+		<var name = 'dt_mt' type = "float">
 			<attributes label = "Διαφορά θερμοκρασίας κατάψυξης:" help_text = "K" required = "False"/>
 		</var>
 		<var name = 'ores_psiksis8' type = "float">

@@ -1,43 +1,50 @@
 # -*- coding: utf-8 -*-
 
+# ex Psugeia[1-6]Form - FormA
+# ex Psugeia7Form - FormB
+# ex Psugeia8Form - FormC
+# ex Psugeia9Form - FormD
+# ex Psugeia10Form - FormE
+# ex Psugeia11Form - FormF
+# ex Psugeia12Form - FormG
+
 from cronos.refrigerators.tables import *
 from django import forms
+import xml.etree.ElementTree as ET
+import os
+from cronos.settings import *
+xmlfile = '' + str(PROJECT_ROOT.split()[0][0:len(PROJECT_ROOT)-2]) + 'refrigerators/Refrigerators.xml'
+tree = ET.parse(xmlfile)
+root = tree.getroot()
 
-# ex Psugeia[1-6]Form
-class FormA(forms.Form):
-    sint_thermop = forms.FloatField(label = "Συντελεστής Θερμοπερατότητας (K):", help_text = "KW/m^2*K")
-    epif_pleuras = forms.FloatField(label = "Επιφάνεια Πλευράς:", help_text = "m^2")
-    dt = forms.FloatField(label = "Διαφορά Θερμοκρασίας:", help_text = "K")
+# ex Dicts.
+Forms = []
+# ex Forms.
+Classes = []
+# the second, undeclared, half of each ex dict_X_.
+tempdict = {}
 
-# ex Psugeia7Form
-class FormB(forms.Form):
-    thermokrasia_apothikeusis7 = forms.ChoiceField(choices = THERMOKRASIA_APOTHIKEYSIS7, label = "Θερμοκρασία αποθήκευσης", help_text = "C")
-    thermokrasia_aera_eisodou7 = forms.ChoiceField(choices = THERMOKRASIA_AERA_EISODOY7, label = "Θερμοκρασία - Σχετική υγρασία αέρα εισροής", help_text = "C")
-    ogkos_thalamou7 = forms.ChoiceField(choices = OGKOS_THALAMOY7, label = "Όγκος Θαλάμου", help_text = "m^3")
-    thermokrasia_thalamou7 = forms.ChoiceField(choices = THERMOKRASIA_THALAMOY7, label = "Θερμοκρασία Θαλάμου")
+for a_form in root:
+	# ex dict_X_'s all in one.
+	tempForm = [a_form.attrib['name']]
+	#print tempForm
+	tempdict = {}
+	for a_var in a_form:
+		#print a_var.attrib['type']
+		if a_var.attrib['type'] == 'float':
+			varsForm = forms.FloatField(label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+		elif a_var.attrib['type'] == 'choice':
+			varsForm = forms.ChoiceField(choices = a_var._children[0].__dict__['attrib']['choices'], label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+		else:
+			pass
+		#print a_var.attrib['name'], type(varsForm)
+		tempdict[a_var.attrib['name']] = varsForm
+	#print tempForm, ' -type> ', type(tempForm)
+	tempForm.append(tempdict)
+	#print tempForm
+	Forms.append(tempForm)
 
-# ex Psugeia8Form
-class FormC(forms.Form):
-    sint_kataps = forms.ChoiceField(choices = SINT_KATAPS, label = "Επιλογή αποθήκευσης:")
-    bathmos_psiksis8 = forms.ChoiceField(choices = PROIONTA8, label = "Προϊόν:")
-    dt8 = forms.FloatField(label = "Διαφορά Θερμοκρασίας συντήρησης:", help_text = "Κ")
-    dt_mt8 = forms.FloatField(label = "Διαφορά θερμοκρασίας κατάψυξης:", help_text = "K", required = False)
-    ores_psiksis8 = forms.FloatField(label = "Ώρες ψύξης:", help_text = "Ώρες")
-    maza8 = forms.FloatField(label = "Μάζα:", help_text = "Kg")
+for i in Forms:
+    Classes.append(type(i[0], (forms.Form, ), i[1]))
 
-# ex Psugeia9Form
-class FormD(forms.Form):
-    maza9 = forms.FloatField(label = "Μάζα:", help_text = "Kg")
-    timi_anapnois9 = forms.FloatField(label = "Τιμή αναπνοής:", help_text = "KW/Kg")
 
-# ex Psugeia10Form
-class FormE(forms.Form):
-    diafora_fortia10 = forms.FloatField(label = "Διάφορα φορτία:", help_text = "KWatt")
-
-# ex Psugeia11Form
-class FormF(forms.Form):
-    sintelestis_asfaleias11 = forms.FloatField(label = "Συντελεστής ασφαλείας:")
-
-# ex Psugeia12Form
-class FormG(forms.Form):
-    sintelestis_diakop_leit12 = forms.FloatField(label = "Συντελεστής διακοπτόμενης λειτουργίας:", help_text = "Ώρες")
