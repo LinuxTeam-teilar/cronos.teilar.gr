@@ -11,7 +11,7 @@ logger_syslog = logging.getLogger('cronos')
 logger_mail = logging.getLogger('mail_cronos')
 
 def get_package_version():
-    return '0.3-dev'
+    return '0.4-dev'
 
 __version__ = get_package_version()
 
