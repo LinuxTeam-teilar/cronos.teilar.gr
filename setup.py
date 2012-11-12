@@ -64,7 +64,7 @@ setup(
         'django-tastypie>=0.9.11',
         'feedparser>=5.1.2',
         'lxml>=2.3.4',
-	'mysql-python>=1.2.3',
+	    'mysql-python>=1.2.3',
         'pycrypto>=2.6',
         'requests>=0.13.6',
         'setuptools>=0.6.21',
