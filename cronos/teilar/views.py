@@ -70,61 +70,22 @@ def dionysos(request):
     '''
     Retrieve and print the declaration
     '''
-    declaration_lessons = []
+    declaration = []
     if request.user.get_profile().declaration:
         declaration_full = request.user.get_profile().declaration.split(':')
         i = 0
         while i <= len(declaration_full):
-            declaration_lessons.append(declaration_full[i:i+7])
+            declaration.append(declaration_full[i:i+7])
             i += 7
 
     '''
     Retrieve and print the grades
     '''
+    # TODO
     grades = []
-    summary = None
-    total = None
-    '''
-    if request.user.get_profile().grades:
-        grades_full = request.user.get_profile().grades.split(',')
-        length = len(grades_full)
-        i = 0
-        while i < length - 6:
-            if grades_full[i][:7] == u'Εξάμηνο':
-                grades.append([grades_full[i]])
-                i += 1
-            elif grades_full[i+5][:5] == 'total':
-                grades.append([
-                    str(grades_full[i]),
-                    str(grades_full[i+1]),
-                    #str(grades_full[i+2]),
-                    grades_full[i+3],
-                    #str(grades_full[i+4]),
-                ])
-                i += 6 
-            else: 
-                grades.append([
-                    grades_full[i],
-                    #str(grades_full[i+1]),
-                    #str(grades_full[i+2]),
-                    grades_full[i+3],
-                    #str(grades_full[i+4]),
-                    grades_full[i+5],
-                    grades_full[i+6],
-                ])
-                i += 7
-        total = [
-            grades_full[i],
-            grades_full[i+1],
-            #str(grades_full[i+2]),
-            grades_full[i+3],
-            #str(grades_full[i+4]),
-        ]'''
     return  render_to_response('dionysos.html', {
-            'summary': summary,
-            'declaration_lessons': declaration_lessons,
+            'declaration': declaration,
             'grades': grades,
-            'total': total,
         }, context_instance = RequestContext(request))
 
 @login_required

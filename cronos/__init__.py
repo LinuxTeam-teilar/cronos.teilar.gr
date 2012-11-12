@@ -94,7 +94,7 @@ class Cronos(object):
             '''
             Get the HTML output of the declaration page
             '''
-            dionysos_declaration_url = 'https://dionysos.teilar.gr/unistudent/stud_NewClass.asp?studPg=1&mnuid=diloseis;newDil&'
+            dionysos_declaration_url = 'https://dionysos.teilar.gr/unistudent/stud_vClasses.asp?studPg=1&mnuid=diloseis;showDil&'
             response = dionysos_session.get(dionysos_declaration_url)
             response.encoding = 'windows-1253'
             self.dionysos_declaration_output = response.text
@@ -218,6 +218,7 @@ class Cronos(object):
         DM eg 2
         Hours eg 4
         Type eg Y
+        Grade
         '''
         if not self.dionysos_declaration_output:
             self.dionysos_auth_login(declaration = True)
@@ -227,33 +228,35 @@ class Cronos(object):
         variables give faster results, since we don't have to regenerate the
         same data in each time the for loop is executed.
         '''
-        temp = soup.find_all('table')[15]
-        temp_td = temp.find_all('td')
-        temp_span_underline = temp.find_all('span', 'underline')
-        '''
-        The lessons are stored in a dictionary with the following structure:
-        {lcode: [title, semester, dm, hours, type]}
-        '''
-        declaration = {}
-        i = 8
-        for item in temp_span_underline:
-            lcode = temp_td[i].contents[2].strip()[1:-1]
-            title = item.contents[0].strip()
-            semester = temp_td[i+2].contents[0]
-            dm = temp_td[i+3].contents[0]
-            hours = temp_td[i+4].contents[0]
-            ltype = temp_td[i+5].contents[0]
-            i +=7
-            declaration[lcode] = [title, semester, dm ,hours, ltype]
-        '''
-        Get total lessons, total DMs and total hours, and add them
-        in the declaration dictionary as well
-        '''
-        totals = soup.find_all('td', 'error')
-        declaration['totals'] = []
-        for item in totals:
-            declaration['totals'].append(item.contents[0])
-        self.dionysos_declaration = declaration
+        try:
+            temp = soup.find_all('table')[13].find('table')
+            temp_td_bottom = temp.find_all('td', 'bottomborderLight')
+            declaration = temp_td_bottom
+            i = 0
+            while i < len(declaration):
+                '''
+                Some of the above results are inside single HTML tags (<td>2</td>)
+                and some are in double ones (<td><span>4</span</td>). We work around
+                this with a try/except block
+                '''
+                try:
+                    '''
+                    Add information that is inside double HTML tags
+                    '''
+                    declaration[i] = unicode(declaration[i].contents[0].contents[0]).strip()
+                except AttributeError:
+                    '''
+                    Add information that is inside single HTML tags
+                    '''
+                    declaration[i] = unicode(declaration[i].contents[0]).strip()
+                i += 1
+            declaration = ':'.join(declaration).replace('&amp;', '&')
+            self.dionysos_declaration = declaration
+        except ImportError as error:
+            if request:
+                logger_syslog.error(error, extra = log_extra_data(request))
+                logger_mail.exception(error)
+            raise CronosError(u'Αδυναμία ανάκτησης Δήλωσης')
 
     def get_dionysos_grades(self, request = None):
         self.dionysos_grades = None

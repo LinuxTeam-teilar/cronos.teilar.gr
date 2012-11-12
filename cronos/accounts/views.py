@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from cronos import Cronos
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.encryption import encrypt_password, decrypt_password
@@ -167,11 +168,13 @@ def settings_accounts(request):
             Update the declaration
             '''
             try:
-                declaration = get_dionysos_declaration(
+                student = Cronos(
                     request.user.get_profile().dionysos_username,
                     decrypt_password(request.user.get_profile().dionysos_password),
-                    request,
                 )
+                student.get_dionysos_declaration(request)
+                request.user.get_profile().declaration = student.dionysos_declaration
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
@@ -180,11 +183,13 @@ def settings_accounts(request):
             Update the grades
             '''
             try:
-                grades = get_dionysos_grades(
+                student = Cronos(
                     request.user.get_profile().dionysos_username,
                     decrypt_password(request.user.get_profile().dionysos_password),
-                    request,
                 )
+                student.get_dionysos_grades(request)
+                request.user.get_profile().grades = student.dionysos_grades
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
