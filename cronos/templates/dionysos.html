@@ -6,13 +6,13 @@
 
 {% block content %}
     <div id="notifications">
-        <p>Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
+        <p>Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/accounts/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
     </div>
 
     <div class="entry" id="declaration">
     <h3>Δήλωση μαθημάτων</h3>
     {% if not user.get_profile.declaration %}
-        Παρακαλούμε πατήστε ανανέωση στο πεδίο της Δήλωσης στις <a href="/settings/#other">ρυθμίσεις</a>
+        Παρακαλούμε πατήστε ανανέωση στο πεδίο της Δήλωσης στις <a href="/settings/accounts/#other">ρυθμίσεις</a>
     {% else %}
         <table>
             <th style="width: 120px;">Κωδικός</th>
@@ -22,7 +22,7 @@
             <th style="width: 60px;">Ώρες</th>
             <th style="width: 60px;">Τύπος</th>
             <th style="width: 60px;">Βαθμός</th>
-            {% for i in declaration_lessons %}
+            {% for i in declaration %}
                 <tr>
                 {% for j in i %}
                     <td style="text-align: center;">{{j|safe}}</td>
@@ -36,7 +36,7 @@
     <div class="entry" id="grades">
         <h3>Βαθμολογία</h3>
         {% if not user.get_profile.grades %}
-            Παρακαλούμε πατήστε ανανέωση στο πεδίο της Βαθμολογίας στις <a href="/settings/#other">ρυθμίσεις</a>
+            Παρακαλούμε πατήστε ανανέωση στο πεδίο της Βαθμολογίας στις <a href="/settings/accounts/#other">ρυθμίσεις</a>
         {% else %}
             <table>
                 {% for i in grades %}

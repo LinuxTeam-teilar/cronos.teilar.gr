@@ -59,7 +59,9 @@ setup(
     install_requires=[
         'beautifulsoup>=3.2.1',
         'Django>=1.4.1',
+        'django-setuptest>=0.1.2',
         'django-endless-pagination>=1.1',
+        'django-tastypie>=0.9.11',
         'feedparser>=5.1.2',
         'mysql-python>=1.2.3',
         'pycrypto>=2.6',

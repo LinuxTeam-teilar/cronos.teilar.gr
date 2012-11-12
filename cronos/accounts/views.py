@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from cronos import eclass_auth_login
+from cronos import Cronos
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
 from cronos.common.encryption import encrypt_password, decrypt_password
 from cronos.accounts.forms import *
-from cronos.accounts.get_student import get_dionysos_declaration, get_dionysos_grades, get_eclass_lessons
 from cronos.accounts.models import UserProfile
 from cronos.teilar.models import Teachers, Websites
 from django.contrib.auth import login, authenticate, logout
@@ -14,6 +13,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from tastypie.models import ApiKey
 import logging
 
 logger = logging.getLogger('cronos')
@@ -39,6 +39,8 @@ def accounts_login(request):
             it was successful. If it retrieves None then it failed to login
             '''
             user = authenticate(username = username, password = password, request = request)
+            if not user:
+                raise LoginError
             if user.is_active:
                 login(request, user)
                 if not form.cleaned_data['remember']:
@@ -67,9 +69,9 @@ def accounts_index(request):
 
 
 @login_required
-def settings(request):
+def settings_accounts(request):
     '''
-    The user's settings webpage
+    The user's accounts settings webpage
     '''
     msg = None
     eclass_credentials_form = EclassCredentialsForm()
@@ -78,32 +80,14 @@ def settings(request):
     grades_form = GradesForm()
     eclass_lessons_form = EclassLessonsForm()
     '''
-    Fill the select boxes with teachers
+    Get the API key
     '''
-    teachers_all_q = Teachers.objects.filter(is_active = True).order_by('name')
-    '''
-    Get the following teachers that will be put in the right selectbox
-    '''
-    teachers_following = teachers_all_q.filter(id__in = request.user.get_profile().following_teachers.all())
-    '''
-    Get the not following teachers that will be put in the left selectbox
-    '''
-    teachers_unfollowing = teachers_all_q.exclude(id__in = request.user.get_profile().following_teachers.all())
-    '''
-    Fill the select boxes with websites
-    '''
-    websites_all_q = Websites.objects.filter(is_active = True).exclude(url__endswith = u'_dummy').order_by('name')
-    '''
-    Get the following websites that will be put in the right selectbox
-    '''
-    websites_following = websites_all_q.filter(id__in = request.user.get_profile().following_websites.all())
-    '''
-    Get the not following websites that will be put in the left selectbox
-    '''
-    websites_unfollowing = websites_all_q.exclude(id__in = request.user.get_profile().following_websites.all())
-    '''
-    Process one of the form submissions
-    '''
+    try:
+        api_key = ApiKey.objects.get(user = request.user)
+        api_key_hash = api_key.key
+    except ApiKey.DoesNotExist:
+        api_key = None
+        api_key_hash = None
     if request.method == 'POST':
         if request.POST.get('eclass_password'):
             '''
@@ -116,7 +100,7 @@ def settings(request):
                     eclass_username = request.user.get_profile().eclass_username
                 else:
                     if not eclass_credentials_form.is_valid():
-                        raise CronosError('')
+                        raise LoginError
                     eclass_username = request.POST.get('eclass_username')
                 try:
                     '''
@@ -145,16 +129,52 @@ def settings(request):
                 msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
+        elif request.POST.get('webmail_password'):
+            '''
+            Update webmail credentials
+            '''
+            try:
+                webmail_form = WebmailForm(request.POST)
+                webmail_password = request.POST.get('webmail_password')
+                if request.user.get_profile().webmail_username:
+                    webmail_username = request.user.get_profile().webmail_username
+                else:
+                    if not webmail_form.is_valid():
+                        raise LoginError
+                    webmail_username = request.POST.get('webmail_username')
+                try:
+                    '''
+                    Check if the myweb.teilar.gr credentials already exist in the DB,
+                    but belong to another student's account
+                    '''
+                    user = User.objects.get(userprofile__webmail_username = webmail_username)
+                    if user.username != request.user.username:
+                        raise CronosError(u'Τα στοιχεία webmail.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
+                except User.DoesNotExist:
+                    user = None
+                if not user:
+                    user = UserProfile.objects.get(pk=request.user.id)
+                user.webmail_username = webmail_username
+                user.webmail_password = encrypt_password(webmail_password)
+                '''
+                Login was successful, add in DB
+                '''
+                user.save()
+                msg = u'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
+            except (CronosError, LoginError) as error:
+                msg = error.value
         elif request.POST.get('declaration'):
             '''
             Update the declaration
             '''
             try:
-                declaration = get_dionysos_declaration(
+                student = Cronos(
                     request.user.get_profile().dionysos_username,
                     decrypt_password(request.user.get_profile().dionysos_password),
-                    request,
                 )
+                student.get_dionysos_declaration(request)
+                request.user.get_profile().declaration = student.dionysos_declaration
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
@@ -163,11 +183,13 @@ def settings(request):
             Update the grades
             '''
             try:
-                grades = get_dionysos_grades(
+                student = Cronos(
                     request.user.get_profile().dionysos_username,
                     decrypt_password(request.user.get_profile().dionysos_password),
-                    request,
                 )
+                student.get_dionysos_grades(request)
+                request.user.get_profile().grades = student.dionysos_grades
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
@@ -184,55 +206,101 @@ def settings(request):
                 msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
-        elif request.POST.get('teachers'):
-            if request.POST.get('teachers_selected'):
-                '''
-                Get the list of selected teachers
-                '''
-                selected_teachers = dict(request.POST)['teachers_selected']
-                selected_teachers = teachers_all_q.filter(id__in = selected_teachers)
-                '''
-                Find the teachers for addition to the following_teachers field
-                '''
-                teachers_for_addition = selected_teachers.exclude(id__in = teachers_following)
-                for teacher in teachers_for_addition:
-                    request.user.get_profile().following_teachers.add(teacher)
-                teachers_for_removal = teachers_following.exclude(id__in = selected_teachers)
-                '''
-                Find the teachers for removal from the following_teachers field
-                '''
-                for teacher in teachers_for_removal:
-                    request.user.get_profile().following_teachers.remove(teacher)
+        elif request.POST.get('api_key'):
+            if api_key:
+                api_key.key = api_key.generate_key()
+                api_key.save()
             else:
-                request.user.get_profile().following_teachers.clear()
-            msg = u'Οι αλλαγές έγιναν επιτυχώς'
-        elif request.POST.get('websites'):
-            if request.POST.get('websites_selected'):
-                '''
-                Get the list of selected websites
-                '''
-                selected_websites = dict(request.POST)['websites_selected']
-                selected_websites = websites_all_q.filter(id__in = selected_websites)
-                '''
-                Find the websites for addition to the following_websites field
-                '''
-                websites_for_addition = selected_websites.exclude(id__in = websites_following)
-                for website in websites_for_addition:
-                    request.user.get_profile().following_websites.add(website)
-                '''
-                Find the websites for removal from the following_websites field
-                '''
-                websites_for_removal = websites_following.exclude(id__in = selected_websites)
-                for website in websites_for_removal:
-                    request.user.get_profile().following_websites.remove(website)
-            else:
-                request.user.get_profile().following_websites.clear()
-            msg = u'Οι αλλαγές έγιναν επιτυχώς'
-    return render_to_response('settings.html',{
+                api_key = ApiKey.objects.create(user=request.user)
+            api_key_hash = api_key.key
+    return render_to_response('settings_accounts.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
-        'eclass_lessons_form': eclass_lessons_form,
         'webmail_form': webmail_form,
+        'eclass_lessons_form': eclass_lessons_form,
+        'declaration_form': declaration_form,
+        'grades_form': grades_form,
+        'api_key': api_key_hash,
+       }, context_instance = RequestContext(request))
+
+@login_required
+def settings_announcements(request):
+    '''
+    The user's announcements settings webpage
+    '''
+    msg = None
+    '''
+    Fill the select boxes with teachers
+    '''
+    teachers_all_q = Teachers.objects.filter(is_active = True).order_by('name')
+    '''
+    Get the following teachers that will be put in the right selectbox
+    '''
+    teachers_following = teachers_all_q.filter(id__in = request.user.get_profile().following_teachers.all())
+    '''
+    Get the not following teachers that will be put in the left selectbox
+    '''
+    teachers_unfollowing = teachers_all_q.exclude(id__in = request.user.get_profile().following_teachers.all())
+    '''
+    Fill the select boxes with websites
+    '''
+    websites_all_q = Websites.objects.filter(is_active = True).exclude(url__endswith = u'_dummy').order_by('name')
+    '''
+    Get the following websites that will be put in the right selectbox
+    '''
+    websites_following = websites_all_q.filter(id__in = request.user.get_profile().following_websites.all())
+    '''
+    Get the not following websites that will be put in the left selectbox
+    '''
+    websites_unfollowing = websites_all_q.exclude(id__in = request.user.get_profile().following_websites.all())
+    '''
+    Process one of the form submissions
+    '''
+    if request.method == 'POST':
+        if request.POST.get('teachers_selected'):
+            '''
+            Get the list of selected teachers
+            '''
+            selected_teachers = dict(request.POST)['teachers_selected']
+            selected_teachers = teachers_all_q.filter(id__in = selected_teachers)
+            '''
+            Find the teachers for addition to the following_teachers field
+            '''
+            teachers_for_addition = selected_teachers.exclude(id__in = teachers_following)
+            for teacher in teachers_for_addition:
+                request.user.get_profile().following_teachers.add(teacher)
+            teachers_for_removal = teachers_following.exclude(id__in = selected_teachers)
+            '''
+            Find the teachers for removal from the following_teachers field
+            '''
+            for teacher in teachers_for_removal:
+                request.user.get_profile().following_teachers.remove(teacher)
+        else:
+            request.user.get_profile().following_teachers.clear()
+        msg = u'Οι αλλαγές έγιναν επιτυχώς'
+        if request.POST.get('websites_selected'):
+            '''
+            Get the list of selected websites
+            '''
+            selected_websites = dict(request.POST)['websites_selected']
+            selected_websites = websites_all_q.filter(id__in = selected_websites)
+            '''
+            Find the websites for addition to the following_websites field
+            '''
+            websites_for_addition = selected_websites.exclude(id__in = websites_following)
+            for website in websites_for_addition:
+                request.user.get_profile().following_websites.add(website)
+            '''
+            Find the websites for removal from the following_websites field
+            '''
+            websites_for_removal = websites_following.exclude(id__in = selected_websites)
+            for website in websites_for_removal:
+                request.user.get_profile().following_websites.remove(website)
+        else:
+            request.user.get_profile().following_websites.clear()
+        msg = u'Οι αλλαγές έγιναν επιτυχώς'
+    return render_to_response('settings_announcements.html',{
+        'msg': msg,
         'teachers_unfollowing': teachers_unfollowing,
         'teachers_following': teachers_following,
         'websites_unfollowing': websites_unfollowing,

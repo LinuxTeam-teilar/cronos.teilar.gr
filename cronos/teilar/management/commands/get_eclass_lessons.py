@@ -4,7 +4,7 @@ from cronos.common.exceptions import CronosError
 from cronos.common.log import log_extra_data
 from cronos.posts.models import Authors
 from cronos.teilar.models import EclassFaculties, EclassLessons
-from cronos import teilar_anon_login
+from cronos.teilar import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
 import logging

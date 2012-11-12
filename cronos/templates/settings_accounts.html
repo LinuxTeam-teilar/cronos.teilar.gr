@@ -5,10 +5,6 @@
     Ρυθμίσεις χρήστη {{user}} | 
 {% endblock %}
 
-{% block extra_js_top %}
-    <script type="text/javascript" src="{% static "js/multibox.js" %}"></script>
-{% endblock %}
-
 {% block content %}
     {% if msg %}
         <div id="notifications">
@@ -83,43 +79,21 @@
         </table>
     </div>
 
-    <div class="entry" id="teachers">
-        <h3>Ανακοινώσεις Καθηγητών</h3>
-        <form action="." method="POST" id="select_teachers">{% csrf_token %}
-            <select multiple="multiple" name="teachers_unselected" id="teachers_unselected">
-                {% for teacher in teachers_unfollowing %}
-                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
-                {% endfor %}
-            </select>
-            <select multiple="multiple" name="teachers_selected" id="teachers_selected">
-                {% for teacher in teachers_following %}
-                    <option value="{{ teacher.id }}">{{ teacher.name }}</option>
-                {% endfor %}
-            </select>
-            <div id="add1pl"><a href="#" id="add1">Προσθήκη &gt;&gt;</a></div>
-            <div id="remove1pl"><a href="#" id="remove1">&lt;&lt; Αφαίρεση</a></div>
-            <br /><br /><br />
-            <input class="button" type="submit" name="teachers" value="Ανανέωση" />
-        </form>
-    </div>
-
-    <div class="entry" id="websites">
-        <h3>Άλλες Ανακοινώσεις</h3>
-        <form action="." method="POST" id="select_websites">{% csrf_token %}
-            <select multiple="multiple" name="websites_unselected" id="websites_unselected">
-                {% for website in websites_unfollowing %}
-                    <option value="{{ website.id }}">{{ website.name }}</option>
-                {% endfor %}
-            </select>
-            <select multiple="multiple" name="websites_selected" id="websites_selected">
-                {% for website in websites_following %}
-                    <option value="{{ website.id }}">{{ website.name }}</option>
-                {% endfor %}
-            </select>
-            <div id="add2pl"><a href="#" id="add2">Προσθήκη &gt;&gt;</a></div>
-            <div id="remove2pl"><a href="#" id="remove2">&lt;&lt; Αφαίρεση</a></div>
-            <br /><br /><br />
-            <input class="button" type="submit" name="websites" value="Ανανέωση" />
+    <div class="entry" id="api_key">
+        <h3>API Key</h3>
+        <p>Στην παρακάτω φορμά μπορείτε να δημιουργήσετε ή να ανανεώσετε το API key σας</p>
+        {% if api_key %}
+            <p>Η τιμή από το τρέχον API key σας είναι: {{ api_key }}</p>
+            <p>Η σελίδα των πληροφοριών σας είναι διαθέσιμη σε <a href="/api/user/?format=json&username={{request.user.username}}&api_key={{api_key}}">μορφή JSON</a> και σε <a href="/api/user/?format=xml&username={{request.user.username}}&api_key={{api_key}}">μορφή XML</a>.</p>
+        {% endif %}
+        <form action="." method="POST" id="api_key">{% csrf_token %}
+            <input class="button" type="submit" name="api_key" value=
+            {% if api_key %}
+                "Ανανέωση"
+            {% else %}
+                "Δημιουργία"
+            {% endif %}
+            />
         </form>
     </div>
 {% endblock %}

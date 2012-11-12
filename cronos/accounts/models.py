@@ -23,3 +23,9 @@ class UserProfile(models.Model):
 
     def __unicode__(self):
         return self.user.username
+
+class Files(models.Model):
+    name = models.CharField(max_length = 255)
+    department = models.ForeignKey(Departments)
+#    lesson = models.ForeignKey(Lessons)
+    uploader = models.ForeignKey(User)

@@ -1,16 +1,5 @@
 #!/bin/bash
-# Cronos cronjob
-
-# Variables
-LOCK="/var/lock/update_cronos.lock"
-SCRIPTS=(
-    websites
-    departments
-    teachers
-    eclass_faculties
-    eclass_lessons
-    rss_feeds
-)
+# Cronos update script, it also can be run as cronjob
 
 help() {
     echo
@@ -23,6 +12,7 @@ help() {
     echo " -p <path> Path of the cronos instance"
     echo " -u        Update the repository"
     echo " -c        Collect the static files"
+    echo " -r        Create the custom RSS feeds"
     echo " -d        Populate the database"
     echo
     exit
@@ -31,6 +21,15 @@ help() {
 if [[ $1 == "--help" ]]; then
     help
 fi
+
+SCRIPTS=(
+    websites
+    departments
+    teachers
+    eclass_faculties
+    eclass_lessons
+    rss_feeds
+)
 
 CRONOS_PATH=
 COLLECTSTATIC=
@@ -50,17 +49,19 @@ while getopts p:curdhv arg; do
     esac
 done
 
-set -e
-if [ -e "${LOCK}" ]; then
-    echo "Warning: \"${LOCK}\" already present, skipping update."
-    exit 1
-fi
-touch "${LOCK}"
-trap "rm -f ${LOCK}" EXIT
 
 if [[ -z ${CRONOS_PATH} ]]; then
     help
 else
+    # Create lock file
+    LOCK="${CRONOS_PATH}/.update.lock"
+    set -e
+    if [ -e "${LOCK}" ]; then
+        echo "Warning: \"${LOCK}\" already present, skipping update."
+        exit 1
+    fi
+    touch "${LOCK}"
+    trap "rm -f ${LOCK}" EXIT
     # Check if the directory exists
     if [[ ! -d ${CRONOS_PATH} ]]; then
         echo "The specified path is not a directory or does not exist"
