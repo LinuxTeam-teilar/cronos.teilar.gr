@@ -45,7 +45,7 @@ setup(
     ],
     cmdclass={'test': test},
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Students',
         'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
