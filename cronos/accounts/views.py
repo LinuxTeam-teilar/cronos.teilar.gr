@@ -102,37 +102,27 @@ def settings_accounts(request):
             '''
             try:
                 eclass_credentials_form = EclassCredentialsForm(request.POST)
-                eclass_password = request.POST.get('eclass_password')
-                if request.user.get_profile().eclass_username:
-                    eclass_username = request.user.get_profile().eclass_username
-                else:
-                    if not eclass_credentials_form.is_valid():
+                student.eclass_password = request.POST.get('eclass_password')
+                if not request.user.get_profile().eclass_username:
+                    if eclass_credentials_form.is_valid():
+                        student.eclass_username = request.POST.get('eclass_username')
+                    else:
                         raise LoginError
-                    eclass_username = request.POST.get('eclass_username')
                 try:
                     '''
                     Check if the e-class.teilar.gr credentials already exist in the DB,
                     but belong to another student's account
                     '''
-                    user = User.objects.get(userprofile__eclass_username = eclass_username)
+                    user = User.objects.get(userprofile__eclass_username = student.eclass_username)
                     if user.username != request.user.username:
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
-                    user = None
-                if not user:
-                    user = UserProfile.objects.get(pk=request.user.id)
-                user.eclass_username = eclass_username
-                user.eclass_password = encrypt_password(eclass_password)
-                '''
-                Login and get the eclass lessons
-                '''
-                eclass_lessons = get_eclass_lessons(request, eclass_username, eclass_password)
-                '''
-                Login and retrieval of lessons were successful, save both in DB
-                '''
-                user.save()
-                for lesson in eclass_lessons:
-                    request.user.get_profile().following_eclass_lessons.add(lesson)
+                    pass
+                request.user.get_profile().eclass_username = student.eclass_username
+                request.user.get_profile().eclass_password = encrypt_password(student.eclass_password)
+                #student.get_eclass_lessons(request)
+                #request.user.get_profile().eclass_lessons = student.eclass_lessons
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
