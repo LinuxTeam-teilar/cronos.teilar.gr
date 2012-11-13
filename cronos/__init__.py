@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from bs4 import BeautifulSoup
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
-from bs4 import BeautifulSoup
+from cronos.teilar.models import EclassLessons
 import logging
 import requests
 import sys
@@ -323,15 +324,50 @@ class Cronos(object):
         if not self.eclass_output:
             self.eclass_auth_login(request)
         try:
-            eclass_lessons = {}
-            all_lessons = BeautifulSoup(self.eclass_output).find('table', 'tbl_lesson').find_all('td', align='left')
-            for item in all_lessons:
-                lcode = item.span.contents[0][1:-1]
-                url = u'http://openclass.teilar.gr/courses/%s/' % lcode
-                name = item.a.contents[0]
-                # TODO: teacher, faculty, ltype
-                eclass_lessons[lcode] = [url, name]
-            self.eclass_lessons = eclass_lessons
+            eclass_output = BeautifulSoup(self.eclass_output).find('table', 'tbl_lesson').find_all('td', align='left')
+            if request:
+                '''
+                We are using the function from the webapp, all actions will be
+                performed to the DB directly.
+                Get all lessons and the ones that the student already follows
+                '''
+                eclass_lessons_all_q = EclassLessons.objects.all()
+                eclass_lessons_following = eclass_lessons_all_q.filter(url__in = request.user.get_profile().following_eclass_lessons.all())
+                '''
+                Get the new list of following lessons
+                '''
+                new_eclass_lessons = []
+                for eclass_lesson in eclass_output:
+                    new_eclass_lessons.append(eclass_lesson.find('a')['href'])
+                '''
+                Convert the python list to QuerySet
+                '''
+                new_eclass_lessons = eclass_lessons_all_q.filter(url__in = new_eclass_lessons)
+                '''
+                Find the new additions and put them in the DB
+                '''
+                eclass_lessons_for_addition = new_eclass_lessons.exclude(url__in = eclass_lessons_following)
+                for eclass_lesson in eclass_lessons_for_addition:
+                    request.user.get_profile().following_eclass_lessons.add(eclass_lesson)
+                '''
+                Find the removed ones and remove them from the DB
+                '''
+                eclass_lessons_for_removal = eclass_lessons_following.exclude(url__in = new_eclass_lessons)
+                for eclass_lesson in eclass_lessons_for_removal:
+                    request.user.get_profile().following_eclass_lessons.remove(eclass_lesson)
+            else:
+                '''
+                We are using the function from CLI, the output will be a python
+                dictionary with the eclass lessons
+                '''
+                eclass_lessons = {}
+                for item in all_lessons:
+                    lcode = item.span.contents[0][1:-1]
+                    url = u'http://openclass.teilar.gr/courses/%s/' % lcode
+                    name = item.a.contents[0]
+                    # TODO: teacher, faculty, ltype
+                    eclass_lessons[lcode] = [url, name]
+                self.eclass_lessons = eclass_lessons
         except Exception as error:
             if request:
                 logger_syslog.error(error, extra = log_extra_data(request))

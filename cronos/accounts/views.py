@@ -120,9 +120,8 @@ def settings_accounts(request):
                     pass
                 request.user.get_profile().eclass_username = student.eclass_username
                 request.user.get_profile().eclass_password = encrypt_password(student.eclass_password)
-                #student.get_eclass_lessons(request)
-                #request.user.get_profile().eclass_lessons = student.eclass_lessons
                 request.user.get_profile().save()
+                student.get_eclass_lessons(request)
                 msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
@@ -188,8 +187,6 @@ def settings_accounts(request):
             '''
             try:
                 student.get_eclass_lessons(request)
-                request.user.get_profile().eclass_lessons = student.eclass_lessons()
-                request.user.get_profile().save()
                 msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
