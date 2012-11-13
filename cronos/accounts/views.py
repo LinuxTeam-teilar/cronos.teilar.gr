@@ -79,6 +79,13 @@ def settings_accounts(request):
     declaration_form = DeclarationForm()
     grades_form = GradesForm()
     eclass_lessons_form = EclassLessonsForm()
+    student = Cronos(
+        request.user.get_profile().dionysos_username,
+        decrypt_password(request.user.get_profile().dionysos_password),
+    )
+    if request.user.get_profile().eclass_username:
+        student.eclass_username = request.user.get_profile().eclass_username
+        student.eclass_password = decrypt_password(request.user.get_profile().eclass_password)
     '''
     Get the API key
     '''
@@ -168,10 +175,6 @@ def settings_accounts(request):
             Update the declaration
             '''
             try:
-                student = Cronos(
-                    request.user.get_profile().dionysos_username,
-                    decrypt_password(request.user.get_profile().dionysos_password),
-                )
                 student.get_dionysos_declaration(request)
                 request.user.get_profile().declaration = student.dionysos_declaration
                 request.user.get_profile().save()
@@ -183,10 +186,6 @@ def settings_accounts(request):
             Update the grades
             '''
             try:
-                student = Cronos(
-                    request.user.get_profile().dionysos_username,
-                    decrypt_password(request.user.get_profile().dionysos_password),
-                )
                 student.get_dionysos_grades(request)
                 request.user.get_profile().grades = student.dionysos_grades
                 request.user.get_profile().save()
@@ -198,11 +197,9 @@ def settings_accounts(request):
             Update the eclass lessons
             '''
             try:
-                eclass_lessons = get_eclass_lessons(
-                    request,
-                    request.user.get_profile().eclass_username,
-                    decrypt_password(request.user.get_profile().eclass_password),
-                )
+                student.get_eclass_lessons(request)
+                request.user.get_profile().eclass_lessons = student.eclass_lessons()
+                request.user.get_profile().save()
                 msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
