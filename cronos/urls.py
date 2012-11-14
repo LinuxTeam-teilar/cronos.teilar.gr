@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     (r'^refrigerators/', 'cronos.refrigerators.views.refrigerators'),
     (r'^settings/accounts/$', 'cronos.accounts.views.settings_accounts'),
     (r'^settings/announcements/$', 'cronos.accounts.views.settings_announcements'),
+    (r'^settings/apikey/$', 'cronos.accounts.views.settings_apikey'),
     (r'^teachers/$', 'cronos.teilar.views.teachers'),
     (r'^teachers/(\d+)/$', 'cronos.posts.views.posts', {'page': u'teacher'}),
 )

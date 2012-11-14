@@ -86,15 +86,6 @@ def settings_accounts(request):
     if request.user.get_profile().eclass_username:
         student.eclass_username = request.user.get_profile().eclass_username
         student.eclass_password = decrypt_password(request.user.get_profile().eclass_password)
-    '''
-    Get the API key
-    '''
-    try:
-        api_key = ApiKey.objects.get(user = request.user)
-        api_key_hash = api_key.key
-    except ApiKey.DoesNotExist:
-        api_key = None
-        api_key_hash = None
     if request.method == 'POST':
         if request.POST.get('eclass_password'):
             '''
@@ -190,13 +181,6 @@ def settings_accounts(request):
                 msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 msg = error.value
-        elif request.POST.get('api_key'):
-            if api_key:
-                api_key.key = api_key.generate_key()
-                api_key.save()
-            else:
-                api_key = ApiKey.objects.create(user=request.user)
-            api_key_hash = api_key.key
     return render_to_response('settings_accounts.html',{
         'msg': msg,
         'eclass_credentials_form': eclass_credentials_form,
@@ -204,7 +188,6 @@ def settings_accounts(request):
         'eclass_lessons_form': eclass_lessons_form,
         'declaration_form': declaration_form,
         'grades_form': grades_form,
-        'api_key': api_key_hash,
        }, context_instance = RequestContext(request))
 
 @login_required
@@ -289,4 +272,29 @@ def settings_announcements(request):
         'teachers_following': teachers_following,
         'websites_unfollowing': websites_unfollowing,
         'websites_following': websites_following,
+        }, context_instance = RequestContext(request))
+
+@login_required
+def settings_apikey(request):
+    msg = None
+    '''
+    Get the API key
+    '''
+    try:
+        api_key = ApiKey.objects.get(user = request.user)
+        api_key_hash = api_key.key
+    except ApiKey.DoesNotExist:
+        api_key = None
+        api_key_hash = None
+    if request.method == 'POST':
+        if request.POST.get('api_key'):
+            if api_key:
+                api_key.key = api_key.generate_key()
+                api_key.save()
+            else:
+                api_key = ApiKey.objects.create(user=request.user)
+            api_key_hash = api_key.key
+    return render_to_response('settings_apikey.html',{
+        'msg': msg,
+        'api_key': api_key_hash,
         }, context_instance = RequestContext(request))
