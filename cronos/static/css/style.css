@@ -150,7 +150,7 @@ th { color: #786721; width: 280px; }
 }
 
 #content #notifications p.infobox { background: #FFECB3; color: #786721; border: dashed 1px #E6AC00; }
-#content #notifications p.failbox {  background: #ffd0d0; color: #e92525; border: dashed 1px #e92525; }
+#content #notifications p.errorbox {  background: #ffd0d0; color: #e92525; border: dashed 1px #e92525; }
 #content #notifications p.successbox { background: #CCFF99; color: #009900; border: dashed 1px #009900; }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
