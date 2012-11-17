@@ -57,7 +57,7 @@ setup(
         'Topic :: Software Development',
     ],
     install_requires=[
-        'beautifulsoup>=3.2.1',
+        'beautifulsoup>=4.1.0',
         'Django>=1.4.1',
         'django-setuptest>=0.1.2',
         'django-endless-pagination>=1.1',
