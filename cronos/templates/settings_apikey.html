@@ -6,12 +6,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if msg %}
-        <div id="notifications">
-            <p>{{ msg }}</p>
-        </div>
-    {% endif %}
-
     <div class="entry" id="api_key" align="center">
         <h3>API Key</h3>
         {% if api_key %}

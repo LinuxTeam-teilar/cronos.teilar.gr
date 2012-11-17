@@ -22,7 +22,7 @@ def accounts_login(request):
     '''
     The login page (also the front page)
     '''
-    msg = None
+    notification = {}
     form = None
     user = None
     if request.method == "POST":
@@ -47,14 +47,14 @@ def accounts_login(request):
                     request.session.set_expiry(0)
                 return HttpResponseRedirect('/')
         except (CronosError, LoginError) as error:
-            msg = error.value
+            notification['error'] = error.value
     else:
         if request.user.is_authenticated():
             return HttpResponseRedirect('/')
         else:
             form = LoginForm()
     return render_to_response('login.html', {
-       'msg': msg,
+       'notification': notification,
        'form': form,
         }, context_instance = RequestContext(request))
 
@@ -73,7 +73,7 @@ def settings_accounts(request):
     '''
     The user's accounts settings webpage
     '''
-    msg = None
+    notification = {}
     eclass_credentials_form = EclassCredentialsForm()
     webmail_form = WebmailForm()
     declaration_form = DeclarationForm()
@@ -113,9 +113,9 @@ def settings_accounts(request):
                 request.user.get_profile().eclass_password = encrypt_password(student.eclass_password)
                 request.user.get_profile().save()
                 student.get_eclass_lessons(request)
-                msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('webmail_password'):
             '''
             Update webmail credentials
@@ -147,9 +147,9 @@ def settings_accounts(request):
                 Login was successful, add in DB
                 '''
                 user.save()
-                msg = u'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('declaration'):
             '''
             Update the declaration
@@ -158,9 +158,9 @@ def settings_accounts(request):
                 student.get_dionysos_declaration(request)
                 request.user.get_profile().declaration = student.dionysos_declaration
                 request.user.get_profile().save()
-                msg = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('grades'):
             '''
             Update the grades
@@ -169,20 +169,20 @@ def settings_accounts(request):
                 student.get_dionysos_grades(request)
                 request.user.get_profile().grades = student.dionysos_grades
                 request.user.get_profile().save()
-                msg = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('eclass_lessons'):
             '''
             Update the eclass lessons
             '''
             try:
                 student.get_eclass_lessons(request)
-                msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
     return render_to_response('settings_accounts.html',{
-        'msg': msg,
+        'notification': notification,
         'eclass_credentials_form': eclass_credentials_form,
         'webmail_form': webmail_form,
         'eclass_lessons_form': eclass_lessons_form,
@@ -195,7 +195,7 @@ def settings_announcements(request):
     '''
     The user's announcements settings webpage
     '''
-    msg = None
+    notification = {}
     '''
     Fill the select boxes with teachers
     '''
@@ -244,7 +244,6 @@ def settings_announcements(request):
                 request.user.get_profile().following_teachers.remove(teacher)
         else:
             request.user.get_profile().following_teachers.clear()
-        msg = u'Οι αλλαγές έγιναν επιτυχώς'
         if request.POST.get('websites_selected'):
             '''
             Get the list of selected websites
@@ -265,9 +264,9 @@ def settings_announcements(request):
                 request.user.get_profile().following_websites.remove(website)
         else:
             request.user.get_profile().following_websites.clear()
-        msg = u'Οι αλλαγές έγιναν επιτυχώς'
+        notification['success'] = u'Οι αλλαγές έγιναν επιτυχώς'
     return render_to_response('settings_announcements.html',{
-        'msg': msg,
+        'notification': notification,
         'teachers_unfollowing': teachers_unfollowing,
         'teachers_following': teachers_following,
         'websites_unfollowing': websites_unfollowing,
@@ -276,7 +275,7 @@ def settings_announcements(request):
 
 @login_required
 def settings_apikey(request):
-    msg = None
+    notification = {}
     '''
     Get the API key
     '''
@@ -294,7 +293,8 @@ def settings_apikey(request):
             else:
                 api_key = ApiKey.objects.create(user=request.user)
             api_key_hash = api_key.key
+        notification['success'] = u'Το API key ανανεώθηκε επιτυχώς'
     return render_to_response('settings_apikey.html',{
-        'msg': msg,
+        'notification': notification,
         'api_key': api_key_hash,
         }, context_instance = RequestContext(request))

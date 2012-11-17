@@ -53,6 +53,17 @@
                 <a class="button" href="/logout/">Αποσύνδεση</a>
             </div>
             {% endif %}
+            <div id="notifications">
+                {% if notification.info %}
+                    <p class="infobox">{{ notification.info|safe }}</p>
+                {% elif notification.error %}
+                    <p class="errorbox">{{ notification.error|safe }}</p>
+                {% elif notification.success %}
+                    <p class="successbox">{{ notification.success|safe }}</p>
+                {% endif %}
+                {% block notifications %}{% endblock %}
+            </div>
+
             <div id="content">
                 {% block content %}{% endblock %}
             </div>

@@ -24,7 +24,7 @@ def library(request):
     '''
     Perform search in library.teilar.gr and print the results
     '''
-    msg = None
+    notification = {}
     results = []
     if request.method == 'GET':
         form = LibraryForm(request.GET)
@@ -52,12 +52,12 @@ def library(request):
                 i += 10
                 results.append([title, authors, editor, city])
             if not results:
-                msg = 'Δεν υπάρχουν αποτελέσματα'
+                notification['info'] = 'Δεν υπάρχουν αποτελέσματα'
     else:
         form = SearchForm()
     return render_to_response('library.html', {
             'form': form,
-            'msg': msg,
+            'notification': notification,
             'results': results,
         }, context_instance = RequestContext(request))
 
@@ -66,7 +66,7 @@ def dionysos(request):
     '''
     Retrieve the declaration and grades from the DB and print them
     '''
-
+    notification = {}
     '''
     Retrieve and print the declaration
     '''
@@ -84,6 +84,7 @@ def dionysos(request):
     # TODO
     grades = []
     return  render_to_response('dionysos.html', {
+            'notification': notification,
             'declaration': declaration,
             'grades': grades,
         }, context_instance = RequestContext(request))
