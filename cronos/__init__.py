@@ -3,7 +3,6 @@
 from bs4 import BeautifulSoup
 from cronos.common.exceptions import CronosError, LoginError
 from cronos.common.log import log_extra_data
-from cronos.teilar.models import EclassLessons
 import logging
 import requests
 import sys
@@ -260,7 +259,86 @@ class Cronos(object):
             raise CronosError(u'Αδυναμία ανάκτησης Δήλωσης')
 
     def get_dionysos_grades(self, request = None):
-        self.dionysos_grades = None
+        '''
+        Retrieves student's grades
+        '''
+        if not self.dionysos_grades_output:
+            self.dionysos_auth_login(grades = True)
+        soup = BeautifulSoup(self.dionysos_grades_output)
+        grades = ''
+        i = 0
+        item = soup.find_all('table')[13].find_all('td')
+        length_all_td = len(item)
+        semesters = soup.find_all('table')[13].find_all('td', 'groupHeader')
+        lessons = soup.find_all('table')[13].find_all('td', 'topBorderLight')
+        while i < length_all_td:
+            item0 = item[i]
+            if item0 in semesters:
+                grades += item0.contents[0] + ','
+            if item0 in lessons:
+                year = item[i+6].contents[0].i.contents[0].strip()
+                year = year[:10].strip() + year[-9:].strip()
+                grades += '%s,%s,%s,%s,%s,%s,%s,' % (
+                    item0.contents[0].strip(),
+                    item[i+1].contents[0].strip(),
+                    item[i+2].contents[0].strip(),
+                    item[i+3].contents[0].strip(),
+                    item[i+4].contents[0].strip(),
+                    item[i+5].span.contents[0].replace(',', '.').strip(),
+                    year.replace('--', '-'),
+                )
+                try:
+                    if item[i+9].contents[1].strip()[4] in [u'Θ', u'Ε']:
+                        year = item[i+14].contents[0].i.contents[0].strip()
+                        year = year[:10].strip() + year[-9:]
+                        grades += '%s,%s,%s,%s,%s,%s,%s,' % (
+                            item[i+9].contents[1].strip(),
+                            '',
+                            item[i+10].i.contents[0].strip(),
+                            item[i+11].contents[0].strip(),
+                            item[i+12].contents[0].strip(),
+                            item[i+13].contents[0].replace(',', '.').strip(),
+                            year.replace('--', '-'),
+                        )
+                        year = item[i+22].contents[0].i.contents[0]
+                        year = year[:10].strip() + year[-9:]
+                        grades += '%s,%s,%s,%s,%s,%s,%s,' % (
+                            item[i+17].contents[1].strip(),
+                            '',
+                            item[i+18].i.contents[0].strip(),
+                            item[i+19].contents[0].strip(),
+                            item[i+20].contents[0].strip(),
+                            item[i+21].contents[0].replace(',', '.').strip(),
+                            year.replace('--', '-'),
+                        )
+                        i += 11
+                except:
+                    pass
+                i += 6
+            try:
+                if item0.contents[0][:6] == u'Σύνολα':
+                    grades += '%s,%s,%s,%s,%s,%s,' % (
+                        item0.b.contents[0],
+                        item[i+1].contents[1].contents[0].strip(),
+                        item[i+1].contents[3].contents[0].strip(),
+                        item[i+1].contents[5].contents[0].strip(),
+                        item[i+1].contents[7].contents[0].strip(),
+                        'total' + unicode(i),
+                    )
+                    i += 1
+            except:
+                pass
+            i += 1
+
+        general = soup.findAll('table')[13].findAll('tr', 'subHeaderBack')[-1]
+        grades += '%s,%s,%s,%s,%s,' % (
+            general.b.contents[2][-2:].strip(),
+            general.contents[1].span.contents[0].strip(),
+            general.contents[1].b.contents[3].contents[0].strip(),
+            general.contents[1].b.contents[5].contents[0].strip(),
+            general.contents[1].b.contents[7].contents[0].strip(),
+        )
+        self.dionysos_grades = grades[:-1]
 
     def get_dionysos_account(self, request = None):
         '''
@@ -325,6 +403,7 @@ class Cronos(object):
         try:
             eclass_output = BeautifulSoup(self.eclass_output).find('table', 'tbl_lesson').find_all('td', align='left')
             if request:
+                from cronos.teilar.models import EclassLessons
                 '''
                 We are using the function from the webapp, all actions will be
                 performed to the DB directly.
