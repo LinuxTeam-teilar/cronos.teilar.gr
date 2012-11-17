@@ -253,7 +253,7 @@ class Cronos(object):
                 i += 1
             declaration = ':'.join(declaration).replace('&amp;', '&')
             self.dionysos_declaration = declaration
-        except ImportError as error:
+        except Exception as error:
             if request:
                 logger_syslog.error(error, extra = log_extra_data(request))
                 logger_mail.exception(error)
