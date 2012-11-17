@@ -16,13 +16,17 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 σημαντικό στοιχείο είναι ότι παρέχεται ενιαίο RSS Feed όλων αυτών των
 ανακοινώσεων.
 
+[Περισσότερες πληροφορίες καθώς και συντελεστές της σελίδας](http://cronos.teilar.gr/about)
+
 Ανάπτυξη
 ========
 
 Ιδέες και σφάλματα
 --------------------
 
-Λίστα με ιδέες και σφάλματα βρίσκονται στον [issue tracker](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues).
+Λίστα με ιδέες και σφάλματα βρίσκονται στον [issue tracker](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues).  
+Επίσης, στο [wiki](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki)
+βρίσκονται διάφορα άρθρα που αφορούν την ανάπτυξη της εφαρμογής.
 
 Εγκατάσταση
 -----------
