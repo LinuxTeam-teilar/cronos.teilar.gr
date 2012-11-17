@@ -68,8 +68,10 @@ API
 Ο cronos προσφέρει ένα CLI API, το οποίο εμφανίζει δεδομένα της βάσης
 σε python variables.  
 Ο cronos προσφέρει επίσης και ένα RESTful API το οποίο εμφανίζει
-δεδομένα της βάσης σε JSON και XML μορφή.
+δεδομένα της βάσης σε JSON και XML μορφή.  
 Πληροφορίες για το API θα βρείτε [εδώ](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki/API)
+Λόγω του RESTful API, μπορούν να γραφτούν και external applications που θα
+διαχειρίζονται τις πληροφορίες του cronos, πληροφορίες [εδώ](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki/External-applications)
 
 Περιγραφή του κώδικα
 --------------------
