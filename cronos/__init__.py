@@ -262,8 +262,11 @@ class Cronos(object):
         '''
         Retrieves student's grades
         '''
-        if not self.dionysos_grades_output:
-            self.dionysos_auth_login(grades = True)
+        #if not self.dionysos_grades_output:
+        #    self.dionysos_auth_login(grades = True)
+        output = open('/home/tampakrap/Downloads/a.html').read()
+        self.dionysos_grades_output = output.decode('windows-1253')
+        ####
         soup = BeautifulSoup(self.dionysos_grades_output)
         grades = ''
         i = 0
