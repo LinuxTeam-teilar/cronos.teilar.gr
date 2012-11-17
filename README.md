@@ -29,13 +29,12 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 
 Για Linux:
 
+* Δημιουργείτε μια βάση δεδομένων, κατά προτίμηση MySQL
 * git clone git://github.com/LinuxTeam-teilar/cronos.teilar.gr
 * cd cronos.teilar.gr
 * pip install -r requirements.txt
-* Στη συνέχεια θα πρέπει να δημιουργήσετε μια βάση δεδομένων, κατά
-προτίμηση MySQL
 * cp cronos/local\_settings.py.sample cronos/local\_settings.py
-* ${EDITOR} cronos/local\_settings.py
+* $EDITOR cronos/local\_settings.py
   * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Οι υπόλοιπες
   μεταβλητές δεν χρειάζεται να αλλαχθούν.
 * bin/update\_cronos.sh -p . -r -d -v
@@ -45,7 +44,7 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
   * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων
   για λόγους testing
 * Τέλος, μπορείτε να κάνετε login είτε με τα στοιχεία που έχετε
-στο dionysos είτε με username και password: admin
+στο http://dionysos.teilar.gr, είτε με username και password: admin
 
 Το script update\_cronos.sh τρέχει τις παρακάτω εντολές:
 * python manage.py get\_websites
@@ -62,3 +61,42 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
   * Αποθηκεύει στη βάση τα μαθήματα e-class
 * python manage.py get\_rss\_feeds
   * Αποθηκεύει στη βάση όλες τις ανακοινώσεις
+
+API
+---
+
+Ο cronos προσφέρει ένα CLI API, το οποίο εμφανίζει δεδομένα της βάσης
+σε python variables.  
+Ο cronos προσφέρει επίσης και ένα RESTful API το οποίο εμφανίζει
+δεδομένα της βάσης σε JSON και XML μορφή.
+Πληροφορίες για το API θα βρείτε [εδώ](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki/API)
+
+Περιγραφή του κώδικα
+--------------------
+
+* media και static: Στους καταλόγους αυτούς μπαίνουν πληροφορίες από το web
+server και δεν χρησιμοποιούνται για το development instance
+* configs: Διάφορα configuration files για reference, χρησιμοποιούνται κυρίως
+για το production
+* test: Διάφορα unit tests. Τρέχουν με την εντολή:
+  * python manage.py test tests
+* cronos: ο python/django, HTML, CSS και JS κώδικας
+  * \_\_init\_\_.py: Περιέχει την έκδοση της εφαρμογής, καθώς και το Cronos
+  object από το οποίο συνθέτονται οι πληροφορίες του φοιτητή. Το Cronos object
+  μπορεί να χρησιμοποιηθεί και ως CLI API
+  * accounts: Ότι αφορά το login και την προβολή των λογαριασμών
+    * backends.py: Το authentication backend το οποίο εξασφαλίζει την
+    αυθεντικοποίηση του λογαριασμού μέσω του http://dionysos.teilar.gr
+    * resources.py: Το RESTful API
+  * common: Κοινά modules/classes/functions που χρησιμοποιούνται γενικά
+    * encryption.py: Συναρτήσεις κρυπτογράφησης/αποκρυπτογράφησης των κωδικών
+    μέσω αλγορίθμου blowfish
+  * posts: Ότι αφορά την προβολή των ανακοινώσεων (συμπεριλαμβανομένου και
+  του cronos blog)
+    * feeds.py: Το combined RSS feed
+  * refrigerators: Το extension Βιομηχανικά Ψυγεία
+  * static: CSS, JS και αρχεία εικόνων
+  * teilar: Εμφάνιση σελίδων σχετικών με πληροφορίες του ΤΕΙ Λάρισας
+    * management/commands: Οι custom εντολές python manage.py $COMMAND
+  * templates: Τα HTML templates
+
