@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 u'http://disabled.teilar.gr/index.php?format=feed&type=rss',
                 None,
             ],
-            u'http://diogenis.teilar.gr': [
+            u'http://diogenis.teilar.gr::facebook': [
                 u'Ηλεκτρονική εγγραφή εργαστηρίων',
                 u'https://www.facebook.com/feeds/page.php?format=atom10&id=153439198094399',
                 u'diogenis@teilar.gr',

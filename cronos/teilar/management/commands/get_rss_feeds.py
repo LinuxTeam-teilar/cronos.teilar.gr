@@ -141,7 +141,10 @@ class Command(BaseCommand):
         '''
         Return a list with the post's tags that are of interest
         '''
-        title = entry.title
+        if creator_url.endswith(u'::facebook'):
+            title = u'(χωρίς τίτλο)'
+        else:
+            title = entry.title
         url = entry.link
         try:
             pubdate = entry.updated_parsed
