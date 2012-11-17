@@ -295,7 +295,6 @@ class Cronos(object):
         '''
         Send a GET request to get the cookies. If it fails then e-class.teilar.gr is down
         '''
-        eclass_session.get('http://openclass.teilar.gr')
         try:
             response = eclass_session.get('http://openclass.teilar.gr')
         except Exception as warning:
