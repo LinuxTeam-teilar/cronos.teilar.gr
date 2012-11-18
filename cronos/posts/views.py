@@ -5,8 +5,10 @@ from cronos.teilar.models import Departments as departments
 from cronos.teilar.models import Teachers as teachers
 from cronos.teilar.models import Websites as websites
 from cronos.teilar.models import EclassLessons as eclasslessons
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.db import connection
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -182,4 +184,10 @@ def posts(request, id, page, template = "posts.html", extra_context = None):
     context = {'posts': posts, 'title': title}
     if extra_context:
         context.update(extra_context)
+    # Show SQL queries in console output
+    print connection.queries
+    # Write the SQL queries in a JSON file
+    f = open('/tmp/%s/posts_queries.json' % settings.INSTANCE_NAME, 'w')
+    f.write(str(connection.queries))
+    f.close()
     return render_to_response(template, context, context_instance = RequestContext(request))
