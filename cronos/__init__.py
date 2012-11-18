@@ -62,7 +62,7 @@ class Cronos(object):
             if temp_td_whiteheader != u'Είσοδος Φοιτητή':
                 raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
         except AttributeError:
-            pass
+            raise CronosError(u'Παρουσιάστηκε σφάλμα σύνδεσης με το dionysos.teilar.gr')
         '''
         If everything was fine so far, then dionysos.teilar.gr is up and running.
         Now we can proceed to the actual authentication.
