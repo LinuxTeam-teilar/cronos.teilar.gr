@@ -39,14 +39,14 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 * pip install -r requirements.txt
 * cp cronos/local\_settings.py.sample cronos/local\_settings.py
 * $EDITOR cronos/local\_settings.py
-  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Οι υπόλοιπες
-  μεταβλητές δεν χρειάζεται να αλλαχθούν.
+  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Οι υπόλοιπες μεταβλητές
+  δεν χρειάζεται να αλλαχθούν.
+* python manage.py syncdb
 * bin/update\_cronos.sh -p . -r -d -v
-  * Η εντολή αυτή αποθηκεύει στη βάση δεδομένων πληροφορίες και
-  ανακοινώσεις
+  * Η εντολή αυτή αποθηκεύει στη βάση δεδομένων πληροφορίες και ανακοινώσεις
 * python manage.py loaddata tests/fixtures/admin\_account.json
-  * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων
-  για λόγους testing
+  * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων για λόγους
+  testing
 * Τέλος, μπορείτε να κάνετε login είτε με τα στοιχεία που έχετε στο
 http://dionysos.teilar.gr, είτε με username και password: admin
 
