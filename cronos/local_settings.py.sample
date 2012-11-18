@@ -29,6 +29,12 @@ DATABASES = {
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'secret'
 
+# Instance name, used in:
+# * prefix of the notification mails: "[${INSTANCE_NAME}] ${TITLE}"
+# * log dir name: /var/log/${INSTANCE_NAME}
+# * console logs: ${INSTANCE_NAME} ${IP} ${ERROR}
+INSTANCE_NAME = 'cronos'
+
 # Variables regarding email sending (host, credentials)
 # SERVER_EMAIL = 'user@localhost'
 # EMAIL_HOST = 'localhost'

@@ -13,6 +13,7 @@ def log_extra_data(additional = None):
     log_extra_data = {
         'client_ip': '',
         'id_name': '',
+        'instance_name': settings.INSTANCE_NAME,
     }
     if not additional:
         return log_extra_data
