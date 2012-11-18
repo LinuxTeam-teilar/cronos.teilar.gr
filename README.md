@@ -98,4 +98,4 @@ server και δεν χρησιμοποιούνται για το development in
       Λάρισας όπως είναι αποθηκευμένες στο e-class.teilar.gr
       * **get\_eclass\_lessons**: Αποθηκεύει στη βάση τα μαθήματα e-class
       * **get\_rss\_feeds**: Αποθηκεύει στη βάση όλες τις ανακοινώσεις
-  * templates: Τα HTML templates
+  * **templates**: Τα HTML templates
