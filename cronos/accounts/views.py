@@ -79,9 +79,13 @@ def settings_accounts(request):
     declaration_form = DeclarationForm()
     grades_form = GradesForm()
     eclass_lessons_form = EclassLessonsForm()
+    if request.user.get_profile().dionysos_password:
+        raw_dionysos_password = decrypt_password(request.user.get_profile().dionysos_password),
+    else:
+        raw_dionysos_password = None
     student = Cronos(
         request.user.get_profile().dionysos_username,
-        decrypt_password(request.user.get_profile().dionysos_password),
+        raw_dionysos_password,
     )
     if request.user.get_profile().eclass_username:
         student.eclass_username = request.user.get_profile().eclass_username
