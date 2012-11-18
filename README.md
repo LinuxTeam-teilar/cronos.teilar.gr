@@ -47,24 +47,8 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 * python manage.py loaddata tests/fixtures/admin\_account.json
   * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων
   για λόγους testing
-* Τέλος, μπορείτε να κάνετε login είτε με τα στοιχεία που έχετε
-στο http://dionysos.teilar.gr, είτε με username και password: admin
-
-Το script update\_cronos.sh τρέχει τις παρακάτω εντολές:
-* python manage.py get\_websites
-  * Αποθηκεύει στη βάση τη λίστα με τα websites από τα οποία
-  θα ελέγχονται για ανακοινώσεις
-* python manage.py get\_departments
-  * Αποθηκεύει στη βάση τα τμήματα του ΤΕΙ Λάρισας
-* python manage.py get\_teachers
-  * Αποθηκεύει στη βάση τους καθηγητές του ΤΕΙ Λάρισας
-* python manage.py get\_eclass\_faculties
-  * Αποθηκεύει στη βάση τις σχολές του ΤΕΙ Λάρισας όπως
-  είναι αποθηκευμένες στο e-class.teilar.gr
-* python manage.py get\_eclass\_lessons
-  * Αποθηκεύει στη βάση τα μαθήματα e-class
-* python manage.py get\_rss\_feeds
-  * Αποθηκεύει στη βάση όλες τις ανακοινώσεις
+* Τέλος, μπορείτε να κάνετε login είτε με τα στοιχεία που έχετε στο
+http://dionysos.teilar.gr, είτε με username και password: admin
 
 API
 ---
@@ -80,29 +64,38 @@ API
 Περιγραφή του κώδικα
 --------------------
 
-* media και static: Στους καταλόγους αυτούς μπαίνουν πληροφορίες από το web
+* **media** και **static**: Στους καταλόγους αυτούς μπαίνουν πληροφορίες από το web
 server και δεν χρησιμοποιούνται για το development instance
-* configs: Διάφορα configuration files για reference, χρησιμοποιούνται κυρίως
+* **configs**: Διάφορα configuration files για reference, χρησιμοποιούνται κυρίως
 για το production
-* test: Διάφορα unit tests. Τρέχουν με την εντολή:
+* **test**: Διάφορα unit tests. Τρέχουν με την εντολή:
   * python manage.py test tests
-* cronos: ο python/django, HTML, CSS και JS κώδικας
-  * \_\_init\_\_.py: Περιέχει την έκδοση της εφαρμογής, καθώς και το Cronos
+* **cronos**: ο python/django, HTML, CSS και JS κώδικας
+  * **\_\_init\_\_.py**: Περιέχει την έκδοση της εφαρμογής, καθώς και το Cronos
   object από το οποίο συνθέτονται οι πληροφορίες του φοιτητή. Το Cronos object
   μπορεί να χρησιμοποιηθεί και ως CLI API
-  * accounts: Ότι αφορά το login και την προβολή των λογαριασμών
-    * backends.py: Το authentication backend το οποίο εξασφαλίζει την
+  * **accounts**: Ότι αφορά το login και την προβολή των λογαριασμών
+    * **backends.py**: Το authentication backend το οποίο εξασφαλίζει την
     αυθεντικοποίηση του λογαριασμού μέσω του http://dionysos.teilar.gr
-    * resources.py: Το RESTful API
-  * common: Κοινά modules/classes/functions που χρησιμοποιούνται γενικά
-    * encryption.py: Συναρτήσεις κρυπτογράφησης/αποκρυπτογράφησης των κωδικών
-    μέσω αλγορίθμου blowfish
-  * posts: Ότι αφορά την προβολή των ανακοινώσεων (συμπεριλαμβανομένου και
+    * **resources.py**: Το RESTful API
+  * **common**: Κοινά modules/classes/functions που χρησιμοποιούνται γενικά
+    * **encryption.py**: Συναρτήσεις κρυπτογράφησης/αποκρυπτογράφησης των
+    κωδικών μέσω αλγορίθμου κρυπτογράφησης blowfish
+  * **posts**: Ότι αφορά την προβολή των ανακοινώσεων (συμπεριλαμβανομένου και
   του cronos blog)
-    * feeds.py: Το combined RSS feed
-  * refrigerators: Το extension Βιομηχανικά Ψυγεία
-  * static: CSS, JS και αρχεία εικόνων
-  * teilar: Εμφάνιση σελίδων σχετικών με πληροφορίες του ΤΕΙ Λάρισας
-    * management/commands: Οι custom εντολές python manage.py $COMMAND
+    * **feeds.py**: Το combined RSS feed
+  * **refrigerators**: Το extension Ψυκτικά Φορτία
+  * **static**: CSS, JS και αρχεία εικόνων
+  * **teilar**: Εμφάνιση σελίδων σχετικών με πληροφορίες του ΤΕΙ Λάρισας
+    * **management/commands**: Οι custom εντολές python manage.py $COMMAND
+      * **create\_rss\_feed**: Δημιουργεί RSS feeds για τις σελίδες που είτε
+      δεν παρέχουν, είτε παρέχουν αλλά δεν είναι σε καλή μορφή
+      * **get\_websites**: Αποθηκεύει στη βάση τη λίστα με τα websites από τα
+      οποία θα ελέγχονται για ανακοινώσεις
+      * **get\_departments**: Αποθηκεύει στη βάση τα τμήματα του ΤΕΙ Λάρισας
+      * **get\_teachers**: Αποθηκεύει στη βάση τους καθηγητές του ΤΕΙ Λάρισας
+      * **get\_eclass\_faculties**: Αποθηκεύει στη βάση τις σχολές του ΤΕΙ
+      Λάρισας όπως είναι αποθηκευμένες στο e-class.teilar.gr
+      * **get\_eclass\_lessons**: Αποθηκεύει στη βάση τα μαθήματα e-class
+      * **get\_rss\_feeds**: Αποθηκεύει στη βάση όλες τις ανακοινώσεις
   * templates: Τα HTML templates
-
