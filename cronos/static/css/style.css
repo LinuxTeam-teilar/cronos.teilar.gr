@@ -247,4 +247,19 @@ th { color: #786721; width: 280px; }
 #content .post_content { display: block; width: 95%; margin-left: auto; margin-right: auto; }
 #content .post h3>a:link, #content .post_header h3>a:visited { border:0; }
 #content .post_header img { float:left; margin:3px; padding-right:5px; }
-#content .more { text-align:right;}
+#content .more { text-align:right; }
+
+#content #container {
+	float:center;
+}
+#content #service{
+	margin-left:18px;
+}
+
+#content #id_eclass_username {
+	margin-right:26px;
+}
+
+#content #id_eclass_password {
+	margin-left:15px;
+}

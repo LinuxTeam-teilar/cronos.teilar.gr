@@ -11,16 +11,16 @@
         <p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης για
         κάποια από τις ακόλουθες υπηρεσίες του ΤΕΙ Λάρισας, ή εαν θέλετε να
         προσθέσετε κάποια από αυτές στο λογαριασμό σας στο Cronos, συμπληρώστε τα νέα
-        στοιχεία στην κατάλληλη φόρμα</p>
-        <p><a href="http://e-class.teilar.gr">e-class.teilar.gr</a><br />
+		στοιχεία στην κατάλληλη φόρμα</p>
+		<p><label>Service: </label><a id="service" href="http://e-class.teilar.gr">e-class.teilar.gr</a><br />
             <form action="." method="POST">{% csrf_token %}
-                {% if user.get_profile.eclass_username %}
+				<label>Username:</label>{% if user.get_profile.eclass_username %}
                     {{ user.get_profile.eclass_username }}
                 {% else %}
                     {{ eclass_credentials_form.eclass_username }}
                 {% endif %}
                 <br />
-                {{ eclass_credentials_form.eclass_password }}<br />
+				<label>Pasword:</label>{{ eclass_credentials_form.eclass_password }}<br />
                 <p><input class="button" type="submit" value=
                 {% if user.get_profile.eclass_username %}
                     "Ανανέωση"
@@ -28,7 +28,7 @@
                     "Προσθήκη"
                 {% endif %}
                 /></p>
-            </form>
+		</form>
         </p>
     </div>
 
