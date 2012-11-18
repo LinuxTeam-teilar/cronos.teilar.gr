@@ -62,7 +62,7 @@ class Command(BaseCommand):
                 u'Ηλεκτρονική Γραμματεία ΤΕΙ Λάρισας',
                 u'https://www.facebook.com/feeds/page.php?format=atom10&id=199839176816429',
                 u'dionysos@teilar.gr',
-            ]
+            ],
             #u'http://www.pr.teilar.gr': [
             #    u'Γραφείο Δημοσίων & Διεθνών Σχέσεων',
             #    u'http://www.pr.teilar.gr/TODO',
