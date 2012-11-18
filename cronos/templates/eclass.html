@@ -4,11 +4,11 @@
     Eclass | 
 {% endblock %}
 
-{% block content %}
-    <div id="notifications">
-        <p>Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από την ιστοσελίδα του <a href="http://openclass.teilar.gr">openclass</a>, επισκευτείτε τις <a href="/settings/#teilar">ρυθμίσεις</a> για να την ανανεώσετε και στην παρούσα</p>
-    </div>
+{% block notifications %}
+    <p class="infobox">Σε περίπτωση που έχετε κάνει αλλαγές στη λίστα μαθημάτων σας από την ιστοσελίδα του <a href="http://openclass.teilar.gr">openclass</a>, επισκευτείτε τις <a href="/settings/accounts/#teilar">ρυθμίσεις</a> για να την ανανεώσετε και στην παρούσα</p>
+{% endblock %}
 
+{% block content %}
     <div class="entry">
         <h3>Τα Μαθήματά μου</h3>
         {% if eclass_lessons %}

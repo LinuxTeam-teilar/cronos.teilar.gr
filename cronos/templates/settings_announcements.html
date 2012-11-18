@@ -10,12 +10,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if msg %}
-        <div id="notifications">
-            <p>{{ msg }}</p>
-        </div>
-    {% endif %}
-
     <div class="entry" id="teachers" align="center">
         <h3>Επιλογή Ανακοινώσεων</h3>
         <form action="." method="POST" id="announcements">{% csrf_token %}

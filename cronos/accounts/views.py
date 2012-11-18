@@ -22,7 +22,7 @@ def accounts_login(request):
     '''
     The login page (also the front page)
     '''
-    msg = None
+    notification = {}
     form = None
     user = None
     if request.method == "POST":
@@ -47,14 +47,14 @@ def accounts_login(request):
                     request.session.set_expiry(0)
                 return HttpResponseRedirect('/')
         except (CronosError, LoginError) as error:
-            msg = error.value
+            notification['error'] = error.value
     else:
         if request.user.is_authenticated():
             return HttpResponseRedirect('/')
         else:
             form = LoginForm()
     return render_to_response('login.html', {
-       'msg': msg,
+       'notification': notification,
        'form': form,
         }, context_instance = RequestContext(request))
 
@@ -73,21 +73,23 @@ def settings_accounts(request):
     '''
     The user's accounts settings webpage
     '''
-    msg = None
+    notification = {}
     eclass_credentials_form = EclassCredentialsForm()
     webmail_form = WebmailForm()
     declaration_form = DeclarationForm()
     grades_form = GradesForm()
     eclass_lessons_form = EclassLessonsForm()
-    '''
-    Get the API key
-    '''
-    try:
-        api_key = ApiKey.objects.get(user = request.user)
-        api_key_hash = api_key.key
-    except ApiKey.DoesNotExist:
-        api_key = None
-        api_key_hash = None
+    if request.user.get_profile().dionysos_password:
+        raw_dionysos_password = decrypt_password(request.user.get_profile().dionysos_password),
+    else:
+        raw_dionysos_password = None
+    student = Cronos(
+        request.user.get_profile().dionysos_username,
+        raw_dionysos_password,
+    )
+    if request.user.get_profile().eclass_username:
+        student.eclass_username = request.user.get_profile().eclass_username
+        student.eclass_password = decrypt_password(request.user.get_profile().eclass_password)
     if request.method == 'POST':
         if request.POST.get('eclass_password'):
             '''
@@ -95,40 +97,29 @@ def settings_accounts(request):
             '''
             try:
                 eclass_credentials_form = EclassCredentialsForm(request.POST)
-                eclass_password = request.POST.get('eclass_password')
-                if request.user.get_profile().eclass_username:
-                    eclass_username = request.user.get_profile().eclass_username
-                else:
-                    if not eclass_credentials_form.is_valid():
+                student.eclass_password = request.POST.get('eclass_password')
+                if not request.user.get_profile().eclass_username:
+                    if eclass_credentials_form.is_valid():
+                        student.eclass_username = request.POST.get('eclass_username')
+                    else:
                         raise LoginError
-                    eclass_username = request.POST.get('eclass_username')
                 try:
                     '''
                     Check if the e-class.teilar.gr credentials already exist in the DB,
                     but belong to another student's account
                     '''
-                    user = User.objects.get(userprofile__eclass_username = eclass_username)
+                    user = User.objects.get(userprofile__eclass_username = student.eclass_username)
                     if user.username != request.user.username:
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
-                    user = None
-                if not user:
-                    user = UserProfile.objects.get(pk=request.user.id)
-                user.eclass_username = eclass_username
-                user.eclass_password = encrypt_password(eclass_password)
-                '''
-                Login and get the eclass lessons
-                '''
-                eclass_lessons = get_eclass_lessons(request, eclass_username, eclass_password)
-                '''
-                Login and retrieval of lessons were successful, save both in DB
-                '''
-                user.save()
-                for lesson in eclass_lessons:
-                    request.user.get_profile().following_eclass_lessons.add(lesson)
-                msg = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
+                    pass
+                request.user.get_profile().eclass_username = student.eclass_username
+                request.user.get_profile().eclass_password = encrypt_password(student.eclass_password)
+                request.user.get_profile().save()
+                student.get_eclass_lessons(request)
+                notification['success'] = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('webmail_password'):
             '''
             Update webmail credentials
@@ -160,67 +151,47 @@ def settings_accounts(request):
                 Login was successful, add in DB
                 '''
                 user.save()
-                msg = u'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση των στοιχείων myweb.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('declaration'):
             '''
             Update the declaration
             '''
             try:
-                student = Cronos(
-                    request.user.get_profile().dionysos_username,
-                    decrypt_password(request.user.get_profile().dionysos_password),
-                )
                 student.get_dionysos_declaration(request)
                 request.user.get_profile().declaration = student.dionysos_declaration
                 request.user.get_profile().save()
-                msg = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση της δήλωσης ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('grades'):
             '''
             Update the grades
             '''
             try:
-                student = Cronos(
-                    request.user.get_profile().dionysos_username,
-                    decrypt_password(request.user.get_profile().dionysos_password),
-                )
                 student.get_dionysos_grades(request)
                 request.user.get_profile().grades = student.dionysos_grades
                 request.user.get_profile().save()
-                msg = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
+                notification['success'] = u'Η ανανέωση της βαθμολογίας ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
+                notification['error'] = error.value
         elif request.POST.get('eclass_lessons'):
             '''
             Update the eclass lessons
             '''
             try:
-                eclass_lessons = get_eclass_lessons(
-                    request,
-                    request.user.get_profile().eclass_username,
-                    decrypt_password(request.user.get_profile().eclass_password),
-                )
-                msg = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
+                student.get_eclass_lessons(request)
+                notification['success'] = u'Η ανανέωση των μαθημάτων e-class ήταν επιτυχής'
             except (CronosError, LoginError) as error:
-                msg = error.value
-        elif request.POST.get('api_key'):
-            if api_key:
-                api_key.key = api_key.generate_key()
-                api_key.save()
-            else:
-                api_key = ApiKey.objects.create(user=request.user)
-            api_key_hash = api_key.key
+                notification['error'] = error.value
     return render_to_response('settings_accounts.html',{
-        'msg': msg,
+        'notification': notification,
         'eclass_credentials_form': eclass_credentials_form,
         'webmail_form': webmail_form,
         'eclass_lessons_form': eclass_lessons_form,
         'declaration_form': declaration_form,
         'grades_form': grades_form,
-        'api_key': api_key_hash,
        }, context_instance = RequestContext(request))
 
 @login_required
@@ -228,7 +199,7 @@ def settings_announcements(request):
     '''
     The user's announcements settings webpage
     '''
-    msg = None
+    notification = {}
     '''
     Fill the select boxes with teachers
     '''
@@ -277,7 +248,6 @@ def settings_announcements(request):
                 request.user.get_profile().following_teachers.remove(teacher)
         else:
             request.user.get_profile().following_teachers.clear()
-        msg = u'Οι αλλαγές έγιναν επιτυχώς'
         if request.POST.get('websites_selected'):
             '''
             Get the list of selected websites
@@ -298,11 +268,37 @@ def settings_announcements(request):
                 request.user.get_profile().following_websites.remove(website)
         else:
             request.user.get_profile().following_websites.clear()
-        msg = u'Οι αλλαγές έγιναν επιτυχώς'
+        notification['success'] = u'Οι αλλαγές έγιναν επιτυχώς'
     return render_to_response('settings_announcements.html',{
-        'msg': msg,
+        'notification': notification,
         'teachers_unfollowing': teachers_unfollowing,
         'teachers_following': teachers_following,
         'websites_unfollowing': websites_unfollowing,
         'websites_following': websites_following,
+        }, context_instance = RequestContext(request))
+
+@login_required
+def settings_apikey(request):
+    notification = {}
+    '''
+    Get the API key
+    '''
+    try:
+        api_key = ApiKey.objects.get(user = request.user)
+        api_key_hash = api_key.key
+    except ApiKey.DoesNotExist:
+        api_key = None
+        api_key_hash = None
+    if request.method == 'POST':
+        if request.POST.get('api_key'):
+            if api_key:
+                api_key.key = api_key.generate_key()
+                api_key.save()
+            else:
+                api_key = ApiKey.objects.create(user=request.user)
+            api_key_hash = api_key.key
+        notification['success'] = u'Το API key ανανεώθηκε επιτυχώς'
+    return render_to_response('settings_apikey.html',{
+        'notification': notification,
+        'api_key': api_key_hash,
         }, context_instance = RequestContext(request))

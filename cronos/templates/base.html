@@ -41,6 +41,7 @@
                         <div class="sidebar_body">
                             <li><a href="/settings/accounts/">&raquo;&emsp;Ρυθμίσεις Λογαριασμών</a></li>
                             <li><a href="/settings/announcements/">&raquo;&emsp;Επιλογή ανακοινώσεων</a></li>
+                            <li><a href="/settings/apikey/">&raquo;&emsp;API key</a></li>
                         </div>
                         <li><a href="/about/">&raquo;&emsp;Σχετικά</a></li>
                     </ul>
@@ -53,6 +54,16 @@
             </div>
             {% endif %}
             <div id="content">
+            <div id="notifications">
+                {% if notification.info %}
+                    <p class="infobox">{{ notification.info|safe }}</p>
+                {% elif notification.error %}
+                    <p class="errorbox">{{ notification.error|safe }}</p>
+                {% elif notification.success %}
+                    <p class="successbox">{{ notification.success|safe }}</p>
+                {% endif %}
+                {% block notifications %}{% endblock %}
+            </div>
                 {% block content %}{% endblock %}
             </div>
         </div>

@@ -28,8 +28,8 @@
                 {% endfor %}
                 <input class="button" type="submit" value="Είσοδος" name="submit" />
                 <br />
-                {% if msg %}
-                    <p class="messages">{{ msg }}</p>
+                {% if notification %}
+                    <p class="notifications">{{ notification.error }}</p>
                 {% endif %}
             </form>
         </div>

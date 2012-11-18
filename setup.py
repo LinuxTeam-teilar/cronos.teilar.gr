@@ -26,6 +26,7 @@ setup(
     author_email='cronos@teilar.gr',
     url='http://cronos.teilar.gr',
     description='Django application that collects announcements and personal data for students of TEI of Larissa',
+    long_description=open(os.path.join(os.path.dirname(__file__), 'README.md')).read(),
     keywords='rss, announcements, university, django, teilar',
     packages=find_packages(),
     data_files=[
@@ -48,7 +49,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Students',
-        'License :: OSI Approved :: GNU Affero General Public License v3 (AGPLv3)',
+        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
         'Natural Language :: Greek',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
@@ -57,7 +58,7 @@ setup(
         'Topic :: Software Development',
     ],
     install_requires=[
-        'beautifulsoup>=3.2.1',
+        'beautifulsoup>=4.1.0',
         'Django>=1.4.1',
         'django-setuptest>=0.1.2',
         'django-endless-pagination>=1.1',

@@ -121,7 +121,7 @@ th { color: #786721; width: 280px; }
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 #content {
-    width: 77.7%; min-width: 730px; height: 80%; min-height: 522px; position: relative; top: 10px; left: 270px;
+    width: 77.7%; min-width: 730px; height: 80%; min-height: 522px; position: relative; left: 270px;
     padding-top: 25px;
 /*    background-image: url("/static/img/logo_bg.png");
     background-repeat: no-repeat;
@@ -130,28 +130,27 @@ th { color: #786721; width: 280px; }
 }
 
 #content a { text-decoration: none; }
-
 #content #notifications { margin-bottom: 30px; }
 #content #notifications p {
     width: 550px;
     margin: 0 0 5px 75px; padding: 9px 12px 10px 12px;
-    background: #FFECB3; border: dashed 1px #E6AC00;
     font: normal 13px/17px Verdana, Arial, Helvetica, sans-serif;
-    color: #786721;
-
 }
 
-#content #notifications p>a:link, #content #notifications p>a:visited {
+#content #notifications p>a:link,#content #notifications p>a:visited {
     padding: 1px 4px 1px 4px;
     border-bottom: dashed 1px #504416;
     color: #504416;
-    background: #FFF2CC;
 }
-#content #notifications p>a:hover, #content #notifications p>a:focus {
+
+#content #notifications p>a:hover,#content  #notifications p>a:focus {
     border-bottom: dashed 1px #111;
     color: #111;
-    background: #FFF2CC;
 }
+
+#content #notifications p.infobox { background: #FFECB3; color: #786721; border: dashed 1px #E6AC00; }
+#content #notifications p.errorbox {  background: #ffd0d0; color: #e92525; border: dashed 1px #e92525; }
+#content #notifications p.successbox { background: #CCFF99; color: #009900; border: dashed 1px #009900; }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 /*FOR ENTRY CONTENT-----------------------------------------------------------------------------------------------------------------------------------------*/
@@ -172,8 +171,8 @@ th { color: #786721; width: 280px; }
     -moz-box-shadow: 0px 0px 5px #ccc; /* FF3.5+ */
     -webkit-box-shadow: 0px 0px 5px #ccc; /* Saf3.0+, Chrome */
     box-shadow: 0px 0px 5px #ccc; /* Opera 10.5, IE 9.0 */
-
 }
+
 
 #content .entry h3, #content .entry h2 {
     position:absolute; top: 15px;
@@ -247,4 +246,19 @@ th { color: #786721; width: 280px; }
 #content .post_content { display: block; width: 95%; margin-left: auto; margin-right: auto; }
 #content .post h3>a:link, #content .post_header h3>a:visited { border:0; }
 #content .post_header img { float:left; margin:3px; padding-right:5px; }
-#content .more { text-align:right;}
+#content .more { text-align:right; }
+
+#content #container {
+	float:center;
+}
+#content #service{
+	margin-left:18px;
+}
+
+#content #id_eclass_username {
+	margin-right:26px;
+}
+
+#content #id_eclass_password {
+	margin-left:15px;
+}

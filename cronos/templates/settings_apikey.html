@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+    Ρυθμίσεις χρήστη {{user}} | 
+{% endblock %}
+
+{% block content %}
+    <div class="entry" id="api_key" align="center">
+        <h3>API Key</h3>
+        {% if api_key %}
+            <p>Το τρέχον API key σας είναι:<b> {{ api_key }}</b></p>
+            <p>Η σελίδα των πληροφοριών σας είναι διαθέσιμη σε <a href="/api/user/?format=json&username={{request.user.username}}&api_key={{api_key}}">μορφή JSON</a> και σε <a href="/api/user/?format=xml&username={{request.user.username}}&api_key={{api_key}}">μορφή XML</a>.</p>
+            <p>Πατήστε "Ανανέωση" για να ανανεώσετε το API key σας.</p>
+        {% else %}
+            <p>Πατήστε "Δημιουργία" για να δημιουργήσετε το API key σας.</p>
+        {% endif %}
+        <br />
+        <form action="." method="POST" id="api_key">{% csrf_token %}
+            <input class="button" type="submit" name="api_key" value=
+            {% if api_key %}
+                "Ανανέωση"
+            {% else %}
+                "Δημιουργία"
+            {% endif %}
+            />
+        </form>
+    </div>
+{% endblock %}

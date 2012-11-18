@@ -123,31 +123,6 @@ INSTALLED_APPS = (
     'tests',
 )
 
-# Get the site name and check if it matches
-# 'cronos.teilar.gr' which makes it the official
-# production instance
-PRODUCTION = False
-if not DEBUG:
-    from django.contrib.sites.models import Site
-
-    try:
-        current_site = Site.objects.get_current()
-        if current_site.name == u'cronos.teilar.gr':
-            PRODUCTION = True
-    except:
-        current_site = None
-        pass
-
-# Check if this is the official production instance.
-# In this case the logger uses syslog_production handler
-# and the logs are going to /var/log/cronos_${level}.log
-# Else the logger uses syslog_development handler
-# (even when DEBUG = False), and the logs are going
-# to /var/log/cronos-dev_${level}.log
-HANDLER_SUFFIX = 'development'
-if PRODUCTION:
-    HANDLER_SUFFIX = 'production'
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -157,11 +132,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters':{
-        'production': {
-            'format': 'cronos: %(levelname)s %(id_name)s %(client_ip)s Message: %(message)s File: %(module)s Function: %(funcName)s Line: %(lineno)d',
-        },
-        'development': {
-            'format': 'cronos-dev: %(levelname)s %(id_name)s %(client_ip)s Message: %(message)s File: %(module)s Function: %(funcName)s Line: %(lineno)d',
+        'cronos': {
+            'format': '%(instance_name)s: %(levelname)s %(id_name)s %(client_ip)s Message: %(message)s File: %(module)s Function: %(funcName)s Line: %(lineno)d',
         },
     },
     'filters': {
@@ -179,18 +151,12 @@ LOGGING = {
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'development',
+            'formatter': 'cronos',
         },
-        'syslog_production': {
+        'syslog': {
             'level': 'INFO',
             'class': 'logging.handlers.SysLogHandler',
-            'formatter': 'production',
-            'address': '/dev/log',
-        },
-        'syslog_development': {
-            'level': 'INFO',
-            'class': 'logging.handlers.SysLogHandler',
-            'formatter': 'development',
+            'formatter': 'cronos',
             'address': '/dev/log',
         },
     },
@@ -201,7 +167,7 @@ LOGGING = {
             'propagate': True,
         },
         'cronos': {
-            'handlers': ['console' if DEBUG else 'syslog_' + HANDLER_SUFFIX],
+            'handlers': ['console' if DEBUG else 'syslog'],
             'level': 'DEBUG' if DEBUG else 'INFO',
         },
     }
@@ -223,13 +189,11 @@ AUTHENTICATION_BACKENDS = (
 
 # email sending variables regarding server authentication
 # and configuration should be specified in local_settings
-EMAIL_SUBJECT_PREFIX = '[cronos-dev] '
-if PRODUCTION:
-    EMAIL_SUBJECT_PREFIX = '[cronos] '
+EMAIL_SUBJECT_PREFIX = '[%s] ' % INSTANCE_NAME
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = '/tmp/cronos/mail'
 
 # Path that custom RSS files are stored
-RSS_PATH = '/tmp/cronos/rss'
+RSS_PATH = '/tmp/%s/rss' % INSTANCE_NAME

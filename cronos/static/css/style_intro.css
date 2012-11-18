@@ -94,7 +94,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #login-form form>a { margin: 20px 0 0 30px; }
 
-#login-form p.messages {
+#login-form p.notifications {
     width: 200px;
     margin: 10px 0 0 30px; padding: 8px 10px 9px 10px;
     background: #ffd0d0; color: #e92525;
@@ -136,7 +136,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #signup-form form>a { margin: 20px 0 0 30px; }
 
-#signup-form p.messages {
+#signup-form p.notifications {
     width: 100px;
     margin: 20px 0 0 30px; padding: 8px 10px 9px 10px;
     background: #ffd0d0; color: #e92525;

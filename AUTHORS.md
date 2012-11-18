@@ -1,9 +1,10 @@
 ## Authors
    * Theo Chatzimichos
-   * Iwannis Spanos
+   * Ioannis Spanos
 
 ## Contributors
    * Alex-P. Natsios
+   * Christos Somaras
    * George Koutsikos
    * George Tsiokos
    * Dimitris Papapoulios

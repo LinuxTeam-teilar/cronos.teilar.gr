@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 u'http://disabled.teilar.gr/index.php?format=feed&type=rss',
                 None,
             ],
-            u'http://diogenis.teilar.gr': [
+            u'http://diogenis.teilar.gr::facebook': [
                 u'Ηλεκτρονική εγγραφή εργαστηρίων',
                 u'https://www.facebook.com/feeds/page.php?format=atom10&id=153439198094399',
                 u'diogenis@teilar.gr',
@@ -57,6 +57,11 @@ class Command(BaseCommand):
                 u'Υπηρεσία ενοποίησης πληροφοριών',
                 u'http://linuxteam.teilar.gr/blog/1464/feed',
                 u'cronos@teilar.gr',
+            ],
+            u'https://dionysos.teilar.gr::facebook': [
+                u'Ηλεκτρονική Γραμματεία ΤΕΙ Λάρισας',
+                u'https://www.facebook.com/feeds/page.php?format=atom10&id=199839176816429',
+                u'dionysos@teilar.gr',
             ],
             #u'http://www.pr.teilar.gr': [
             #    u'Γραφείο Δημοσίων & Διεθνών Σχέσεων',
@@ -95,7 +100,7 @@ class Command(BaseCommand):
                 u'teachers_dummy',
             ],
             #u'%s/%s' % (settings.RSS_PATH, 'dionysos.rss'): [
-            #    u'Γραμματεία ΤΕΙ Λάρισας',
+            #    u'Ηλεκτρονική Γραμματεία ΤΕΙ Λάρισας',
             #    u'http://dionysos.teilar.gr',
             #    u'dionysos@teilar.gr',
             #],

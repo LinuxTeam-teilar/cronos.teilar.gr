@@ -4,11 +4,11 @@
     Στοιχεία Γραμματείας | 
 {% endblock %}
 
-{% block content %}
-    <div id="notifications">
-        <p>Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/accounts/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
-    </div>
+{% block notifications %}
+    <p class="infobox">Σε περίπτωση που έχουν γίνει αλλαγές στη δήλωση ή τη βαθμολογία σας σας από την ιστοσελίδα της <a href="http://dionysos.teilar.gr">Γραμματείας (dionysos)</a>, επισκευτείτε τις <a href="/settings/accounts/#other">ρυθμίσεις</a> για να τις ανανεώσετε και στην παρούσα</p>
+{% endblock %}
 
+{% block content %}
     <div class="entry" id="declaration">
     <h3>Δήλωση μαθημάτων</h3>
     {% if not user.get_profile.declaration %}

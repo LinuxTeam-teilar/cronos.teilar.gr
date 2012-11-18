@@ -6,35 +6,29 @@
 {% endblock %}
 
 {% block content %}
-    {% if msg %}
-        <div id="notifications">
-            <p>{{ msg }}</p>
-        </div>
-    {% endif %}
-
     <div class="entry" id="teilar">
         <h3>Λογαριασμοί υπηρεσιών ΤΕΙ Λάρισας</h3>
         <p>Σε περίπτωση που αλλάξατε το όνομα χρήστη ή τον κωδικό πρόσβασης για
         κάποια από τις ακόλουθες υπηρεσίες του ΤΕΙ Λάρισας, ή εαν θέλετε να
         προσθέσετε κάποια από αυτές στο λογαριασμό σας στο Cronos, συμπληρώστε τα νέα
-        στοιχεία στην κατάλληλη φόρμα</p>
-        <p><a href="http://e-class.teilar.gr">e-class.teilar.gr</a><br />
+		στοιχεία στην κατάλληλη φόρμα</p>
+		<p><label>Service: </label><a id="service" href="http://e-class.teilar.gr">e-class.teilar.gr</a><br />
             <form action="." method="POST">{% csrf_token %}
-                {% if user.get_profile.eclass_username %}
+				<label>Username:</label>{% if user.get_profile.eclass_username %}
                     {{ user.get_profile.eclass_username }}
                 {% else %}
                     {{ eclass_credentials_form.eclass_username }}
                 {% endif %}
                 <br />
-                {{ eclass_credentials_form.eclass_password }}<br />
-                <input class="button" type="submit" value=
+				<label>Pasword:</label>{{ eclass_credentials_form.eclass_password }}<br />
+                <p><input class="button" type="submit" value=
                 {% if user.get_profile.eclass_username %}
                     "Ανανέωση"
                 {% else %}
                     "Προσθήκη"
                 {% endif %}
-                />
-            </form>
+                /></p>
+		</form>
         </p>
     </div>
 
@@ -77,23 +71,5 @@
                 </td>
             </tr>
         </table>
-    </div>
-
-    <div class="entry" id="api_key">
-        <h3>API Key</h3>
-        <p>Στην παρακάτω φορμά μπορείτε να δημιουργήσετε ή να ανανεώσετε το API key σας</p>
-        {% if api_key %}
-            <p>Η τιμή από το τρέχον API key σας είναι: {{ api_key }}</p>
-            <p>Η σελίδα των πληροφοριών σας είναι διαθέσιμη σε <a href="/api/user/?format=json&username={{request.user.username}}&api_key={{api_key}}">μορφή JSON</a> και σε <a href="/api/user/?format=xml&username={{request.user.username}}&api_key={{api_key}}">μορφή XML</a>.</p>
-        {% endif %}
-        <form action="." method="POST" id="api_key">{% csrf_token %}
-            <input class="button" type="submit" name="api_key" value=
-            {% if api_key %}
-                "Ανανέωση"
-            {% else %}
-                "Δημιουργία"
-            {% endif %}
-            />
-        </form>
     </div>
 {% endblock %}
