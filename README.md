@@ -47,8 +47,12 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 * python manage.py loaddata tests/fixtures/admin\_account.json
   * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων για λόγους
   testing
-* Τέλος, μπορείτε να κάνετε login είτε με τα στοιχεία που έχετε στο
-http://dionysos.teilar.gr, είτε με username και password: admin
+* python manage.py runserver
+* Τέλος, μπορείτε να κάνετε login στο http://localhost:8000 είτε με τα στοιχεία
+που έχετε στο http://dionysos.teilar.gr, είτε με username και password: admin
+
+Μπορούμε επίσης να σας παρέχουμε testing instance σε δικό μας server,
+επικοινωνήστε μαζί μας για να κανονίσουμε τις λεπτομέρειες.
 
 API
 ---
