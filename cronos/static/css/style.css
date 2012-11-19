@@ -252,7 +252,7 @@ th { color: #786721; width: 280px; }
 	float:center;
 }
 #content #service{
-	margin-left:18px;
+	margin-left:16px;
 }
 
 #content #id_eclass_username {
@@ -260,5 +260,5 @@ th { color: #786721; width: 280px; }
 }
 
 #content #id_eclass_password {
-	margin-left:15px;
+	margin-left:10px;
 }
