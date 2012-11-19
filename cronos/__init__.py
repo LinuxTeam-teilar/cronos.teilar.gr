@@ -390,7 +390,7 @@ class Cronos(object):
             soup = BeautifulSoup(response.text).find_all('p', 'alert1')[0]
             if soup.contents[0] == u'Λάθος στοιχεία.':
                 raise LoginError
-        except AttributeError:
+        except (AttributeError, IndexError):
             pass
         self.eclass_output = response.text
 
