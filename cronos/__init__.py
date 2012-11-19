@@ -102,7 +102,7 @@ class Cronos(object):
             '''
             Get the HTML output of the grades page
             '''
-            dionysos_grades_url = 'http://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
+            dionysos_grades_url = 'https://dionysos.teilar.gr/unistudent/stud_CResults.asp?studPg=1&mnuid=mnu3&'
             response = dionysos_session.get(dionysos_grades_url)
             response.encoding = 'windows-1253'
             self.dionysos_grades_output = response.text
