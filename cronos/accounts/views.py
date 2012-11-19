@@ -113,10 +113,16 @@ def settings_accounts(request):
                         raise CronosError(u'Τα στοιχεία e-class.teilar.gr ανήκουν ήδη σε κάποιον άλλο λογαριασμό')
                 except User.DoesNotExist:
                     pass
+                '''
+                Try to login with those credentials, and update eclass lessons afterwards
+                '''
+                student.get_eclass_lessons(request)
+                '''
+                Login succeeded, save eclass credentials to the user's profile
+                '''
                 request.user.get_profile().eclass_username = student.eclass_username
                 request.user.get_profile().eclass_password = encrypt_password(student.eclass_password)
                 request.user.get_profile().save()
-                student.get_eclass_lessons(request)
                 notification['success'] = u'Η ανανέωση των στοιχείων openclass.teilar.gr ήταν επιτυχής'
             except (CronosError, LoginError) as error:
                 notification['error'] = error.value
