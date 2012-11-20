@@ -43,7 +43,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = PROJECT_ROOT + '/media/'
+MEDIA_ROOT = HTDOCS + '/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -54,7 +54,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # under cronos/static/ subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = PROJECT_ROOT + '/static/'
+STATIC_ROOT = HTDOCS + '/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"

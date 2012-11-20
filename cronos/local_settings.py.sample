@@ -35,6 +35,10 @@ SECRET_KEY = 'secret'
 # * console logs: ${INSTANCE_NAME} ${IP} ${ERROR}
 INSTANCE_NAME = 'cronos'
 
+# Absolute path of the webserver's htdocs
+# (used only in production)
+HTDOCS = '/var/www/cronos.teilar.gr/htdocs'
+
 # Variables regarding email sending (host, credentials)
 # SERVER_EMAIL = 'user@localhost'
 # EMAIL_HOST = 'localhost'
