@@ -1,11 +1,8 @@
 *.pyc
-local_settings.py
 *.kdev4
 *.swp
 *.swo
-.bash*
-.vim*
-.ssh*
-.mysql*
-.update.lock
-cronos.db
+*.db
+.*
+local_settings.py
+!.gitignore
