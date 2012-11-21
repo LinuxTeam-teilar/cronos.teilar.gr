@@ -33,19 +33,22 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 
 Για Linux:
 
-* Δημιουργείτε μια βάση δεδομένων, κατά προτίμηση MySQL
+* Προαιρετικό: Δημιουργείτε μια βάση δεδομένων MySQL. Αν δεν θέλετε, το σύστημα
+θα σας δημιουργήσει από μόνο του μια SQLite.
 * `git clone git://github.com/LinuxTeam-teilar/cronos.teilar.gr`
 * `cd cronos.teilar.gr`
 * `pip install -r requirements.txt`
-  * Πρέπει να έχετε ήδη εγκαταστήσει τα συγκεκριμένα packages από το package manager: `libxml2-dev` `libxslt1-dev` `mysql` `libmysqlclient-dev`
-* `cp cronos/local\_settings.py.sample cronos/local\_settings.py`
-* `$EDITOR cronos/local\_settings.py`
-  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Οι υπόλοιπες μεταβλητές
-  δεν χρειάζεται να αλλαχθούν.
+  * Πρέπει να έχετε ήδη εγκαταστήσει τα συγκεκριμένα packages από το package
+  manager: `libxml2-dev` `libxslt1-dev` `mysql` `libmysqlclient-dev`
+* `cp cronos/local_settings.py.sample cronos/local_settings.py`
+* `$EDITOR cronos/local_settings.py`
+  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Σε περίπτωση που έχετε
+  MySQL δεν χρειάζεται να πειράξετε κάτι. Οι υπόλοιπες μεταβλητές δεν
+  χρειάζεται να αλλαχθούν.
 * `python manage.py syncdb`
-* `bin/update\_cronos.sh -p . -r -d -v`
+* `bin/update_cronos.sh -p . -r -d -v`
   * Η εντολή αυτή αποθηκεύει στη βάση δεδομένων πληροφορίες και ανακοινώσεις
-* `python manage.py loaddata tests/fixtures/admin\_account.json`
+* `python manage.py loaddata tests/fixtures/admin_account.json`
   * Η εντολή αυτή προσθέτει ένα fake account στη βάση δεδομένων για λόγους
   testing
 * `python manage.py runserver`
