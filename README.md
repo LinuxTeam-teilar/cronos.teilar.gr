@@ -24,7 +24,13 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 Ιδέες και σφάλματα
 --------------------
 
-Λίστα με ιδέες και σφάλματα βρίσκονται στον [issue tracker](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues).  
+Λίστα με ιδέες και σφάλματα βρίσκονται στον [issue tracker](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues).
+ * [Όλα τα ανοιχτά issues](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&sort=created&state=open)
+ * [Bugs](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=bug&page=1&sort=created&state=open)
+ * [Enhancements](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=enhancement&page=1&sort=created&state=open)
+ * [Junior Jobs](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=junior+job&page=1&sort=created&state=open)
+     * Λίστα με bugs/enhancements με εύκολη επίλυση, ιδανικά για να αρχίσει
+     κάποιος την ανάπτυξη του cronos
 Επίσης, στο [wiki](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki)
 βρίσκονται διάφορα άρθρα που αφορούν την ανάπτυξη της εφαρμογής.
 
@@ -33,8 +39,8 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
 
 Για Linux:
 
-* Προαιρετικό: Δημιουργείτε μια βάση δεδομένων MySQL. Αν δεν θέλετε, το σύστημα
-θα σας δημιουργήσει από μόνο του μια SQLite.
+* Προαιρετικό: Δημιουργείτε μια βάση δεδομένων MySQL, εναλλακτικά το σύστημα
+θα δημιουργήσει από μόνο του μια SQLite.
 * `git clone git://github.com/LinuxTeam-teilar/cronos.teilar.gr`
 * `cd cronos.teilar.gr`
 * `pip install -r requirements.txt`
@@ -42,8 +48,8 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
   manager: `libxml2-dev` `libxslt1-dev` `mysql` `libmysqlclient-dev`
 * `cp cronos/local_settings.py.sample cronos/local_settings.py`
 * `$EDITOR cronos/local_settings.py`
-  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας. Σε περίπτωση που έχετε
-  MySQL δεν χρειάζεται να πειράξετε κάτι. Οι υπόλοιπες μεταβλητές δεν
+  * Τοποθετείτε τα στοιχεία της βάσης δεδομένων σας (σε περίπτωση που έχετε
+  SQLite δεν χρειάζεται να πειράξετε κάτι). Οι υπόλοιπες μεταβλητές δεν
   χρειάζεται να αλλαχθούν.
 * `python manage.py syncdb`
 * `bin/update_cronos.sh -p . -r -d -v`
