@@ -29,8 +29,8 @@ sites του ΤΕΙ Λάρισας. Ο σκοπός της παρούσας υπ
  * [Bugs](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=bug&page=1&sort=created&state=open)
  * [Enhancements](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=enhancement&page=1&sort=created&state=open)
  * [Junior Jobs](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/issues?direction=desc&labels=junior+job&page=1&sort=created&state=open)
-     * Λίστα με bugs/enhancements με εύκολη επίλυση, ιδανικά για να αρχίσει
-     κάποιος την ανάπτυξη του cronos
+ (Λίστα με bugs/enhancements με εύκολη επίλυση)
+
 Επίσης, στο [wiki](https://github.com/LinuxTeam-teilar/cronos.teilar.gr/wiki)
 βρίσκονται διάφορα άρθρα που αφορούν την ανάπτυξη της εφαρμογής.
 
