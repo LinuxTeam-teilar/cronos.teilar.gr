@@ -71,8 +71,9 @@ API
 
 * **configs**: Διάφορα configuration files για reference, χρησιμοποιούνται
 κυρίως για το production
-* **tests**: Διάφορα unit tests. Τρέχουν με την εντολή:
-    * python manage.py test tests
+* **tests**: Διάφορα unit tests. Τρέχουν με μία από τις παρακάτω εντολές:
+    * `python manage.py test tests`
+    * `python setup.py test`
 * **cronos**: ο python/django, HTML, CSS και JS κώδικας
     * **\_\_init\_\_.py**: Περιέχει την έκδοση της εφαρμογής, καθώς και το
     Cronos object από το οποίο συνθέτονται οι πληροφορίες του φοιτητή. Το
