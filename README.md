@@ -69,8 +69,6 @@ API
 Περιγραφή του κώδικα
 --------------------
 
-* **media** και **static**: Στους καταλόγους αυτούς μπαίνουν πληροφορίες από το
-web server και δεν χρησιμοποιούνται για το development instance
 * **configs**: Διάφορα configuration files για reference, χρησιμοποιούνται
 κυρίως για το production
 * **tests**: Διάφορα unit tests. Τρέχουν με την εντολή:
