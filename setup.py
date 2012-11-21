@@ -19,7 +19,7 @@ except IndexError:
     pass
 
 setup(
-    name=NAME,
+    name='cronos',
     version=cronos.__version__,
     license='AGPLv3',
     author='Cronos Development Team',
@@ -67,6 +67,7 @@ setup(
         'lxml>=2.3.4',
         'mysql-python>=1.2.3',
         'pycrypto>=2.6',
+        'python-dateutil<=2.0',
         'requests>=0.13.6',
         'setuptools>=0.6.21',
     ],
