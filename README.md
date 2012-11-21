@@ -72,8 +72,6 @@ API
 Περιγραφή του κώδικα
 --------------------
 
-* **configs**: Διάφορα configuration files για reference, χρησιμοποιούνται
-κυρίως για το production
 * **tests**: Διάφορα unit tests. Τρέχουν με μία από τις παρακάτω εντολές:
     * `python manage.py test tests`
     * `python setup.py test`

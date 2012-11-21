@@ -36,13 +36,6 @@ setup(
             'bin/logs_create_fix_perms.sh',
             'bin/get_full_production_db.sh'
         ]),
-        ('configs', [
-            'configs/apache.conf',
-            'configs/cron.d_cronos',
-            'configs/logrotate.d_cronos',
-            'configs/logrotate.d_cronos-dev',
-            'configs/syslog-ng.conf'
-        ]),
     ],
     cmdclass={'test': test},
     classifiers=[
