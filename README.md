@@ -78,6 +78,7 @@ API
 Περιγραφή του κώδικα
 --------------------
 
+* **bin**: bash scripts, λεπτομέρειες στο header τους
 * **tests**: Διάφορα unit tests. Τρέχουν με μία από τις παρακάτω εντολές:
     * `python manage.py test tests`
     * `python setup.py test`
