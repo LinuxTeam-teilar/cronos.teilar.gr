@@ -40,10 +40,10 @@ for a_form in root:
 			pass
 		#print a_var.attrib['name'], type(varsForm)
 		tempdict[a_var.attrib['name']] = varsForm
+	fullclass = (a_form.attrib['name'], tempdict)
 	#print tempForm, ' -type> ', type(tempForm)
-	tempForm.append(tempdict)
 	#print tempForm
-	Forms.append(tempForm)
+	Forms.append(fullclass)
 
 for i in Forms:
     Classes.append(type(i[0], (forms.Form, ), i[1]))

@@ -36,10 +36,10 @@ def refrigerators(request):
                 formsName = str(type(forms[i]))
                 print formsName[-3:-2]
                 if (int(formsName[-3:-2]) > 0) and (int(formsName[-3:-2]) < 7):
-                    forms[i].sint_thermop = float(request.POST.get('sint_thermop'+i[-1:]))
-                    forms[i].epif_pleuras = float(request.POST.get('epif_pleuras'+i[-1:]))
-                    print "Form's A dt -> ", request.POST.get('dt'+i[-1:]), " *** ", 'dt'+i[-1:]
-                    forms[i].dt  = float(request.POST.get('dt'+i[-1:]))
+                    forms[i].sint_thermop = float(request.POST.get('sint_thermop'+formsName[-3:-2]))
+                    forms[i].epif_pleuras = float(request.POST.get('epif_pleuras'+formsName[-3:-2]))
+                    print "Form's A dt -> ", request.POST.get('dt'+formsName[-3:-2]), " *** ", 'dt'+i[-1:]
+                    forms[i].dt  = float(request.POST.get('dt'+formsName[-3:-2]))
                     results[i] = forms[i].sint_thermop * forms[i].epif_pleuras * forms[i].dt
                 if int(formsName[-3:-2]) == 7:
                     forms[i].thermokrasia_aera_eisodou7 = int(request.POST.get('thermokrasia_aera_eisodou7'))

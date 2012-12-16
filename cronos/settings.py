@@ -119,7 +119,6 @@ INSTALLED_APPS = (
     'cronos.posts',
     'cronos.teilar',
     'endless_pagination',
-    'tastypie',
     'tests',
 )
 
@@ -180,18 +179,6 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'development',
-        },
-        'syslog_production': {
-            'level': 'INFO',
-            'class': 'logging.handlers.SysLogHandler',
-            'formatter': 'production',
-            'address': '/dev/log',
-        },
-        'syslog_development': {
-            'level': 'INFO',
-            'class': 'logging.handlers.SysLogHandler',
-            'formatter': 'development',
-            'address': '/dev/log',
         },
     },
     'loggers': {
