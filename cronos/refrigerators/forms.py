@@ -34,7 +34,8 @@ for a_form in root:
 		if a_var.attrib['type'] == 'float':
 			varsForm = forms.FloatField(label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
 		elif a_var.attrib['type'] == 'choice':
-			varsForm = forms.ChoiceField(choices = a_var._children[0].__dict__['attrib']['choices'], label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+			choices = eval(a_var._children[0].__dict__['attrib']['choices'])
+			varsForm = forms.ChoiceField(choices = choices, label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
 		else:
 			pass
 		#print a_var.attrib['name'], type(varsForm)
@@ -46,5 +47,5 @@ for a_form in root:
 
 for i in Forms:
     Classes.append(type(i[0], (forms.Form, ), i[1]))
-
+#type(Classes[0].sint_thermop)
 

@@ -1,37 +1,92 @@
 <xml>
-	<form name = "FormA"> 
-		<var name = "sint_thermop" type = "float">
+	<form name = "Form1"> 
+		<var name = "sint_thermop1" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
-		<var name = "epif_pleuras" type = "float">
+		<var name = "epif_pleuras1" type = "float">
 			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
 		</var>
-		<var name = 'dt' type = "float">
+		<var name = 'dt1' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
 	</form>
-	<form name = "FormB">
-		<var name = "thermokrasia_apothikeusis7" type = "choice">
-			<attributes choices = "THERMOKRASIA_APOTHIKEYSIS7" label = "Θερμοκρασία αποθήκευσης" help_text = "C"/>
+	<form name = "Form2"> 
+		<var name = "sint_thermop2" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
-		<var name = "thermokrasia_aera_eisodou7" type = "choice">
-			<attributes choices = "THERMOKRASIA_AERA_EISODOY7" label = "Θερμοκρασία - Σχετική υγρασία αέρα εισροής" help_text = "C" />
+		<var name = "epif_pleuras2" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
 		</var>
-		<var name = 'ogkos_thalamou7' type = 'choice'>
-			<attributes choices = "OGKOS_THALAMOY7" label = "Όγκος Θαλάμου" help_text = "m^3"/>
-		</var>
-		<var name = 'thermokrasia_thalamou7' type = "choice">
-			<attributes choices = "THERMOKRASIA_THALAMOY7" label = "Θερμοκρασία Θαλάμου" help_text = "None"/>
+		<var name = 'dt2' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
 	</form>
-	<form name = "FormC">
-		<var name = 'sint_kataps'  type = "choice">
-			<attributes choices = "SINT_KATAPS" label = "Επιλογή αποθήκευσης:" help_text = "None"/>
+	<form name = "Form3"> 
+		<var name = "sint_thermop3" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
+		</var>
+		<var name = "epif_pleuras3" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
+		</var>
+		<var name = 'dt3' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
+		</var>
+	</form>
+	<form name = "Form4"> 
+		<var name = "sint_thermop4" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
+		</var>
+		<var name = "epif_pleuras4" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
+		</var>
+		<var name = 'dt4' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
+		</var>
+	</form>
+	<form name = "Form5"> 
+		<var name = "sint_thermop5" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
+		</var>
+		<var name = "epif_pleuras5" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
+		</var>
+		<var name = 'dt5' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
+		</var>
+	</form>
+	<form name = "Form6"> 
+		<var name = "sint_thermop6" type = "float">
+			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
+		</var>
+		<var name = "epif_pleuras6" type = "float">
+			<attributes label = "Επιφάνεια Πλευράς:" help_text = "m^2"/>
+		</var>
+		<var name = 'dt6' type = "float">
+			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
+		</var>
+	</form>
+	<form name = "Form7">
+		<var name = "thermokrasia_apothikeusis7" type = "choice">
+			<attributes choices = "(0, '15'),(1, '10'),(2, '5')" label = "Θερμοκρασία αποθήκευσης" help_text = "C"/>
+		</var>
+		<var name = "thermokrasia_aera_eisodou7" type = "choice">
+			<attributes choices = "(0, '25-50%'),(1, '25-60%'),(2, '25-70%')" label = "Θερμοκρασία - Σχετική υγρασία αέρα εισροής" help_text = "C" />
+		</var>
+		<var name = 'ogkos_thalamou7' type = 'choice'>
+			<attributes choices = "(0, '7'),(1, '8.5'),(2, '10')" label = "Όγκος Θαλάμου" help_text = "m^3"/>
+		</var>
+		<var name = 'thermokrasia_thalamou7' type = "choice">
+			<attributes choices = "(0, 'μεγαλύτερη του μηδενός'),(1, 'μικρότερη του μηδενός')" label = "Θερμοκρασία Θαλάμου" help_text = ""/>
+		</var>
+	</form>
+	<form name = "Form8">
+		<var name = 'sint_kataps8'  type = "choice">
+			<attributes choices = "('0', 'Συντήρηση'),('1', 'Κατάψυξη')" label = "Επιλογή αποθήκευσης:" help_text = ""/>
 		</var>
 		<var name = 'bathmos_psiksis8' type = "choice">
-			<attributes choices = "PROIONTA8" label = "Προϊόν:" help_text = "None"/>
+			<attributes choices = "('0.9-3.81::3.81-2.05-313', 'Σπαράγγια'),('0.67-3.64::3.64-1.97-277', 'Φασολάκια φρέσκα'),('0.8-3.77::3.77-2.01-300', 'Ραπανάκια με φύλλα')" label = "Προϊόν:" help_text = ""/>
 		</var>
-		<var name = 'dt' type = "float">
+		<var name = 'dt8' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας συντήρησης:" help_text = "Κ"/>
 		</var>
 		<var name = 'dt_mt' type = "float">
@@ -44,7 +99,7 @@
 			<attributes label = "Μάζα:" help_text = "Kg"/>
 		</var>
 	</form>
-	<form name = "FormD">
+	<form name = "Form9">
 		<var name = 'maza9' type = "float">
 			<attributes label = "Μάζα:" help_text = "Kg"/>
 		</var>
@@ -52,17 +107,17 @@
 			<attributes label = "Τιμή αναπνοής:" help_text = "KW/Kg"/>
 		</var>
 	</form>
-	<form name = "FormE">
+	<form name = "Form10">
 		<var name = 'diafora_fortia10' type = "float">
 			<attributes label = "Διάφορα φορτία:" help_text = "KWatt"/>
 		</var>
 	</form>
-	<form name = "FormF">
+	<form name = "Form11">
 		<var name = 'sintelestis_asfaleias11' type = "float">
-			<attributes label = "Συντελεστής ασφαλείας:" help_text = "None"/> 
+			<attributes label = "Συντελεστής ασφαλείας:" help_text = ""/> 
 		</var>
 	</form>
-	<form name = "FormG">
+	<form name = "Form12">
 		<var name = 'sintelestis_diakop_leit12' type = "float">
 			<attributes label = "Συντελεστής διακοπτόμενης λειτουργίας:" help_text = "Ώρες"/>
 		</var>
