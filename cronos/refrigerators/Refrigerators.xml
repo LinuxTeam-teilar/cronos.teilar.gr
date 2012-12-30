@@ -78,13 +78,19 @@
 		<var name = 'thermokrasia_thalamou7' type = "choice">
 			<attributes choices = "(0, 'μεγαλύτερη του μηδενός'),(1, 'μικρότερη του μηδενός')" label = "Θερμοκρασία Θαλάμου" help_text = ""/>
 		</var>
+		<var name = 'ENTHALPIA_AERA_EISROIS7' type = "tuple">
+			<attributes values = "[0.0128, 0.0186, 0.0246],[0.0266, 0.0323, 0.0382],[0.0388, 0.0445, 0.0502]"/>
+		</var>
+		<var name = 'OGKOS_AERA_EISROIS7' type = "tuple">
+			<attributes values = "[3.1, 2.3],[3.4, 2.6],[3.7, 2.8]"/>
+		</var>
 	</form>
 	<form name = "Form8">
 		<var name = 'sint_kataps8'  type = "choice">
 			<attributes choices = "('0', 'Συντήρηση'),('1', 'Κατάψυξη')" label = "Επιλογή αποθήκευσης:" help_text = ""/>
 		</var>
 		<var name = 'bathmos_psiksis8' type = "choice">
-			<attributes choices = "('0.9-3.81::3.81-2.05-313', 'Σπαράγγια'),('0.67-3.64::3.64-1.97-277', 'Φασολάκια φρέσκα'),('0.8-3.77::3.77-2.01-300', 'Ραπανάκια με φύλλα')" label = "Προϊόν:" help_text = ""/>
+			<attributes choices = "((([0.9, 3.81], [3.81, 2.05, 313]), 'Σπαράγγια'),(([0.67, 3.64], [3.64, 1.97, 277]), 'Φασολάκια φρέσκα'),(([0.8, 3.77], [3.77, 2.01, 300]),'Ραπανάκια με φύλλα'))" label = "Προϊόν:" help_text = ""/>
 		</var>
 		<var name = 'dt8' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας συντήρησης:" help_text = "Κ"/>

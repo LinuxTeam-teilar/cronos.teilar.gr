@@ -34,11 +34,9 @@ def refrigerators(request):
         for i in 'form1', 'form2', 'form3', 'form4', 'form5', 'form6', 'form7', 'form8', 'form9', 'form10':
             if forms[i].is_valid():
                 formsName = str(type(forms[i]))
-                print formsName[-3:-2]
                 if (int(formsName[-3:-2]) > 0) and (int(formsName[-3:-2]) < 7):
                     forms[i].sint_thermop = float(request.POST.get('sint_thermop'+formsName[-3:-2]))
                     forms[i].epif_pleuras = float(request.POST.get('epif_pleuras'+formsName[-3:-2]))
-                    print "Form's A dt -> ", request.POST.get('dt'+formsName[-3:-2]), " *** ", 'dt'+i[-1:]
                     forms[i].dt  = float(request.POST.get('dt'+formsName[-3:-2]))
                     results[i] = forms[i].sint_thermop * forms[i].epif_pleuras * forms[i].dt
                 if int(formsName[-3:-2]) == 7:
@@ -46,38 +44,34 @@ def refrigerators(request):
                     forms[i].thermokrasia_apothikeusis7 = int(request.POST.get('thermokrasia_apothikeusis7')) 
                     forms[i].ogkos_thalamou7 = int(request.POST.get('ogkos_thalamou7'))
                     forms[i].thermokrasia_thalamou7 = int(request.POST.get('thermokrasia_thalamou7'))
-                    # e.g.: ENTHALPIA_AERA_EISROIS7 -> new var@xml ; usage e.g.: forms[i].ENTHALPIA_AERA_EISROIS7... .
-                    enthalpia_aera_eisrois7 = ENTHALPIA_AERA_EISROIS7[forms[i].thermokrasia_apothikeusis7][forms[i].thermokrasia_aera_eisodou7]
-                    ogkos_aera_eisrois7 = OGKOS_AERA_EISROIS7[forms[i].ogkos_thalamou7][forms[i].thermokrasia_thalamou7]
+                    enthalpia_aera_eisrois7 = forms[i].ENTHALPIA_AERA_EISROIS7[forms[i].thermokrasia_apothikeusis7][forms[i].thermokrasia_aera_eisodou7]
+                    ogkos_aera_eisrois7 = forms[i].OGKOS_AERA_EISROIS7[forms[i].ogkos_thalamou7][forms[i].thermokrasia_thalamou7]
                     results[i] = ogkos_aera_eisrois7 * enthalpia_aera_eisrois7
                 if int(formsName[-3:-2]) == 8:
                     forms[i].ores_psiksis8 = float(request.POST.get('ores_psiksis8'))
                     forms[i].maza8 = float(request.POST.get('maza8'))
                     a = request.POST.get('dt'+i[-1:])
-                    print "STOP POINT: ", a
                     forms[i].dt8 = float(request.POST.get('dt'+i[-1:]))
                     forms[i].sint_kataps8 = int(request.POST.get('sint_kataps8'))
                     if forms[i].sint_kataps8 == 0:
                         forms[i].sint_kataps8 = 'Συντήρηση'
-                        forms[i].bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[0]
-                        sint_bathmou_psiksis8 = float(forms[i].bathmos_psiksis8.split('-')[0])
-                        eidiki_thermotita_pr8 = float(forms[i].bathmos_psiksis8.split('-')[1])
-                        print 'here'
-                        results[i] = (forms[i].maza8 * eidiki_thermotita_pr8 * forms[i].dt8) / (forms[i].ores_psiksis8 * 3600 * sint_bathmou_psiksis8)
+                        forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[0]
+                        sint_bathmou_psiksis8 = forms[i].bathmos_psiksis8[0]
+                        eidiki_thermotita_pr8 = forms[i].bathmos_psiksis8[1]
+                        results[i] = (float(forms[i].maza8) * float(eidiki_thermotita_pr8) * float(forms[i].dt8)) / (float(forms[i].ores_psiksis8) * 3600.0 * float(sint_bathmou_psiksis8))
                     else:
                         forms[i].sint_kataps8 = 'Κατάψυξη'
-                        forms[i].bathmos_psiksis8 = request.POST.get('bathmos_psiksis8').split('::')[1]
-                        eidiki_thermotita_pr8 = float(forms[i].bathmos_psiksis8.split('-')[0])
-                        eidiki_thermotita_mt8 = float(forms[i].bathmos_psiksis8.split('-')[1])
-                        lanthanousa_therm_ster8 = float(forms[i].bathmos_psiksis8.split('-')[2])
-                        forms[i].dt_mt = float(request.POST.get('dt_mt8'))
-                        results[i] = ((forms[i].maza8 * eidiki_thermotita_pr8 * forms[i].dt8) + (forms[i].maza8 * lanthanousa_therm_ster8) + (forms[i].maza8 * eidiki_thermotita_mt8 * forms[i].dt_mt)) / (forms[i].ores_psiksis8 * 3600)
+                        forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[1]
+                        eidiki_thermotita_pr8 = forms[i].bathmos_psiksis8[0]
+                        eidiki_thermotita_mt8 = forms[i].bathmos_psiksis8[1]
+                        lanthanousa_therm_ster8 = forms[i].bathmos_psiksis8[2]
+                        forms[i].dt_mt = float(request.POST.get('dt_mt'))
+                        results[i] = ((forms[i].maza8 * eidiki_thermotita_pr8 * forms[i].dt8) + (forms[i].maza8 * lanthanousa_therm_ster8) + (forms[i].maza8 * eidiki_thermotita_mt8 * forms[i].dt_mt)) / (forms[i].ores_psiksis8 * 3600.0)
                 if int(formsName[-3:-2]) == 9:
                     forms[i].maza9 = float(request.POST.get('maza9'))
                     forms[i].timi_anapnois9 = float(request.POST.get('timi_anapnois9'))
                     results[i] = forms[i].maza9 * forms[i].timi_anapnois9
                 if formsName.find("Form10") > 0:
-                    print "INTO 10"
                     forms[i].diafora_fortia10 = float(request.POST.get('diafora_fortia10'))
                     results[i] = forms[i].diafora_fortia10
         if forms['form11'].is_valid():
@@ -88,8 +82,8 @@ def refrigerators(request):
                 temp_result = temp_result + results[text]
             results['form11'] = temp_result * forms['form11'].sintelestis_asfaleias11
         if forms['form12'].is_valid():
-            forms[i].sintelestis_diakop_leit12 = float(request.POST.get('sintelestis_diakop_leit12'))
-            results['form12'] = 24 * results['form11'] / forms[i].sintelestis_diakop_leit12
+            forms['form12'].sintelestis_diakop_leit12 = float(request.POST.get('sintelestis_diakop_leit12'))
+            results['form12'] = 24 * results['form11'] / forms['form12'].sintelestis_diakop_leit12
         results['total_result'] = temp_result + results['form11'] + results['form12']
     else:
         forms['form1'] = Classes[0](request.POST)

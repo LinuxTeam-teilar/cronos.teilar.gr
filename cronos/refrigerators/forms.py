@@ -36,6 +36,8 @@ for a_form in root:
 		elif a_var.attrib['type'] == 'choice':
 			choices = eval(a_var._children[0].__dict__['attrib']['choices'])
 			varsForm = forms.ChoiceField(choices = choices, label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+		elif a_var.attrib['type'] == 'tuple':
+			varsForm = eval(a_var._children[0].__dict__['attrib']['values'])
 		else:
 			pass
 		#print a_var.attrib['name'], type(varsForm)
