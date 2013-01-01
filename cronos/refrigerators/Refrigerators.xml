@@ -9,6 +9,7 @@
 		<var name = 'dt1' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result1" equation = "sint_thermop1 * epif_pleuras1 * dt1"/>
 	</form>
 	<form name = "Form2"> 
 		<var name = "sint_thermop2" type = "float">
@@ -20,6 +21,7 @@
 		<var name = 'dt2' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result2" equation = "sint_thermop2 * epif_pleuras2 * dt2"/>
 	</form>
 	<form name = "Form3"> 
 		<var name = "sint_thermop3" type = "float">
@@ -31,6 +33,7 @@
 		<var name = 'dt3' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result3" equation = "sint_thermop3 * epif_pleuras3 * dt3"/>
 	</form>
 	<form name = "Form4"> 
 		<var name = "sint_thermop4" type = "float">
@@ -42,6 +45,7 @@
 		<var name = 'dt4' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result4" equation = "sint_thermop4 * epif_pleuras4 * dt4"/>
 	</form>
 	<form name = "Form5"> 
 		<var name = "sint_thermop5" type = "float">
@@ -53,6 +57,7 @@
 		<var name = 'dt5' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result5" equation = "sint_thermop5 * epif_pleuras5 * dt5"/>
 	</form>
 	<form name = "Form6"> 
 		<var name = "sint_thermop6" type = "float">
@@ -64,6 +69,7 @@
 		<var name = 'dt6' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
+		<function name = "Result6" equation = "sint_thermop6 * epif_pleuras6 * dt6"/>
 	</form>
 	<form name = "Form7">
 		<var name = "thermokrasia_apothikeusis7" type = "choice">

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from cronos.refrigerators.forms import *
-from cronos.refrigerators.tables import *
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
@@ -48,25 +47,28 @@ def refrigerators(request):
                     ogkos_aera_eisrois7 = forms[i].OGKOS_AERA_EISROIS7[forms[i].ogkos_thalamou7][forms[i].thermokrasia_thalamou7]
                     results[i] = ogkos_aera_eisrois7 * enthalpia_aera_eisrois7
                 if int(formsName[-3:-2]) == 8:
+                    #@__init__.py
                     forms[i].ores_psiksis8 = float(request.POST.get('ores_psiksis8'))
                     forms[i].maza8 = float(request.POST.get('maza8'))
-                    a = request.POST.get('dt'+i[-1:])
                     forms[i].dt8 = float(request.POST.get('dt'+i[-1:]))
-                    forms[i].sint_kataps8 = int(request.POST.get('sint_kataps8'))
-                    if forms[i].sint_kataps8 == 0:
-                        forms[i].sint_kataps8 = 'Συντήρηση'
-                        forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[0]
+                    forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[int(request.POST.get('sint_kataps8'))]
+                    #@__init__.py end.
+                    #To be replaced @ forms.py + Refrigerators.xml - the below code will be 
+                    # replaced by the 
+                    # xml tag: "function" and the results[i] [to be evaluated by eval()] by 
+                    # the "equation" attribute-to-function-tag. the label "condition" will 
+                    # determine [from the request.POST.get('sint_kataps8')] which result 
+                    # will be returned.
+                    forms[i].sint_kataps8 = forms[i].base_fields['sint_kataps8']._choices[int(request.POST.get('sint_kataps8'))][1]
+                    if int(request.POST.get('sint_kataps8')) == 0:
                         sint_bathmou_psiksis8 = forms[i].bathmos_psiksis8[0]
-                        eidiki_thermotita_pr8 = forms[i].bathmos_psiksis8[1]
-                        results[i] = (float(forms[i].maza8) * float(eidiki_thermotita_pr8) * float(forms[i].dt8)) / (float(forms[i].ores_psiksis8) * 3600.0 * float(sint_bathmou_psiksis8))
+                        lanthanousa_therm_ster8 = None
+                        eidiki_thermotita_mt8 = None
+                        results[i] = (forms[i].maza8 * forms[i].bathmos_psiksis8[1] * forms[i].dt8) / (forms[i].ores_psiksis8 * 3600.0 * forms[i].bathmos_psiksis8[0])
                     else:
-                        forms[i].sint_kataps8 = 'Κατάψυξη'
-                        forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[1]
-                        eidiki_thermotita_pr8 = forms[i].bathmos_psiksis8[0]
-                        eidiki_thermotita_mt8 = forms[i].bathmos_psiksis8[1]
-                        lanthanousa_therm_ster8 = forms[i].bathmos_psiksis8[2]
+                        sint_bathmou_psiksis8 = None
                         forms[i].dt_mt = float(request.POST.get('dt_mt'))
-                        results[i] = ((forms[i].maza8 * eidiki_thermotita_pr8 * forms[i].dt8) + (forms[i].maza8 * lanthanousa_therm_ster8) + (forms[i].maza8 * eidiki_thermotita_mt8 * forms[i].dt_mt)) / (forms[i].ores_psiksis8 * 3600.0)
+                        results[i] = ((forms[i].maza8 * forms[i].bathmos_psiksis8[0] * forms[i].dt8) + (forms[i].maza8 * forms[i].bathmos_psiksis8[2]) + (forms[i].maza8 * forms[i].bathmos_psiksis8[1] * forms[i].dt_mt)) / (forms[i].ores_psiksis8 * 3600.0)
                 if int(formsName[-3:-2]) == 9:
                     forms[i].maza9 = float(request.POST.get('maza9'))
                     forms[i].timi_anapnois9 = float(request.POST.get('timi_anapnois9'))
@@ -148,7 +150,9 @@ def refrigerators(request):
         'ogkos_aera_eisrois7' : ogkos_aera_eisrois7,
         'bathmos_psiksis8' : forms['form8']['bathmos_psiksis8'],
         'sint_bathmou_psiksis8' : sint_bathmou_psiksis8,
-        'eidiki_thermotita_pr8' : eidiki_thermotita_pr8,
+        # if sintirisi del 'eidiki_thermotita_pr8'
+        'eidiki_thermotita_pr8' : forms['form8'].bathmos_psiksis8[1],
+        # if katapsiksi del 'eidiki_thermotita_mt8'
         'eidiki_thermotita_mt8' : eidiki_thermotita_mt8,
         'ores_psiksis8' : forms['form8']['ores_psiksis8'],
         'maza8' : forms['form8']['maza8'],

@@ -8,10 +8,8 @@
 # ex Psugeia11Form - FormF
 # ex Psugeia12Form - FormG
 
-from cronos.refrigerators.tables import *
 from django import forms
 import xml.etree.ElementTree as ET
-import os
 from cronos.settings import *
 xmlfile = '' + str(PROJECT_ROOT.split()[0][0:len(PROJECT_ROOT)-2]) + 'refrigerators/Refrigerators.xml'
 tree = ET.parse(xmlfile)
@@ -25,24 +23,30 @@ Classes = []
 tempdict = {}
 
 for a_form in root:
-	# ex dict_X_'s all in one.
-	tempForm = [a_form.attrib['name']]
-	#print tempForm
-	tempdict = {}
+	varDict = {}
+	funcDict = {}
 	for a_var in a_form:
 		#print a_var.attrib['type']
-		if a_var.attrib['type'] == 'float':
-			varsForm = forms.FloatField(label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
-		elif a_var.attrib['type'] == 'choice':
-			choices = eval(a_var._children[0].__dict__['attrib']['choices'])
-			varsForm = forms.ChoiceField(choices = choices, label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
-		elif a_var.attrib['type'] == 'tuple':
-			varsForm = eval(a_var._children[0].__dict__['attrib']['values'])
+		if a_var.tag == "var":
+			if a_var.attrib['type'] == 'float':
+				varsForm = forms.FloatField(label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+			elif a_var.attrib['type'] == 'choice':
+				choices = eval(a_var._children[0].__dict__['attrib']['choices'])
+				varsForm = forms.ChoiceField(choices = choices, label = a_var._children[0].__dict__['attrib']['label'], help_text = a_var._children[0].__dict__['attrib']['help_text'])
+			elif a_var.attrib['type'] == 'tuple':
+				varsForm = eval(a_var._children[0].__dict__['attrib']['values'])
+			else:
+				pass
+			#print a_var.attrib['name'], type(varsForm)
+			varDict[a_var.attrib['name']] = varsForm
+		elif a_var.tag == "function":
+			#funcForm = eval(a_var._children[0].__dict__['attrib']['equation'])
+			funcname = a_var.__dict__['attrib']['name']
+			funcForm = a_var.__dict__['attrib']['equation']
+			funcDict[funcname] = funcForm
 		else:
 			pass
-		#print a_var.attrib['name'], type(varsForm)
-		tempdict[a_var.attrib['name']] = varsForm
-	fullclass = (a_form.attrib['name'], tempdict)
+	fullclass = (a_form.attrib['name'], varDict, funcDict)
 	#print tempForm, ' -type> ', type(tempForm)
 	#print tempForm
 	Forms.append(fullclass)
