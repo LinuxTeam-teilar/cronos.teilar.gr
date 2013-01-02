@@ -151,7 +151,7 @@ def refrigerators(request):
         'bathmos_psiksis8' : forms['form8']['bathmos_psiksis8'],
         'sint_bathmou_psiksis8' : sint_bathmou_psiksis8,
         # if sintirisi del 'eidiki_thermotita_pr8'
-        'eidiki_thermotita_pr8' : forms['form8'].bathmos_psiksis8[1],
+        'eidiki_thermotita_pr8' : forms['form8']['bathmos_psiksis8'],
         # if katapsiksi del 'eidiki_thermotita_mt8'
         'eidiki_thermotita_mt8' : eidiki_thermotita_mt8,
         'ores_psiksis8' : forms['form8']['ores_psiksis8'],
