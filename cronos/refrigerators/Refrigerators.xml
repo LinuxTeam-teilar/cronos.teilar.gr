@@ -9,7 +9,10 @@
 		<var name = 'dt1' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result1" equation = "sint_thermop1 * epif_pleuras1 * dt1"/>
+		<results>
+			<case name = "Result1" condition = 'True' equation = "sint_thermop1 * epif_pleuras1 * dt1"/>
+		</results>
+
 	</form>
 	<form name = "Form2"> 
 		<var name = "sint_thermop2" type = "float">
@@ -21,7 +24,9 @@
 		<var name = 'dt2' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result2" equation = "sint_thermop2 * epif_pleuras2 * dt2"/>
+		<results>
+			<case name = "Result2" condition = 'True' equation = "sint_thermop2 * epif_pleuras2 * dt2"/>
+		</results>
 	</form>
 	<form name = "Form3"> 
 		<var name = "sint_thermop3" type = "float">
@@ -33,7 +38,9 @@
 		<var name = 'dt3' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result3" equation = "sint_thermop3 * epif_pleuras3 * dt3"/>
+		<results>
+			<case name = "Result3" condition = 'True' equation = "sint_thermop3 * epif_pleuras3 * dt3"/>
+		</results>
 	</form>
 	<form name = "Form4"> 
 		<var name = "sint_thermop4" type = "float">
@@ -45,7 +52,9 @@
 		<var name = 'dt4' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result4" equation = "sint_thermop4 * epif_pleuras4 * dt4"/>
+		<results>
+			<case name = "Result4" condition = 'True' equation = "sint_thermop4 * epif_pleuras4 * dt4"/>
+		</results>
 	</form>
 	<form name = "Form5"> 
 		<var name = "sint_thermop5" type = "float">
@@ -57,7 +66,9 @@
 		<var name = 'dt5' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result5" equation = "sint_thermop5 * epif_pleuras5 * dt5"/>
+		<results>
+			<case name = "Result5" condition = 'True' equation = "sint_thermop5 * epif_pleuras5 * dt5"/>
+		</results>
 	</form>
 	<form name = "Form6"> 
 		<var name = "sint_thermop6" type = "float">
@@ -69,7 +80,9 @@
 		<var name = 'dt6' type = "float">
 			<attributes label = "Διαφορά Θερμοκρασίας:" help_text = "K"/>
 		</var>
-		<function name = "Result6" equation = "sint_thermop6 * epif_pleuras6 * dt6"/>
+		<results>
+			<case name = "Result6" condition = 'True' equation = "sint_thermop6 * epif_pleuras6 * dt6"/>
+		</results>
 	</form>
 	<form name = "Form7">
 		<var name = "thermokrasia_apothikeusis7" type = "choice">
@@ -110,6 +123,11 @@
 		<var name = 'maza8' type = "float">
 			<attributes label = "Μάζα:" help_text = "Kg"/>
 		</var>
+		#render it as an anonymous function@forms.py(?).
+		<results>
+			<case name = "result8.0" help_text = "Form's 8 Results" condition = "sint_kataps8 == 0" equation = "(maza8 * bathmos_psiksis8[1] * dt8) / (ores_psiksis8 * 3600.0 * bathmos_psiksis8[0])"/>
+			<case name = "result8.1" help_text = "Form's 8 Results" condition = "sint_kataps8 == 1" equation = "((maza8 * bathmos_psiksis8[0] * dt8) + (maza8 * bathmos_psiksis8[2]) + (maza8 * bathmos_psiksis8[1] * dt_mt)) / (ores_psiksis8 * 3600.0)" />
+		</results>
 	</form>
 	<form name = "Form9">
 		<var name = 'maza9' type = "float">

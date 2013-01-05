@@ -51,7 +51,9 @@ def refrigerators(request):
                     forms[i].ores_psiksis8 = float(request.POST.get('ores_psiksis8'))
                     forms[i].maza8 = float(request.POST.get('maza8'))
                     forms[i].dt8 = float(request.POST.get('dt'+i[-1:]))
-                    forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[int(request.POST.get('sint_kataps8'))]
+                    forms[i].sint_kataps8 = eval(request.POST.get('sint_kataps8'))
+                    forms[i].bathmos_psiksis8 = eval(request.POST.get('bathmos_psiksis8'))[int(forms[i].sint_kataps8)]
+                    #forms[i].bathmos_psiksis8 = forms[i].bathmos_psiksis8[forms[i].sint_kataps8]
                     #@__init__.py end.
                     #To be replaced @ forms.py + Refrigerators.xml - the below code will be 
                     # replaced by the 
@@ -59,7 +61,6 @@ def refrigerators(request):
                     # the "equation" attribute-to-function-tag. the label "condition" will 
                     # determine [from the request.POST.get('sint_kataps8')] which result 
                     # will be returned.
-                    forms[i].sint_kataps8 = forms[i].base_fields['sint_kataps8']._choices[int(request.POST.get('sint_kataps8'))][1]
                     if int(request.POST.get('sint_kataps8')) == 0:
                         sint_bathmou_psiksis8 = forms[i].bathmos_psiksis8[0]
                         lanthanousa_therm_ster8 = None
