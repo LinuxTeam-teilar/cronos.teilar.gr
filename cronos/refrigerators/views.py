@@ -9,6 +9,7 @@ from cronos.refrigerators.__init__ import *
 
 def refrigerators(request):
     varDict = procReq(request)
+    print varDict
     # 'XMLFILENAME' will be replaced by the urls./extensions(ex-refrigerators)
     # /UserSelectedURL(e.g. refiregerators)/.
-    return render_to_response(""'XMLFILENAME'"", varDict}, context_instance = RequestContext(request))
+    return render_to_response('refrigerators.html', varDict, context_instance = RequestContext(request))
