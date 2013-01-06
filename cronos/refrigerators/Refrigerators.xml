@@ -85,6 +85,9 @@
 		</results>
 	</form>
 	<form name = "Form7">
+		<var name = "testTEXTname" type = "text">
+			<attributes label = "testTEXTlabel" help_text = "testTEXThelp_text"/>
+		</var>
 		<var name = "thermokrasia_apothikeusis7" type = "choice">
 			<attributes choices = "(0, '15'),(1, '10'),(2, '5')" label = "Θερμοκρασία αποθήκευσης" help_text = "C"/>
 		</var>
