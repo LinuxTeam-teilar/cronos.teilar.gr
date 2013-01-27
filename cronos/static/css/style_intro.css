@@ -86,7 +86,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #login-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
 
-#login-form input[name="submit"] { display: inherited; margin: 10px 0 0 30px; }
+#login-form input[name="submit"] { display: inherit; margin: 10px 0 0 30px; }
 
 #login-form input[name="signup"] { display: inline;}
 
@@ -128,7 +128,7 @@ p { margin: 3px 0 15px 0; color: #212121; font: normal 14px Verdana,Arial,sans-s
 
 #signup-form label { display: block; margin: 12px 0 0 30px; color: #212121; }
 
-#signup-form input[name="submit"] { display: inherited; margin: 10px 0 0 30px; }
+#signup-form input[name="submit"] { display: inherit; margin: 10px 0 0 30px; }
 
 #signup-form input[name="signup"] { display: inline;}
 
