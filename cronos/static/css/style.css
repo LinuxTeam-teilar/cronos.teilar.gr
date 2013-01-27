@@ -34,7 +34,41 @@ th { color: #786721; width: 280px; }
 }
 
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
-/*FOR NAVIGATION--------------------------------------------------------------------------------------------------------------------------------------------*/
+/*FOR SIDEBAR-----------------------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+
+.sidebar_body {
+    display:none;
+    font: 14px Verdana,Arial,Helvetica,sans-serif;
+    color: #786721;
+    background: #FFE699 url("/static/img/navigation_bg_link.png") top left repeat-x;
+    border: solid 1px #786721; border-top: 0;
+    text-shadow: #FFF2CC 1px 1px 0px;
+    letter-spacing: 0.02em;
+}
+.sidebar_head {
+    cursor: pointer;
+    position: relative;
+    margin:1px;
+    font-weight:bold;
+}
+.sidebar_body a {
+    display:block;
+    color: #786721;
+    padding-left:22px;
+    background-color:#FFEEB5;
+    text-decoration:none;
+    padding-top:2px;
+    padding-bottom:2px;
+}
+.sidebar_body a:hover {
+    color: #f4f4f4; text-shadow: #000 0px 1px 0px;
+    background: #786721 url("/static/img/navigation_bg_over.png") top left repeat-x;
+    text-decoration:none;
+}
+
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*FOR SIDEBAR -> NAVIGATION---------------------------------------------------------------------------------------------------------------------------------*/
 /*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 
 #navigation {
@@ -197,10 +231,15 @@ th { color: #786721; width: 280px; }
     margin-left: 2em;
     padding-left: 0;
 }
+
 #content .entry p {
     margin-top: 0.5em;
 }
 
+
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
+/*FOR VARIOUS OTHER NODES-----------------------------------------------------------------------------------------------------------------------------------*/
+/*^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^*/
 #content .rss-promo { background: #FFECB3; border: solid 1px #E6AC00; }
 #content .rss-promo a:link, #content .rss-promo a:visited {
     text-align:center;
@@ -211,36 +250,6 @@ th { color: #786721; width: 280px; }
 }
 #content .rss-promo a:hover, #content .rss-promo a:focus { border: 0; color: #B38600; }
 #content .rss-promo p { text-align:center;color: #786721; }
-
-.sidebar_body {
-    display:none;
-    font: 14px Verdana,Arial,Helvetica,sans-serif;
-    color: #786721;
-    background: #FFE699 url("/static/img/navigation_bg_link.png") top left repeat-x;
-    border: solid 1px #786721; border-top: 0;
-    text-shadow: #FFF2CC 1px 1px 0px;
-    letter-spacing: 0.02em;
-}
-.sidebar_head {
-    cursor: pointer;
-    position: relative;
-    margin:1px;
-    font-weight:bold;
-}
-.sidebar_body a {
-    display:block;
-    color: #786721;
-    padding-left:22px;
-    background-color:#FFEEB5;
-    text-decoration:none;
-    padding-top:2px;
-    padding-bottom:2px;
-}
-.sidebar_body a:hover {
-    color: #f4f4f4; text-shadow: #000 0px 1px 0px;
-    background: #786721 url("/static/img/navigation_bg_over.png") top left repeat-x;
-    text-decoration:none;
-}
 
 #content .post_content h3 {position:relative !important; padding-bottom:27px;}
 #content .post_content { display: block; width: 95%; margin-left: auto; margin-right: auto; }
