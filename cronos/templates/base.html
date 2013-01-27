@@ -21,14 +21,14 @@
                     <ul id="navigation">
                         <li><a href="/">&raquo;&emsp;Αρχική</a></li>
                         {% if user.is_authenticated %}
-                        <li><a href="/announcements/">&raquo;&emsp;Ανακοινώσεις</a></li>
-                        <li><a href="/dionysos/">&raquo;&emsp;Στοιχεία Γραμματείας</a></li>
-                        {% if user.get_profile.eclass_username %}
-                        <li><a href="/eclass/">&raquo;&emsp;E-class</a></li>
-                        {% endif %}
-                        {% if user.get_profile.webmail_username %}
-                        <li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
-                        {% endif %}
+                            <li><a href="/announcements/">&raquo;&emsp;Ανακοινώσεις</a></li>
+                            <li><a href="/dionysos/">&raquo;&emsp;Στοιχεία Γραμματείας</a></li>
+                            {% if user.get_profile.eclass_username %}
+                                <li><a href="/eclass/">&raquo;&emsp;E-class</a></li>
+                            {% endif %}
+                            {% if user.get_profile.webmail_username %}
+                                <li><a href="/webmail/">&raquo;&emsp;E-mail</a></li>
+                            {% endif %}
                         {% endif %}
                         <li><a href="/library/">&raquo;&emsp;Αναζήτηση Βιβλιοθήκης</a></li>
                         <li><a href="/teachers/">&raquo;&emsp;Λίστα Καθηγητών</a></li>
@@ -48,10 +48,10 @@
                 </div>
             </div>
             {% if user.is_authenticated %}
-            <div id="profile">
-                <p>{{user.first_name}} {{user.last_name}}&emsp;&mdash;&emsp;{{user.get_profile.registration_number}}</p>
-                <a class="button" href="/logout/">Αποσύνδεση</a>
-            </div>
+                <div id="profile">
+                    <p>{{user.first_name}} {{user.last_name}}&emsp;&mdash;&emsp;{{user.get_profile.registration_number}}</p>
+                    <a class="button" href="/logout/">Αποσύνδεση</a>
+                </div>
             {% endif %}
             <div id="content">
             <div id="notifications">
