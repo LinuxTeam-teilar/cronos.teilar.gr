@@ -9,15 +9,21 @@
         <h3>Λίστα Καθηγητών</h3>
         <ul>
         {% for teacher in teachers %}
-            <li><strong><a href="{{ teacher.url }}">{{ teacher.name }}</a></strong>{% if request.user.is_authenticated %} (<a href="/teachers/{{ teacher.urlid }}">Τελευταίες ανακοινώσεις</a>){% endif %}
-            <ul>
-            {% if teacher.email %}
-                <li><i>Email:</i> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a>
-            {% endif %}
-            {% if teacher.department %}
-                <li><i>Τμήμα / Υπηρεσία:</i> {{ teacher.department }}</li>
-            {% endif %}
-            </ul>
+			<li>
+				<span class="teacher">
+					<a href="{{ teacher.url }}">{{ teacher.name }}</a>
+				</span>
+				{% if request.user.is_authenticated %}
+					(<a href="/teachers/{{ teacher.urlid }}">Τελευταίες ανακοινώσεις</a>)
+				{% endif %}
+            	<ul>
+            	{% if teacher.email %}
+					<li><i>Email:</i> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a></li>
+            	{% endif %}
+            	{% if teacher.department %}
+            	    <li><i>Τμήμα / Υπηρεσία:</i> {{ teacher.department }}</li>
+            	{% endif %}
+            	</ul>
             </li>
         {% endfor %}
         </ul>

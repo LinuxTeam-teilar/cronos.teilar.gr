@@ -232,6 +232,11 @@ th { color: #786721; width: 280px; }
     padding-left: 0;
 }
 
+
+#content .entry ul li .teacher {
+	font-weight: bolder;
+}
+
 #content .entry p {
     margin-top: 0.5em;
 }
