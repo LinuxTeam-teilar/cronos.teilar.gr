@@ -7,7 +7,22 @@
 {% block content %}
     <div class="entry">
         <h3>Λίστα Καθηγητών</h3>
-        <ul>
+
+		<div id="TeacherFilter" style="display:none;">
+			<div>
+				<span><label for="FilterText" >Φίλτρο:</label><input type="text" id="FilterText" /></span>
+				<span>
+					<input type="checkbox" id="FilterGroup"
+						{% if not request.user.is_authenticated %} disabled="disabled" {% endif %}
+					/><label for="FilterGroup" >Μόνο καθηγητές του τμήματός μου.</label>
+				</span>
+				</div>
+			<div>
+				<span><label for="SelectedTeachers">Βρέθηκαν <span id="SelectedTeachers"></span> εγγραφές.</label></span>
+			</div>
+		</div>
+
+		<ul id="TeacherList">
         {% for teacher in teachers %}
 			<li>
 				<span class="teacher">
@@ -21,10 +36,37 @@
 					<li><i>Email:</i> <a href="mailto:{{ teacher.email }}">{{ teacher.email }}</a></li>
             	{% endif %}
             	{% if teacher.department %}
-            	    <li><i>Τμήμα / Υπηρεσία:</i> {{ teacher.department }}</li>
+				<li
+					{% if user.is_authenticated %}
+						{% if user.get_profile.school == teacher.department %}title="MyDepartment"{% endif %}
+					{% endif %}
+				><i>Τμήμα / Υπηρεσία:</i> {{ teacher.department }}</li>
             	{% endif %}
             	</ul>
             </li>
         {% endfor %}
         </ul>
+
+		<script id="filter" type="text/javascript" src="/static/js/filter.js" >
+			/* Settings */
+			window.Filter = [];
+			Filter['BEGIN'] = function(){
+				/*  How to find the entries */
+				Entry = [];
+				Entry['Entry'] = "ul#TeacherList > li";
+				Entry['TextString'] = 'span.teacher > a';
+				Entry['Group'] = 'ul > li[title="MyDepartment"]';
+				/* How to find the Filter Search box */
+				SearchBox = [];
+				SearchBox['SearchBox'] = $('#TeacherFilter');
+				SearchBox['Text'] = $('#FilterText');
+				SearchBox['Group'] = $('#FilterGroup');
+				SearchBox['MatchedLength'] = $('#SelectedTeachers');
+			};
+			Filter['END'] = function(){
+				/* Persistent vertical scroll does not blink during typing */
+				$('html').css('overflow-y','scroll');
+			};
+		</script>
+
 {% endblock %}

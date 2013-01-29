@@ -216,6 +216,33 @@ th { color: #786721; width: 280px; }
     color: #aaa;
 }
 
+
+#content .entry div#TeacherFilter {
+    margin: 8px 8px 8px 8px;
+    padding: 8px 8px 8px 8px;
+    background: #FAFAFA;
+    border: solid 1px #c1c1c1;
+    font: 14px verdana;
+	color: #212121;
+
+    -moz-border-radius: 9px; /* FF1+ */
+    -webkit-border-radius: 9px; /* Saf3+, Chrome */
+    border-radius: 9px; /* Opera 10.5, IE 9 */
+
+    -moz-box-shadow: 0 0 1px #a1a1a1; /* FF3.5+ */
+    -webkit-box-shadow: 0 0 1px #a1a1a1; /* Saf3.0+, Chrome */
+    box-shadow: 0 0 1px #a1a1a1; /* Opera 10.5, IE 9.0 */
+}
+
+#content .entry div#TeacherFilter * {
+	margin: 6px 0px 6px 6px;
+}
+
+#content .entry div#TeacherFilter input#FilterText {
+	border: 1px solid #C1C1C1;
+}
+
+
 #content .entry a:link, #content .entry a:visited {
     border-bottom: 1px dashed #212121;
     color: #786721;
