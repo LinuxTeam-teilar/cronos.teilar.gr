@@ -7,6 +7,7 @@ from cronos.teilar.models import EclassFaculties
 from cronos.teilar import teilar_anon_login
 from bs4 import BeautifulSoup
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError
 import logging
 
 logger_syslog = logging.getLogger('cronos')
@@ -44,6 +45,14 @@ class Command(BaseCommand):
             author = Authors(content_object = faculty)
             author.save()
             logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
+        except IntegrityError:
+            '''
+            Check if the entry is already in the DB but marked inactive
+            '''
+            faculty = EclassFaculties.objects.filter(is_active=False).get(url=url)
+            faculty.is_active = True
+            faculty.save()
+            logger_syslog.info(u'Αλλαγή κατάστασης σε active', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
