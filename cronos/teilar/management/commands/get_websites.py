@@ -6,6 +6,7 @@ from cronos.posts.models import Authors
 from cronos.teilar.models import Websites
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError
 import logging
 
 logger_syslog = logging.getLogger('cronos')
@@ -141,6 +142,14 @@ class Command(BaseCommand):
             author = Authors(content_object = website)
             author.save()
             logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
+        except IntegrityError:
+            '''
+            Check if the entry is already in the DB but marked inactive
+            '''
+            website = Websites.objects.filter(is_active=False).get(url=url)
+            website.is_active = True
+            website.save()
+            logger_syslog.info(u'Αλλαγή κατάστασης σε active', extra = log_extra_data(url))
         except Exception as error:
             logger_syslog.error(error, extra = log_extra_data(url))
             logger_mail.exception(error)
