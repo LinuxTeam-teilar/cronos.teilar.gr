@@ -41,12 +41,7 @@ class Command(BaseCommand):
         try:
             department.save()
             logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
-        except Exception as error:
-            logger_syslog.error(error, extra = log_extra_data(url))
-            logger_mail.exception(error)
-            return
-        author = Authors(content_object = department)
-        try:
+            author = Authors(content_object = department)
             author.save()
             logger_syslog.info(u'Επιτυχής προσθήκη', extra = log_extra_data(url))
         except Exception as error:
