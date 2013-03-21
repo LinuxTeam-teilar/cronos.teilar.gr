@@ -26,7 +26,6 @@ SCRIPTS=(
     websites
     departments
     teachers
-    eclass_faculties
     eclass_lessons
     rss_feeds
 )
