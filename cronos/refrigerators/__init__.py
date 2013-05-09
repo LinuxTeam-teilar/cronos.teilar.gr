@@ -10,7 +10,7 @@ def procReq(request):
 	print "request.method  ===  ", request.method
 	if request.method == 'POST':
 		for i in forms:
-			print forms[i].is_valid(), type(forms[i])
+			print forms[i].is_valid(), " || ", type(forms[i]), " || ", forms[i].errors, " || "
 			if forms[i].is_valid():
 				for j in forms[i].fields:
 					if forms[i].fields[j].__class__.__name__ == "CharField":
@@ -23,13 +23,23 @@ def procReq(request):
 						print "invalid input"
 		print "len(forms) === ", len(forms)
 		for i in forms:
-			for j in forms[i].fields:
-				varDict[j] = forms[i].fields[j]
-		print "varDictIF ===", varDict
+			formsname = ''
+			for k in str(type(forms[i]))[27:]:
+				if k.isdigit()>0 or k.isalpha()>0:
+					formsname=formsname+k
+				else:
+					pass
+			varDict[formsname] = forms[i]
+		print "\n\tvarDictIF ===\n"
 	else:
 		for i in forms:
-			for j in forms[i].fields:
-				varDict[j] = forms[i].fields[j]
-		print "varDictELSE ===", varDict
+			formsname = ''
+			for k in str(type(forms[i]))[27:]:
+				if k.isdigit()>0 or k.isalpha()>0:
+					formsname=formsname+k
+				else:
+					pass
+				varDict[formsname] = forms[i]
+		print "\n\tvarDictELSE ===\n\n\n", varDict
 	return varDict
 

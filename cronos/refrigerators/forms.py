@@ -84,6 +84,7 @@ for a_form in root:
 				varsForm = forms.FloatField(label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])
 			elif a_tag.attrib['type'] == 'choice':
 				choices = eval(a_tag._children[0].__dict__['attrib']['choices'])
+				print "\n\n\n \t CHOICES ==", choices
 				varsForm = forms.ChoiceField(choices = choices, label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])
 			elif a_tag.attrib['type'] == 'text':
 				varsForm = forms.CharField(label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])

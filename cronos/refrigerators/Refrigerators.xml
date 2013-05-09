@@ -1,5 +1,5 @@
 <xml>
-	<form name = "Form1"> 
+	<form name = "form1"> 
 		<var name = "sint_thermop1" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -14,7 +14,7 @@
 		</results>
 
 	</form>
-	<form name = "Form2"> 
+	<form name = "form2"> 
 		<var name = "sint_thermop2" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -28,7 +28,7 @@
 			<case name = "Result2" condition = 'True' equation = "sint_thermop2 * epif_pleuras2 * dt2"/>
 		</results>
 	</form>
-	<form name = "Form3"> 
+	<form name = "form3"> 
 		<var name = "sint_thermop3" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -42,7 +42,7 @@
 			<case name = "Result3" condition = 'True' equation = "sint_thermop3 * epif_pleuras3 * dt3"/>
 		</results>
 	</form>
-	<form name = "Form4"> 
+	<form name = "form4"> 
 		<var name = "sint_thermop4" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -56,7 +56,7 @@
 			<case name = "Result4" condition = 'True' equation = "sint_thermop4 * epif_pleuras4 * dt4"/>
 		</results>
 	</form>
-	<form name = "Form5"> 
+	<form name = "form5"> 
 		<var name = "sint_thermop5" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -70,7 +70,7 @@
 			<case name = "Result5" condition = 'True' equation = "sint_thermop5 * epif_pleuras5 * dt5"/>
 		</results>
 	</form>
-	<form name = "Form6"> 
+	<form name = "form6"> 
 		<var name = "sint_thermop6" type = "float">
 			<attributes label = "Συντελεστής Θερμοπερατότητας (K):" help_text = "KW/m^2*K"/>
 		</var>
@@ -84,10 +84,7 @@
 			<case name = "Result6" condition = 'True' equation = "sint_thermop6 * epif_pleuras6 * dt6"/>
 		</results>
 	</form>
-	<form name = "Form7">
-		<var name = "testTEXTname" type = "text">
-			<attributes label = "testTEXTlabel" help_text = "testTEXThelp_text"/>
-		</var>
+	<form name = "form7">
 		<var name = "thermokrasia_apothikeusis7" type = "choice">
 			<attributes choices = "(0, '15'),(1, '10'),(2, '5')" label = "Θερμοκρασία αποθήκευσης" help_text = "C"/>
 		</var>
@@ -107,7 +104,7 @@
 			<attributes values = "[3.1, 2.3],[3.4, 2.6],[3.7, 2.8]"/>
 		</var>
 	</form>
-	<form name = "Form8">
+	<form name = "form8">
 		<var name = 'sint_kataps8'  type = "choice">
 			<attributes choices = "('0', 'Συντήρηση'),('1', 'Κατάψυξη')" label = "Επιλογή αποθήκευσης:" help_text = ""/>
 		</var>
@@ -128,11 +125,11 @@
 		</var>
 		#render it as an anonymous function@forms.py(?).
 		<results>
-			<case name = "result8.0" help_text = "Form's 8 Results" condition = "sint_kataps8 == 0" equation = "(maza8 * bathmos_psiksis8[1] * dt8) / (ores_psiksis8 * 3600.0 * bathmos_psiksis8[0])"/>
-			<case name = "result8.1" help_text = "Form's 8 Results" condition = "sint_kataps8 == 1" equation = "((maza8 * bathmos_psiksis8[0] * dt8) + (maza8 * bathmos_psiksis8[2]) + (maza8 * bathmos_psiksis8[1] * dt_mt)) / (ores_psiksis8 * 3600.0)" />
+			<case name = "result8.0" help_text = "form's 8 Results" condition = "sint_kataps8 == 0" equation = "(maza8 * bathmos_psiksis8[1] * dt8) / (ores_psiksis8 * 3600.0 * bathmos_psiksis8[0])"/>
+			<case name = "result8.1" help_text = "form's 8 Results" condition = "sint_kataps8 == 1" equation = "((maza8 * bathmos_psiksis8[0] * dt8) + (maza8 * bathmos_psiksis8[2]) + (maza8 * bathmos_psiksis8[1] * dt_mt)) / (ores_psiksis8 * 3600.0)" />
 		</results>
 	</form>
-	<form name = "Form9">
+	<form name = "form9">
 		<var name = 'maza9' type = "float">
 			<attributes label = "Μάζα:" help_text = "Kg"/>
 		</var>
@@ -140,17 +137,17 @@
 			<attributes label = "Τιμή αναπνοής:" help_text = "KW/Kg"/>
 		</var>
 	</form>
-	<form name = "Form10">
+	<form name = "form10">
 		<var name = 'diafora_fortia10' type = "float">
 			<attributes label = "Διάφορα φορτία:" help_text = "KWatt"/>
 		</var>
 	</form>
-	<form name = "Form11">
+	<form name = "form11">
 		<var name = 'sintelestis_asfaleias11' type = "float">
 			<attributes label = "Συντελεστής ασφαλείας:" help_text = ""/> 
 		</var>
 	</form>
-	<form name = "Form12">
+	<form name = "form12">
 		<var name = 'sintelestis_diakop_leit12' type = "float">
 			<attributes label = "Συντελεστής διακοπτόμενης λειτουργίας:" help_text = "Ώρες"/>
 		</var>
