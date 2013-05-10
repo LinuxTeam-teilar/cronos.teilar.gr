@@ -46,10 +46,10 @@ def fixEquationSyntax(self, com):
 				if buff_no_white not in forbBuffDict:
 					if buff.find('[') >= 0 and buff.find(']') >= 0:
 						limits = (buff.find('['), buff.find(']')+1)
-						buff = "self.base_fields['" + buff[0:limits[0]] + "']" + buff[limits[0]:limits[1]]
+						buff = "self.base_fields['" + buff[0:limits[0]] + "'].initial" + buff[limits[0]:limits[1]]
 						ll.append(buff)
 					else:
-						buff = "self.base_fields['" + buff + "']"
+						buff = "self.base_fields['" + buff + "'].initial"
 						ll.append(buff)
 			if com[i] == ')':
 				fstr = fstr + buff + temp
@@ -69,8 +69,10 @@ def evalEquations(self):
 	cstr = ''
 	for i in self.results:
 		cstr = self.fixEquationSyntax(str(self.results[i][1]))
+		print cstr
 		if eval(cstr):
 			fstr = self.fixEquationSyntax(self.results[i][0])
+			print fstr
 			self.results[i] = eval(fstr)
 
 
@@ -84,7 +86,6 @@ for a_form in root:
 				varsForm = forms.FloatField(label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])
 			elif a_tag.attrib['type'] == 'choice':
 				choices = eval(a_tag._children[0].__dict__['attrib']['choices'])
-				print "\n\n\n \t CHOICES ==", choices
 				varsForm = forms.ChoiceField(choices = choices, label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])
 			elif a_tag.attrib['type'] == 'text':
 				varsForm = forms.CharField(label = a_tag._children[0].__dict__['attrib']['label'], help_text = a_tag._children[0].__dict__['attrib']['help_text'])
