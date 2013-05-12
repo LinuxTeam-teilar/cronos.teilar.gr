@@ -19,12 +19,16 @@ def refrigerators(request):
 			print forms[i].is_valid(), " || ", type(forms[i]), " || ", forms[i].errors, " || "
 			if forms[i].is_valid():
 				for j in forms[i].fields:
+					forms[i].fields[j].__dict__['initial'] = 5.0
 					if forms[i].fields[j].__class__.__name__ == "CharField":
-						forms[i].fields[j].initial = eval(request.POST.get(j))
+						forms[i].fields[j].__dict__['initial'] = eval(request.POST.get(j))
 					elif forms[i].fields[j].__class__.__name__ == "FloatField":
-						forms[i].fields[j].initial = float(request.POST.get(j))
+						forms[i].fields[j].__dict__['initial'] = float(request.POST.get(j))
+						#print "\n\n\t FLOAT var ==", float(request.POST.get(j)), "\n\t initial value from request ==", forms[i].fields[j].__dict__['initial'], "\n\t VAR_NAME == ", j, "-.-"
+					elif forms[i].fields[j].__class__.__name__ == "ChoiceField":
+						print "\nChoiceField\n"
 					else:
-						print "invalid input"
+						print "\ninvalid formField \n"
 		print "len(forms) === ", len(forms)
 		for i in forms:
 			formsname = ''
@@ -35,8 +39,8 @@ def refrigerators(request):
 					pass
 			varDict[formsname] = forms[i]
 		print "\n\tvarDictIF ===\n"
-		print "\n\n", varDict['form2'].base_fields['sint_thermop2'].initial, "\n\n"
-		print "\n\n", varDict['form2'].evalEquations()
+		print "\n\n form2.fields['sint_thermop2'].__dict__['initial'] = ", varDict['form2'].fields['sint_thermop2'].__dict__['initial'], "\n\n"
+		print "\n\n evalEquations() = ", varDict['form2'].evalEquations()
 	else:
 		for i in forms:
 			formsname = ''

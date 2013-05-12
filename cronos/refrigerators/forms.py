@@ -46,10 +46,10 @@ def fixEquationSyntax(self, com):
 				if buff_no_white not in forbBuffDict:
 					if buff.find('[') >= 0 and buff.find(']') >= 0:
 						limits = (buff.find('['), buff.find(']')+1)
-						buff = "self.base_fields['" + buff[0:limits[0]] + "'].initial" + buff[limits[0]:limits[1]]
+						buff = "self.fields['" + buff[0:limits[0]] + "'].__dict__['initial']" + buff[limits[0]:limits[1]]
 						ll.append(buff)
 					else:
-						buff = "self.base_fields['" + buff + "'].initial"
+						buff = "self.fields['" + buff + "'].__dict__['initial']"
 						ll.append(buff)
 			if com[i] == ')':
 				fstr = fstr + buff + temp
@@ -69,10 +69,10 @@ def evalEquations(self):
 	cstr = ''
 	for i in self.results:
 		cstr = self.fixEquationSyntax(str(self.results[i][1]))
-		print cstr
+		print '\n\n\tcstr = ', cstr
 		if eval(cstr):
 			fstr = self.fixEquationSyntax(self.results[i][0])
-			print fstr
+			print '\n\n\tfstr = ', fstr, "\n\n"
 			self.results[i] = eval(fstr)
 
 
